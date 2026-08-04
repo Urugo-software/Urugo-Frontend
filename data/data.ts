@@ -92,3 +92,35 @@ export const ListData = [
     description: "Generate income and occupancy reports with one click.",
   },
 ];
+export const steps = [
+  {
+    number: "01",
+    title: "Guest registration",
+    description: "Collects your name, phone, and email conversationally.",
+  },
+  {
+    number: "02",
+    title: "Natural language search",
+    description: "Describe what you want — no filters required.",
+  },
+  {
+    number: "03",
+    title: "Budget advisor",
+    description: "Tells you what you can really afford based on income.",
+  },
+  {
+    number: "04",
+    title: "Neighborhood guide",
+    description: "Explains an area's pros, cons, and typical rent range.",
+  },
+  {
+    number: "05",
+    title: "Move-in calculator",
+    description: "Total upfront cost plus real monthly cost, broken down.",
+  },
+  {
+    number: "06",
+    title: "Express interest",
+    description: "Occupied home? Get notified the moment it's free.",
+  },
+];

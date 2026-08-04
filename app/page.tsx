@@ -8,6 +8,7 @@ import SectionTitle from "@/components/shared/SectionTitle";
 import HeaderSection from "@/components/platform/home/AI-assistant/HeaderSection";
 import ChatBox from "@/components/platform/home/AI-assistant/ChatBox";
 import WorkingProcess from "@/components/platform/home/AI-assistant/WorkingProcess";
+import RoleCardWrapper from "@/components/platform/home/roles/RoleCardWrapper";
 
 function page() {
   return (
@@ -43,11 +44,28 @@ function page() {
       </SectionContainer>
       <hr className="border-transparent mt-8 lg:mt-20" />
       <SectionContainer className="bg-surface py-10 lg:py-20">
-        <HeaderSection />
-        <SectionContainer className="max-w-7xl mx-auto grid grid-cols-1 gap-6 lg:grid-cols-2 mt-10">
+        <HeaderSection
+          subTitle="The Urugo Assistant"
+          Title="One conversation. Everything a guest needs."
+        >
+          <p className="text-body text-base">
+            No search forms, no filters to figure out. Just describe what you're
+            looking for.
+          </p>
+        </HeaderSection>
+        <SectionContainer className="max-w-7xl mx-auto grid grid-cols-1 lg:gap-12 lg:grid-cols-2 mt-10">
           <ChatBox />
           <WorkingProcess />
         </SectionContainer>
+      </SectionContainer>
+
+      {/* roles */}
+      <SectionContainer className="max-w-7xl mx-auto py-10 lg:py-20">
+        <HeaderSection
+          subTitle="Three roles, one registry"
+          Title="Everyone on Urugo is verified."
+        />
+        <RoleCardWrapper />
       </SectionContainer>
     </main>
   );
