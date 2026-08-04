@@ -30,8 +30,8 @@ function heroSection() {
             <Link href="/auth/signin">
               <CustomButton
                 title="Get Started →"
-                variant="light"
-                className="bg-white text-brand border border-line p-6"
+                variant="transparentLight"
+                className="bg-white hover:bg-transparent text-brand border border-line p-6"
               />
             </Link>
             <Link href="/properties">

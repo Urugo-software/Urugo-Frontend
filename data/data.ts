@@ -1,6 +1,59 @@
+import prop1 from "../public/assets/home/prop1.jpg";
+import prop2 from "../public/assets/home/prop2.jpg";
+import prop3 from "../public/assets/home/prop3.jpg";
+import prop4 from "../public/assets/home/prop4.jpg";
+import prop5 from "../public/assets/home/prop5.jpg";
+
 export const home_stats = [
   { id: "1", title: "2,140", paragraph: "verified properties" },
   { id: "2", title: "430+", paragraph: "Registered Landlords" },
   { id: "3", title: "99.2%", paragraph: "Payment success rate" },
   { id: "4", title: "24/7", paragraph: "AI assistant availability" },
+];
+
+export const available_properties = [
+  {
+    id: "0001",
+    image: prop1,
+    title: "Cozy Studio Apartment",
+    location: "Kacyiru, Kigali",
+    price: "100,000",
+    amenities: ["Wifi", "Water"],
+  },
+  {
+    id: "0002",
+
+    image: prop2,
+    title: "Spacious 3BR House",
+    location: "Nyarutarama, Kigali",
+    price: "300,000",
+    amenities: ["Parking", "Garden", "Security"],
+  },
+  {
+    id: "0003",
+
+    image: prop3,
+    title: "Furnished 1BR",
+    location: "Kicukiro, Kigali",
+    price: "200,000",
+    amenities: ["Furnished", "Wifi"],
+  },
+  {
+    id: "0004",
+
+    image: prop4,
+    title: "Modern 4BR Villa",
+    location: "Gacuriro, Kigali",
+    price: "500,000",
+    amenities: ["Pool", "Parking", "Security"],
+  },
+  {
+    id: "0005",
+
+    image: prop5,
+    title: "Modern 4BR Villa",
+    location: "Gacuriro, Kigali",
+    price: "500,000",
+    amenities: ["Pool", "Parking", "Security"],
+  },
 ];
