@@ -1,5 +1,6 @@
-import { Heart } from "lucide-react";
+import { Heart, House, LocateIcon, MapPin, Star } from "lucide-react";
 import Image, { StaticImageData } from "next/image";
+import Link from "next/link";
 
 interface PropertyCardProps {
   image: StaticImageData;
@@ -16,8 +17,9 @@ function PropertyCard({
   price,
   amenities,
 }: PropertyCardProps) {
+  const currency = "Rwf";
   return (
-    <div className="flex-none w-[300px] snap-start bg-white border border-line scrollbar-hide overflow-hidden hover:shadow-[0_16px_40px_-18px_rgba(14,17,22,.22)] hover:-translate-y-0.5 transition">
+    <div className="flex-none rounded-xl w-full max-w-[400px]  bg-white border border-line  overflow-hidden hover:shadow-[0_16px_40px_-18px_rgba(14,17,22,.22)] hover:-translate-y-0.5 transition">
       <div className="relative h-[190px] overflow-hidden">
         <Image
           height={30}
@@ -31,43 +33,33 @@ function PropertyCard({
           <span className="w-2 h-2 bg-success animate-pulse rounded-full" />
           Available
         </span>
-        <div className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 flex items-center justify-center">
-          <Heart size={16} />
+        <div className="absolute top-3 right-3 w-6 h-6 rounded-full bg-white/90 flex items-center justify-center">
+          <Heart size={14} />
         </div>
       </div>
       <div className="px-4.5 pt-4 pb-4.5">
         <div className="flex justify-between items-start gap-2.5 mb-1">
-          <div className="text-[14.5px] font-bold leading-tight">{title}</div>
-          <div className="text-sm font-extrabold text-brand font-mono whitespace-nowrap">
-            {price}
+          <Link
+            href={`/properties/${title}`}
+            className="hover:text-brand duration-300"
+          >
+            <div className="text-[14.5px] font-bold leading-tight">{title}</div>
+          </Link>
+          <div className="text-sm font-extrabold font-ibm  text-brand  whitespace-nowrap">
+            {price} {currency}
           </div>
         </div>
         <div className="text-xs text-body mb-3 flex items-center gap-1.5">
-          {/* <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-            <path
-              d="M12 21s7-6.5 7-11.5A7 7 0 105 9.5C5 14.5 12 21 12 21z"
-              stroke="#8A93A3"
-              stroke-width="1.6"
-            />
-            <circle
-              cx="12"
-              cy="9.5"
-              r="2.3"
-              stroke="#8A93A3"
-              stroke-width="1.6"
-            />
-          </svg> */}
+          <MapPin size={12} className="text-faint" />
           {location}
         </div>
-        <div className="flex justify-between items-center pt-3 border-t border-line">
-          <div className="text-xs font-semibold flex items-center gap-1">
-            {/* <svg width="12" height="12" viewBox="0 0 24 24" fill="#F59E0B">
-              <path d="M12 2.5l2.9 6.1 6.6.9-4.8 4.6 1.2 6.6L12 17.6l-5.9 3.1 1.2-6.6-4.8-4.6 6.6-.9L12 2.5z" />
-            </svg> */}
+        <div className="hidden lg:flex justify-between items-center pt-3 mt-5 border-t border-line">
+          <div className="text-xs text-ink font-semibold flex items-center gap-1">
+            <House className="text-faint" size={11} />
             {amenities.join(", ")}
           </div>
           <div className="text-xs text-faint">
-            {amenities.length} amenity{amenities.length !== 1 ? "s" : ""}
+            {amenities.length} amenit{amenities.length !== 1 ? "ies" : "y"}
           </div>
         </div>
       </div>

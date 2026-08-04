@@ -1,22 +1,34 @@
-import React, { Fragment } from "react";
-import PropertyCard from "./PropertyCard";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import { available_properties } from "@/data/data";
+import PropertyCard from "./PropertyCard";
+import CarouselWrapper from "./CarouselWrapper";
 
 function PropertyWrapper() {
   return (
-    <div className="my-8 flex gap-4 overflow-x-auto  snap-x snap-mandatory">
+    <CarouselWrapper>
       {available_properties.map((prop) => (
-        <Fragment key={prop.id}>
-          <PropertyCard
-            image={prop.image}
-            title={prop.title}
-            location={prop.location}
-            price={prop.price}
-            amenities={prop.amenities}
-          />
-        </Fragment>
+        <CarouselItem
+          key={prop.id}
+          className="basis-1/2 md:basis-1/3 lg:basis-1/4"
+        >
+          <div className="p-1">
+            <PropertyCard
+              image={prop.image}
+              title={prop.title}
+              location={prop.location}
+              price={prop.price}
+              amenities={prop.amenities}
+            />
+          </div>
+        </CarouselItem>
       ))}
-    </div>
+    </CarouselWrapper>
   );
 }
 

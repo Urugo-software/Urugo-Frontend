@@ -57,3 +57,38 @@ export const available_properties = [
     amenities: ["Pool", "Parking", "Security"],
   },
 ];
+export const ListData = [
+  {
+    id: 1,
+    title: "Dashboard overview",
+    description: "See every property and payment status at a glance.",
+  },
+  {
+    id: 2,
+    title: "Online payments",
+    description:
+      "Tenants pay via MTN or Airtel Money — you receive it in your account.",
+  },
+  {
+    id: 3,
+    title: "Blacklist check",
+    description: "Search a tenant's payment history before you sign a lease.",
+  },
+  {
+    id: 4,
+    title: "Automated reminders",
+    description:
+      "SMS and email reminders sent automatically before rent is due.",
+  },
+  {
+    id: 5,
+    title: "Digital lease agreements",
+    description:
+      "Sign online, stored securely in the cloud, always accessible.",
+  },
+  {
+    id: 6,
+    title: "Tax reports",
+    description: "Generate income and occupancy reports with one click.",
+  },
+];
