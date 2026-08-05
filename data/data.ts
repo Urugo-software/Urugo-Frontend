@@ -4,6 +4,14 @@ import prop3 from "../public/assets/home/prop3.jpg";
 import prop4 from "../public/assets/home/prop4.jpg";
 import prop5 from "../public/assets/home/prop5.jpg";
 
+// icons
+import { PiHouseLine } from "react-icons/pi";
+import { User } from "lucide-react";
+import { IoShieldOutline } from "react-icons/io5";
+
+// types
+import { HomeUiRolesDataProps } from "@/types";
+
 export const home_stats = [
   { id: "1", title: "2,140", paragraph: "verified properties" },
   { id: "2", title: "430+", paragraph: "Registered Landlords" },
@@ -122,5 +130,44 @@ export const steps = [
     number: "06",
     title: "Express interest",
     description: "Occupied home? Get notified the moment it's free.",
+  },
+];
+export const userTypes: HomeUiRolesDataProps[] = [
+  {
+    id: 1,
+    Icon: PiHouseLine,
+    title: "Landlords",
+    description:
+      "Onboarded by an admin or licensed agent after document checks.",
+    features: [
+      "Mobile money collection, instant receipts",
+      "Color-coded payment dashboard",
+      "Blacklist check before signing",
+    ],
+    onboarding: "Added by admin / agent",
+  },
+  {
+    id: 2,
+    Icon: User,
+    title: "Guests",
+    description: "Just looking? Register in seconds, no forms required.",
+    features: [
+      "Chat-based registration with the AI",
+      "Natural language property search",
+      "Join a waiting list for occupied homes",
+    ],
+    onboarding: "Self-registration, instant",
+  },
+  {
+    id: 3,
+    Icon: IoShieldOutline,
+    title: "Renters",
+    description: "Onboarded by an admin once a lease is ready to sign.",
+    features: [
+      "5-day grace period, no surprises",
+      "Digital lease, always accessible",
+      "Payment history builds your credit score",
+    ],
+    onboarding: "Added by admin",
   },
 ];
