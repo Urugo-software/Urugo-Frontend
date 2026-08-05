@@ -18,14 +18,14 @@ export function LoginForm({
   return (
     <form
       className={cn(
-        "w-full max-w-md rounded-2xl border border-brand/10 bg-background p-6 shadow-sm sm:p-8",
+        "w-full max-w-sm rounded-2xl border border-brand/10 bg-background p-5 shadow-sm sm:max-w-md sm:p-8",
         className,
       )}
       {...props}
     >
-      <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-6 sm:gap-8">
         <LoginFormHeader />
-        <FieldGroup className="gap-5  ">
+        <FieldGroup className="gap-4 sm:gap-5">
           <Field>
             <FieldLabel htmlFor="email">Email</FieldLabel>
             <Input
@@ -37,11 +37,11 @@ export function LoginForm({
             />
           </Field>
           <Field>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-3">
               <FieldLabel htmlFor="password">Password</FieldLabel>
               <Link
                 href="#"
-                className="ml-auto text-sm font-medium text-muted-foreground underline-offset-4 transition hover:text-brand hover:underline"
+                className="text-sm font-medium text-muted-foreground underline-offset-4 transition hover:text-brand hover:underline sm:ml-auto"
               >
                 Forgot your password?
               </Link>
@@ -57,7 +57,7 @@ export function LoginForm({
           <Field>
             <Button
               type="submit"
-              className="h-11 w-full rounded-xl bg-brand-deep text-white hover:bg-brand duration-300 cursor-pointer"
+              className="h-11 w-full rounded-xl bg-brand text-white hover:bg-brand-deep duration-300 cursor-pointer"
             >
               Login
             </Button>
@@ -69,7 +69,7 @@ export function LoginForm({
             <Button
               variant="outline"
               type="button"
-              className="h-11 w-full rounded-xl border-ink"
+              className="h-11 w-full rounded-xl cursor-pointer border-ink"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -95,11 +95,11 @@ export function LoginForm({
               </svg>
               Login with Google
             </Button>
-            <FieldDescription className="text-center text-sm pt-4 ">
+            <FieldDescription className="pt-4 text-center text-sm">
               Don&apos;t have an account?{" "}
               <Link
                 href="/auth/sign-up"
-                className="font-medium text-brand-deep underline-offset-4 hover:underline"
+                className="font-medium text-brand underline-offset-4 hover:text-brand-deep"
               >
                 Sign up
               </Link>

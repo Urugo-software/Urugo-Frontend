@@ -185,7 +185,7 @@ export const signUpSteps = [
         label: "Full name",
         type: "text",
         autoComplete: "name",
-        placeholder: "Jane Doe",
+        placeholder: "Leon Sterlling",
         required: true,
       },
       {
@@ -212,8 +212,6 @@ export const signUpSteps = [
         autoComplete: "new-password",
         placeholder: "Create a strong password",
         required: true,
-        description:
-          "Use at least 8 characters with a mix of letters and numbers.",
       },
       {
         id: "confirmPassword",
