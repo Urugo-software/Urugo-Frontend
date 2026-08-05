@@ -1,10 +1,4 @@
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
+import { CarouselItem } from "@/components/ui/carousel";
 import { available_properties } from "@/data/data";
 import PropertyCard from "./PropertyCard";
 import CarouselWrapper from "./CarouselWrapper";

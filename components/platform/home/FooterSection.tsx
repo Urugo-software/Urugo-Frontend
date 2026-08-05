@@ -11,8 +11,8 @@ function FooterSection() {
               <Logo />
             </div>
             <p className="text-[13.5px] text-body max-w-[260px]">
-              Rwanda's verified rental registry. Digital payments, honest
-              landlords, and an AI assistant to help you find home.
+              {` Rwanda's verified rental registry. Digital payments, honest
+              landlords, and an AI assistant to help you find home.`}
             </p>
           </div>
           <div>
@@ -110,8 +110,8 @@ function FooterSection() {
           </div>
         </div>
         <div className="flex justify-between text-xs text-faint flex-wrap gap-2.5 pt-5 border-t border-line">
-          <div>© 2026 Urugo. All rights reserved.</div>
-          <div>Built for Rwanda's rental market.</div>
+          <div>{`© 2026 Urugo. All rights reserved.`}</div>
+          <div>{`Built for Rwanda's rental market.`}</div>
         </div>
       </div>
     </footer>

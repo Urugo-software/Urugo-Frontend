@@ -1,5 +1,4 @@
 import CustomButton from "@/components/shared/CustomButton";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 const AuthButtons = () => {

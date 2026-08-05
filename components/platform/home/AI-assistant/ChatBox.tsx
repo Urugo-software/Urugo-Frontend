@@ -26,7 +26,7 @@ function ChatBox() {
         </div>
 
         <div className="self-end max-w-[82%] rounded-[20px] rounded-br-[6px] bg-brand px-4 py-2.5 text-[13.5px] leading-relaxed text-white shadow-[0_10px_24px_-16px_rgba(14,17,22,.35)]">
-          Best rated, and I'll need parking
+          {` Best rated, and I'll need parking`}
         </div>
 
         <div className="self-start max-w-[82%] rounded-[20px] rounded-bl-[6px] border border-line bg-white px-4 py-2 text-[13px] leading-relaxed text-ink shadow-[0_8px_20px_-16px_rgba(14,17,22,.2)]">
@@ -40,7 +40,7 @@ function ChatBox() {
 
       <div className="flex items-center gap-2.5 border-t border-line bg-white px-5 py-3.5">
         <div className="flex flex-1 items-center rounded-full border border-line bg-surface px-4 py-2 text-[13px] text-faint shadow-[inset_0_1px_0_rgba(14,17,22,0.03)]">
-          Describe what you're looking for…
+          {` Describe what you're looking for…`}
         </div>
         <button className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-brand text-lg font-semibold text-white transition-transform duration-200 hover:scale-[1.03]">
           →

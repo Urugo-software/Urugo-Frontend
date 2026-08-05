@@ -1,4 +1,5 @@
 import { Menu } from "lucide-react";
+import Image from "next/image";
 
 function DashboardTemplate() {
   return (
@@ -9,7 +10,7 @@ function DashboardTemplate() {
           Search properties, tenants, payments…
         </div>
         <div>
-          <img
+          <Image
             src="https://flagcdn.com/w320/rw.png"
             alt="Rwanda Flag"
             height={12}

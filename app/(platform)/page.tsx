@@ -1,6 +1,5 @@
 import DashboardTemplate from "@/components/platform/home/howItWorks/DashboardTemplate";
 import PropertyWrapper from "@/components/platform/home/featuredProperties/PropertyWrapper";
-import Navbar from "@/components/platform/home/headerSection/Navbar";
 import HeroSection from "@/components/platform/home/heroSection/HeroSection";
 import ListWrapper from "@/components/platform/home/PropertyList";
 import SectionContainer from "@/components/platform/home/SectionContainer";
@@ -10,7 +9,6 @@ import ChatBox from "@/components/platform/home/AI-assistant/ChatBox";
 import WorkingProcess from "@/components/platform/home/AI-assistant/WorkingProcess";
 import RoleCardWrapper from "@/components/platform/home/roles/RoleCardWrapper";
 import CtaBand from "@/components/platform/home/CtaBand";
-import FooterSection from "@/components/platform/home/FooterSection";
 
 function page() {
   return (
@@ -51,8 +49,8 @@ function page() {
           Title="One conversation. Everything a guest needs."
         >
           <p className="text-body text-base">
-            No search forms, no filters to figure out. Just describe what you're
-            looking for.
+            {` No search forms, no filters to figure out. Just describe what you're
+            looking for.`}
           </p>
         </HeaderSection>
         <SectionContainer className="max-w-7xl mx-auto grid grid-cols-1 lg:gap-12 lg:grid-cols-2 mt-10">
