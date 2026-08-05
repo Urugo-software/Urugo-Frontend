@@ -9,6 +9,8 @@ import HeaderSection from "@/components/platform/home/AI-assistant/HeaderSection
 import ChatBox from "@/components/platform/home/AI-assistant/ChatBox";
 import WorkingProcess from "@/components/platform/home/AI-assistant/WorkingProcess";
 import RoleCardWrapper from "@/components/platform/home/roles/RoleCardWrapper";
+import CtaBand from "@/components/platform/home/CtaBand";
+import FooterSection from "@/components/platform/home/FooterSection";
 
 function page() {
   return (
@@ -67,6 +69,10 @@ function page() {
         />
         <RoleCardWrapper />
       </SectionContainer>
+      {/* cta band */}
+      <CtaBand />
+      {/* footer */}
+      <FooterSection />
     </main>
   );
 }
