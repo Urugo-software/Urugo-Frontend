@@ -7,28 +7,28 @@ const navItems = [
   {
     id: 1,
     title: "Features",
-    href: "/#features",
+    href: "/features",
   },
   {
     id: 2,
     title: "Properties",
-    href: "/#properties",
+    href: "/properties",
   },
   {
     id: 3,
     title: "How it works",
-    href: "/#how-it-works",
+    href: "/how-it-works",
   },
   {
     id: 4,
     title: "AI Assistant",
-    href: "/#ai-assistant",
+    href: "/ai-assistant",
   },
 ];
 
 function Navbar() {
   return (
-    <nav className="bg-white shadow py-2 px-2.5  rounded-full  mt-4 flex justify-between items-center">
+    <nav className="bg-white shadow py-2 px-2.5  rounded-full   flex justify-between items-center">
       {/* brand logo */}
       <div className="ml-3">
         <Logo />

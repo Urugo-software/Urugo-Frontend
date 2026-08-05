@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { signUpSteps } from "@/data/data";
+import { signUpSteps } from "@/data/home-data";
 import { FieldGroup } from "@/components/ui/field";
 import { cn } from "@/lib/utils";
 

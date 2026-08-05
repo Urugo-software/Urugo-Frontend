@@ -1,4 +1,4 @@
-import { userTypes } from "@/data/data";
+import { userTypes } from "@/data/home-data";
 import RoleCard from "./RoleCard";
 
 function RoleCardWrapper() {

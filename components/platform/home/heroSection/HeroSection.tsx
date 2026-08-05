@@ -2,7 +2,7 @@ import CustomButton from "@/components/shared/CustomButton";
 import { Sparkle } from "lucide-react";
 import Link from "next/link";
 import HomeStasCounter from "./HomeStasCounter";
-import { home_stats } from "@/data/data";
+import { home_stats } from "@/data/home-data";
 import { Fragment } from "react";
 
 function heroSection() {

@@ -1,5 +1,5 @@
 import { CarouselItem } from "@/components/ui/carousel";
-import { available_properties } from "@/data/data";
+import { available_properties } from "@/data/home-data";
 import PropertyCard from "./PropertyCard";
 import CarouselWrapper from "./CarouselWrapper";
 

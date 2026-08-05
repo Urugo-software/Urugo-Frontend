@@ -5,7 +5,7 @@ import SectionContainer from "@/components/platform/home/SectionContainer";
 function layout({ children }: { children: React.ReactNode }) {
   return (
     <main>
-      <SectionContainer className="max-w-7xl mx-auto">
+      <SectionContainer className=" sticky top-3 z-10 max-w-7xl mx-auto">
         <Navbar />
       </SectionContainer>
       {children}
