@@ -1,19 +1,24 @@
 import CustomButton from "@/components/shared/CustomButton";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const AuthButtons = () => {
   return (
     <div className="flex gap-2 md:gap-4 items-center">
-      <CustomButton
-        title="Sign In"
-        variant="light"
-        className="bg-white border border-line"
-      />
-      <CustomButton
-        title="Get Started"
-        variant="colored"
-        className="bg-brand border border-line"
-      />
+      <Link href="/auth/sign-in">
+        <CustomButton
+          title="Sign In"
+          variant="light"
+          className="bg-white border border-line"
+        />
+      </Link>
+      <Link href="/auth/sign-up">
+        <CustomButton
+          title="Get Started"
+          variant="colored"
+          className="bg-brand border border-line"
+        />
+      </Link>
     </div>
   );
 };
