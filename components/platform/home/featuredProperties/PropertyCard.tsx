@@ -1,6 +1,9 @@
-import { Heart, House, LocateIcon, MapPin, Star } from "lucide-react";
+"use client";
+import OnLoadSkeleton from "@/components/shared/OnLoadSkeleton";
+import { Heart, House, MapPin } from "lucide-react";
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 interface PropertyCardProps {
   image: StaticImageData;
@@ -17,50 +20,77 @@ function PropertyCard({
   price,
   amenities,
 }: PropertyCardProps) {
+  // image load state
+  const [isImageLoaded, setImageLoaded] = useState(false);
+
   const currency = "Rwf";
   return (
-    <div className="flex-none rounded-xl w-full max-w-[400px]  bg-white border border-line  overflow-hidden hover:shadow-[0_16px_40px_-18px_rgba(14,17,22,.22)] hover:-translate-y-0.5 transition">
-      <div className="relative h-[190px] overflow-hidden">
+    <div className="flex-none w-full max-w-[400px] h-[420px] flex flex-col overflow-hidden  border cursor-pointer border-brand/20 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-brand hover:shadow-[0_18px_40px_-18px_rgba(14,17,22,.22)]">
+      {/* Image */}
+      <div className="relative h-full overflow-hidden">
+        {!isImageLoaded && <OnLoadSkeleton />}
+
         <Image
-          height={30}
-          width={30}
-          unoptimized
-          alt={title}
+          fill
           src={image}
-          className="w-full h-full object-cover"
+          alt={title}
+          sizes="(max-width:768px) 100vw, 400px"
+          onLoad={() => setImageLoaded(true)}
+          className={`object-cover w-full h-full transition-opacity duration-300 ${
+            isImageLoaded ? "opacity-100" : "opacity-0"
+          }`}
         />
-        <span className="absolute top-3 left-3 bg-white text-[11px] font-bold text-success px-2.5 py-1.5 rounded-full flex items-center gap-1.5">
-          <span className="w-2 h-2 bg-success animate-pulse rounded-full" />
+
+        <span className="absolute left-4 top-4 flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-[11px] font-semibold text-success shadow-sm">
+          <span className="h-2 w-2 rounded-full bg-success" />
           Available
         </span>
-        <div className="absolute top-3 right-3 w-6 h-6 rounded-full bg-white/90 flex items-center justify-center">
-          <Heart size={14} />
-        </div>
+
+        <button className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 shadow-sm transition hover:bg-white">
+          <Heart size={16} />
+        </button>
       </div>
-      <div className="px-4.5 pt-4 pb-4.5">
-        <div className="flex justify-between items-start gap-2.5 mb-1">
-          <Link
-            href={`/properties/${title}`}
-            className="hover:text-brand duration-300"
-          >
-            <div className="text-[14.5px] font-bold leading-tight">{title}</div>
+
+      {/* Content */}
+      <div className="p-4 pt-6 pb-8 ">
+        {/* Title + Price */}
+        <div className="flex items-start justify-between gap-4">
+          <Link href={`/properties/${title}`} className="group flex-1">
+            <h3 className="text-md text-nowrap max-w-[150px]  truncate font-semibold  text-ink transition-colors group-hover:text-brand tracking-tight">
+              {title}
+            </h3>
           </Link>
-          <div className="text-sm font-extrabold font-ibm  text-brand  whitespace-nowrap">
-            {price} {currency}
+
+          <div className=" flex items-center gap-1 text-right">
+            <div className="font-ibm text-[14px] font-bold text-brand">
+              {price}
+            </div>
+            <div className="text-[11px] text-body">{currency}</div>
           </div>
         </div>
-        <div className="text-xs text-body mb-3 flex items-center gap-1.5">
-          <MapPin size={12} className="text-faint" />
-          {location}
+
+        {/* Location */}
+        <div className="mt-2 flex items-center gap-2 text-sm tracking-tight text-body">
+          <MapPin size={15} className="text-faint" />
+          <span>{location}</span>
         </div>
-        <div className="hidden lg:flex justify-between items-center pt-3 mt-5 border-t border-line">
-          <div className="text-xs text-ink font-semibold flex items-center gap-1">
-            <House className="text-faint" size={11} />
-            {amenities.join(", ")}
+
+        {/* Divider */}
+        <div className="my-4 border-t border-line" />
+
+        {/* Amenities */}
+        <div className="flex items-center justify-between ">
+          <div className="flex items-center gap-2 text-sm text-ink">
+            <House size={14} className="text-faint" />
+            <span className="truncate whitespace-nowrap text-[13px] max-w-[130px]">
+              {amenities.join(", ")}
+            </span>
           </div>
-          <div className="text-xs text-faint">
-            {amenities.length} amenit{amenities.length !== 1 ? "ies" : "y"}
-          </div>
+
+          <span className="text-xs text-faint">
+            {amenities.length}{" "}
+            {amenities.length === 1 ? "amenity" : "amenities"}
+          </span>
         </div>
       </div>
     </div>

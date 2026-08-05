@@ -11,7 +11,7 @@ function FooterSection() {
               <Logo />
             </div>
             <p className="text-[13.5px] text-body max-w-[260px]">
-              Rwanda's verified rental registry — digital payments, honest
+              Rwanda's verified rental registry. Digital payments, honest
               landlords, and an AI assistant to help you find home.
             </p>
           </div>

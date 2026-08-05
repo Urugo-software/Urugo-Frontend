@@ -12,7 +12,7 @@ function SectionTitle({
   descriptionClassName?: string;
 }) {
   return (
-    <div className="max-w-[500px]">
+    <div className="max-w-[550px]">
       <h1
         className={
           cn("text-2xl tracking-tight font-extrabold text-ink ") +

@@ -7,7 +7,10 @@ interface NavItemsProps {
 
 function NavItems({ href, name }: NavItemsProps) {
   return (
-    <Link className="text-ink text-sm tracking-wide" href={href}>
+    <Link
+      className="text-ink hover:border-b-2 duration-300 hover:border-brand/80 hover:text-brand rounded-full px-2 text-sm tracking-wide"
+      href={href}
+    >
       {name}
     </Link>
   );

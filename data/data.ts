@@ -144,7 +144,7 @@ export const userTypes: HomeUiRolesDataProps[] = [
       "Color-coded payment dashboard",
       "Blacklist check before signing",
     ],
-    onboarding: "Added by admin / agent",
+    onboarding: "Added by Agent ",
   },
   {
     id: 2,
@@ -168,6 +168,6 @@ export const userTypes: HomeUiRolesDataProps[] = [
       "Digital lease, always accessible",
       "Payment history builds your credit score",
     ],
-    onboarding: "Added by admin",
+    onboarding: "Added by Landlord",
   },
 ];

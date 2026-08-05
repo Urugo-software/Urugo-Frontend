@@ -16,10 +16,10 @@ function page() {
   return (
     <main className="w-full bg-white min-h-screen ">
       <SectionContainer className="max-w-7xl mx-auto">
-        <Navbar />
         <HeroSection />
       </SectionContainer>
       <hr className="border-line my-8 lg:my-20" />
+      {/* fearutured propeties */}
       <SectionContainer className="max-w-7xl mx-auto">
         <SectionTitle
           title="Featured Properties"
@@ -34,10 +34,10 @@ function page() {
         <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
           <div>
             <SectionTitle
-              title="Everything you need to manage your properties."
+              title="Manage your entire rental business from one dashboard."
               className="lg:text-4xl"
               descriptionClassName="mt-2 mb-6 lg:mb-8"
-              description="Stop using notebooks and Excel. One dashboard for payments, tenants, and every property you own."
+              description="Collect payments, track tenants, monitor properties, and access everything in one place."
             />
             <ListWrapper />
           </div>
@@ -71,8 +71,6 @@ function page() {
       </SectionContainer>
       {/* cta band */}
       <CtaBand />
-      {/* footer */}
-      <FooterSection />
     </main>
   );
 }
