@@ -171,3 +171,58 @@ export const userTypes: HomeUiRolesDataProps[] = [
     onboarding: "Added by Landlord",
   },
 ];
+
+export const signUpSteps = [
+  {
+    key: 1,
+    label: "Account details",
+    title: "Create your account",
+    description:
+      "Tell us who you are and where we can reach you to start the signup flow.",
+    fields: [
+      {
+        id: "fullName",
+        label: "Full name",
+        type: "text",
+        autoComplete: "name",
+        placeholder: "Jane Doe",
+        required: true,
+      },
+      {
+        id: "email",
+        label: "Email",
+        type: "email",
+        autoComplete: "email",
+        placeholder: "jane@example.com",
+        required: true,
+      },
+    ],
+  },
+  {
+    key: 2,
+    label: "Security",
+    title: "Secure your account",
+    description:
+      "Choose a strong password and confirm it to finish creating your profile.",
+    fields: [
+      {
+        id: "password",
+        label: "Password",
+        type: "password",
+        autoComplete: "new-password",
+        placeholder: "Create a strong password",
+        required: true,
+        description:
+          "Use at least 8 characters with a mix of letters and numbers.",
+      },
+      {
+        id: "confirmPassword",
+        label: "Confirm password",
+        type: "password",
+        autoComplete: "new-password",
+        placeholder: "Repeat your password",
+        required: true,
+      },
+    ],
+  },
+] as const;
