@@ -1,5 +1,5 @@
 import BrandLogo from "@/components/platform/auth/BrandLogo";
-import Logo from "@/components/platform/home/headerSection/Logo";
+import Logo from "@/components/platform/layout/Logo";
 
 function layout({ children }: { children: React.ReactNode }) {
   return (

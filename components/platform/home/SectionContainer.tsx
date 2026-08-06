@@ -8,7 +8,7 @@ function SectionContainer({
   className?: string;
 }) {
   return (
-    <section className={`w-full  px-2  sm:px-4 md:px-6 ${className || ""}`}>
+    <section className={`w-full  px-4 md:px-6 ${className || ""}`}>
       {children}
     </section>
   );

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Logo from "./headerSection/Logo";
+import Logo from "../layout/Logo";
 import SectionContainer from "./SectionContainer";
 
 function FooterSection() {

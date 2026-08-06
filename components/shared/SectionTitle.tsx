@@ -15,7 +15,9 @@ function SectionTitle({
     <div className="max-w-[550px]">
       <h1
         className={
-          cn("text-2xl tracking-tight font-extrabold text-ink ") +
+          cn(
+            "text-2xl tracking-tight max-md:tracking-normal font-extrabold  ",
+          ) +
           " " +
           className
         }

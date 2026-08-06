@@ -19,14 +19,14 @@ function heroSection() {
             Registry
           </span>
           <h1 className="max-w-3xl text-white leading-[1.05] tracking-tight text-4xl md:text-5xl font-extrabold mx-auto mb-6">
-            {` Rwanda's rental market, finally digital.`}
+            {` Rwanda's rental market, finally digital`}
           </h1>
-          <p className="max-w-2xl text-white/80 text-md md:text-lg font-medium mx-auto mb-6">
+          <p className="max-w-2xl px-2 text-white/80 text-md md:text-lg font-medium mx-auto mb-6">
             {` Urugo helps landlords collect rent online, screen tenants instantly,
             and manage every property from one dashboard — while guests chat
             with an AI assistant to find a verified home in minutes.`}
           </p>
-          <div className="flex gap-2 md:gap-4 items-center">
+          <div className="flex max-md:flex-col max-md:gap-4 gap-2 md:gap-4 items-center">
             <Link href="/auth/signin">
               <CustomButton
                 title="Get Started →"

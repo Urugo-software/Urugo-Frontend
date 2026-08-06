@@ -34,7 +34,7 @@ function Navbar() {
         <Logo />
       </div>
       {/* navigation items */}
-      <div className="flex gap-4 md:gap-6 items-center font-medium ">
+      <div className="hidden md:flex gap-4 md:gap-6 items-center font-medium ">
         {navItems.map((item) => (
           <Fragment key={item.id}>
             <NavItems href={item.href} name={item.title} />
