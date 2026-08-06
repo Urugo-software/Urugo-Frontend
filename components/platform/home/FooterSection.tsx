@@ -97,7 +97,7 @@ function FooterSection() {
                     href="#"
                     className="text-[13.5px] text-body hover:text-ink"
                   >
-                    support@urugo.rw
+                    mx.urugo.rw
                   </Link>
                 </li>
                 <li>
@@ -105,7 +105,7 @@ function FooterSection() {
                     href="#"
                     className="text-[13.5px] text-body hover:text-ink"
                   >
-                    +250 788 000 000
+                    +250 787 723 139
                   </Link>
                 </li>
               </ul>
