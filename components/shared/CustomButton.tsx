@@ -8,7 +8,7 @@ function CustomButton({
   children,
 }: {
   title: string;
-  variant: "light" | "colored";
+  variant: "light" | "colored" | "transparentLight";
   className?: string;
   children?: React.ReactNode;
 }) {
@@ -23,6 +23,12 @@ function CustomButton({
       "primary-span":
         "transition-transform absolute inset-0 duration-300  -translate-y-6 group-hover:translate-0 text-ink group-hover:bg-white  ",
       "secondary-span": "relative z-10 p-5 group-hover:text-brand text-white",
+    },
+    transparentLight: {
+      "primary-span":
+        "transition-transform absolute inset-0 duration-300  translate-y-6 group-hover:translate-0 text-ink group-hover:bg-white/20 ",
+      "secondary-span":
+        "relative z-10 tracking-wide p-5 group-hover:text-white",
     },
   };
 
