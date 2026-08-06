@@ -19,12 +19,6 @@ function page() {
       <hr className="border-line my-12 lg:my-20" />
       {/* fearutured propeties */}
       <SectionContainer className="max-w-7xl mx-auto">
-        <SectionTitle
-          title="Featured Properties"
-          className="lg:text-3xl"
-          descriptionClassName="mt-1"
-          description="Check out our verified properties available for rent "
-        />
         <PropertyWrapper />
       </SectionContainer>
       <hr className="border-line my-12 lg:my-20" />
