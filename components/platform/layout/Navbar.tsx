@@ -2,31 +2,16 @@ import { Fragment } from "react";
 import NavItems from "./NavItems";
 import Logo from "./Logo";
 import AuthButtons from "./AuthButtons";
+import MenuHamburger from "./MenuHamburger";
+import { navItems } from "@/data/navbar-data";
 
-const navItems = [
-  {
-    id: 1,
-    title: "Features",
-    href: "/features",
-  },
-  {
-    id: 2,
-    title: "Properties",
-    href: "/properties",
-  },
-  {
-    id: 3,
-    title: "How it works",
-    href: "/how-it-works",
-  },
-  {
-    id: 4,
-    title: "AI Assistant",
-    href: "/ai-assistant",
-  },
-];
-
-function Navbar() {
+function Navbar({
+  mobileMenuOpen,
+  setMobileMenuOpen,
+}: {
+  mobileMenuOpen: boolean;
+  setMobileMenuOpen: (open: boolean) => void;
+}) {
   return (
     <nav className="bg-white shadow py-2 px-2.5  rounded-full   flex justify-between items-center">
       {/* brand logo */}
@@ -41,8 +26,15 @@ function Navbar() {
           </Fragment>
         ))}
       </div>
-      {/* auth buttons */}
-      <AuthButtons />
+      <div className="flex items-center gap-3">
+        {/* auth buttons */}
+        <AuthButtons />
+        {/* Menu hamburger */}
+        <MenuHamburger
+          mobileMenuOpen={mobileMenuOpen}
+          setMobileMenuOpen={setMobileMenuOpen}
+        />
+      </div>
     </nav>
   );
 }
