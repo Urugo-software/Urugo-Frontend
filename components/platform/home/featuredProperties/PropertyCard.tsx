@@ -25,7 +25,7 @@ function PropertyCard({
 
   const currency = "Rwf";
   return (
-    <div className="flex-none w-full max-w-[400px] h-[420px] flex flex-col overflow-hidden  border cursor-pointer border-brand/20 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-brand hover:shadow-[0_18px_40px_-18px_rgba(14,17,22,.22)]">
+    <div className="flex-none w-full md:max-w-[400px] h-[420px] flex flex-col overflow-hidden  border cursor-pointer border-brand/20 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-brand hover:shadow-[0_18px_40px_-18px_rgba(14,17,22,.22)]">
       {/* Image */}
       <div className="relative h-full overflow-hidden">
         {!isImageLoaded && <OnLoadSkeleton />}
