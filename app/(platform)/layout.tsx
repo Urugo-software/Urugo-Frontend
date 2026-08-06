@@ -1,12 +1,12 @@
 import FooterSection from "@/components/platform/home/FooterSection";
-import Navbar from "@/components/platform/home/headerSection/Navbar";
 import SectionContainer from "@/components/platform/home/SectionContainer";
+import NavbarWrapper from "@/components/platform/layout/NavbarWrapper";
 
 function layout({ children }: { children: React.ReactNode }) {
   return (
     <main>
-      <SectionContainer className="max-w-7xl mx-auto">
-        <Navbar />
+      <SectionContainer className=" sticky top-3 z-30 max-w-7xl mx-auto">
+        <NavbarWrapper />
       </SectionContainer>
       {children}
       <FooterSection />

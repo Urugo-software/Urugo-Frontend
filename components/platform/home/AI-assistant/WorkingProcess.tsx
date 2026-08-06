@@ -1,4 +1,4 @@
-import { steps } from "@/data/data";
+import { steps } from "@/data/home-data";
 
 type WorkingProcessStepProps = {
   number: string;

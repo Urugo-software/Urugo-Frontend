@@ -1,4 +1,4 @@
-import { ListData } from "@/data/data";
+import { ListData } from "@/data/home-data";
 import { ListCard } from "./howItWorks/ListCard";
 
 function ListWrapper() {

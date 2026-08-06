@@ -16,7 +16,7 @@ function page() {
       <SectionContainer className="max-w-7xl mx-auto">
         <HeroSection />
       </SectionContainer>
-      <hr className="border-line my-8 lg:my-20" />
+      <hr className="border-line my-12 lg:my-20" />
       {/* fearutured propeties */}
       <SectionContainer className="max-w-7xl mx-auto">
         <SectionTitle
@@ -27,7 +27,7 @@ function page() {
         />
         <PropertyWrapper />
       </SectionContainer>
-      <hr className="border-line my-8 lg:my-20" />
+      <hr className="border-line my-12 lg:my-20" />
       <SectionContainer className="max-w-7xl mx-auto">
         <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
           <div>
