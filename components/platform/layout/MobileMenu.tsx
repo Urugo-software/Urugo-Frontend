@@ -11,16 +11,16 @@ function MobileMenu({
 
   useEffect(() => {
     // Your effect logic here
-    const handleClickOutsie = (e: MouseEvent) => {
+    const handleClickOutside = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setMobileMenuOpen(false);
       }
     };
-    document.addEventListener("mousedown", handleClickOutsie);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutsie);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [setMobileMenuOpen]);
 
   return (
     <div
