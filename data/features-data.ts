@@ -19,13 +19,6 @@ interface Feature {
   Icon: LucideIcon;
 }
 
-interface Feature {
-  id: number;
-  title: string;
-  description: string;
-  Icon: LucideIcon;
-}
-
 export const renterFeatures: Feature[] = [
   {
     id: 1,
