@@ -13,18 +13,26 @@ function LeftSectionHeader({
   href,
 }: LeftSectionHeaderProps) {
   return (
-    <div className="flex items-end justify-between mb-10 flex-wrap gap-4">
-      <div>
-        <span className="block text-xs font-bold tracking-widest uppercase text-brand mb-3">
-          {subHeader}
-        </span>
+    <div className="flex items-center justify-between mb-10 flex-wrap  ">
+      <div className="max-md:flex-1">
+        <div className="flex  items-center justify-between gap-4 mb-3 ">
+          <span className="block text-xs font-bold tracking-widest uppercase text-brand ">
+            {subHeader}
+          </span>
+          <Link
+            href={href || "#"}
+            className="md:hidden text-sm font-semibold text-brand whitespace-nowrap"
+          >
+            →
+          </Link>
+        </div>
         <h2 className="text-3xl text-ink font-extrabold tracking-tight">
           {header}
         </h2>
       </div>
       <Link
         href={href || "#"}
-        className="text-sm font-semibold text-brand whitespace-nowrap"
+        className="max-md:hidden text-sm font-semibold text-brand whitespace-nowrap"
       >
         {seeMore} →
       </Link>

@@ -13,7 +13,7 @@ import { Fragment } from "react";
 function page() {
   return (
     <section className="min-h-screen w-full bg-white">
-      <SectionContainer className="max-w-7xl mx-auto py-10 lg:py-20">
+      <SectionContainer className="max-w-7xl mx-auto py-10 lg:py-25">
         <HeaderSection
           subTitle="FEATURES"
           Title="Everything a verified rental registry needs."
