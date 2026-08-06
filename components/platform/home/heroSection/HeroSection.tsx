@@ -27,7 +27,7 @@ function heroSection() {
             with an AI assistant to find a verified home in minutes.`}
           </p>
           <div className="flex max-md:flex-col max-md:gap-4 gap-2 md:gap-4 items-center">
-            <Link href="/auth/signin">
+            <Link href="/auth/sign-in">
               <CustomButton
                 title="Get Started →"
                 variant="transparentLight"
