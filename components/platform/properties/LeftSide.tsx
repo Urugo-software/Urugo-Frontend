@@ -3,7 +3,7 @@ import { MessageSquareText } from "lucide-react";
 
 function LeftSide() {
   return (
-    <div className="xl:w-1/4 max-xl:max-w-[300px] max-md:min-w-full w-full  h-full flex flex-col gap-2">
+    <div className="sm:min-w-[300px] w-[300px] max-sm:w-full  h-full flex flex-col gap-2">
       {/* talk to an agent card */}
       <div className="bg-brand rounded-2xl p-6 text-white mb-4">
         <h4 className="text-base font-extrabold mb-1.5">List your property</h4>
@@ -29,12 +29,12 @@ function LeftSide() {
           Chat with the Urugo Assistant describe what you're looking for in
           plain language.
         </p>
-        <a
+        <Link
           href="#"
           className="w-full flex justify-center text-[13.5px] font-semibold px-4.5 py-2.5 rounded-full border border-line text-ink"
         >
           Ask the AI Assistant
-        </a>
+        </Link>
       </div>
       {/* Property already taken card */}
       <div className="bg-surface border border-dashed border-line rounded-2xl p-5">

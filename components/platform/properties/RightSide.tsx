@@ -3,7 +3,7 @@ import PropertyListing from "./PropertyListing";
 
 function RightSide() {
   return (
-    <div className="w-full  flex gap-4 md:gap-6 ">
+    <div className="flex-1  max-xl:flex-col flex gap-4 md:gap-6 ">
       <div className="basis-2/3 ">
         {/* property listing */}
         <PropertyListing />
