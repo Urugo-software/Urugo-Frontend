@@ -51,7 +51,7 @@ function PriceRangeFilter() {
           <DropdownMenuItem onClick={() => setMaxPrice("250,000")}>
             250,000
           </DropdownMenuItem>
-          <DropdownMenuItem onSelect={() => setMaxPrice("400,000+")}>
+          <DropdownMenuItem onClick={() => setMaxPrice("400,000+")}>
             400,000+
           </DropdownMenuItem>
         </DropdownMenuContent>
