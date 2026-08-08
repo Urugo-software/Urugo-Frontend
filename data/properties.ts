@@ -81,3 +81,47 @@ export const listed_properties = [
     availabilityStatus: "available",
   },
 ];
+
+export const propertyLocations = [
+  { id: "1", name: "All districts" },
+
+  // Kigali City
+  { id: "2", name: "Gasabo" },
+  { id: "3", name: "Kicukiro" },
+  { id: "4", name: "Nyarugenge" },
+
+  // Eastern Province
+  { id: "5", name: "Bugesera" },
+  { id: "6", name: "Gatsibo" },
+  { id: "7", name: "Kayonza" },
+  { id: "8", name: "Kirehe" },
+  { id: "9", name: "Ngoma" },
+  { id: "10", name: "Nyagatare" },
+  { id: "11", name: "Rwamagana" },
+
+  // Northern Province
+  { id: "12", name: "Burera" },
+  { id: "13", name: "Gakenke" },
+  { id: "14", name: "Gicumbi" },
+  { id: "15", name: "Musanze" },
+  { id: "16", name: "Rulindo" },
+
+  // Southern Province
+  { id: "17", name: "Gisagara" },
+  { id: "18", name: "Huye" },
+  { id: "19", name: "Kamonyi" },
+  { id: "20", name: "Muhanga" },
+  { id: "21", name: "Nyamagabe" },
+  { id: "22", name: "Nyanza" },
+  { id: "23", name: "Nyaruguru" },
+  { id: "24", name: "Ruhango" },
+
+  // Western Province
+  { id: "25", name: "Karongi" },
+  { id: "26", name: "Ngororero" },
+  { id: "27", name: "Nyabihu" },
+  { id: "28", name: "Nyamasheke" },
+  { id: "29", name: "Rubavu" },
+  { id: "30", name: "Rusizi" },
+  { id: "31", name: "Rutsiro" },
+];

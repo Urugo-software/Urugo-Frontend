@@ -3,7 +3,7 @@ import { MessageSquareText } from "lucide-react";
 
 function LeftSide() {
   return (
-    <div className="sm:min-w-[300px] w-[300px] max-sm:w-full  h-full flex flex-col gap-2">
+    <div className=" sm:min-w-[300px] w-[300px] max-md:w-full  h-full flex flex-col gap-2">
       {/* talk to an agent card */}
       <div className="bg-brand rounded-2xl p-6 text-white mb-4">
         <h4 className="text-base font-extrabold mb-1.5">List your property</h4>
@@ -26,8 +26,8 @@ function LeftSide() {
           Not sure what you need?
         </h4>
         <p className="text-xs text-body mb-3.5">
-          Chat with the Urugo Assistant describe what you're looking for in
-          plain language.
+          {`Chat with the Urugo Assistant describe what you're looking for in
+        plain language.`}
         </p>
         <Link
           href="#"
@@ -42,7 +42,7 @@ function LeftSide() {
           Property already taken?
         </h5>
         <p className="text-xs text-body">
-          Express interest and we'll notify you the moment it's available again.
+          {`Express interest and we'll notify you the moment it's available again.`}
         </p>
       </div>
     </div>

@@ -6,12 +6,14 @@ import TotalAvailableProperties from "./TotalAvailableProperties";
 function PropertyListing() {
   return (
     <div className="w-full ">
-      {/* search field */}
-      <SearchInput className="p-3 w-full outline-none border-none focus:outline-none focus:border-none focus:ring-0" />
+      <div className="max-md:my-8 max-md:mb-12">
+        {/* search field */}
+        <SearchInput className="p-3 w-full outline-none border-none focus:outline-none focus:border-none focus:ring-0" />
 
-      {/* stats & filter */}
-      <div className=" my-4 ">
-        <TotalAvailableProperties total={126} />
+        {/* stats & filter */}
+        <div className=" my-4 ">
+          <TotalAvailableProperties total={126} />
+        </div>
       </div>
       {/* list properties */}
       <div className="mt-8 flex flex-col gap-4">
