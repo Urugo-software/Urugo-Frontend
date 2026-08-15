@@ -7,8 +7,10 @@ import {
   MapPin,
   ShieldAlert,
 } from "lucide-react";
+import Link from "next/link";
 
 interface PropertyListingCardProps {
+  id: string;
   image: string | StaticImageData;
   headline: string;
   ownerName: string;
@@ -24,6 +26,7 @@ interface PropertyListingCardProps {
 }
 
 function PropertyListingCard({
+  id,
   image,
   headline,
   ownerName,
@@ -54,9 +57,11 @@ function PropertyListingCard({
         {/* Header */}
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <h3 className="truncate tracking-tight text-[17px] font-bold text-brand-deep">
-              {headline}
-            </h3>
+            <Link href={`/properties/${id}`}>
+              <h3 className="truncate hover:text-brand hover:underline tracking-tight text-[17px] font-bold text-brand-deep">
+                {headline}
+              </h3>
+            </Link>
 
             <div className="mt-1 flex items-center gap-1.5 text-[12px] text-gray-500">
               <span>Listed by {ownerName}</span>

@@ -20,6 +20,7 @@ function PropertyListing() {
         {listed_properties.map((prop) => (
           <PropertyListingCard
             key={prop.id}
+            id={prop.id}
             image={prop.image}
             headline={prop.headline}
             ownerName={prop.ownerName}
