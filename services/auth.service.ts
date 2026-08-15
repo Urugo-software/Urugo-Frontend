@@ -10,15 +10,10 @@ export function AxiosErrorHandler(error: unknown) {
   }
 }
 
-export async function loginUserService({
-  email_phone,
-  username,
-  password,
-}: LoginProps) {
+export async function loginUserService({ identifier, password }: LoginProps) {
   try {
     const { data } = await api.post("/public/auth/login", {
-      email_phone,
-      username,
+      identifier,
       password,
     });
     return data;

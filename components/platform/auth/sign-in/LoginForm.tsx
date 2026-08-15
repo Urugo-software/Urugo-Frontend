@@ -1,3 +1,5 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,8 +12,9 @@ import {
 import { Input } from "@/components/ui/input";
 import LoginFormHeader from "./LoginFormHeader";
 import Link from "next/link";
-import { useForm } from "react-hook-form";
 import { LoginProps } from "@/types";
+import { useForm } from "react-hook-form";
+import { useLogin } from "@/hooks/useLogin";
 
 export function LoginForm({
   className,
@@ -23,8 +26,15 @@ export function LoginForm({
     formState: { errors },
   } = useForm<LoginProps>();
 
+  const { mutate, isPending } = useLogin();
+
+  const onSubmit = (data: LoginProps) => {
+    mutate(data);
+  };
+
   return (
     <form
+      onSubmit={handleSubmit(onSubmit)}
       className={cn(
         "w-full max-w-sm rounded-2xl border border-brand/10 bg-background p-5 shadow-sm sm:max-w-md sm:p-8",
         className,
@@ -36,18 +46,23 @@ export function LoginForm({
         <FieldGroup className="gap-4 sm:gap-5">
           <Field>
             <FieldLabel className="text-faint font-medium" htmlFor="email">
-              Email / Phone Number
+              Email or Phone Number
             </FieldLabel>
             <Input
               id="email"
-              type="email"
-              placeholder="Email / Phone Number"
+              type="text"
+              placeholder="email or phone number"
               required
-              {...register("email_phone", {
+              {...register("identifier", {
                 required: "Email or Phone Number is required",
               })}
-              className="h-11 border-gray-400 hover:border-brand/30 hover:ring-1 hover:ring-brand/30 focus-within:outline-none focus-within:ring-2 focus-within:ring-brand"
+              className="h-11 placeholder:text-sm placeholder:text-faint border-gray-400 hover:border-brand/30 hover:ring-1 hover:ring-brand/30 focus-within:outline-none focus-within:ring-2 focus-within:ring-brand"
             />
+            {errors.identifier && (
+              <p className="mt-1 text-xs text-red-600">
+                {errors.identifier.message}
+              </p>
+            )}
           </Field>
           <Field>
             <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-3">
@@ -71,13 +86,20 @@ export function LoginForm({
               })}
               className="h-11 border-gray-400 hover:border-brand/30 hover:ring-1 hover:ring-brand/30 focus-within:outline-none focus-within:ring-2 focus-within:ring-brand"
             />
+            {errors.password && (
+              <p className="mt-1 text-xs text-red-600">
+                {errors.password.message}
+              </p>
+            )}
           </Field>
           <Field>
             <Button
               type="submit"
-              className="h-11 w-full rounded-xl bg-brand text-white hover:bg-brand-deep duration-300 cursor-pointer"
+              className={`h-11 w-full rounded-xl  text-white hover:bg-brand-deep duration-300 cursor-pointer
+                ${isPending ? "bg-gray-300 hover:bg-gray-300 cursor-not-allowed" : " bg-brand"}
+                `}
             >
-              Login
+              {isPending ? "Logging in..." : "Login"}
             </Button>
           </Field>
           <FieldSeparator className="text-muted-foreground">
