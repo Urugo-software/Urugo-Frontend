@@ -27,21 +27,25 @@ export function LoginForm({
         <LoginFormHeader />
         <FieldGroup className="gap-4 sm:gap-5">
           <Field>
-            <FieldLabel htmlFor="email">Email</FieldLabel>
+            <FieldLabel className="text-faint font-medium" htmlFor="email">
+              Email / Phone Number
+            </FieldLabel>
             <Input
               id="email"
               type="email"
               placeholder="m@example.com"
               required
-              className="h-11 border-ink hover:border-brand/30 hover:ring-1 hover:ring-brand/30 focus-within:outline-none focus-within:ring-2 focus-within:ring-brand"
+              className="h-11 border-gray-400 hover:border-brand/30 hover:ring-1 hover:ring-brand/30 focus-within:outline-none focus-within:ring-2 focus-within:ring-brand"
             />
           </Field>
           <Field>
             <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-3">
-              <FieldLabel htmlFor="password">Password</FieldLabel>
+              <FieldLabel className="text-faint font-medium" htmlFor="password">
+                Password
+              </FieldLabel>
               <Link
                 href="#"
-                className="text-sm font-medium text-muted-foreground underline-offset-4 transition hover:text-brand hover:underline sm:ml-auto"
+                className="text-xs tracking-tight font-medium text-brand-deep underline-offset-4 transition hover:text-brand hover:underline sm:ml-auto"
               >
                 Forgot your password?
               </Link>
@@ -51,7 +55,7 @@ export function LoginForm({
               type="password"
               required
               placeholder="••••••••"
-              className="h-11 border-ink hover:border-brand/30 hover:ring-1 hover:ring-brand/30 focus-within:outline-none focus-within:ring-2 focus-within:ring-brand"
+              className="h-11 border-gray-400 hover:border-brand/30 hover:ring-1 hover:ring-brand/30 focus-within:outline-none focus-within:ring-2 focus-within:ring-brand"
             />
           </Field>
           <Field>
@@ -69,7 +73,7 @@ export function LoginForm({
             <Button
               variant="outline"
               type="button"
-              className="h-11 w-full rounded-xl cursor-pointer border-ink"
+              className="h-11 w-full rounded-xl cursor-pointer border-gray-400 text-gray-600"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
