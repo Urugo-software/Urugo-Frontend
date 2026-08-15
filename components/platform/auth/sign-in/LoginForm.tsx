@@ -10,11 +10,19 @@ import {
 import { Input } from "@/components/ui/input";
 import LoginFormHeader from "./LoginFormHeader";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { LoginProps } from "@/types";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginProps>();
+
   return (
     <form
       className={cn(
@@ -33,8 +41,11 @@ export function LoginForm({
             <Input
               id="email"
               type="email"
-              placeholder="m@example.com"
+              placeholder="Email / Phone Number"
               required
+              {...register("email_phone", {
+                required: "Email or Phone Number is required",
+              })}
               className="h-11 border-gray-400 hover:border-brand/30 hover:ring-1 hover:ring-brand/30 focus-within:outline-none focus-within:ring-2 focus-within:ring-brand"
             />
           </Field>
@@ -55,6 +66,9 @@ export function LoginForm({
               type="password"
               required
               placeholder="••••••••"
+              {...register("password", {
+                required: "Password is required",
+              })}
               className="h-11 border-gray-400 hover:border-brand/30 hover:ring-1 hover:ring-brand/30 focus-within:outline-none focus-within:ring-2 focus-within:ring-brand"
             />
           </Field>

@@ -12,7 +12,7 @@ export interface HomeUiRolesDataProps {
 
 // Authentication service types
 export interface LoginProps {
-  email?: string;
+  email_phone?: string;
   username?: string;
   password: string;
 }
