@@ -3,8 +3,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { QueryProvider } from "@/components/provider/QueryClient";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: "Urugo",
@@ -19,9 +20,18 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("h-full", "antialiased", ibm.variable, inter.className, "font-sans", geist.variable)}
+      className={cn(
+        "h-full",
+        "antialiased",
+        ibm.variable,
+        inter.className,
+        "font-sans",
+        geist.variable,
+      )}
     >
-      <body className="min-h-full flex flex-col ">{children}</body>
+      <body className="min-h-full flex flex-col ">
+        <QueryProvider>{children}</QueryProvider>
+      </body>
     </html>
   );
 }
