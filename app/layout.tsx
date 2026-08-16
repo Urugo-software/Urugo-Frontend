@@ -4,6 +4,7 @@ import "./globals.css";
 import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { QueryProvider } from "@/components/provider/QueryClient";
+import { Toaster } from "react-hot-toast";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -30,6 +31,7 @@ export default function RootLayout({
       )}
     >
       <body className="min-h-full flex flex-col ">
+        <Toaster position="top-center" />
         <QueryProvider>{children}</QueryProvider>
       </body>
     </html>

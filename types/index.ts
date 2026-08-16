@@ -9,3 +9,9 @@ export interface HomeUiRolesDataProps {
   features: string[];
   onboarding: string;
 }
+
+// Authentication service types
+export interface LoginProps {
+  identifier?: string;
+  password: string;
+}
