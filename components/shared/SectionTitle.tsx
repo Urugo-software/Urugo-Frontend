@@ -1,16 +1,34 @@
+import { cn } from "@/lib/utils";
+
 function SectionTitle({
   title,
   description,
+  className,
+  descriptionClassName,
 }: {
   title: string;
   description?: string;
+  className?: string;
+  descriptionClassName?: string;
 }) {
   return (
-    <div>
-      <h1 className="text-3xl tracking-tight font-extrabold text-ink">
+    <div className="max-w-[550px]">
+      <h1
+        className={
+          cn(
+            "text-2xl tracking-tight max-md:tracking-normal font-extrabold  ",
+          ) +
+          " " +
+          className
+        }
+      >
         {title}
       </h1>
-      {description && <p className="text-body text-[15px]">{description}</p>}
+      {description && (
+        <p className={cn("text-body  text-base" + " " + descriptionClassName)}>
+          {description}
+        </p>
+      )}
     </div>
   );
 }
