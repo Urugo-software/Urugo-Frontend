@@ -75,7 +75,7 @@ export const ListData = [
     id: 2,
     title: "Online payments",
     description:
-      "Tenants pay via MTN or Airtel Money — you receive it in your account.",
+      "Tenants pay via MTN or Airtel Money  you receive it in your account.",
   },
   {
     id: 3,
@@ -109,7 +109,7 @@ export const steps = [
   {
     number: "02",
     title: "Natural language search",
-    description: "Describe what you want — no filters required.",
+    description: "Describe what you want  no filters required.",
   },
   {
     number: "03",

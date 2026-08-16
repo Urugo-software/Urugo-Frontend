@@ -38,21 +38,21 @@ export const renterFeatures: Feature[] = [
     id: 3,
     title: "Digital lease, always on hand",
     description:
-      "Every term clearly written and downloadable — nothing verbal, nothing forgotten.",
+      "Every term clearly written and downloadable  nothing verbal, nothing forgotten.",
     Icon: FileText,
   },
   {
     id: 4,
     title: "Standard 5-day grace period",
     description:
-      "Clear, consistent late-fee rules — no arbitrary penalties or surprise evictions.",
+      "Clear, consistent late-fee rules  no arbitrary penalties or surprise evictions.",
     Icon: CalendarClock,
   },
   {
     id: 5,
     title: "Proof of every payment",
     description:
-      'The platform holds your payment history — no more "I paid" disputes with a landlord.',
+      'The platform holds your payment history  no more "I paid" disputes with a landlord.',
     Icon: Check,
   },
   {
@@ -76,21 +76,21 @@ export const landlordFeatures: Feature[] = [
     id: 2,
     title: "Mobile money payments",
     description:
-      "Tenants pay via MTN or Airtel Money and upload proof — you approve from anywhere.",
+      "Tenants pay via MTN or Airtel Money and upload proof  you approve from anywhere.",
     Icon: Wallet,
   },
   {
     id: 3,
     title: "Blacklist check",
     description:
-      "Search a tenant's payment history before you sign a lease — avoid repeat bad renters.",
+      "Search a tenant's payment history before you sign a lease  avoid repeat bad renters.",
     Icon: Shield,
   },
   {
     id: 4,
     title: "Automated reminders",
     description:
-      "SMS and email reminders sent automatically before rent is due — no manual chasing.",
+      "SMS and email reminders sent automatically before rent is due  no manual chasing.",
 
     Icon: Bell,
   },
@@ -98,7 +98,7 @@ export const landlordFeatures: Feature[] = [
     id: 5,
     title: "Digital lease agreements",
     description:
-      "Sign online, stored securely in the cloud — legal proof if disputes ever arise.",
+      "Sign online, stored securely in the cloud  legal proof if disputes ever arise.",
     Icon: FileText,
   },
   {

@@ -1,6 +1,11 @@
 import { ibm, inter } from "@/lib/fonts";
 import type { Metadata } from "next";
 import "./globals.css";
+import { Geist } from "next/font/google";
+import { cn } from "@/lib/utils";
+import { QueryProvider } from "@/components/provider/QueryClient";
+
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: "Urugo",
@@ -15,9 +20,18 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${ibm.variable} ${inter.className} h-full antialiased`}
+      className={cn(
+        "h-full",
+        "antialiased",
+        ibm.variable,
+        inter.className,
+        "font-sans",
+        geist.variable,
+      )}
     >
-      <body className="min-h-full flex flex-col ">{children}</body>
+      <body className="min-h-full flex flex-col ">
+        <QueryProvider>{children}</QueryProvider>
+      </body>
     </html>
   );
 }

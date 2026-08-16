@@ -17,7 +17,7 @@ function page() {
         <HeaderSection
           subTitle="FEATURES"
           Title="Everything a verified rental registry needs."
-          classNameTitle="text-4xl md:text-[44px]! "
+          classNameTitle="text-4xl text-brand md:text-[44px]! "
         >
           <p className="text-body text-[17px] mt-6 max-w-xl mx-auto">
             Built for landlords who are tired of chasing cash, renters who

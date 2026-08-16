@@ -23,7 +23,7 @@ function heroSection() {
           </h1>
           <p className="max-w-2xl px-2 text-white/80 text-md md:text-lg font-medium mx-auto mb-6">
             {` Urugo helps landlords collect rent online, screen tenants instantly,
-            and manage every property from one dashboard — while guests chat
+            and manage every property from one dashboard  while guests chat
             with an AI assistant to find a verified home in minutes.`}
           </p>
           <div className="flex max-md:flex-col max-md:gap-4 gap-2 md:gap-4 items-center">
