@@ -8,31 +8,25 @@ import {
   landlordFeatures,
   renterFeatures,
 } from "@/data/features-data";
-import { Fragment } from "react";
 
 function page() {
   return (
     <section className="min-h-screen w-full bg-white">
-      <SectionContainer className="max-w-7xl mx-auto py-10 lg:py-25">
+      <SectionContainer className="max-w-7xl mx-auto py-12 lg:py-20">
         <HeaderSection
           subTitle="FEATURES"
           Title="Everything a verified rental registry needs."
-          classNameTitle="text-4xl text-brand md:text-[44px]! "
+          classNameTitle="text-3xl text-ink sm:text-4xl lg:text-5xl font-extrabold tracking-tight"
         >
-          <p className="text-body text-[17px] mt-6 max-w-xl mx-auto">
+          <p className="text-body text-base md:text-lg mt-4 max-w-2xl mx-auto leading-relaxed text-gray-600">
             Built for landlords who are tired of chasing cash, renters who
             deserve fairness, and guests who just want a home without the
             hassle.
           </p>
         </HeaderSection>
-        <div className="flex flex-wrap gap-3 justify-center  0">
+        <div className="flex flex-wrap gap-2.5 justify-center items-center mt-6">
           {featureService.map((item) => (
-            <Fragment key={item.id}>
-              <Badge
-                className="p-3 border-line text-gray-500 font-semibold  tracking-wide text-sm"
-                title={item.title}
-              />
-            </Fragment>
+            <Badge key={item.id} title={item.title} />
           ))}
         </div>
       </SectionContainer>
@@ -64,7 +58,7 @@ function page() {
             subHeader="For Renters"
             header="Pay easily, Build a record you can trust."
             seeMore="See the dashboards"
-            href="/dashbord"
+            href="/dashboard"
           />
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {renterFeatures.map((item) => (

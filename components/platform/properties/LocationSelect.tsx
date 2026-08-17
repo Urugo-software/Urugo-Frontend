@@ -17,14 +17,14 @@ function LocationSelect() {
   };
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="group flex w-full items-center justify-between rounded-lg border border-line bg-white px-3 py-2.5 text-[13.5px] text-body hover:bg-surface">
+      <DropdownMenuTrigger className="group flex w-full items-center justify-between border border-line bg-white px-3 py-2.5 text-[13.5px] text-body hover:bg-surface">
         <span>{selectedLocation || "All districts"}</span>
         <ChevronDown className="h-4 w-4 transition-transform duration-300 group-data-popup-open:rotate-180 group-data-open:rotate-180" />
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
-        align="end"
-        className="w-(--radix-dropdown-menu-trigger-width) bg-white"
+        align="start"
+        className="w-(--anchor-width) bg-white"
       >
         {propertyLocations.map((location) => (
           <DropdownMenuItem
