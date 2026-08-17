@@ -10,10 +10,10 @@ interface RoleTabSelectorProps {
   onRoleChange: (role: RoleType) => void;
 }
 
-const ROLES: { id: RoleType; label: string }[] = [
-  { id: "home_seeker", label: "For Home Seekers" },
-  { id: "landlord", label: "For Landlords" },
-  { id: "renter", label: "For Renters" },
+const ROLES: { id: RoleType; label: string; icon: React.ElementType }[] = [
+  { id: "home_seeker", label: "For Home Seekers", icon: Search },
+  { id: "landlord", label: "For Landlords", icon: Building2 },
+  { id: "renter", label: "For Renters", icon: KeyRound },
 ];
 
 export default function RoleTabSelector({
@@ -21,8 +21,9 @@ export default function RoleTabSelector({
   onRoleChange,
 }: RoleTabSelectorProps) {
   return (
-    <div className="flex justify-center  items-center gap-2 sm:gap-3 flex-wrap mb-12 px-4">
+    <div className="flex justify-center items-center gap-2 sm:gap-3 flex-wrap mb-12 px-4">
       {ROLES.map((role) => {
+        const Icon = role.icon;
         const isActive = activeRole === role.id;
 
         return (
@@ -52,6 +53,11 @@ export default function RoleTabSelector({
                 isActive ? "text-white font-bold" : "text-ink hover:text-brand"
               }`}
             >
+              <Icon
+                className={`w-4 h-4 transition-transform duration-200 ${
+                  isActive ? "scale-110 text-white" : "text-body"
+                }`}
+              />
               <span>{role.label}</span>
             </span>
           </button>

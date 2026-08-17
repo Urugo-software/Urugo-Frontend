@@ -17,6 +17,9 @@ function HowItWorksTabs() {
 
       {/* Steps Flow Grid */}
       <StepFlowGrid steps={currentData.steps} roleId={activeRole} />
+
+      {/* Role-Specific CTA Banner */}
+      <RoleBannerCTA banner={currentData.banner} roleId={activeRole} />
     </div>
   );
 }
