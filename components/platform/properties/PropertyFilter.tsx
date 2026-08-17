@@ -1,4 +1,7 @@
+"use client";
+
 import type { ReactNode } from "react";
+import { motion } from "framer-motion";
 
 import LocationSelect from "./LocationSelect";
 import PriceRangeFilter from "./PriceRangeFilter";
@@ -16,7 +19,7 @@ function FilterSection({ title, children, htmlFor }: FilterSectionProps) {
     <div className="mb-5">
       <label
         htmlFor={htmlFor}
-        className="mb-2 block text-[13px] tracking-wide font-bold"
+        className="mb-2 block text-[13px] md:text-sm text-ink tracking-wide font-bold"
       >
         {title}
       </label>
@@ -27,8 +30,13 @@ function FilterSection({ title, children, htmlFor }: FilterSectionProps) {
 
 function PropertyFilter() {
   return (
-    <div>
-      <h2 className="mb-5 text-[18px] tracking-wide font-bold text-ink">
+    <motion.div
+      initial={{ opacity: 0, x: 15 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.4, delay: 0.15 }}
+      className="sticky top-24"
+    >
+      <h2 className="uppercase mb-5 text-[18px] tracking-wide font-bold text-ink">
         Filters
       </h2>
 
@@ -55,7 +63,7 @@ function PropertyFilter() {
       </FilterSection>
 
       <FilterActions />
-    </div>
+    </motion.div>
   );
 }
 
