@@ -16,11 +16,11 @@ function PriceRangeFilter() {
   return (
     <div className="flex gap-2">
       <DropdownMenu>
-        <DropdownMenuTrigger className="group flex flex-1 items-center justify-between rounded-lg border border-line px-3 py-2.5 text-[13.5px] text-body">
+        <DropdownMenuTrigger className="group flex flex-1 items-center justify-between border border-line px-3 py-2.5 text-[13.5px] text-body">
           <span>{minPrice}</span>
           <ChevronDown className="h-4 w-4 transition-transform duration-300 group-data-popup-open:rotate-180 group-data-open:rotate-180" />
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-full bg-white">
+        <DropdownMenuContent align="start" className="w-(--anchor-width) bg-white">
           <DropdownMenuItem onClick={() => setMinPrice("Min")}>
             Min
           </DropdownMenuItem>
@@ -37,13 +37,13 @@ function PriceRangeFilter() {
       </DropdownMenu>
 
       <DropdownMenu>
-        <DropdownMenuTrigger className="group flex flex-1 items-center justify-between rounded-lg border border-line px-3 py-2.5 text-[13.5px] text-body">
+        <DropdownMenuTrigger className="group flex flex-1 items-center justify-between border border-line px-3 py-2.5 text-[13.5px] text-body">
           <span>{maxPrice}</span>
           <ChevronDown className="h-4 w-4 transition-transform duration-300 group-data-popup-open:rotate-180 group-data-open:rotate-180" />
         </DropdownMenuTrigger>
         <DropdownMenuContent
           align="start"
-          className="w-(--radix-dropdown-menu-trigger-width) bg-white"
+          className="w-(--anchor-width) bg-white"
         >
           <DropdownMenuItem onClick={() => setMaxPrice("150,000")}>
             150,000

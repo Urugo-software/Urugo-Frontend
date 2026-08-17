@@ -1,11 +1,11 @@
 import { cn } from "@/lib/utils";
 
 function Badge({ title, className }: { title: string; className?: string }) {
-  const defaultClassName = "border-line bg-surface text-sm text-gray-400  ";
   return (
     <div
       className={cn(
-        (className ?? defaultClassName) + " " + "rounded-full border",
+        "inline-flex items-center px-4 py-2 rounded-full border border-line bg-surface/60 text-xs font-semibold text-gray-600 transition-colors cursor-default shadow-xs",
+        className,
       )}
     >
       {title}

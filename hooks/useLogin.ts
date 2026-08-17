@@ -10,10 +10,10 @@ export function useLogin() {
   const { isPending, mutate, isError, error } = useMutation({
     mutationFn: loginUserService,
     onSuccess: () => {
-      (queryClient.invalidateQueries({
+      queryClient.invalidateQueries({
         queryKey: ["me"],
-      }),
-        toast.success("Login successful!"));
+      });
+      toast.success("Login successful!");
       router.replace("/guest");
     },
     onError: (error) => {
