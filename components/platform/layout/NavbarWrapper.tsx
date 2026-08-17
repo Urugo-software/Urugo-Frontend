@@ -10,6 +10,7 @@ function NavbarWrapper() {
   return (
     <>
       <Navbar
+      
         mobileMenuOpen={mobileMenuOpen}
         setMobileMenuOpen={setMobileMenuOpen}
       />
