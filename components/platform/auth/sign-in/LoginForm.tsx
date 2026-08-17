@@ -14,7 +14,7 @@ import LoginFormHeader from "./LoginFormHeader";
 import Link from "next/link";
 import { LoginProps } from "@/types";
 import { useForm } from "react-hook-form";
-import { useLogin } from "@/hooks/useLogin";
+import { useLogin } from "@/hooks/mutations/useLogin";
 
 export function LoginForm({
   className,
