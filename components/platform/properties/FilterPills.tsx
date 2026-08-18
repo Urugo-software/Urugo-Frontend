@@ -3,11 +3,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 
-type FilterPillsProps = {
-  options: string[];
-  defaultSelected?: string;
-  onSelect?: (option: string) => void;
-};
+import { FilterPillsProps } from "@/types";
 
 function FilterPills({ options, defaultSelected, onSelect }: FilterPillsProps) {
   const [selected, setSelected] = useState(defaultSelected || options[0]);
