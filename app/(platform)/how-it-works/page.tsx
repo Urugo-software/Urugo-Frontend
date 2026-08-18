@@ -1,4 +1,3 @@
-import CtaBand from "@/components/platform/home/CtaBand";
 import HowItWorksHeader from "@/components/platform/how-it-works/HowItWorksHeader";
 import HowItWorksTabs from "@/components/platform/how-it-works/HowItWorksTabs";
 
@@ -16,9 +15,6 @@ function page() {
 
       {/* Interactive Tabs, Step Flow, and Role Banner */}
       <HowItWorksTabs />
-
-      {/* Bottom CTA Band */}
-      <CtaBand />
     </main>
   );
 }
