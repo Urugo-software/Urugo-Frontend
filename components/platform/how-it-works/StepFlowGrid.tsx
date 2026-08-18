@@ -1,8 +1,8 @@
 "use client";
 
-import { Step } from "@/data/how-it-works-data";
 import { AnimatePresence, motion } from "framer-motion";
 import StepCard from "./StepCard";
+import { Step } from "@/types";
 
 interface StepFlowGridProps {
   steps: Step[];
