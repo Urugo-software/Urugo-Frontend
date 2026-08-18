@@ -22,7 +22,7 @@ function Navbar({
       <div className="hidden md:flex gap-4 md:gap-6 items-center font-medium ">
         {navItems.map((item) => (
           <Fragment key={item.id}>
-            <NavItems  href={item.href} name={item.title} />
+            <NavItems href={item.href} name={item.title} />
           </Fragment>
         ))}
       </div>
