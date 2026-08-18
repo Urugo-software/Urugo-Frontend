@@ -1,20 +1,4 @@
-export interface Step {
-  stepNumber: number;
-  title: string;
-  description: string;
-}
-
-export interface RoleFlow {
-  roleId: "home_seeker" | "landlord" | "renter";
-  roleName: string;
-  steps: Step[];
-  banner: {
-    title: string;
-    description: string;
-    ctaText: string;
-    ctaHref: string;
-  };
-}
+import { RoleFlow} from "@/types";
 
 export const howItWorksData: Record<
   "home_seeker" | "landlord" | "renter",

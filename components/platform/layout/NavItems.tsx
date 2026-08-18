@@ -3,12 +3,9 @@ import { usePathname } from "next/navigation";
 import { isActivePath } from "@/lib/utils";
 import Link from "next/link";
 
-interface NavItemsProps {
-  href: string;
-  name: string;
-}
+import { NavItemProps } from "@/types";
 
-function NavItems({ href, name }: NavItemsProps) {
+function NavItems({ href, name }: NavItemProps) {
   const pathname = usePathname();
   const isActive = isActivePath(pathname, href);
   console.log("isActive", isActive, pathname, href);

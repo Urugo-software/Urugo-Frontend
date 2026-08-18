@@ -60,22 +60,6 @@ function LeftSide() {
           </Link>
         </motion.div>
       </motion.div>
-
-      {/* Property already taken card */}
-      <motion.div
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35, delay: 0.3 }}
-        whileHover={{ y: -2 }}
-        className="bg-surface border border-dashed border-line rounded-2xl p-5 transition-colors hover:border-brand/40"
-      >
-        <h5 className="text-[13px] font-bold mb-1.5">
-          Property already taken?
-        </h5>
-        <p className="text-xs text-body">
-          {`Express interest and we'll notify you the moment it's available again.`}
-        </p>
-      </motion.div>
     </motion.div>
   );
 }

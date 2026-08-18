@@ -25,7 +25,7 @@ function PropertyCard({
 
   const currency = "Rwf";
   return (
-    <div className="flex-none w-full md:max-w-[400px] h-[420px] flex flex-col overflow-hidden  border cursor-pointer border-brand/20 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-brand hover:shadow-[0_18px_40px_-18px_rgba(14,17,22,.22)]">
+    <div className="flex-none rounded-sm w-full md:max-w-[400px] h-[420px] flex flex-col overflow-hidden  border cursor-pointer border-brand/20 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-brand hover:shadow-[0_18px_40px_-18px_rgba(14,17,22,.22)]">
       {/* Image */}
       <div className="relative h-full overflow-hidden">
         {!isImageLoaded && <OnLoadSkeleton />}
@@ -41,8 +41,8 @@ function PropertyCard({
           }`}
         />
 
-        <span className="absolute left-4 top-4 flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-[11px] font-semibold text-success shadow-sm">
-          <span className="h-2 w-2 rounded-full bg-success" />
+        <span className="absolute left-4 top-4 flex items-center gap-2 rounded-full bg-white px-3 py-1 text-[11px] font-semibold text-brand shadow-sm">
+          <span className="h-2 w-2 rounded-full bg-brand" />
           Available
         </span>
 

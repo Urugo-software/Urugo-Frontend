@@ -10,7 +10,7 @@
   --font-ibm: var(--font-ibm);
 
   /* colors  */
-  --color-brand: #1d4ed8;
+  --color-brand: rgb(29, 102, 255);
   --color-brand-deep: #1e40af;
   --color-brand-tint: #eff6ff;
 

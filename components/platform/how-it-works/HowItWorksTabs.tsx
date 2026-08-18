@@ -2,9 +2,9 @@
 
 import { howItWorksData } from "@/data/how-it-works-data";
 import { useState } from "react";
-
-import RoleTabSelector, { RoleType } from "./RoleTabSelector";
+import RoleTabSelector from "./RoleTabSelector";
 import StepFlowGrid from "./StepFlowGrid";
+import { RoleType } from "@/types";
 
 function HowItWorksTabs() {
   const [activeRole, setActiveRole] = useState<RoleType>("home_seeker");

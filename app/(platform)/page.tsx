@@ -20,6 +20,8 @@ function page() {
       {/* fearutured propeties */}
       <SectionContainer className="max-w-7xl mx-auto">
         <PropertyWrapper />
+        {/* cta band */}
+        <CtaBand />
       </SectionContainer>
       <hr className="border-line my-12 lg:my-20" />
       <SectionContainer className="max-w-7xl mx-auto">
@@ -61,8 +63,6 @@ function page() {
         />
         <RoleCardWrapper />
       </SectionContainer>
-      {/* cta band */}
-      <CtaBand />
     </main>
   );
 }
