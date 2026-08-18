@@ -3,8 +3,11 @@ import Link from "next/link";
 
 function CtaBand() {
   return (
-    <div className="px-6 pb-24">
-      <div className="max-w-[1200px] mx-auto bg-brand rounded-3xl px-10 py-16 text-center text-white">
+    <div className="px-6 pt-8">
+      <div className="relative max-w-7xl mx-auto bg-brand rounded-3xl px-10 py-16 text-center text-white">
+        {/* light balloon */}
+        <div className="absolute -top-25 -right-20 bg-white/10 w-[420px] h-[420px] rounded-full" />
+        <div className="absolute -bottom-45 -left-20 bg-white/10 w-[420px] h-[420px] rounded-full" />
         <h2 className="text-3xl font-extrabold mb-3.5">
           Ready to modernize your rental business?
         </h2>
