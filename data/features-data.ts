@@ -1,8 +1,8 @@
+import { Feature } from "@/types";
 import {
   Bell,
   FileText,
   LayoutGrid,
-  LucideIcon,
   Shield,
   Wallet,
   Smartphone,
@@ -11,13 +11,6 @@ import {
   Check,
   Clock,
 } from "lucide-react";
-
-interface Feature {
-  id: number;
-  title: string;
-  description: string;
-  Icon: LucideIcon;
-}
 
 export const renterFeatures: Feature[] = [
   {
