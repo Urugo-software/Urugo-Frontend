@@ -5,12 +5,14 @@ import NavbarWrapper from "@/components/platform/layout/NavbarWrapper";
 
 function layout({ children }: { children: React.ReactNode }) {
   return (
-    <main>
+    <main className="relative">
       <SectionContainer className=" sticky top-3 z-30 max-w-7xl mx-auto">
         <NavbarWrapper />
       </SectionContainer>
       {children}
-      <AIWidget />
+      <SectionContainer className="sticky bottom-3 z-30 max-w-7xl mx-auto">
+        <AIWidget />
+      </SectionContainer>
       <FooterSection />
     </main>
   );
