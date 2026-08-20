@@ -14,6 +14,8 @@ interface AssistantCanvasProps {
 export function AssistantCanvas({ animState }: AssistantCanvasProps) {
   return (
     <Canvas
+      className="size-full max-w-full"
+      style={{ height: "100%", maxWidth: "100%", width: "100%" }}
       camera={{
         position: [0, 0, 3],
         fov: 35,
@@ -25,7 +27,7 @@ export function AssistantCanvas({ animState }: AssistantCanvasProps) {
 
       <directionalLight position={[2, 3, 4]} intensity={2} castShadow />
 
-      <pointLight position={[-2, 1, 2]} intensity={1} color="#2F9E6E" />
+      <pointLight position={[-2, 1, 2]} intensity={1} color="#1D66FF" />
 
       <Float speed={1.2} rotationIntensity={0.15} floatIntensity={0.15}>
         <RobotAssistant animState={animState} scale={1} />
