@@ -9,31 +9,28 @@ interface AssistantEyesProps {
   animState: AssistantAnimState;
 }
 
-const ACCENT = "#2F9E6E";
+const ACCENT = "#1D66FF";
 
 export function AssistantEyes({ animState }: AssistantEyesProps) {
   const eyeRefs = useRef<(THREE.Mesh | null)[]>([]);
 
   const blinkTimer = useRef(0);
-  const nextBlink = useRef(3 + Math.random() * 4);
+  const nextBlink = useRef(4);
 
   useFrame((_, delta) => {
     blinkTimer.current += delta;
-
     if (blinkTimer.current > nextBlink.current) {
       blinkTimer.current = 0;
       nextBlink.current = 2.5 + Math.random() * 5;
     }
 
     const blinkProgress = Math.min(blinkTimer.current / 0.12, 1);
-
     let blinkScale = 1;
-
     if (blinkTimer.current < 0.12) {
       blinkScale = 1 - Math.sin(blinkProgress * Math.PI) * 0.9;
     }
 
-    eyeRefs.current.forEach((eye, i) => {
+    eyeRefs.current.forEach((eye) => {
       if (!eye) return;
 
       let scaleY = blinkScale;
