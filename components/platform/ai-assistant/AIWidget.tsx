@@ -16,7 +16,6 @@ export function AIWidget() {
         {isOpen && (
           <AssistantPanel
             onClose={() => setIsOpen(false)}
-            visual={<AssistantCanvas animState="talking" />}
           />
         )}
       </AnimatePresence>
