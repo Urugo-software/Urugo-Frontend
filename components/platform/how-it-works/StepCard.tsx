@@ -1,6 +1,6 @@
 "use client";
 
-import { Step } from "@/data/how-it-works-data";
+import { Step } from "@/types";
 import { motion } from "framer-motion";
 
 interface StepCardProps {

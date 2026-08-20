@@ -1,6 +1,6 @@
 "use client";
 
-import { RoleFlow } from "@/data/how-it-works-data";
+import { RoleFlow } from "@/types";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
