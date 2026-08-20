@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, MapPin, Star, ShieldCheck } from "lucide-react";
+import { ArrowUpRight, MapPin, ShieldCheck } from "lucide-react";
 
 export interface PropertyMatchItem {
   id?: string;

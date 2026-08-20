@@ -1,16 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { Bell, Bot, Search } from "lucide-react";
+import { Bell } from "lucide-react";
 
 interface DashboardHeaderProps {
   title?: string;
-  onOpenAIWidget?: () => void;
 }
 
 export function DashboardHeader({
   title = "Dashboard",
-  onOpenAIWidget,
 }: DashboardHeaderProps) {
   return (
     <header className="sticky top-0 z-20 flex h-16 shrink-0 items-center justify-between border-b border-line bg-white/90 px-6 sm:px-8 backdrop-blur-md">

@@ -6,7 +6,6 @@ import {
   Bell,
   User,
   Settings,
-  HelpCircle,
   Clock,
   Building2,
   FileText,

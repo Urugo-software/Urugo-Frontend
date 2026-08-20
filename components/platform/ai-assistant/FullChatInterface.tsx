@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Send,
   Sparkles,
-  RefreshCw,
   Copy,
   Check,
   ThumbsUp,
@@ -17,12 +16,7 @@ import {
   UserCheck,
   ChevronRight,
   ShieldCheck,
-  ArrowUpRight,
   Bot,
-  Maximize2,
-  Minimize2,
-  SlidersHorizontal,
-  Info,
   Zap,
 } from "lucide-react";
 import { PropertyMatches, PropertyMatchItem } from "./PropertyMatches";
@@ -225,10 +219,10 @@ Here are a few verified listings currently active on the Urugo registry:`;
       }
 
       const assistantMsg: MessageItem = {
-        id: `msg-${Date.now()}`,
+        id: `msg-${crypto.randomUUID()}`,
         role: "assistant",
         content: responseText,
-        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        timestamp: "Just now",
         propertyMatches: matches,
         suggestedActions: actions,
         badge: badgeTag,
@@ -247,10 +241,10 @@ Here are a few verified listings currently active on the Urugo registry:`;
     if (!messageText.trim()) return;
 
     const userMsg: MessageItem = {
-      id: `user-${Date.now()}`,
+      id: `user-${crypto.randomUUID()}`,
       role: "user",
       content: messageText.trim(),
-      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      timestamp: "Just now",
     };
 
     setMessages((prev) => [...prev, userMsg]);

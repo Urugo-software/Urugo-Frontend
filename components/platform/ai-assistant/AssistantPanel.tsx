@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Send, Bot, Sparkles, ChevronRight, Copy, Check, ThumbsUp, ThumbsDown, ShieldCheck, MapPin, Calculator } from "lucide-react";
+import { motion } from "framer-motion";
+import { Send, Bot, Sparkles, ChevronRight, Copy, Check } from "lucide-react";
 
 import { AssistantCanvas } from "./AssistantCanvas";
 import { AssistantHeader } from "./AssistantHeader";
@@ -74,12 +74,12 @@ const mockProperties: Record<string, PropertyMatchItem[]> = {
 };
 
 export function AssistantPanel({ onClose }: AssistantPanelProps) {
-  const [messages, setMessages] = useState<WidgetMessage[]>([
+  const [messages, setMessages] = useState<WidgetMessage[]>(() => [
     {
       id: "welcome-1",
       role: "assistant",
       content: "Hi! I'm Urugo AI. What kind of home or rental details are you looking for today in Kigali?",
-      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      timestamp: "Just now",
       suggestedActions: ["2BR in Remera under 200k", "Move-in cost breakdown", "Guest registration"],
       badge: "AI Rental Concierge",
     },
@@ -108,10 +108,10 @@ export function AssistantPanel({ onClose }: AssistantPanelProps) {
     if (!text.trim()) return;
 
     const userMsg: WidgetMessage = {
-      id: `u-${Date.now()}`,
+      id: `u-${crypto.randomUUID()}`,
       role: "user",
       content: text.trim(),
-      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      timestamp: "Just now",
     };
 
     setMessages((prev) => [...prev, userMsg]);
@@ -146,10 +146,10 @@ export function AssistantPanel({ onClose }: AssistantPanelProps) {
       }
 
       const aiMsg: WidgetMessage = {
-        id: `ai-${Date.now()}`,
+        id: `ai-${crypto.randomUUID()}`,
         role: "assistant",
         content: reply,
-        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        timestamp: "Just now",
         propertyMatches: matches,
         suggestedActions: actions,
         badge,
