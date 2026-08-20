@@ -4,13 +4,11 @@ import { AssistantAnimState } from "@/types/ai-assistant";
 import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
 import * as THREE from "three";
-
-
 interface AssistantMouthProps {
   animState: AssistantAnimState;
 }
 
-const ACCENT = "#2F9E6E";
+const ACCENT = "#1D66FF";
 
 export function AssistantMouth({ animState }: AssistantMouthProps) {
   const mouthRef = useRef<THREE.Mesh>(null);
@@ -19,11 +17,9 @@ export function AssistantMouth({ animState }: AssistantMouthProps) {
     if (!mouthRef.current) return;
 
     const t = state.clock.elapsedTime;
-
     let targetX = 0.16;
     let targetY = 0.045;
     let targetRotation = 0;
-
     switch (animState) {
       case "idle":
         targetY = 0.045 + Math.sin(t * 1.3) * 0.004;
