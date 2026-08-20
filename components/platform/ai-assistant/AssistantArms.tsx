@@ -5,12 +5,11 @@ import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
 import * as THREE from "three";
 
+import { AssistantArm } from "./AssistantArm";
 
 interface AssistantArmsProps {
   animState: AssistantAnimState;
 }
-
-const BODY_COLOR = "#FAFAF8";
 
 export function AssistantArms({ animState }: AssistantArmsProps) {
   const armRefs = useRef<(THREE.Group | null)[]>([]);
@@ -63,37 +62,13 @@ export function AssistantArms({ animState }: AssistantArmsProps) {
     });
   });
 
-  return (
-    <>
-      {[1, -1].map((sign, i) => (
-        <group
-          key={i}
-          ref={(el) => {
-            armRefs.current[i] = el;
-          }}
-          position={[sign * 0.46, 0.06, 0.03]}
-        >
-          <mesh position={[0, -0.12, 0]}>
-            <cylinderGeometry args={[0.06, 0.05, 0.24, 12]} />
-
-            <meshStandardMaterial
-              color={BODY_COLOR}
-              roughness={0.35}
-              metalness={0.05}
-            />
-          </mesh>
-
-          <mesh position={[0, -0.25, 0]}>
-            <sphereGeometry args={[0.075, 16, 16]} />
-
-            <meshStandardMaterial
-              color={BODY_COLOR}
-              roughness={0.35}
-              metalness={0.05}
-            />
-          </mesh>
-        </group>
-      ))}
-    </>
-  );
+  return [0, 1].map((index) => (
+    <AssistantArm
+      index={index}
+      key={index}
+      onRef={(element) => {
+        armRefs.current[index] = element;
+      }}
+    />
+  ));
 }
