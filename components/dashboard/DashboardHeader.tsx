@@ -8,7 +8,10 @@ interface DashboardHeaderProps {
   onOpenAIWidget?: () => void;
 }
 
-export function DashboardHeader({ title = "Dashboard", onOpenAIWidget }: DashboardHeaderProps) {
+export function DashboardHeader({
+  title = "Dashboard",
+  onOpenAIWidget,
+}: DashboardHeaderProps) {
   return (
     <header className="sticky top-0 z-20 flex h-16 shrink-0 items-center justify-between border-b border-line bg-white/90 px-6 sm:px-8 backdrop-blur-md">
       {/* Current Page Title */}
@@ -24,17 +27,6 @@ export function DashboardHeader({ title = "Dashboard", onOpenAIWidget }: Dashboa
         >
           Browse Properties
         </Link>
-
-        {onOpenAIWidget && (
-          <button
-            type="button"
-            onClick={onOpenAIWidget}
-            className="flex items-center gap-1.5 rounded-[10px] bg-brand-tint border border-brand/20 px-3.5 py-2 text-[13px] font-semibold text-brand transition hover:bg-brand hover:text-white"
-          >
-            <Bot className="size-4" />
-            <span className="hidden sm:inline">AI Assistant</span>
-          </button>
-        )}
 
         <button
           type="button"

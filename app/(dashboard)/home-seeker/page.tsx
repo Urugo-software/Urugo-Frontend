@@ -29,14 +29,15 @@ export default function HomeSeekerPage() {
         />
 
         {/* Scrollable Dashboard View */}
-        <HomeSeekerDashboard
-          onOpenAIWidget={() => setIsAIWidgetOpen(true)}
-        />
+        <HomeSeekerDashboard onOpenAIWidget={() => setIsAIWidgetOpen(true)} />
 
         {/* Floating AI Assistant Widget Overlay */}
         <AnimatePresence>
           {isAIWidgetOpen && (
-            <AssistantPanel onClose={() => setIsAIWidgetOpen(false)} />
+            <AssistantPanel
+              visual="idle"
+              onClose={() => setIsAIWidgetOpen(false)}
+            />
           )}
         </AnimatePresence>
 
