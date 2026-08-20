@@ -5,21 +5,17 @@ import { useRef } from "react";
 import * as THREE from "three";
 
 
-import { AssistantEyes } from "./AssistantEyes";
-import { AssistantMouth } from "./AssistantMouth";
 import { AssistantArms } from "./AssistantArms";
+import { AssistantBody } from "./AssistantBody";
+import { AssistantEyes } from "./AssistantEyes";
 import { AssistantGlow } from "./AssistantGlow";
+import { AssistantMouth } from "./AssistantMouth";
 import { AssistantAnimState } from "@/types/ai-assistant";
 
 interface RobotAssistantProps {
   animState: AssistantAnimState;
   scale?: number;
 }
-
-const BODY_COLOR = "#FAFAF8";
-const SHADE_COLOR = "#E7E5DE";
-const VISOR_COLOR = "#1E2321";
-const ACCENT = "#2F9E6E";
 
 export function RobotAssistant({ animState, scale = 1 }: RobotAssistantProps) {
   const groupRef = useRef<THREE.Group>(null);
@@ -67,58 +63,16 @@ export function RobotAssistant({ animState, scale = 1 }: RobotAssistantProps) {
 
   return (
     <group ref={groupRef} scale={scale}>
-      {/* Main body */}
-      <mesh castShadow>
-        <sphereGeometry args={[0.5, 32, 32]} />
-
-        <meshStandardMaterial
-          color={BODY_COLOR}
-          roughness={0.35}
-          metalness={0.05}
-        />
-      </mesh>
-
-      {/* Lower body */}
-      <mesh position={[0, -0.42, 0]} scale={[1, 0.55, 1]} castShadow>
-        <sphereGeometry args={[0.42, 32, 32]} />
-
-        <meshStandardMaterial
-          color={SHADE_COLOR}
-          roughness={0.4}
-          metalness={0.05}
-        />
-      </mesh>
-
-      {/* Head / face */}
+      <AssistantBody />
       <group ref={headRef}>
         <mesh position={[0, 0.08, 0.42]} scale={[0.32, 0.22, 0.12]}>
           <sphereGeometry args={[0.5, 24, 24]} />
-
-          <meshStandardMaterial
-            color={VISOR_COLOR}
-            roughness={0.3}
-            metalness={0.2}
-          />
+          <meshStandardMaterial color="#1E2321" roughness={0.3} metalness={0.2} />
         </mesh>
-
         <AssistantEyes animState={animState} />
-
         <AssistantMouth animState={animState} />
       </group>
-
       <AssistantArms animState={animState} />
-
-      {/* Chest accent */}
-      <mesh position={[0, -0.22, 0.4]} rotation={[Math.PI / 2.4, 0, 0]}>
-        <torusGeometry args={[0.12, 0.005, 8, 32]} />
-
-        <meshStandardMaterial
-          color={ACCENT}
-          emissive={ACCENT}
-          emissiveIntensity={0.4}
-        />
-      </mesh>
-
       <AssistantGlow animState={animState} />
     </group>
   );
