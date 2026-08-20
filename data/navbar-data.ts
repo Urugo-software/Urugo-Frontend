@@ -14,9 +14,4 @@ export const navItems = [
     title: "How it works",
     href: "/how-it-works",
   },
-  {
-    id: 4,
-    title: "AI Assistant",
-    href: "/ai-assistant",
-  },
 ];
