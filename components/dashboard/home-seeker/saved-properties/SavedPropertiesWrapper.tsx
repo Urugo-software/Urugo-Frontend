@@ -13,24 +13,14 @@ export function SavedPropertiesWrapper() {
     setItems((prev) => prev.filter((p) => p.id !== id));
   };
 
-  const sortedItems = [...items].sort((a, b) => {
-    if (sortBy === "Price — low to high") {
-      return (
-        parseInt(a.price.replace(/,/g, "")) -
-        parseInt(b.price.replace(/,/g, ""))
-      );
-    }
-    return 0;
-  });
-
   return (
     <>
       <SavedPropertiesHeader
-        totalCount={sortedItems.length}
+        totalCount={items.length}
         sortBy={sortBy}
         onSortChange={setSortBy}
       />
-      <SavedPropertiesGrid properties={sortedItems} onRemove={handleRemove} />
+      <SavedPropertiesGrid properties={items} onRemove={handleRemove} />
     </>
   );
 }

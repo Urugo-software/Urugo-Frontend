@@ -128,8 +128,7 @@ export const propertyLocations = [
 ];
 export const sortOptions = [
   { id: "1", name: "Recently saved " },
-  { id: "2", name: "Price — low to high " },
-  { id: "3", name: "Highest rated " },
+  { id: "2", name: "Low to high " },
 ];
 
 export const property_details: Property[] = [

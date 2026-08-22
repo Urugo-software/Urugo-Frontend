@@ -30,14 +30,15 @@ export function SavedPropertiesHeader({
           />
         </Link>
       </div>
-      <p className="text-[14px] text-body mb-6">
-        {totalCount} properties you&apos;ve bookmarked while browsing.
+      <p className="text-[15px] text-body mb-6">
+        View properties you&apos;ve bookmarked while browsing.
       </p>
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-4">
-        <span className="text-[13.5px] text-body">
+        <span className="text-[14.5px] text-body">
           <strong className="text-ink">{totalCount}</strong> saved properties
         </span>
         <Dropdown
+          className="text-ink! font-medium flex gap-2"
           menuList={sortOptions}
           defaultMenu={sortOptions[0].name}
           onSelectValue={onSortChange}
