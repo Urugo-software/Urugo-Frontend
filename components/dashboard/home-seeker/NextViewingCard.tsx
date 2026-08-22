@@ -6,9 +6,11 @@ import { nextViewingData } from "@/data/dashboard-data";
 
 export function NextViewingCard() {
   return (
-    <div className="flex flex-col rounded-2xl border border-line bg-white p-6 shadow-xs">
+    <div className="flex flex-col border border-line bg-white p-6 shadow-xs">
       <div className="mb-4 flex items-center justify-between">
-        <div className="text-[14.5px] font-bold text-ink">Next Viewing</div>
+        <div className="text-[15px] tracking-wide font-bold text-ink">
+          Next Viewing
+        </div>
         <div className="flex items-center gap-1.5">
           <button
             type="button"
