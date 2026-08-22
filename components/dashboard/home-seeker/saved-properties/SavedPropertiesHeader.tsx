@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import CustomButton from "@/components/shared/CustomButton";
+import Dropdown from "@/components/shared/Dropdown";
+import { sortOptions } from "@/data/properties";
 
 interface SavedPropertiesHeaderProps {
   totalCount: number;
@@ -35,15 +37,12 @@ export function SavedPropertiesHeader({
         <span className="text-[13.5px] text-body">
           <strong className="text-ink">{totalCount}</strong> saved properties
         </span>
-        <select
-          value={sortBy}
-          onChange={(e) => onSortChange(e.target.value)}
-          className="rounded-lg border border-line bg-white px-3 py-1.5 text-[13px] text-ink outline-none focus:border-brand"
-        >
-          <option value="recent">Sort: Recently saved</option>
-          <option value="price_low">Sort: Price — low to high</option>
-          <option value="rated">Sort: Highest rated</option>
-        </select>
+        <Dropdown
+          menuList={sortOptions}
+          defaultMenu={sortOptions[0].name}
+          onSelectValue={onSortChange}
+          selectedValue={sortBy}
+        />
       </div>
     </div>
   );
