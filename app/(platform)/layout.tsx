@@ -6,9 +6,11 @@ import NavbarWrapper from "@/components/platform/layout/NavbarWrapper";
 function layout({ children }: { children: React.ReactNode }) {
   return (
     <main className="relative">
-      <SectionContainer className=" sticky top-3 z-30 max-w-7xl mx-auto">
-        <NavbarWrapper />
-      </SectionContainer>
+      <div className="bg-white sticky top-0 z-30 w-full">
+        <SectionContainer className="pt-3 md:pb-1  max-w-7xl mx-auto">
+          <NavbarWrapper />
+        </SectionContainer>
+      </div>
       {children}
       <SectionContainer className="sticky bottom-3 z-30 max-w-7xl mx-auto">
         <AIWidget />
