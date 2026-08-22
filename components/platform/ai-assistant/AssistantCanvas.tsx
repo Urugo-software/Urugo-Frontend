@@ -1,11 +1,10 @@
 "use client";
 
 import { Canvas } from "@react-three/fiber";
-import { ContactShadows, Environment, Float } from "@react-three/drei";
+import { ContactShadows, Float } from "@react-three/drei";
 
 import { RobotAssistant } from "./RobotAssistant";
 import { AssistantAnimState } from "@/types/ai-assistant";
-
 
 interface AssistantCanvasProps {
   animState: AssistantAnimState;
@@ -39,8 +38,6 @@ export function AssistantCanvas({ animState }: AssistantCanvasProps) {
         scale={1.5}
         blur={2}
       />
-
-      <Environment preset="studio" />
     </Canvas>
   );
 }
