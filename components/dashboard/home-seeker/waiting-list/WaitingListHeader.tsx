@@ -14,7 +14,7 @@ export function WaitingListHeader() {
           <CustomButton
             variant="light"
             title="Browse Properties"
-            className="text-[13.5px] px-5 py-2.5 rounded-[10px]"
+            className="text-[13.5px] px-5 rounded-none py-2.5 "
           />
         </Link>
       </div>
