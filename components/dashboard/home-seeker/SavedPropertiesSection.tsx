@@ -9,6 +9,7 @@ export function SavedPropertiesSection() {
   return (
     <SectionCard
       title="Saved Properties"
+      className="tracking-wide"
       action={
         <Link
           href="/properties"
