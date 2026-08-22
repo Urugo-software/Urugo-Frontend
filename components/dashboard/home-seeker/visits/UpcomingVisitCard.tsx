@@ -2,19 +2,18 @@
 
 import Image from "next/image";
 import { VisitItem } from "@/data/visits-data";
+import Link from "next/link";
+import CustomButton from "@/components/shared/CustomButton";
 
 interface UpcomingVisitCardProps {
   visit: VisitItem;
   onCancel: (id: string) => void;
 }
 
-export function UpcomingVisitCard({
-  visit,
-  onCancel,
-}: UpcomingVisitCardProps) {
+export function UpcomingVisitCard({ visit, onCancel }: UpcomingVisitCardProps) {
   const isConfirmed = visit.status === "Confirmed";
   return (
-    <div className="rounded-2xl border border-line bg-white p-6 transition hover:shadow-xs">
+    <div className=" border border-line bg-white p-6 transition hover:shadow-xs">
       <div className="flex flex-col gap-5 sm:flex-row">
         <div className="relative h-[100px] w-full shrink-0 overflow-hidden rounded-xl bg-surface sm:w-[140px]">
           <Image
@@ -27,8 +26,13 @@ export function UpcomingVisitCard({
         <div className="flex-1">
           <div className="mb-2 flex flex-wrap items-start justify-between gap-3">
             <div>
-              <div className="text-[15.5px] font-bold text-ink">
-                {visit.title}
+              <div className="text-[17px] font-bold text-ink">
+                <Link
+                  className="hover:text-brand hover:underline duration-300"
+                  href={`/properties/${visit.id}`}
+                >
+                  {visit.title}
+                </Link>
               </div>
               <div className="text-[13px] text-body">{visit.location}</div>
             </div>
@@ -60,26 +64,24 @@ export function UpcomingVisitCard({
 
           <div className="mt-4 flex flex-wrap gap-2.5">
             {isConfirmed && (
-              <button
-                type="button"
-                className="rounded-lg border border-line px-4 py-2 text-[13px] font-semibold text-ink transition hover:bg-surface cursor-pointer"
-              >
-                Get directions
-              </button>
+              <CustomButton
+                title="Get directions"
+                variant="light"
+                className="rounded-none text-[14px] "
+              />
             )}
-            <button
-              type="button"
-              className="rounded-lg border border-line px-4 py-2 text-[13px] font-semibold text-ink transition hover:bg-surface cursor-pointer"
-            >
-              Reschedule
-            </button>
-            <button
-              type="button"
-              onClick={() => onCancel(visit.id)}
-              className="rounded-lg border border-line px-4 py-2 text-[13px] font-semibold text-danger transition hover:bg-red-50 cursor-pointer"
-            >
-              Cancel
-            </button>
+            <CustomButton
+              title="Reschedule"
+              variant="light"
+              className="rounded-none text-[14px] "
+            />
+            <div onClick={() => onCancel(visit.id)}>
+              <CustomButton
+                title="Cancel"
+                variant="cancel"
+                className="rounded-none text-[14px] "
+              />
+            </div>
           </div>
         </div>
       </div>
