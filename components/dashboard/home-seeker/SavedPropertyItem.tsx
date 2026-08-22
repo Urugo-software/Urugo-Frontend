@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { SavedPropertyItem as SavedPropertyItemData } from "@/data/dashboard-data";
+import CustomButton from "@/components/shared/CustomButton";
 
 const statusStyles: Record<
   SavedPropertyItemData["status"],
@@ -21,7 +22,7 @@ const statusStyles: Record<
 export function SavedPropertyItem({ item }: { item: SavedPropertyItemData }) {
   const status = statusStyles[item.status];
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-surface px-5 py-4">
+    <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl  backdrop-blur-3xl border border-line px-5 py-4">
       <div className="flex items-center gap-3.5 min-w-55">
         <div className="relative size-11 shrink-0 overflow-hidden rounded-lg bg-white">
           <Image
@@ -41,11 +42,12 @@ export function SavedPropertyItem({ item }: { item: SavedPropertyItemData }) {
       >
         {status.label}
       </span>
-      <Link
-        href="/properties"
-        className="rounded-lg border border-line bg-white px-4 py-2 text-[12.5px] font-semibold text-brand transition hover:bg-brand-tint"
-      >
-        View
+      <Link href="/properties">
+        <CustomButton
+          variant="light"
+          className="rounded-none text-[13px] "
+          title="View Details"
+        />
       </Link>
     </div>
   );
