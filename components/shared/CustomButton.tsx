@@ -6,9 +6,10 @@ function CustomButton({
   variant,
   className,
   children,
+  ...props
 }: {
   title?: string;
-  variant: "light" | "colored" | "transparentLight";
+  variant: "light" | "colored" | "transparentLight" | "cancel";
   className?: string;
   children?: React.ReactNode;
 }) {
@@ -30,10 +31,17 @@ function CustomButton({
       "secondary-span":
         "relative z-10 tracking-wide p-5 group-hover:text-white",
     },
+    cancel: {
+      "primary-span":
+        "transition-transform absolute inset-0 duration-300  translate-y-6 group-hover:translate-0 text-ink group-hover:bg-red-500  ",
+      "secondary-span":
+        "text-ink relative z-10 tracking-wide p-5 group-hover:text-white",
+    },
   };
 
   return (
     <Button
+      {...props}
       variant="outline"
       className={
         cn(
