@@ -21,13 +21,13 @@ export function SavedPropertyCard({
     : "/properties";
 
   return (
-    <div className="group overflow-hidden border border-line bg-white shadow-xs transition duration-300 hover:-translate-y-0.5 hover:shadow-md">
+    <div className=" overflow-hidden border border-line bg-white shadow-xs transition duration-300 hover:-translate-y-0.5 hover:shadow-md">
       <div className="relative h-[180px] w-full overflow-hidden bg-surface">
         <Image
           src={property.image}
           alt={property.title}
           fill
-          className="object-cover transition duration-500 group-hover:scale-105"
+          className="object-cover transition duration-500 "
         />
         <span
           className={`absolute top-3 left-3 rounded-md px-2.5 py-1 text-[11px] font-bold tracking-wide uppercase ${
@@ -62,9 +62,9 @@ export function SavedPropertyCard({
           <Link href={linkHref} className="flex-1">
             <CustomButton
               variant="light"
-              className="w-full rounded-none py-2 text-center text-[13.5px] font-bold"
+              className="w-full rounded-none  text-center text-[13.5px] font-bold"
             >
-              <span className="text-brand group-hover:text-white py-2 ">
+              <span className="-translate-x-3 text-brand group-hover:text-white z-20">
                 {property.isWaitingList ? "On waiting list" : "View Details"}
               </span>
             </CustomButton>
@@ -72,7 +72,7 @@ export function SavedPropertyCard({
           <button
             type="button"
             onClick={() => onRemove(property.id)}
-            className="border border-line px-4.5 py-2 text-[13.5px] font-semibold text-ink transition hover:bg-surface cursor-pointer"
+            className="border border-line px-4.5 h-10 text-[13.5px] font-semibold text-ink transition hover:bg-brand duration-300 ease-in-out hover:text-white cursor-pointer"
           >
             Remove
           </button>
