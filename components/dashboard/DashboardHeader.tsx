@@ -2,42 +2,32 @@
 
 import Link from "next/link";
 import { Bell, Sparkles } from "lucide-react";
+import CustomButton from "@/components/shared/CustomButton";
 
 interface DashboardHeaderProps {
   title?: string;
-  onOpenAIWidget?: () => void;
 }
 
-export function DashboardHeader({
-  title = "Dashboard",
-  onOpenAIWidget,
-}: DashboardHeaderProps) {
+export function DashboardHeader({ title = "Dashboard" }: DashboardHeaderProps) {
   return (
-    <header className="sticky top-0 z-20 flex h-16 shrink-0 items-center justify-between border-b border-line bg-white/90 px-6 sm:px-8 backdrop-blur-md">
+    <header className="sticky top-0 z-20 flex h-18 shrink-0 items-center justify-between border-b border-line  px-6 sm:px-8 backdrop-blur-md">
       {/* Current Page Title */}
       <div className="flex items-center gap-3">
-        <h1 className="text-xl font-extrabold text-ink sm:text-2xl">{title}</h1>
+        <h1 className="text-xl  font-bold text-ink sm:text-2xl">{title}</h1>
       </div>
 
       {/* Header Actions & Routing */}
       <div className="flex items-center gap-3">
-        <Link
-          href="/properties"
-          className="hidden rounded-[10px] border border-line px-4 py-2 text-[13.5px] font-semibold text-brand transition hover:bg-surface sm:inline-flex"
-        >
-          Browse Properties
-        </Link>
-
-        {onOpenAIWidget && (
-          <button
-            type="button"
-            onClick={onOpenAIWidget}
-            className="flex items-center gap-2 rounded-[10px] bg-brand/10 px-3.5 py-2 text-[13.5px] font-semibold text-brand transition hover:bg-brand/20 cursor-pointer"
+        <Link href="/">
+          <CustomButton
+            variant="light"
+            className="flex justify-center min-w-fit  rounded-none"
           >
-            <Sparkles className="size-4" />
-            <span className="hidden sm:inline">AI Assistant</span>
-          </button>
-        )}
+            <h1 className="translate-x-[-18%] group-hover:text-white  text-brand">
+              Back to homepage
+            </h1>
+          </CustomButton>
+        </Link>
 
         <button
           type="button"
