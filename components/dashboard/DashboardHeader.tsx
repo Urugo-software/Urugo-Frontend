@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Bell, Sparkles } from "lucide-react";
+import { Bell } from "lucide-react";
 import CustomButton from "@/components/shared/CustomButton";
 
 interface DashboardHeaderProps {
