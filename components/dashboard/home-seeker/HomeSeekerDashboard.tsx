@@ -1,5 +1,3 @@
-"use client";
-
 import { Heart, Calendar } from "lucide-react";
 import { MetricCard } from "./MetricCard";
 import { SearchPreferencesCard } from "./SearchPreferencesCard";
@@ -8,19 +6,13 @@ import { SavedPropertiesSection } from "./SavedPropertiesSection";
 import { WaitingListSection } from "./WaitingListSection";
 import { VerificationBanner } from "./VerificationBanner";
 
-interface HomeSeekerDashboardProps {
-  onOpenAIWidget?: () => void;
-}
-
-export function HomeSeekerDashboard({
-  onOpenAIWidget,
-}: HomeSeekerDashboardProps) {
+export function HomeSeekerDashboard() {
   return (
-    <div className="flex-1 overflow-y-auto p-6 sm:p-8 md:p-10">
+    <div className="min-h-0 flex-1 overflow-y-auto  p-6 sm:p-8 md:p-10">
       {/* Greeting Banner */}
       <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h2 className="mb-1.5 text-xl font-extrabold text-ink sm:text-2xl">
+          <h2 className="mb-1.5 text-xl font-bold text-ink sm:text-2xl">
             Good morning, Yves
           </h2>
           <p className="text-[14px] text-body">
@@ -47,13 +39,15 @@ export function HomeSeekerDashboard({
             iconColorClass="text-success"
           />
         </div>
-        <SearchPreferencesCard onOpenAIWidget={onOpenAIWidget} />
+        <SearchPreferencesCard />
         <NextViewingCard />
       </div>
 
-      <SavedPropertiesSection />
-      <WaitingListSection />
-      <VerificationBanner />
+      <div className="space-y-6 mb-18">
+        <SavedPropertiesSection />
+        <WaitingListSection />
+        <VerificationBanner />
+      </div>
     </div>
   );
 }
