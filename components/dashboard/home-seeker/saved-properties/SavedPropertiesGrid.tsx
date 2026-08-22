@@ -14,7 +14,7 @@ export function SavedPropertiesGrid({
 }: SavedPropertiesGridProps) {
   if (properties.length === 0) {
     return (
-      <div className="py-12 text-center border border-dashed border-line rounded-2xl">
+      <div className="py-12 text-center ">
         <p className="text-[14px] text-body">No saved properties left.</p>
       </div>
     );

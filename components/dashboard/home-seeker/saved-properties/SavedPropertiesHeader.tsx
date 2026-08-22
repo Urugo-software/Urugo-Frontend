@@ -24,7 +24,7 @@ export function SavedPropertiesHeader({
           <CustomButton
             variant="light"
             title="Browse more"
-            className="text-[13.5px] px-5 py-2.5 rounded-[10px]"
+            className="text-[13.5px] px-3 rounded-none"
           />
         </Link>
       </div>
