@@ -7,14 +7,14 @@ import { SavedPropertiesGrid } from "./SavedPropertiesGrid";
 
 export function SavedPropertiesWrapper() {
   const [items, setItems] = useState(fullSavedProperties);
-  const [sortBy, setSortBy] = useState("Sort: Recently saved");
+  const [sortBy, setSortBy] = useState("Recently saved");
 
   const handleRemove = (id: string) => {
     setItems((prev) => prev.filter((p) => p.id !== id));
   };
 
   const sortedItems = [...items].sort((a, b) => {
-    if (sortBy === "Sort: Price — low to high") {
+    if (sortBy === "Price — low to high") {
       return (
         parseInt(a.price.replace(/,/g, "")) -
         parseInt(b.price.replace(/,/g, ""))
