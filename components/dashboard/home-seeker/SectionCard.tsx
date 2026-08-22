@@ -18,9 +18,7 @@ export function SectionCard({
   className = "",
 }: SectionCardProps) {
   return (
-    <div
-      className={`rounded-2xl border border-line bg-white p-6 shadow-xs ${className}`}
-    >
+    <div className={`border border-line bg-white p-6 shadow-xs ${className}`}>
       <div className="mb-5 flex items-center justify-between gap-3">
         <div>
           <div className="text-[16px] font-extrabold text-ink">{title}</div>

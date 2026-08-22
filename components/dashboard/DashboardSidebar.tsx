@@ -3,24 +3,22 @@
 import { usePathname } from "next/navigation";
 import { Settings, HelpCircle } from "lucide-react";
 import { RoleType } from "@/types";
-import { roleNavItems } from "@/data/dashboard-data";
+import { NavItemConfig, roleNavItems } from "@/data/dashboard-data";
 import { SidebarItem } from "./SidebarItem";
 import Logo from "../platform/layout/Logo";
 
 interface DashboardSidebarProps {
   currentRole?: RoleType;
-  onOpenAIWidget?: () => void;
 }
 
 export function DashboardSidebar({
   currentRole = "home_seeker",
-  onOpenAIWidget,
 }: DashboardSidebarProps) {
   const pathname = usePathname();
   const navList = roleNavItems[currentRole] || roleNavItems.home_seeker;
 
   return (
-    <aside className="relative flex h-screen w-[272px] shrink-0 flex-col overflow-hidden border-r border-line bg-surface">
+    <aside className="relative flex h-screen w-[272px] shrink-0 flex-col overflow-hidden border-r border-line bg-white">
       {/* Brand Header */}
       <div className="flex items-center gap-2.5 px-6 pt-6 pb-2">
         <Logo />
@@ -28,7 +26,7 @@ export function DashboardSidebar({
 
       {/* Main Nav Items based on Role */}
       <nav className="mt-4 flex flex-col gap-1 px-4 overflow-y-auto">
-        {navList.map((item) => {
+        {navList.map((item: NavItemConfig) => {
           const isAI = item.label === "AI Assistant";
           return (
             <SidebarItem
@@ -38,7 +36,6 @@ export function DashboardSidebar({
               label={item.label}
               badge={item.badge}
               active={pathname === item.href}
-              onClick={isAI ? onOpenAIWidget : undefined}
             />
           );
         })}

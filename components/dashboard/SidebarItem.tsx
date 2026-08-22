@@ -1,30 +1,35 @@
-"use client";
-
 import Link from "next/link";
-import React from "react";
+import { LucideIcon } from "lucide-react";
 
 export interface SidebarItemProps {
   href: string;
-  icon: React.ElementType;
+  icon: LucideIcon;
   label: string;
   badge?: number | string;
   active?: boolean;
   onClick?: () => void;
 }
 
-export function SidebarItem({ href, icon: Icon, label, badge, active, onClick }: SidebarItemProps) {
+export function SidebarItem({
+  href,
+  icon: Icon,
+  label,
+  badge,
+  active,
+}: SidebarItemProps) {
   return (
     <Link
       href={href}
-      onClick={onClick}
-      className={`group flex items-center justify-between rounded-xl px-3.5 py-2.5 text-[14px] font-medium transition-all ${
+      className={`group flex  items-center justify-between  px-3.5 py-2.5 text-[14px] font-medium transition-all ${
         active
-          ? "bg-white font-semibold text-brand border border-line shadow-xs"
+          ? "bg-white font-semibold text-brand border-l-4 border-brand shadow-xs"
           : "text-body hover:bg-white hover:text-ink"
       }`}
     >
       <div className="flex items-center gap-3">
-        <Icon className={`size-4.5 transition-colors ${active ? "text-brand" : "text-body group-hover:text-ink"}`} />
+        <Icon
+          className={`size-4.5 transition-colors ${active ? "text-brand" : "text-body group-hover:text-ink"}`}
+        />
         <span>{label}</span>
       </div>
       {badge !== undefined && (

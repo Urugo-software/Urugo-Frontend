@@ -12,13 +12,14 @@ import {
   DollarSign,
   Wrench,
   Folder,
+  LucideIcon,
 } from "lucide-react";
 import { RoleType } from "@/types";
 
 export interface NavItemConfig {
   label: string;
   href: string;
-  icon: React.ElementType;
+  icon: LucideIcon;
   badge?: number;
 }
 

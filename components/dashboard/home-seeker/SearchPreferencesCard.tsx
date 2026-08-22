@@ -10,9 +10,9 @@ export function SearchPreferencesCard({
   onOpenAIWidget,
 }: SearchPreferencesCardProps) {
   return (
-    <div className="rounded-2xl border border-line bg-white p-6 shadow-xs">
+    <div className=" border border-line bg-white p-6 shadow-xs">
       <div className="mb-4 flex items-center justify-between">
-        <div className="text-[14.5px] font-bold text-ink">
+        <div className="text-[15px] tracking-wide font-bold text-ink">
           Your Search Preferences
         </div>
         <button

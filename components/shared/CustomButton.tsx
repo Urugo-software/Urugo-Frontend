@@ -7,7 +7,7 @@ function CustomButton({
   className,
   children,
 }: {
-  title: string;
+  title?: string;
   variant: "light" | "colored" | "transparentLight";
   className?: string;
   children?: React.ReactNode;
