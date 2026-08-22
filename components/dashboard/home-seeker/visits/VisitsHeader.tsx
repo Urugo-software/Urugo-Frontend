@@ -15,7 +15,7 @@ export function VisitsHeader() {
           className="text-[13.5px] px-5 py-2.5 rounded-[10px]"
         />
       </div>
-      <p className="text-[14px] text-body">
+      <p className="text-[15px] text-body">
         Property visits you&apos;ve scheduled through the AI Assistant.
       </p>
     </div>
