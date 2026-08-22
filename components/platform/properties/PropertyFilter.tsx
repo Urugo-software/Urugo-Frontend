@@ -4,8 +4,9 @@ import type { ReactNode } from "react";
 import { motion } from "framer-motion";
 import { SlidersHorizontal, X } from "lucide-react";
 import { PropertyFilterProps } from "@/types";
+import { propertyLocations } from "@/data/properties";
 
-import LocationSelect from "./LocationSelect";
+import Dropdown from "@/components/shared/Dropdown";
 import PriceRangeFilter from "./PriceRangeFilter";
 import FilterPills from "./FilterPills";
 import FilterActions from "./FilterActions";
@@ -74,7 +75,7 @@ function PropertyFilter({ isMobile, onClose }: PropertyFilterProps) {
         }
       >
         <FilterSection title="Location" htmlFor="location">
-          <LocationSelect />
+          <Dropdown menuList={propertyLocations} defaultMenu="All Districts" />
         </FilterSection>
 
         <FilterSection title="Price range (RWF/month)">
