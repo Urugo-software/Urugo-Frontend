@@ -16,65 +16,63 @@ export function SavedPropertyCard({
   onRemove,
 }: SavedPropertyCardProps) {
   const isAvailable = property.status === "Available";
+  const linkHref = property.isWaitingList
+    ? "/home-seeker/waiting-list"
+    : "/properties";
+
   return (
-    <div className="group overflow-hidden rounded-2xl border border-line bg-white shadow-xs transition hover:shadow-md">
-      <div className="relative h-[170px] w-full overflow-hidden bg-surface">
+    <div className="group overflow-hidden border border-line bg-white shadow-xs transition duration-300 hover:-translate-y-0.5 hover:shadow-md">
+      <div className="relative h-[180px] w-full overflow-hidden bg-surface">
         <Image
           src={property.image}
           alt={property.title}
           fill
-          className="object-cover transition duration-300 group-hover:scale-105"
+          className="object-cover transition duration-500 group-hover:scale-105"
         />
         <span
-          className={`absolute top-3 left-3 rounded-full px-2.5 py-1 text-[11px] font-bold ${
+          className={`absolute top-3 left-3 rounded-md px-2.5 py-1 text-[11px] font-bold tracking-wide uppercase ${
             isAvailable
-              ? "bg-white text-success shadow-xs"
-              : "bg-white text-warn shadow-xs"
+              ? "bg-white text-success shadow-sm"
+              : "bg-white text-warn shadow-sm"
           }`}
         >
           {property.status}
         </span>
         <button
           type="button"
-          aria-label="Toggle favorite"
+          aria-label="Remove favorite"
           onClick={() => onRemove(property.id)}
-          className="absolute top-3 right-3 flex size-8 items-center justify-center rounded-full bg-white text-brand shadow-xs transition hover:scale-110 cursor-pointer"
+          className="absolute top-3 right-3 flex size-8 items-center justify-center rounded-full bg-white text-brand shadow-sm transition hover:scale-110 cursor-pointer"
         >
-          <Heart className="size-4 fill-brand stroke-brand" />
+          <Heart className="size-4.5 fill-brand stroke-brand" />
         </button>
       </div>
 
-      <div className="p-4.5">
-        <div className="mb-1 flex items-start justify-between gap-2">
-          <div className="text-[14.5px] font-bold leading-tight text-ink">
+      <div className="p-5">
+        <div className="mb-2 flex items-baseline justify-between gap-3">
+          <h3 className="text-[16.5px] font-bold text-ink leading-snug">
             {property.title}
-          </div>
-          <div className="font-mono text-sm font-extrabold text-brand whitespace-nowrap">
-            {property.price}
-          </div>
+          </h3>
+          <span className="font-mono text-[15.5px] font-extrabold text-brand">
+            {property.price} Rwf
+          </span>
         </div>
-        <div className="mb-3 text-xs text-body">
-          {property.location} · {property.features}
-        </div>
-        <div className="flex gap-2">
-          <Link
-            href={
-              property.isWaitingList
-                ? "/home-seeker/waiting-list"
-                : "/properties"
-            }
-            className="flex-1"
-          >
+        <p className="mb-4.5 text-[13.5px] text-body">{property.location}</p>
+        <div className="flex gap-2.5">
+          <Link href={linkHref} className="flex-1">
             <CustomButton
-              variant={property.isWaitingList ? "light" : "colored"}
-              title={property.isWaitingList ? "On waiting list" : "View"}
-              className="w-full text-center text-[13px]"
-            />
+              variant="light"
+              className="w-full rounded-none py-2 text-center text-[13.5px] font-bold"
+            >
+              <span className="text-brand group-hover:text-white py-2 ">
+                {property.isWaitingList ? "On waiting list" : "View Details"}
+              </span>
+            </CustomButton>
           </Link>
           <button
             type="button"
             onClick={() => onRemove(property.id)}
-            className="rounded-lg border border-line px-3 py-2 text-[13px] font-semibold text-body transition hover:bg-surface hover:text-ink cursor-pointer"
+            className="border border-line px-4.5 py-2 text-[13.5px] font-semibold text-ink transition hover:bg-surface cursor-pointer"
           >
             Remove
           </button>
