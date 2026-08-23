@@ -48,7 +48,7 @@ export function DashboardSidebar({
         </span>
       </div>
       <div className="flex flex-col gap-1 px-4">
-        <SidebarItem href="#" icon={Settings} label="Settings" />
+        <SidebarItem href="/home-seeker/settings" icon={Settings} label="Settings" active={pathname === "/home-seeker/settings"} />
         <SidebarItem href="#" icon={HelpCircle} label="Help Center" />
       </div>
 
