@@ -29,14 +29,14 @@ export function DashboardHeader({ title = "Dashboard" }: DashboardHeaderProps) {
           </CustomButton>
         </Link>
 
-        <button
-          type="button"
+        <Link
+          href="/home-seeker/notifications"
           aria-label="Notifications"
           className="relative flex size-9 shrink-0 items-center justify-center rounded-full border border-line transition hover:bg-surface cursor-pointer"
         >
           <Bell className="size-4 text-ink" />
           <span className="absolute top-1.5 right-1.5 size-2 rounded-full bg-red-600 animate-pulse" />
-        </button>
+        </Link>
       </div>
     </header>
   );

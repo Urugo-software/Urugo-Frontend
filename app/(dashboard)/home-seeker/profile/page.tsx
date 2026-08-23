@@ -1,0 +1,16 @@
+import { ProfileForm } from "@/components/dashboard/home-seeker/profile/ProfileForm";
+import { ProfileSections } from "@/components/dashboard/home-seeker/profile/ProfileSections";
+export default function ProfilePage() {
+  return (
+    <main className="flex-1 overflow-y-auto p-6 pb-16 sm:p-8 md:p-10">
+      <div className="max-w-3xl">
+        <h2 className="text-2xl font-bold text-ink">Profile</h2>
+        <p className="mt-1 mb-7 text-sm text-body">
+          Manage your personal information and account status.
+        </p>
+        <ProfileForm />
+        <ProfileSections />
+      </div>
+    </main>
+  );
+}

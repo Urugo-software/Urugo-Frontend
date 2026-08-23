@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { waitingListData } from "@/data/dashboard-data";
 import { SectionCard } from "./SectionCard";
 
@@ -11,6 +12,14 @@ export function WaitingListSection() {
       title="Waiting List"
       className="tracking-wide"
       subtitle="You'll be notified the moment a spot opens"
+      action={
+        <Link
+          href="/home-seeker/waiting-list"
+          className="text-[13.5px] font-semibold text-brand transition hover:underline"
+        >
+          View all →
+        </Link>
+      }
     >
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border hover:shadow-brand/30 hover:shadow-sm duration-300 hover:-translate-y-0.5  border-line px-5 py-4">
         <div className="flex items-center gap-3.5 min-w-55">

@@ -126,6 +126,10 @@ export const propertyLocations = [
   { id: "30", name: "Rusizi" },
   { id: "31", name: "Rutsiro" },
 ];
+export const sortOptions = [
+  { id: "1", name: "Recently saved " },
+  { id: "2", name: "Low to high " },
+];
 
 export const property_details: Property[] = [
   {

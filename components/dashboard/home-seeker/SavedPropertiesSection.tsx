@@ -12,10 +12,10 @@ export function SavedPropertiesSection() {
       className="tracking-wide"
       action={
         <Link
-          href="/properties"
+          href="/home-seeker/saved-properties"
           className="text-[13.5px] font-semibold text-brand transition hover:underline"
         >
-          Browse more →
+          View all →
         </Link>
       }
     >

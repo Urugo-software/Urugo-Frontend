@@ -8,7 +8,7 @@ import { VerificationBanner } from "./VerificationBanner";
 
 export function HomeSeekerDashboard() {
   return (
-    <div className="min-h-0 flex-1 overflow-y-auto  p-6 sm:p-8 md:p-10">
+    <div className="min-h-0 flex-1 overflow-y-auto p-6 pb-16 sm:p-8 sm:pb-20 md:p-10 md:pb-24">
       {/* Greeting Banner */}
       <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
         <div>
@@ -43,7 +43,7 @@ export function HomeSeekerDashboard() {
         <NextViewingCard />
       </div>
 
-      <div className="space-y-6 mb-18">
+      <div className="space-y-6 ">
         <SavedPropertiesSection />
         <WaitingListSection />
         <VerificationBanner />
