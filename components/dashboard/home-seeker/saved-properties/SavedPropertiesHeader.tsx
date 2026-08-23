@@ -34,11 +34,12 @@ export function SavedPropertiesHeader({
         View properties you&apos;ve bookmarked while browsing.
       </p>
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-4">
-        <span className="text-[14.5px] text-body">
-          <strong className="text-ink">{totalCount}</strong> saved properties
+        <span className="text-[14.5px] text-body capitalize">
+          <strong className="text-ink text-md">{totalCount}</strong> saved
+          properties
         </span>
         <Dropdown
-          className="text-ink! font-medium flex gap-2"
+          className="text-ink! hover:bg-brand! hover:text-white! duration-300 px-5! cursor-pointer font-semibold flex gap-2"
           menuList={sortOptions}
           defaultMenu={sortOptions[0].name}
           onSelectValue={onSortChange}
