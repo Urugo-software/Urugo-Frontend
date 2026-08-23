@@ -35,8 +35,8 @@ export const roleNavItems: Record<RoleType, NavItemConfig[]> = {
     { label: "Visits", href: "/home-seeker/visits", icon: Calendar },
     { label: "Waiting List", href: "/home-seeker/waiting-list", icon: Clock },
     { label: "AI Assistant", href: "#", icon: Bot },
-    { label: "Notifications", href: "#", icon: Bell, badge: 1 },
-    { label: "Profile", href: "#", icon: User },
+    { label: "Notifications", href: "/home-seeker/notifications", icon: Bell, badge: 1 },
+    { label: "Profile", href: "/home-seeker/profile", icon: User },
   ],
   landlord: [
     { label: "Dashboard", href: "/landlord", icon: LayoutDashboard },
