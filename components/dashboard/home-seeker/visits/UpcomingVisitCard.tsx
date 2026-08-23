@@ -52,10 +52,12 @@ export function UpcomingVisitCard({ visit, onCancel }: UpcomingVisitCardProps) {
               <span className="text-faint">Date</span>
               <div className="font-semibold text-ink">{visit.date}</div>
             </div>
+            <hr className=" border-2 h-9 border-brand/80" />
             <div>
               <span className="text-faint">Time</span>
               <div className="font-semibold text-ink">{visit.time}</div>
             </div>
+            <hr className=" border-2 h-9 border-brand/80" />
             <div>
               <span className="text-faint">Landlord</span>
               <div className="font-semibold text-ink">{visit.landlord}</div>
