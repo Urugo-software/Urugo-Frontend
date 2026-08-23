@@ -49,7 +49,7 @@ export function DashboardSidebar({
       </div>
       <div className="flex flex-col gap-1 px-4">
         <SidebarItem href="/home-seeker/settings" icon={Settings} label="Settings" active={pathname === "/home-seeker/settings"} />
-        <SidebarItem href="#" icon={HelpCircle} label="Help Center" />
+        <SidebarItem href="/home-seeker/help-center" icon={HelpCircle} label="Help Center" active={pathname === "/home-seeker/help-center"} />
       </div>
 
       {/* Background Graphic SVG */}
