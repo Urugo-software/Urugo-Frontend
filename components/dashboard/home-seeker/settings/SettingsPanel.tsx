@@ -1,46 +1,98 @@
 "use client";
 
 import { useState } from "react";
-import { settingsData } from "@/data/home-seeker-data";
+import {
+  dataExport,
+  deleteAccount,
+  languages,
+  privacyData,
+  settingsData,
+} from "@/data/home-seeker-data";
+import { SettingsSection } from "./SettingsSection";
+import { SettingToggle } from "./SettingToggle";
 
 export function SettingsPanel() {
   const [settings, setSettings] = useState(
-    settingsData.map(([, , enabled]) => enabled),
+    settingsData.map(([, , value]) => value),
   );
+  const [language, setLanguage] = useState(languages[0]);
+  const [showActivity, setShowActivity] = useState<boolean>(privacyData[2]);
   const toggle = (index: number) =>
     setSettings((current) =>
       current.map((value, position) => (position === index ? !value : value)),
     );
+
   return (
-    <section className="overflow-hidden  border border-line bg-white">
-      <div className="border-b border-line p-6">
-        <h2 className="text-base font-bold">Notification preferences</h2>
-        <p className="mt-1 text-sm text-body">
-          Choose the updates you want to receive.
-        </p>
-      </div>
-      {settingsData.map(([title, detail], index) => (
-        <label
-          key={title}
-          className="flex cursor-pointer items-center justify-between gap-5 border-b border-line p-6 last:border-0 hover:bg-surface"
-        >
-          <span>
-            <span className="block text-sm font-semibold text-ink">
-              {title}
-            </span>
-            <span className="mt-1 block text-sm leading-5 text-body">
-              {detail}
-            </span>
-          </span>
-          <input
-            checked={settings[index]}
-            onChange={() => toggle(index)}
-            type="checkbox"
-            className="peer sr-only"
+    <div className="space-y-6">
+      <SettingsSection
+        title="Notification preferences"
+        description="Control the updates you receive from Urugo."
+      >
+        {settingsData.map(([title, detail], index) => (
+          <div
+            key={title}
+            className="flex items-center justify-between gap-5 border-t border-line py-4"
+          >
+            <div>
+              <h3 className="text-[15px] font-semibold">{title}</h3>
+              <p className="mt-1 text-[14.5px] text-faint">{detail}</p>
+            </div>
+            <SettingToggle
+              checked={settings[index]}
+              disabled={index === 1}
+              onChange={() => toggle(index)}
+            />
+          </div>
+        ))}
+      </SettingsSection>
+      <SettingsSection
+        title="Language"
+        description="Choose the language for the interface and AI Assistant."
+      >
+        <div className="flex flex-wrap gap-2.5">
+          {languages.map((item) => (
+            <button
+              key={item}
+              onClick={() => setLanguage(item)}
+              className={`rounded-full px-5 py-2.5 text-sm font-semibold transition ${language === item ? "bg-brand text-white" : "border border-line hover:bg-surface"}`}
+            >
+              {item}
+            </button>
+          ))}
+        </div>
+      </SettingsSection>
+      <SettingsSection title="Privacy">
+        <div className="flex items-center justify-between gap-5 border-t border-line py-4">
+          <div>
+            <h3 className="text-[15px] font-semibold">{privacyData[0]}</h3>
+            <p className="mt-1 text-[14.5px] text-faint">{privacyData[1]}</p>
+          </div>
+          <SettingToggle
+            checked={showActivity}
+            onChange={() => setShowActivity(!showActivity)}
           />
-          <span className="relative h-6 w-11 shrink-0 rounded-full bg-line transition peer-checked:bg-brand after:absolute after:left-1 after:top-1 after:size-4 after:rounded-full after:bg-white after:transition peer-checked:after:translate-x-5" />
-        </label>
-      ))}
-    </section>
+        </div>
+        <div className="flex items-center justify-between gap-5 border-t border-line py-4">
+          <div>
+            <h3 className="text-[15px] font-semibold">{dataExport[0]}</h3>
+            <p className="mt-1 text-[14.5px] text-faint">{dataExport[1]}</p>
+          </div>
+          <button className="text-[14.5px] font-semibold text-brand hover:underline">
+            Export
+          </button>
+        </div>
+      </SettingsSection>
+      <SettingsSection title="Danger zone" danger>
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h3 className="text-[15px] font-semibold">{deleteAccount[0]}</h3>
+            <p className="mt-1 text-[14.5px] text-faint">{deleteAccount[1]}</p>
+          </div>
+          <button className="duration-300 transition-all cursor-pointer border border-destructive px-4 py-2 text-[14.5px] font-semibold text-destructive hover:bg-destructive hover:text-white">
+            Delete account
+          </button>
+        </div>
+      </SettingsSection>
+    </div>
   );
 }
