@@ -3,10 +3,10 @@ import MobileSidebar from "./mobile-sidebar";
 import { useUiStore } from "@/store/ui.store";
 
 function MobileSidebarWrapper() {
-  const { mobileSidebarOpen, setMobileSidebarOpen } = useUiStore((state) => ({
-    mobileSidebarOpen: state.mobileSidebarOpen,
-    setMobileSidebarOpen: state.setMobileSidebarOpen,
-  }));
+  const mobileSidebarOpen = useUiStore((state) => state.mobileSidebarOpen);
+  const setMobileSidebarOpen = useUiStore(
+    (state) => state.setMobileSidebarOpen,
+  );
   return (
     <>
       {mobileSidebarOpen && (

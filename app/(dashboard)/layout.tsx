@@ -1,5 +1,6 @@
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
+import MobileSidebarWrapper from "@/components/dashboard/home-seeker/mobile-nav/mobile-sidebar-wrapper";
 import { ReactNode } from "react";
 
 function layout({ children }: { children: ReactNode }) {
@@ -8,6 +9,7 @@ function layout({ children }: { children: ReactNode }) {
       <DashboardSidebar currentRole="home_seeker" />
       <section className="relative flex flex-1 flex-col h-full min-w-0 overflow-hidden">
         <DashboardHeader />
+        <MobileSidebarWrapper />
         <div className="flex flex-1 flex-col min-h-0 overflow-hidden">
           {children}
         </div>

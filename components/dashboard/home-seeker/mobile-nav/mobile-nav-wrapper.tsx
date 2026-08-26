@@ -3,10 +3,11 @@ import { useUiStore } from "@/store/ui.store";
 import { Menu } from "lucide-react";
 
 function MobileNavWrapper() {
-  const { mobileSidebarOpen, setMobileSidebarOpen } = useUiStore((state) => ({
-    mobileSidebarOpen: state.mobileSidebarOpen,
-    setMobileSidebarOpen: state.setMobileSidebarOpen,
-  }));
+  const mobileSidebarOpen = useUiStore((state) => state.mobileSidebarOpen);
+  const setMobileSidebarOpen = useUiStore(
+    (state) => state.setMobileSidebarOpen,
+  );
+
   return (
     <div className="md:hidden flex flex-col items-end">
       {!mobileSidebarOpen && (

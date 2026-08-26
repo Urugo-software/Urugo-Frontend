@@ -1,6 +1,5 @@
 "use client";
 import { NavItemConfig, roleNavItems } from "@/data/dashboard-data";
-import { RoleType } from "@/types";
 import { usePathname } from "next/navigation";
 import { SidebarItem } from "../../SidebarItem";
 import { X } from "lucide-react";
@@ -18,6 +17,7 @@ function MobileSidebar({
     <motion.div
       initial={{ x: -300 }}
       animate={{ x: 0 }}
+      exit={{ x: -300 }}
       transition={{ duration: 0.3, ease: "easeInOut", type: "spring" }}
       className="md:hidden bg-white border border-line shadow w-[60%] h-full absolute top-0 z-20"
     >
