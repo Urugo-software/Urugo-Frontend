@@ -19,7 +19,7 @@ function MobileSidebar({
       animate={{ x: 0 }}
       exit={{ x: -300 }}
       transition={{ duration: 0.3, ease: "easeInOut", type: "spring" }}
-      className="md:hidden bg-white border border-line shadow w-[60%] h-full absolute top-0 z-20"
+      className="md:hidden bg-white border border-line shadow w-[60%] h-[100dvh] absolute top-0 z-40"
     >
       <button
         aria-label="close mobile menu"
@@ -42,7 +42,7 @@ function MobileSidebar({
         ))}
       </nav>
       {/* User Session Footer */}
-      <div className="absolute bottom-0 border-t border-line bg-surface px-6 py-4">
+      <div className="absolute bottom-0 inset-x-0 border-t border-line bg-surface px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="grid size-10 shrink-0 place-items-center rounded-full bg-brand-tint text-sm font-bold text-brand">
             YK
