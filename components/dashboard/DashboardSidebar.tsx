@@ -14,11 +14,13 @@ interface DashboardSidebarProps {
 export function DashboardSidebar({
   currentRole = "home_seeker",
 }: DashboardSidebarProps) {
+  // TODO: read these two lines carefully and implement role access logic
+
   const pathname = usePathname();
   const navList = roleNavItems[currentRole] || roleNavItems.home_seeker;
 
   return (
-    <aside className="relative flex h-screen w-[272px] shrink-0 flex-col overflow-hidden border-r border-line bg-white">
+    <aside className="relative hidden md:flex h-screen w-[272px] shrink-0 flex-col overflow-hidden border-r border-line bg-white">
       {/* Brand Header */}
       <div className="flex items-center gap-2.5 px-6 pt-6 pb-2">
         <Logo />
@@ -27,11 +29,10 @@ export function DashboardSidebar({
       {/* Main Nav Items based on Role */}
       <nav className="mt-4 flex flex-col gap-1 px-4 overflow-y-auto">
         {navList.map((item: NavItemConfig) => {
-          const isAI = item.label === "AI Assistant";
           return (
             <SidebarItem
               key={item.label}
-              href={isAI ? "#" : item.href}
+              href={item.href}
               icon={item.icon}
               label={item.label}
               badge={item.badge}
@@ -48,8 +49,18 @@ export function DashboardSidebar({
         </span>
       </div>
       <div className="flex flex-col gap-1 px-4">
-        <SidebarItem href="/home-seeker/settings" icon={Settings} label="Settings" active={pathname === "/home-seeker/settings"} />
-        <SidebarItem href="/home-seeker/help-center" icon={HelpCircle} label="Help Center" active={pathname === "/home-seeker/help-center"} />
+        <SidebarItem
+          href="/home-seeker/settings"
+          icon={Settings}
+          label="Settings"
+          active={pathname === "/home-seeker/settings"}
+        />
+        <SidebarItem
+          href="/home-seeker/help-center"
+          icon={HelpCircle}
+          label="Help Center"
+          active={pathname === "/home-seeker/help-center"}
+        />
       </div>
 
       {/* Background Graphic SVG */}
