@@ -3,7 +3,7 @@ import { LoginProps } from "@/types";
 
 export async function loginUserService({ identifier, password }: LoginProps) {
   try {
-    const { data } = await api.post("/public/auth/login", {
+    const { data } = await api.post("/api/auth/login", {
       identifier,
       password,
     });
