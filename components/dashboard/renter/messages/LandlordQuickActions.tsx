@@ -1,23 +1,24 @@
-"use client";
-
-import React from "react";
+import CustomButton from "@/components/shared/CustomButton";
 import { Phone, ShieldAlert } from "lucide-react";
 import Link from "next/link";
 
 export function LandlordQuickActions({ phone }: { phone: string }) {
   return (
-    <div className="pt-2 space-y-2">
-      <a
-        href={`tel:${phone}`}
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand py-2.5 text-xs font-bold text-white hover:bg-brand/90 transition-colors"
-      >
-        <Phone className="size-4" /> Call Landlord
-      </a>
-      <Link
-        href="/renter/maintenance"
-        className="flex w-full items-center justify-center gap-2 rounded-xl border border-line py-2.5 text-xs font-bold text-body hover:bg-surface transition-colors"
-      >
-        <ShieldAlert className="size-4 text-rose-500" /> Report Maintenance Issue
+    <div className="pt-2 flex flex-col items-center gap-1 space-y-2">
+      <Link className="w-full" href={"tel:" + phone}>
+        <CustomButton variant="light" className="w-full">
+          <span className="-translate-x-4 group-hover:text-white flex items-center gap-4">
+            <Phone className="size-4" /> Call Landlord
+          </span>
+        </CustomButton>
+      </Link>
+
+      <Link href="/renter/maintenance" className="w-full">
+        <CustomButton variant="cancel" className="w-full">
+          <span className="-translate-x-4 group-hover:text-white flex items-center gap-4">
+            Report Maintenance Issue
+          </span>
+        </CustomButton>
       </Link>
     </div>
   );
