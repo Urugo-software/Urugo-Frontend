@@ -3,7 +3,7 @@ import { ChatMessage } from "@/types/messages";
 
 const delay = (ms = 150) => new Promise((res) => setTimeout(res, ms));
 
-let messageStore = [...mockInitialMessages];
+const messageStore = [...mockInitialMessages];
 
 export async function fetchLandlordMessages() {
   await delay();

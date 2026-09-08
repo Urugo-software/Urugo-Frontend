@@ -10,7 +10,6 @@ interface Props {
 }
 
 export function PaymentTypeCard({ method, isSelected, onSelect }: Props) {
-  const Icon = method.icon;
   return (
     <button
       type="button"

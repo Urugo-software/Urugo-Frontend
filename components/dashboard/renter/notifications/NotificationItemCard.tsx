@@ -1,5 +1,5 @@
 import React from "react";
-import { DollarSign, Zap, Wrench, FileText, Bell } from "lucide-react";
+import { DollarSign, Zap, Wrench, FileText } from "lucide-react";
 import { RenterNotification } from "@/types/renter";
 
 export function NotificationItemCard({ notif }: { notif: RenterNotification }) {

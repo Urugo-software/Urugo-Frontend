@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Zap, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { RenterElectricity } from "@/types/renter";
 
 export function RenterElectricitySummaryCard({

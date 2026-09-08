@@ -1,12 +1,8 @@
 import {
   Carousel,
-  CarouselContent,
-  CarouselItem,
   CarouselPrevious,
   CarouselNext,
 } from "@/components/ui/carousel";
-import { available_properties } from "@/data/home-data";
-import PropertyCard from "./PropertyCard";
 import SectionTitle from "@/components/shared/SectionTitle";
 import FeaturedPropertiesList from "./FeaturedPropertiesList";
 

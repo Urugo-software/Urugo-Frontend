@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Wrench, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export function RenterMaintenanceSummaryCard({ count }: { count: number }) {
   return (

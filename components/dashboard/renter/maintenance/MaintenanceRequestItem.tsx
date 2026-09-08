@@ -20,9 +20,6 @@ export function MaintenanceRequestItem({ item }: { item: RenterMaintenance }) {
     <div className=" border border-line bg-white p-5 shadow-xs transition hover:border-brand/40">
       <div className="flex flex-wrap items-start justify-between gap-2 border-b border-line pb-3">
         <div className="flex items-center gap-2">
-          <div className="grid size-8 place-items-center rounded-lg bg-surface text-brand">
-            <Wrench className="size-4" />
-          </div>
           <div>
             <h4 className="text-lg font-bold text-ink">{item.title}</h4>
             <span className="text-[15px] text-faint">
@@ -36,7 +33,7 @@ export function MaintenanceRequestItem({ item }: { item: RenterMaintenance }) {
           {item.status}
         </span>
       </div>
-      <p className=" my-3 text-[12.5px] text-body leading-relaxed">
+      <p className=" my-3 text-[14px] text-body leading-relaxed">
         {item.description}
       </p>
       <div className="flex items-center gap-1 text-[12px] text-faint">

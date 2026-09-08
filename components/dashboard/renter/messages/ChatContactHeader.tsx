@@ -1,5 +1,5 @@
 import React from "react";
-import { User, Phone } from "lucide-react";
+import { Phone } from "lucide-react";
 import { ConversationContact } from "@/types/messages";
 
 export function ChatContactHeader({ contact }: { contact: ConversationContact }) {

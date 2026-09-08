@@ -3,9 +3,6 @@ import {
   RenterProperty,
   RenterPayment,
   RenterElectricity,
-  RenterMaintenance,
-  RenterDocument,
-  RenterNotification,
 } from "@/types/renter";
 
 export const mockRenterProfile: RenterProfile = {

@@ -73,6 +73,7 @@ export function WaitingListCard({ item, onLeave }: WaitingListCardProps) {
               className="rounded-none"
               title="Leave waiting list"
               variant="light"
+              onClick={() => onLeave(item.id)}
             />
           </div>
         </div>
