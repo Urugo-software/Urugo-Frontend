@@ -10,9 +10,13 @@ function MobileSidebar({
 }: {
   setMobileSidebarOpen: (open: boolean) => void;
 }) {
-  // TODO: read these two lines carefully and implement role access logic
   const pathname = usePathname();
-  const mobileNavList = roleNavItems.home_seeker;
+  const derivedRole = pathname.startsWith("/renter")
+    ? "renter"
+    : pathname.startsWith("/landlord")
+    ? "landlord"
+    : "home_seeker";
+  const mobileNavList = roleNavItems[derivedRole] || roleNavItems.home_seeker;
   return (
     <motion.div
       initial={{ x: -300 }}
