@@ -12,6 +12,8 @@ import {
   DollarSign,
   Wrench,
   Folder,
+  Zap,
+  MessageSquare,
   LucideIcon,
 } from "lucide-react";
 import { RoleType } from "@/types";
@@ -48,13 +50,14 @@ export const roleNavItems: Record<RoleType, NavItemConfig[]> = {
     { label: "Settings", href: "#", icon: Settings },
   ],
   renter: [
-    { label: "Dashboard", href: "/renter", icon: LayoutDashboard },
-    { label: "My Lease", href: "#", icon: FileText },
-    { label: "Payments", href: "#", icon: DollarSign },
-    { label: "Maintenance", href: "#", icon: Wrench, badge: 1 },
-    { label: "Documents", href: "#", icon: Folder },
-    { label: "AI Assistant", href: "#", icon: Bot },
-    { label: "Notifications", href: "#", icon: Bell },
+    { label: "Overview", href: "/renter", icon: LayoutDashboard },
+    { label: "My Property", href: "/renter/property", icon: Building2 },
+    { label: "Payments", href: "/renter/payments", icon: DollarSign },
+    { label: "Electricity", href: "/renter/electricity", icon: Zap },
+    { label: "Maintenance", href: "/renter/maintenance", icon: Wrench, badge: 1 },
+    { label: "Messages", href: "/renter/messages", icon: MessageSquare, badge: 1 },
+    { label: "Documents", href: "/renter/documents", icon: Folder },
+    { label: "Notifications", href: "/renter/notifications", icon: Bell, badge: 2 },
   ],
 };
 
