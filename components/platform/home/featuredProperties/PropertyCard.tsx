@@ -6,18 +6,20 @@ import Link from "next/link";
 import { useState } from "react";
 
 interface PropertyCardProps {
-  image: StaticImageData;
+  image: StaticImageData | string;
   title: string;
-  location: string;
-  price: string;
+  district: string;
+  province: string;
+  monthlyRent: string;
   amenities: string[];
 }
 
 function PropertyCard({
   image,
   title,
-  location,
-  price,
+  district,
+  province,
+  monthlyRent,
   amenities,
 }: PropertyCardProps) {
   // image load state
@@ -53,7 +55,7 @@ function PropertyCard({
 
       {/* Content */}
       <div className="p-4 pt-6 pb-8 ">
-        {/* Title + Price */}
+        {/* Title + monthlyRent */}
         <div className="flex items-start justify-between gap-4">
           <Link href={`/properties/${title}`} className="group flex-1">
             <h3 className="text-md text-nowrap max-w-[150px]  truncate font-semibold  text-ink transition-colors group-hover:text-brand tracking-tight">
@@ -63,7 +65,7 @@ function PropertyCard({
 
           <div className=" flex items-center gap-1 text-right">
             <div className="font-ibm text-[14px] font-bold text-brand">
-              {price}
+              {monthlyRent}
             </div>
             <div className="text-[11px] text-body">{currency}</div>
           </div>
@@ -72,7 +74,8 @@ function PropertyCard({
         {/* Location */}
         <div className="mt-2 flex items-center gap-2 text-sm tracking-tight text-body">
           <MapPin size={15} className="text-faint" />
-          <span>{location}</span>
+          <span className="capitalize">{district},</span>
+          <span className="capitalize">{province}</span>
         </div>
 
         {/* Divider */}

@@ -10,9 +10,9 @@ export function VisitsHeader() {
           Visits
         </h1>
         <CustomButton
-          variant="colored"
+          variant="light"
           title="Schedule a visit"
-          className="text-[13.5px] px-5 py-2.5 rounded-[10px]"
+          className="text-[13.5px] px-5 py-2.5 rounded-none"
         />
       </div>
       <p className="text-[15px] text-body">

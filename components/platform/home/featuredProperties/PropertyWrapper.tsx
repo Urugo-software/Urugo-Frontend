@@ -8,6 +8,7 @@ import {
 import { available_properties } from "@/data/home-data";
 import PropertyCard from "./PropertyCard";
 import SectionTitle from "@/components/shared/SectionTitle";
+import FeaturedPropertiesList from "./FeaturedPropertiesList";
 
 function PropertyWrapper() {
   return (
@@ -30,24 +31,7 @@ function PropertyWrapper() {
             <CarouselNext className="static my-0 translate-y-0" />
           </div>
         </div>
-        <CarouselContent>
-          {available_properties.map((prop) => (
-            <CarouselItem
-              key={prop.id}
-              className="basis-1/1 sm:basis-1/2 md:basis-1/3 xl:basis-1/4 "
-            >
-              <div className="p-1 w-full ">
-                <PropertyCard
-                  image={prop.image}
-                  title={prop.title}
-                  location={prop.location}
-                  price={prop.price}
-                  amenities={prop.amenities}
-                />
-              </div>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
+        <FeaturedPropertiesList />
       </Carousel>
     </div>
   );

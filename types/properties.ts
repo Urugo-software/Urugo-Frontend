@@ -67,3 +67,18 @@ export interface Property {
 
   availableFrom: string;
 }
+
+export interface FeaturedProperty {
+  id: string;
+  property_photos: string[];
+  title: string;
+  district: string;
+  province: string;
+  amenities: string[];
+  monthlyRent: number;
+}
+
+export interface FeaturedPropertiesResponse {
+  data: FeaturedProperty[];
+  message: string;
+}

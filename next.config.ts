@@ -12,7 +12,20 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "example.com",
+        port: "",
+        pathname: "/**",
+      },
+      // production domains
+      {
+        protocol: "https",
         hostname: "flagcdn.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
         port: "",
         pathname: "/**",
       },
