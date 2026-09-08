@@ -24,13 +24,13 @@ export function ChatInputForm() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex items-center gap-2 border-t border-line bg-white p-3"
+      className="flex items-center gap-2 border-t border-line bg-white p-3 py-6"
     >
       <input
         type="text"
         {...register("messageText", { required: true })}
         placeholder="Type a message to your landlord..."
-        className="flex-1 rounded-full border border-line bg-surface px-4 py-2 text-xs text-ink focus:bg-white focus:outline-brand"
+        className="flex-1 rounded-full border border-line bg-surface p-3 px-4 lg:px-5 placeholder:text-sm text-sm text-ink focus:bg-white focus:outline-brand"
       />
       <button
         type="submit"
