@@ -2,7 +2,11 @@ import React from "react";
 import { Phone } from "lucide-react";
 import { ConversationContact } from "@/types/messages";
 
-export function ChatContactHeader({ contact }: { contact: ConversationContact }) {
+export function ChatContactHeader({
+  contact,
+}: {
+  contact: ConversationContact;
+}) {
   return (
     <div className="flex items-center justify-between border-b border-line bg-white p-4 shadow-2xs">
       <div className="flex items-center gap-3">
@@ -17,9 +21,6 @@ export function ChatContactHeader({ contact }: { contact: ConversationContact })
         <div>
           <h3 className="text-sm font-bold text-ink flex items-center gap-2">
             {contact.name}
-            <span className="rounded bg-surface px-1.5 py-0.5 text-[10px] font-semibold text-faint">
-              {contact.role}
-            </span>
           </h3>
           <p className="text-[11px] text-body">
             {contact.property} · {contact.unit}
