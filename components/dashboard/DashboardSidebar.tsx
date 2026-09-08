@@ -12,12 +12,19 @@ interface DashboardSidebarProps {
 }
 
 export function DashboardSidebar({
-  currentRole = "home_seeker",
+  currentRole,
 }: DashboardSidebarProps) {
-  // TODO: read these two lines carefully and implement role access logic
-
   const pathname = usePathname();
-  const navList = roleNavItems[currentRole] || roleNavItems.home_seeker;
+  const derivedRole: RoleType = pathname.startsWith("/renter")
+    ? "renter"
+    : pathname.startsWith("/landlord")
+    ? "landlord"
+    : currentRole || "home_seeker";
+
+  const navList = roleNavItems[derivedRole] || roleNavItems.home_seeker;
+  const settingsHref = `/${
+    derivedRole === "home_seeker" ? "home-seeker" : derivedRole
+  }/settings`;
 
   return (
     <aside className="relative hidden md:flex h-screen w-[272px] shrink-0 flex-col overflow-hidden border-r border-line bg-white">
@@ -50,10 +57,10 @@ export function DashboardSidebar({
       </div>
       <div className="flex flex-col gap-1 px-4">
         <SidebarItem
-          href="/home-seeker/settings"
+          href={settingsHref}
           icon={Settings}
           label="Settings"
-          active={pathname === "/home-seeker/settings"}
+          active={pathname === settingsHref}
         />
         <SidebarItem
           href="/home-seeker/help-center"
