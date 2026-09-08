@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
+import  { useEffect, useRef } from "react";
 import { useLandlordMessages } from "@/hooks/query/messages.hooks";
 import SectionLoading from "@/components/shared/SectionLoading";
 import SectionError from "@/components/shared/SectionError";
