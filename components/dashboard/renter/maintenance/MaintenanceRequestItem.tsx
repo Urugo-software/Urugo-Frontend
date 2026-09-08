@@ -1,5 +1,4 @@
-import React from "react";
-import { Wrench, Calendar } from "lucide-react";
+import { Calendar } from "lucide-react";
 import { RenterMaintenance } from "@/types/renter";
 
 export function MaintenanceRequestItem({ item }: { item: RenterMaintenance }) {
