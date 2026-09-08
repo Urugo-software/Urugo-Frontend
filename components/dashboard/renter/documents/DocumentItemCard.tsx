@@ -9,14 +9,14 @@ export function DocumentItemCard({ doc }: { doc: RenterDocument }) {
   };
 
   return (
-    <div className="flex items-center justify-between rounded-xl border border-line bg-white p-4 shadow-xs">
+    <div className="flex items-center rounded-md justify-between  border border-line bg-white p-4 shadow-xs">
       <div className="flex items-center gap-3">
         <div className="grid size-10 place-items-center rounded-lg bg-brand-tint text-brand">
           <FileText className="size-5" />
         </div>
         <div>
-          <h4 className="text-xs font-bold text-ink">{doc.title}</h4>
-          <span className="text-[11px] text-faint">
+          <h4 className="text-[13px] font-bold text-ink">{doc.title}</h4>
+          <span className="text-[12px] text-faint">
             {doc.category} · {doc.size} · {doc.date}
           </span>
         </div>
