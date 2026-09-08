@@ -3,7 +3,11 @@
 import React from "react";
 import { ConversationContact } from "@/types/messages";
 
-export function LandlordHeaderCard({ contact }: { contact: ConversationContact }) {
+export function LandlordHeaderCard({
+  contact,
+}: {
+  contact: ConversationContact;
+}) {
   return (
     <div className="p-6 border-b border-line text-center">
       <div className="relative inline-block mx-auto mb-3">
@@ -18,7 +22,7 @@ export function LandlordHeaderCard({ contact }: { contact: ConversationContact }
         )}
       </div>
       <h3 className="text-base font-bold text-ink">{contact.name}</h3>
-      <span className="inline-block mt-1 rounded-full bg-brand-tint px-3 py-0.5 text-xs font-semibold text-brand">
+      <span className="inline-block mt-1  px-3 py-0.5 text-xs font-semibold text-brand">
         {contact.role}
       </span>
     </div>
