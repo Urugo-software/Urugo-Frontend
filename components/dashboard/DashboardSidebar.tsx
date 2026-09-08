@@ -11,20 +11,18 @@ interface DashboardSidebarProps {
   currentRole?: RoleType;
 }
 
-export function DashboardSidebar({
-  currentRole,
-}: DashboardSidebarProps) {
+export function DashboardSidebar({ currentRole }: DashboardSidebarProps) {
   const pathname = usePathname();
   const derivedRole: RoleType = pathname.startsWith("/renter")
     ? "renter"
     : pathname.startsWith("/landlord")
-    ? "landlord"
-    : currentRole || "home_seeker";
+      ? "landlord"
+      : currentRole || "home_seeker";
 
   const navList = roleNavItems[derivedRole] || roleNavItems.home_seeker;
-  const settingsHref = `/${
+  const settingsHrefByRole = `/${
     derivedRole === "home_seeker" ? "home-seeker" : derivedRole
-  }/settings`;
+  }`;
 
   return (
     <aside className="relative hidden md:flex h-screen w-[272px] shrink-0 flex-col overflow-hidden border-r border-line bg-white">
@@ -57,16 +55,16 @@ export function DashboardSidebar({
       </div>
       <div className="flex flex-col gap-1 px-4">
         <SidebarItem
-          href={settingsHref}
+          href={settingsHrefByRole + "/settings"}
           icon={Settings}
           label="Settings"
-          active={pathname === settingsHref}
+          active={pathname === settingsHrefByRole + "/settings"}
         />
         <SidebarItem
-          href="/home-seeker/help-center"
+          href={settingsHrefByRole + "/help-center"}
           icon={HelpCircle}
           label="Help Center"
-          active={pathname === "/home-seeker/help-center"}
+          active={pathname === settingsHrefByRole + "/help-center"}
         />
       </div>
 

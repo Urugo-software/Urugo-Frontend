@@ -14,7 +14,7 @@ const FIELD_BASE =
   "w-full border border-line bg-white p-3 text-sm text-ink placeholder:text-faint focus:border-brand focus:outline-hidden focus:ring-2 focus:ring-brand/20 rounded-sm";
 
 export function ChangePasswordForm() {
-  const { register, handleSubmit, reset, watch } = useForm<PasswordInputs>();
+  const { register, handleSubmit, reset } = useForm<PasswordInputs>();
 
   const onSubmit = (data: PasswordInputs) => {
     if (data.newPassword !== data.confirmPassword) {
