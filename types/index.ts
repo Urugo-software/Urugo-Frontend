@@ -4,6 +4,8 @@ import { StaticImageData } from "next/image";
 
 // Central Export for Property Domain Types
 export * from "./properties";
+export * from "./landlord";
+
 
 // Home & Auth UI Types
 export interface HomeUiRolesDataProps {
