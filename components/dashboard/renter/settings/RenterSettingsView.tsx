@@ -9,7 +9,7 @@ export function RenterSettingsView() {
       <div className="max-w-4xl">
         <div className="mb-8">
           <h2 className="text-xl font-bold text-ink sm:text-2xl">Settings</h2>
-          <p className="text-sm text-body mt-1">
+          <p className="text-[15px] text-body mt-1">
             Manage your profile, security, and notification preferences.
           </p>
         </div>

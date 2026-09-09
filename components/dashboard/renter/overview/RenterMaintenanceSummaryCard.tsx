@@ -12,7 +12,7 @@ export function RenterMaintenanceSummaryCard({ count }: { count: number }) {
       </div>
       <div className="my-3">
         <div className="text-2xl font-bold text-ink">{count} Active</div>
-        <p className="text-xs mt-2 text-body ">
+        <p className="text-[12.5px] mt-2 text-body ">
           {count > 0
             ? "Requests currently being processed"
             : "No active maintenance issues"}

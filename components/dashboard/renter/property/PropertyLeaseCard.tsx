@@ -11,7 +11,7 @@ export function PropertyLeaseCard({ property }: { property: RenterProperty }) {
           {property.leaseStatus}
         </span>
       </div>
-      <div className="space-y-3 text-xs">
+      <div className="space-y-3 text-[12.5px]">
         <div className="flex items-center justify-between border-b border-line pb-2">
           <span className="text-faint">Monthly Rent</span>
           <span className="font-bold text-ink">

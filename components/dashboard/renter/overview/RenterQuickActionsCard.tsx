@@ -1,10 +1,11 @@
 import React from "react";
 import Link from "next/link";
-import { Building2, Bell, Folder } from "lucide-react";
+import { Building2, Bell, Folder, ScrollText } from "lucide-react";
 
 export function RenterQuickActionsCard() {
   const actions = [
-    { label: "My Property & Lease", href: "/renter/property", icon: Building2 },
+    { label: "My Property", href: "/renter/property", icon: Building2 },
+    { label: "My Lease", href: "/renter/lease", icon: ScrollText },
     { label: "Documents & Receipts", href: "/renter/documents", icon: Folder },
     { label: "Notifications", href: "/renter/notifications", icon: Bell },
   ];
@@ -14,7 +15,7 @@ export function RenterQuickActionsCard() {
       <h3 className="mb-3 text-xs font-semibold text-faint uppercase tracking-wider">
         Quick Access
       </h3>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {actions.map((act) => (
           <Link
             key={act.label}

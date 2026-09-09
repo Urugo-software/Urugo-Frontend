@@ -17,7 +17,14 @@ export function RenterDocumentsView() {
       <div className="mb-6">
         <h2 className="text-xl font-bold text-ink sm:text-2xl">My Documents</h2>
         <p className="text-[14px] text-body mt-1">
-          Access lease contracts, payment receipts, and utility statements.
+          Access payment receipts, utility statements, and other supporting
+          documents.{" "}
+          <a
+            href="/renter/lease"
+            className="text-brand underline-offset-2 hover:underline"
+          >
+            View your lease agreement →
+          </a>
         </p>
       </div>
 

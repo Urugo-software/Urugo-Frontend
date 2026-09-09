@@ -25,7 +25,7 @@ export function RenterElectricitySummaryCard({
             <span>{electricity.percentUsed}% of Limit</span>
           </div>
         </div>
-        <p className="text-xs mt-2 text-body mt-1">
+        <p className="text-[12.5px] mt-2 text-body mt-1">
           {electricity.statusMessage}
         </p>
       </div>

@@ -20,7 +20,7 @@ export function RenterRentSummaryCard({
         <div className="text-2xl font-bold text-ink">
           RWF {payment.amountRwf.toLocaleString()}
         </div>
-        <p className="text-xs mt-2 font-semibold text-body">
+        <p className="text-[12.5px] mt-2 font-semibold text-body">
           Due: <span className="font-semibold text-ink">{payment.dueDate}</span>{" "}
           ({payment.period})
         </p>

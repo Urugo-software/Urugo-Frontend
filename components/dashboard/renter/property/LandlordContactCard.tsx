@@ -19,11 +19,11 @@ export function LandlordContactCard({ name, phone, email }: Props) {
           <div className="text-sm font-bold tracking-[0.5px] text-ink">
             {name}
           </div>
-          <div className="flex items-center mt-2 gap-1.5 text-xs text-body ">
+          <div className="flex items-center mt-2 gap-1.5 text-[12.5px] text-body ">
             <Phone className="size-3.5 text-faint" />
             <span className="tracking-[0.5px]">{phone}</span>
           </div>
-          <div className="flex items-center mt-2 gap-1.5 text-xs text-body ">
+          <div className="flex items-center mt-2 gap-1.5 text-[12.5px] text-body ">
             <Mail className="size-3.5 text-faint" />
             <span className="tracking-[0.5px]">{email}</span>
           </div>
