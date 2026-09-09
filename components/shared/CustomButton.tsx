@@ -1,18 +1,21 @@
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 
+interface CustomButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  title?: string;
+  variant?: "light" | "colored" | "transparentLight" | "cancel";
+  className?: string;
+  children?: React.ReactNode;
+}
+
 function CustomButton({
   title,
-  variant,
+  variant = "colored",
   className,
   children,
   ...props
-}: {
-  title?: string;
-  variant: "light" | "colored" | "transparentLight" | "cancel";
-  className?: string;
-  children?: React.ReactNode;
-}) {
+}: CustomButtonProps) {
   const buttonVariants = {
     light: {
       "primary-span":

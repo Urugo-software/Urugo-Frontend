@@ -1,8 +1,8 @@
 import { queryClient } from "@/components/provider/QueryClient";
-import { loginUserService } from "@/services/auth.service";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { loginUserService } from "@/api/auth.api";
 
 export function useLogin() {
   const router = useRouter();

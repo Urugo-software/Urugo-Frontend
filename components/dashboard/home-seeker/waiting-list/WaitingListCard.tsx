@@ -42,17 +42,17 @@ export function WaitingListCard({ item, onLeave }: WaitingListCardProps) {
             </span>
           </div>
 
-          <div className="mt-3 flex flex-wrap gap-x-8 gap-y-2 text-[13px] ">
+          <div className="mt-3 flex max-md:flex-col flex-wrap gap-x-8 gap-y-2 text-[13px] ">
             <div>
               <span className="text-faint">Status</span>
               <div className="font-semibold text-ink">{item.status}</div>
             </div>
-            <hr className=" border-2 h-9 border-brand/80" />
+            <hr className="hidden md:block border-2 h-9 border-brand/80" />
             <div>
               <span className="text-faint">Joined waiting list</span>
               <div className="font-semibold text-ink">{item.joinedDate}</div>
             </div>
-            <hr className=" border-2 h-9 border-brand/80" />
+            <hr className="hidden md:block border-2 h-9 border-brand/80" />
 
             <div>
               <span className="text-faint">People ahead of you</span>
@@ -73,6 +73,7 @@ export function WaitingListCard({ item, onLeave }: WaitingListCardProps) {
               className="rounded-none"
               title="Leave waiting list"
               variant="light"
+              onClick={() => onLeave(item.id)}
             />
           </div>
         </div>

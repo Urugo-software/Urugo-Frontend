@@ -19,10 +19,16 @@ export function SavedPropertiesHeader({
   return (
     <div className="mb-7">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
-        <h1 className="text-[26px] sm:text-[28px] font-extrabold text-ink">
+        <h1 className="text-[24px] max-md:tracking-tight sm:text-[28px] font-extrabold text-ink">
           Saved Properties
         </h1>
-        <Link href="/properties">
+        <Link
+          className="md:hidden tracking-[0.5px] font-semibold text-sm text-brand hover:underline"
+          href="/properties"
+        >
+          More →
+        </Link>
+        <Link className="hidden md:block" href="/properties">
           <CustomButton
             variant="light"
             title="Browse more"

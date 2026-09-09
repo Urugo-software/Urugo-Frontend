@@ -16,13 +16,15 @@ export function SidebarItem({
   label,
   badge,
   active,
+  onClick,
 }: SidebarItemProps) {
   return (
     <Link
       href={href}
-      className={`group flex  items-center justify-between  px-3.5 py-2.5 text-[14px] font-medium transition-all ${
+      onClick={onClick}
+      className={`group flex  items-center justify-between  max-md:px-1 px-3.5 py-2.5 text-[14px] font-medium transition-all ${
         active
-          ? "bg-white font-semibold text-brand border-l-4 border-brand shadow-xs"
+          ? "bg-white font-semibold text-brand md:border-l-4 md:border-brand md:shadow-xs"
           : "text-body hover:bg-white hover:text-ink"
       }`}
     >

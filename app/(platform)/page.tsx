@@ -17,7 +17,7 @@ function page() {
         <HeroSection />
       </SectionContainer>
       <hr className="border-line my-12 lg:my-20" />
-      {/* fearutured propeties */}
+      {/* featured propeties */}
       <SectionContainer className="max-w-7xl mx-auto">
         <PropertyWrapper />
         {/* cta band */}
