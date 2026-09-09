@@ -14,6 +14,7 @@ import {
   Folder,
   Zap,
   MessageSquare,
+  ScrollText,
   LucideIcon,
 } from "lucide-react";
 import { RoleType } from "@/types";
@@ -52,6 +53,7 @@ export const roleNavItems: Record<RoleType, NavItemConfig[]> = {
   renter: [
     { label: "Overview", href: "/renter", icon: LayoutDashboard },
     { label: "My Property", href: "/renter/property", icon: Building2 },
+    { label: "Lease", href: "/renter/lease", icon: ScrollText },
     { label: "Payments", href: "/renter/payments", icon: DollarSign },
     { label: "Electricity", href: "/renter/electricity", icon: Zap },
     { label: "Maintenance", href: "/renter/maintenance", icon: Wrench, badge: 1 },

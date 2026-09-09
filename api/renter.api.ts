@@ -3,6 +3,7 @@ import {
   mockRenterProperty,
   mockRenterPayments,
   mockRenterElectricity,
+  mockRenterLease,
 } from "@/data/renter-data";
 import {
   mockRenterMaintenance,
@@ -53,4 +54,9 @@ export async function fetchRenterDocuments() {
 export async function fetchRenterNotifications() {
   await delay();
   return mockRenterNotifications;
+}
+
+export async function fetchRenterLease() {
+  await delay();
+  return mockRenterLease;
 }

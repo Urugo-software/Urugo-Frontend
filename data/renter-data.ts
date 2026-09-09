@@ -3,6 +3,7 @@ import {
   RenterProperty,
   RenterPayment,
   RenterElectricity,
+  RenterLease,
 } from "@/types/renter";
 
 export const mockRenterProfile: RenterProfile = {
@@ -29,6 +30,29 @@ export const mockRenterProperty: RenterProperty = {
   leaseStatus: "Active",
   leaseEnd: "14 Jan 2025",
   monthlyRentRwf: 150000,
+};
+
+export const mockRenterLease: RenterLease = {
+  status: "Active",
+  propertyName: "Kimironko Heights",
+  unitNumber: "A-03",
+  address: "KN 14 Ave, Kimironko, Kigali",
+  landlordName: "Emmanuel Ntaganda",
+  landlordPhone: "+250 788 123 456",
+  landlordEmail: "irakaramale@gmail.com",
+  startDate: "15 Jan 2024",
+  // endDate is not set — this is an open-ended tenancy beyond the initial term
+  // endDate: "14 Jan 2025",
+  monthlyRentRwf: 150000,
+  paymentDueDay: 10,
+  securityDepositRwf: 300000,
+  noticePeriodDays: 30,
+  agreement: {
+    id: "doc-01",
+    title: "Lease Agreement — Apartment A-03",
+    date: "15 Jan 2024",
+    size: "1.8 MB",
+  },
 };
 
 export const mockRenterPayments: RenterPayment[] = [

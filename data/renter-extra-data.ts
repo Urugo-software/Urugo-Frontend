@@ -27,13 +27,6 @@ export const mockRenterMaintenance: RenterMaintenance[] = [
 
 export const mockRenterDocuments: RenterDocument[] = [
   {
-    id: "doc-01",
-    title: "Lease Agreement — Apartment A-03",
-    category: "Lease Contract",
-    date: "15 Jan 2024",
-    size: "1.8 MB",
-  },
-  {
     id: "doc-02",
     title: "Rent Receipt — August 2026",
     category: "Payment Receipt",

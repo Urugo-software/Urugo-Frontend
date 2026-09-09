@@ -7,6 +7,7 @@ import {
   fetchRenterMaintenance,
   fetchRenterDocuments,
   fetchRenterNotifications,
+  fetchRenterLease,
 } from "@/api/renter.api";
 
 export function useRenterOverview() {
@@ -55,5 +56,12 @@ export function useRenterNotifications() {
   return useQuery({
     queryKey: ["renter-notifications"],
     queryFn: fetchRenterNotifications,
+  });
+}
+
+export function useRenterLease() {
+  return useQuery({
+    queryKey: ["renter-lease"],
+    queryFn: fetchRenterLease,
   });
 }

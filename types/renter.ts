@@ -32,7 +32,7 @@ export interface RenterProperty {
   email: string;
   moveInDate: string;
   leaseStatus: string;
-  leaseEnd: string;
+  leaseEnd?: string;
   monthlyRentRwf: number;
 }
 
@@ -89,6 +89,33 @@ export interface RenterDocument {
   category: string;
   date: string;
   size: string;
+}
+
+export interface RenterLeaseAgreement {
+  id: string;
+  title: string;
+  date: string;
+  size: string;
+}
+
+export interface RenterLease {
+  status: string;
+  propertyName: string;
+  unitNumber: string;
+  address: string;
+  landlordName: string;
+  landlordPhone: string;
+  landlordEmail: string;
+  /** ISO-style or formatted date string for when the lease started / renter moved in */
+  startDate: string;
+  /** Undefined means the tenancy has no fixed end date (open-ended) */
+  endDate?: string;
+  monthlyRentRwf: number;
+  /** Day of month on which rent is due */
+  paymentDueDay: number;
+  securityDepositRwf?: number;
+  noticePeriodDays?: number;
+  agreement?: RenterLeaseAgreement;
 }
 
 export interface RenterNotification {
