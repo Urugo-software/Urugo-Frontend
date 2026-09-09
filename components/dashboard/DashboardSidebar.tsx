@@ -48,12 +48,12 @@ export function DashboardSidebar({ currentRole }: DashboardSidebarProps) {
       </nav>
 
       {/* Settings Section */}
-      <div className="px-7 pt-6 pb-2">
+      <div className="relative z-10 px-7 pt-6 pb-2">
         <span className="text-[11px] font-bold uppercase tracking-widest text-faint">
           Settings
         </span>
       </div>
-      <div className="flex flex-col gap-1 px-4">
+      <div className="relative z-10 flex flex-col gap-1 px-4">
         <SidebarItem
           href={settingsHrefByRole + "/settings"}
           icon={Settings}
@@ -69,9 +69,9 @@ export function DashboardSidebar({ currentRole }: DashboardSidebarProps) {
       </div>
 
       {/* Background Graphic SVG */}
-      <div className="relative min-h-[70px] flex-1">
+      <div className="relative min-h-[70px] flex-1 pointer-events-none">
         <svg
-          className="absolute bottom-0 left-0"
+          className="absolute bottom-0 left-0 pointer-events-none"
           width="272"
           height="200"
           viewBox="0 0 272 200"
