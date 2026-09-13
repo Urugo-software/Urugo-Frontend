@@ -1,23 +1,40 @@
 import Link from "next/link";
-import { ArrowRight, MoreHorizontal, CheckCircle2, Clock, AlertTriangle } from "lucide-react";
+import {
+  ArrowRight,
+  MoreHorizontal,
+  CheckCircle2,
+  Clock,
+  AlertTriangle,
+} from "lucide-react";
 import { RecentActivityItem } from "@/types/landlord";
 
 interface RecentRentalActivityCardProps {
   activities: RecentActivityItem[];
 }
 
-export function RecentRentalActivityCard({ activities }: RecentRentalActivityCardProps) {
+export function RecentRentalActivityCard({
+  activities,
+}: RecentRentalActivityCardProps) {
   const getStatusBadge = (type: RecentActivityItem["type"]) => {
     switch (type) {
       case "payment_pending":
-        return { label: "In Review", style: "bg-amber-50 text-amber-700 border-amber-200" };
+        return {
+          label: "In Review",
+          style: "bg-amber-50 text-amber-700 border-amber-200",
+        };
       case "dispute_submitted":
       case "issue_reported":
-        return { label: "Disputed", style: "bg-rose-50 text-rose-700 border-rose-200" };
+        return {
+          label: "Disputed",
+          style: "bg-rose-50 text-rose-700 border-rose-200",
+        };
       case "payment_approved":
       case "issue_resolved":
       default:
-        return { label: "Approved", style: "bg-brand-tint text-brand border-blue-200" };
+        return {
+          label: "Approved",
+          style: "bg-brand-tint text-brand border-blue-200",
+        };
     }
   };
 
@@ -39,7 +56,9 @@ export function RecentRentalActivityCard({ activities }: RecentRentalActivityCar
     <div className="border border-line bg-white p-6 sm:p-7 shadow-2xs space-y-5">
       <div className="flex items-center justify-between border-b border-line pb-4">
         <div>
-          <h2 className="text-base sm:text-lg font-bold text-ink">Recent Rental Activity</h2>
+          <h2 className="text-base sm:text-lg font-bold text-ink">
+            Recent Rental Activity
+          </h2>
           <p className="text-sm text-body mt-1">
             Latest tenant actions, payment submissions, and dispute updates.
           </p>
@@ -62,9 +81,14 @@ export function RecentRentalActivityCard({ activities }: RecentRentalActivityCar
                   {getActivityIcon(item.type)}
                 </div>
                 <div>
-                  <h4 className="text-sm sm:text-base font-bold text-ink">{item.title}</h4>
+                  <h4 className="text-sm sm:text-base font-bold text-ink">
+                    {item.title}
+                  </h4>
                   <p className="text-sm text-body mt-0.5">
-                    <span className="font-semibold text-ink">{item.renterName}</span> · {item.propertyTitle}
+                    <span className="font-semibold text-ink">
+                      {item.renterName}
+                    </span>{" "}
+                    · {item.propertyTitle}
                   </p>
                 </div>
               </div>
@@ -107,7 +131,7 @@ export function RecentRentalActivityCard({ activities }: RecentRentalActivityCar
       <div className="pt-4 border-t border-line text-center">
         <Link
           href="/landlord/tenancies"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand hover:underline"
+          className="inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-brand hover:underline"
         >
           <span>View all rental activity history</span>
           <ArrowRight className="h-3.5 w-3.5" />

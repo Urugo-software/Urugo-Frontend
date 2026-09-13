@@ -10,7 +10,7 @@ export function LandlordAttentionCard({ items }: LandlordAttentionCardProps) {
   if (!items || items.length === 0) return null;
 
   return (
-    <div className="border bg-brand-tint/20 border-line  p-6 sm:p-7 shadow-2xs space-y-4">
+    <div className="border  border-line  p-6 sm:p-7 shadow-2xs space-y-4">
       <h3 className="text-xs font-semibold uppercase tracking-wider text-red-700">
         Requires Your Attention
       </h3>
@@ -25,7 +25,7 @@ export function LandlordAttentionCard({ items }: LandlordAttentionCardProps) {
             </p>
             <Link
               href={item.href}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand hover:underline"
+              className="inline-flex items-center gap-1.5 text-sm duration-300 hover:font-semibold text-gray-400 hover:text-brand hover:underline"
             >
               <span>{item.actionText}</span>
               <ArrowRight className="h-3.5 w-3.5" />

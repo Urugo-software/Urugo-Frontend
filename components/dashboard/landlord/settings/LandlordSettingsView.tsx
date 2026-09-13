@@ -13,7 +13,8 @@ export function LandlordSettingsView() {
     setTimeout(() => setIsSaved(false), 3000);
   };
 
-  const activeTab = SETTINGS_TABS.find((t) => t.id === activeTabId) || SETTINGS_TABS[0];
+  const activeTab =
+    SETTINGS_TABS.find((t) => t.id === activeTabId) || SETTINGS_TABS[0];
   const ActiveComponent = activeTab.component;
 
   return (
@@ -24,7 +25,8 @@ export function LandlordSettingsView() {
             Account & Settings
           </h1>
           <p className="mt-1 text-sm text-body">
-            Manage your landlord profile, payout accounts, notification alerts, and security.
+            Manage your landlord profile, payout accounts, notification alerts,
+            and security.
           </p>
         </div>
 

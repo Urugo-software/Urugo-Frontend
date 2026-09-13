@@ -14,10 +14,10 @@ export function LandlordKpiCards({ metrics }: LandlordKpiCardsProps) {
           <span className="text-xs font-semibold uppercase tracking-wider text-faint block">
             Total Active Renters
           </span>
-          <span className="mt-2 text-3xl sm:text-4xl font-bold text-ink block">
+          <span className="mt-2 text-3xl sm:text-4xl lg:text-5xl font-bold text-ink block">
             {metrics.activeRentersCount}
           </span>
-          <span className="mt-1.5 text-sm font-medium text-body block">
+          <span className="mt-1.5 text-sm lg:text-md tracking-[0.5px] font-medium text-body block">
             Active verified leases
           </span>
         </div>
@@ -29,10 +29,10 @@ export function LandlordKpiCards({ metrics }: LandlordKpiCardsProps) {
           <span className="text-xs font-semibold uppercase tracking-wider text-faint block">
             Ending Soon (&lt;30 Days)
           </span>
-          <span className="mt-2 text-3xl sm:text-4xl font-bold text-ink block">
+          <span className="mt-2 text-3xl sm:text-4xl lg:text-5xl font-bold text-ink block">
             {metrics.tenanciesEndingSoonCount}
           </span>
-          <span className="mt-1.5 text-sm font-medium text-body block">
+          <span className="mt-1.5 text-sm lg:text-md tracking-[0.5px] font-medium text-body block">
             Requires checkout review
           </span>
         </div>

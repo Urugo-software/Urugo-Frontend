@@ -2,6 +2,7 @@
 
 import { TenancyPayment } from "@/types/landlord";
 import { Button } from "@/components/ui/button";
+import CustomButton from "@/components/shared/CustomButton";
 
 interface PendingPaymentsReviewProps {
   payments: TenancyPayment[];
@@ -20,9 +21,12 @@ export function PendingPaymentsReview({
     return (
       <div className="border border-blue-200 bg-brand-tint/60 p-5 shadow-2xs">
         <div>
-          <p className="text-sm sm:text-[15px] font-semibold text-ink">All payments cleared</p>
+          <p className="text-sm sm:text-[15px] font-semibold text-ink">
+            All payments cleared
+          </p>
           <p className="mt-1 text-sm text-body">
-            There are no pending unverified payments for this tenancy. You may proceed to the next step.
+            There are no pending unverified payments for this tenancy. You may
+            proceed to the next step.
           </p>
         </div>
       </div>
@@ -36,13 +40,17 @@ export function PendingPaymentsReview({
           Pending Payments Waiting for Review ({pending.length})
         </p>
         <p className="mt-1 text-sm text-body">
-          A tenancy cannot be closed while unverified payments exist. Review each payment before continuing.
+          A tenancy cannot be closed while unverified payments exist. Review
+          each payment before continuing.
         </p>
       </div>
 
       <div className="divide-y divide-line">
         {pending.map((pay) => (
-          <div key={pay.id} className="flex flex-wrap items-center justify-between gap-4 px-5 py-5">
+          <div
+            key={pay.id}
+            className="flex flex-wrap items-center justify-between gap-4 px-5 py-5"
+          >
             <div>
               <p className="text-sm font-bold text-ink">{pay.period} Rent</p>
               <p className="mt-1 text-sm text-body">
@@ -51,21 +59,24 @@ export function PendingPaymentsReview({
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <Button
-                size="sm"
-                variant="outline"
-                className="border-rose-200 text-rose-600 hover:bg-rose-50"
-                onClick={() => onReject(pay.id)}
+              <div
+                className="            
+               w-fit h-fit border-2 border-red-600 
+                "
               >
-                Reject
-              </Button>
-              <Button
-                size="sm"
+                <CustomButton variant="cancel" onClick={() => onReject(pay.id)}>
+                  <span className="text-red-600 group-hover:text-white">
+                    Reject
+                  </span>
+                </CustomButton>
+              </div>
+              <CustomButton
+                variant="colored"
                 className="bg-brand hover:bg-brand-deep text-white"
                 onClick={() => onApprove(pay.id)}
               >
                 Approve Payment
-              </Button>
+              </CustomButton>
             </div>
           </div>
         ))}

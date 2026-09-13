@@ -10,7 +10,8 @@ export default async function IssueDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const issue = mockRentalIssues.find((i) => i.id === id) || mockRentalIssues[0];
+  const issue =
+    mockRentalIssues.find((i) => i.id === id) || mockRentalIssues[0];
 
   if (!issue) notFound();
 
@@ -18,7 +19,7 @@ export default async function IssueDetailPage({
     <main className="min-h-0 flex-1 overflow-y-auto bg-white p-4 pb-16 sm:p-8 sm:pb-20 md:p-10 md:pb-24 space-y-6">
       <div>
         <Link
-          href="/landlord/blacklist-check"
+          href="/landlord/renter-history"
           className="inline-flex items-center gap-2 text-sm font-semibold text-faint hover:text-ink transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />

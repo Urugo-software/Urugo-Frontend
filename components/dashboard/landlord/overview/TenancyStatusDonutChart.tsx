@@ -55,7 +55,7 @@ export function TenancyStatusDonutChart({
                   data={chartData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={40}
+                  innerRadius={32}
                   outerRadius={62}
                   paddingAngle={3}
                   dataKey="value"
@@ -103,10 +103,10 @@ export function TenancyStatusDonutChart({
         </div>
       </div>
 
-      <div className="pt-4 border-t border-line/60">
+      <div className="pt-4 border-t border-line/60 ">
         <Link
           href="/landlord/tenancies"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand hover:underline"
+          className="inline-flex items-center w-full justify-between gap-1.5 text-sm font-semibold hover:text-brand hover:underline"
         >
           <span>View All Tenancies</span>
           <ArrowRight className="h-3.5 w-3.5" />
