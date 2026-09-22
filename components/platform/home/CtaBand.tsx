@@ -19,14 +19,14 @@ function CtaBand() {
             <CustomButton
               title="Get Started →"
               variant="transparentLight"
-              className="bg-white hover:bg-transparent text-brand border border-line p-6"
+              className="rounded-full bg-white hover:bg-transparent text-brand border border-line p-6"
             />
           </Link>
           <Link href="/ai-assistant">
             <CustomButton
               title="Talk to the AI Assistant"
               variant="colored"
-              className="bg-white/10 border border-white p-6"
+              className="rounded-full bg-white/10 border border-white p-6"
             />
           </Link>
         </div>
