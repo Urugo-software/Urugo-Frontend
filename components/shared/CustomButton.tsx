@@ -21,24 +21,24 @@ function CustomButton({
       "primary-span":
         "transition-transform absolute inset-0 duration-300  translate-y-6 group-hover:translate-0 text-ink group-hover:bg-brand  ",
       "secondary-span":
-        "text-ink relative z-10 tracking-wide p-5 group-hover:text-white",
+        "text-ink relative z-10 tracking-wide px-4 py-2 group-hover:text-white flex items-center gap-2 justify-center",
     },
     colored: {
       "primary-span":
         "transition-transform absolute inset-0 duration-300  -translate-y-6 group-hover:translate-0 text-ink group-hover:bg-white  ",
-      "secondary-span": "relative z-10 p-5 group-hover:text-brand text-white",
+      "secondary-span": "relative z-10 px-4 py-2 group-hover:text-brand text-white flex items-center gap-2 justify-center",
     },
     transparentLight: {
       "primary-span":
         "transition-transform absolute inset-0 duration-300  translate-y-6 group-hover:translate-0 text-ink group-hover:bg-white/20 ",
       "secondary-span":
-        "relative z-10 tracking-wide p-5 group-hover:text-white",
+        "relative z-10 tracking-wide px-4 py-2 group-hover:text-white flex items-center gap-2 justify-center",
     },
     cancel: {
       "primary-span":
         "transition-transform absolute inset-0 duration-300  translate-y-6 group-hover:translate-0 text-ink group-hover:bg-red-500  ",
       "secondary-span":
-        "text-ink relative z-10 tracking-wide p-5 group-hover:text-white",
+        "text-ink relative z-10 tracking-wide px-4 py-2 group-hover:text-white flex items-center gap-2 justify-center",
     },
   };
 
@@ -46,20 +46,16 @@ function CustomButton({
     <Button
       {...props}
       variant="outline"
-      className={
-        cn(
-          "relative h-10 group overflow-hidden  cursor-pointer  rounded-full px-0   text-sm font-semibold",
-        ) +
-        " " +
+      className={cn(
+        "relative h-10 group overflow-hidden cursor-pointer rounded-none px-0 text-sm font-semibold border-none",
         className
-      }
+      )}
     >
       <span className={buttonVariants[variant]["primary-span"]}></span>
       <span className={buttonVariants[variant]["secondary-span"]}>
-        {" "}
-        {title}{" "}
+        {title}
+        {children}
       </span>
-      {children}
     </Button>
   );
 }

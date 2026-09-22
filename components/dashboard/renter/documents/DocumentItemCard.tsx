@@ -15,8 +15,8 @@ export function DocumentItemCard({ doc }: { doc: RenterDocument }) {
           <FileText className="size-5" />
         </div>
         <div>
-          <h4 className="text-[13px] font-bold text-ink">{doc.title}</h4>
-          <span className="text-[12px] text-faint">
+          <h4 className="text-[13px] font-semibold text-ink">{doc.title}</h4>
+          <span className="text-[13px] text-faint">
             {doc.category} · {doc.size} · {doc.date}
           </span>
         </div>

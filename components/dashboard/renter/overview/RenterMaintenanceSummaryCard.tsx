@@ -12,7 +12,7 @@ export function RenterMaintenanceSummaryCard({ count }: { count: number }) {
       </div>
       <div className="my-3">
         <div className="text-2xl font-bold text-ink">{count} Active</div>
-        <p className="text-[12.5px] mt-2 text-body ">
+        <p className="text-[13px] mt-2 text-body ">
           {count > 0
             ? "Requests currently being processed"
             : "No active maintenance issues"}
@@ -20,7 +20,7 @@ export function RenterMaintenanceSummaryCard({ count }: { count: number }) {
       </div>
       <Link
         href="/renter/maintenance"
-        className="flex items-center duration-300 justify-between pt-2 text-[12px] hover:font-semibold text-gray-400 hover:text-brand hover:underline"
+        className="flex items-center duration-300 justify-between pt-2 text-[13px] hover:font-semibold text-gray-400 hover:text-brand hover:underline"
       >
         <span>Manage Requests</span>
         <ArrowRight className="size-4" />

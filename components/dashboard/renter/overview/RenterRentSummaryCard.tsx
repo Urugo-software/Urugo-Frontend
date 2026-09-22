@@ -20,14 +20,14 @@ export function RenterRentSummaryCard({
         <div className="text-2xl font-bold text-ink">
           RWF {payment.amountRwf.toLocaleString()}
         </div>
-        <p className="text-[12.5px] mt-2 font-semibold text-body">
+        <p className="text-[13px] mt-2 font-semibold text-body">
           Due: <span className="font-semibold text-ink">{payment.dueDate}</span>{" "}
           ({payment.period})
         </p>
       </div>
       <Link
         href="/renter/payments"
-        className="flex items-center duration-300 justify-between pt-2 text-[12px] hover:font-semibold text-gray-400 hover:text-brand hover:underline"
+        className="flex items-center duration-300 justify-between pt-2 text-[13px] hover:font-semibold text-gray-400 hover:text-brand hover:underline"
       >
         <span>View & Pay Rent</span>
         <ArrowRight className="size-4" />

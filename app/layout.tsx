@@ -1,4 +1,4 @@
-import { ibm, inter } from "@/lib/fonts";
+import { ibm, epilogue } from "@/lib/fonts";
 import type { Metadata } from "next";
 import "./globals.css";
 import { Geist } from "next/font/google";
@@ -25,9 +25,8 @@ export default function RootLayout({
         "h-full",
         "antialiased",
         ibm.variable,
-        inter.className,
+        epilogue.className,
         "font-sans",
-        geist.variable,
       )}
     >
       <body className="min-h-full flex flex-col ">
