@@ -4,6 +4,7 @@ import { useState } from "react";
 import { RentalIssue } from "@/types/landlord";
 import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface DisputeDetailsViewProps {
   issue: RentalIssue;
@@ -12,15 +13,27 @@ interface DisputeDetailsViewProps {
 function getStatusBadge(status: RentalIssue["status"]) {
   switch (status) {
     case "Disputed":
-      return { label: "Renter disagrees", style: "bg-amber-50 text-amber-700 border-amber-200" };
+      return {
+        label: "Renter disagrees",
+        style: "bg-amber-50 text-amber-700 border-amber-200",
+      };
     case "Reported":
-      return { label: "Waiting for review", style: "bg-brand-tint text-brand border-blue-200" };
+      return {
+        label: "Waiting for review",
+        style: "bg-brand-tint text-brand border-blue-200",
+      };
     case "Resolved":
-      return { label: "Resolved", style: "bg-brand-tint text-brand border-blue-200" };
+      return {
+        label: "Resolved",
+        style: "bg-brand-tint text-brand border-blue-200",
+      };
     case "Confirmed":
     case "Unresolved":
     default:
-      return { label: "Confirmed", style: "bg-rose-50 text-rose-700 border-rose-200" };
+      return {
+        label: "Confirmed",
+        style: "bg-rose-50 text-rose-700 border-rose-200",
+      };
   }
 }
 
@@ -43,10 +56,16 @@ export function DisputeDetailsView({ issue }: DisputeDetailsViewProps) {
       <div className="border border-line bg-white p-6 shadow-2xs space-y-3">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-ink">{issue.renterName}</h1>
-            <p className="mt-0.5 text-sm font-medium text-body">{issue.propertyName}</p>
+            <h1 className="text-xl sm:text-2xl font-bold text-ink">
+              {issue.renterName}
+            </h1>
+            <p className="mt-0.5 text-sm font-medium text-body">
+              {issue.propertyName}
+            </p>
           </div>
-          <span className={`px-3 py-1 text-xs font-semibold border ${badge.style}`}>
+          <span
+            className={`px-3 py-1 text-xs font-semibold border ${badge.style}`}
+          >
             {badge.label}
           </span>
         </div>
@@ -54,7 +73,8 @@ export function DisputeDetailsView({ issue }: DisputeDetailsViewProps) {
         <div className="pt-3 border-t border-line/60 flex flex-wrap items-center justify-between gap-2">
           <h2 className="text-base font-bold text-ink">{title}</h2>
           <span className="text-sm font-bold text-brand">
-            {issue.amountRwf.toLocaleString()} RWF · <span className="text-faint font-normal">{issue.createdDate}</span>
+            {issue.amountRwf.toLocaleString()} RWF ·{" "}
+            <span className="text-faint font-normal">{issue.createdDate}</span>
           </span>
         </div>
       </div>
@@ -69,7 +89,9 @@ export function DisputeDetailsView({ issue }: DisputeDetailsViewProps) {
             </h3>
           </div>
           <div className="flex flex-1 flex-col justify-between p-5 space-y-4">
-            <p className="text-sm text-body leading-relaxed">{issue.landlordReport}</p>
+            <p className="text-sm text-body leading-relaxed">
+              {issue.landlordReport}
+            </p>
             <p className="text-xs text-faint">
               Reported by {issue.landlordName} · {issue.createdDate}
             </p>
@@ -85,9 +107,13 @@ export function DisputeDetailsView({ issue }: DisputeDetailsViewProps) {
           </div>
           <div className="flex flex-1 flex-col justify-between p-5 space-y-4">
             {issue.renterResponse ? (
-              <p className="text-sm text-body leading-relaxed">{issue.renterResponse}</p>
+              <p className="text-sm text-body leading-relaxed">
+                {issue.renterResponse}
+              </p>
             ) : (
-              <p className="text-sm italic text-faint">No explanation submitted yet.</p>
+              <p className="text-sm italic text-faint">
+                No explanation submitted yet.
+              </p>
             )}
 
             {issue.evidence && (
@@ -95,10 +121,12 @@ export function DisputeDetailsView({ issue }: DisputeDetailsViewProps) {
                 <span className="text-xs font-medium text-ink">
                   {issue.evidence.title}
                 </span>
-                <button className="inline-flex items-center gap-1 text-xs font-semibold text-brand hover:underline">
-                  <ExternalLink className="h-3.5 w-3.5" />
-                  <span>View receipt</span>
-                </button>
+                <Link href="#">
+                  <button className="inline-flex items-center gap-1 text-xs font-semibold text-brand hover:underline">
+                    <ExternalLink className="h-3.5 w-3.5" />
+                    <span>View receipt</span>
+                  </button>
+                </Link>
               </div>
             )}
           </div>
@@ -118,14 +146,14 @@ export function DisputeDetailsView({ issue }: DisputeDetailsViewProps) {
 
         <div className="flex flex-wrap gap-3 pt-2">
           <Button
-            className="bg-brand text-white hover:bg-brand-deep"
+            className="bg-brand rounded-none cursor-pointer text-white hover:bg-brand-deep"
             onClick={() => setCurrentStatus("Resolved")}
           >
             Accept proof & resolve
           </Button>
           <Button
             variant="outline"
-            className="border-amber-200 text-amber-700 hover:bg-amber-50"
+            className="border-amber-200 rounded-none cursor-pointer text-amber-700 hover:bg-amber-50"
             onClick={() => setCurrentStatus("Confirmed")}
           >
             Confirm bill not paid
