@@ -196,8 +196,10 @@ export const mockRentalIssues: RentalIssue[] = [
     renterName: "Eric Manzi",
     createdDate: "01 Sep 2026",
     status: "Disputed",
-    landlordReport: "Renter departed with an unpaid final WASAC water utility balance of 50,000 RWF for July-August period.",
-    renterResponse: "I paid the 50,000 RWF bill via WASAC agent on Aug 28th and have attached the digital payment confirmation receipt.",
+    landlordReport:
+      "Renter departed with an unpaid final WASAC water utility balance of 50,000 RWF for July-August period.",
+    renterResponse:
+      "I paid the 50,000 RWF bill via WASAC agent on Aug 28th and have attached the digital payment confirmation receipt.",
     evidence: {
       title: "WASAC Agent Payment Confirmation PDF",
       type: "Utility Receipt",
@@ -234,7 +236,8 @@ export const mockLandlordProperties: LandlordPropertyItem[] = [
     occupiedUnits: 5,
     monthlyRevenueRwf: 900000,
     status: "Partial",
-    type: "Apartment Building",
+    type: "APARTMENT",
+    hasUnits: true,
   },
   {
     id: "prop-102",
@@ -245,7 +248,8 @@ export const mockLandlordProperties: LandlordPropertyItem[] = [
     occupiedUnits: 4,
     monthlyRevenueRwf: 640000,
     status: "Occupied",
-    type: "Apartment Building",
+    type: "APARTMENT",
+    hasUnits: true,
   },
   {
     id: "prop-103",
@@ -256,7 +260,8 @@ export const mockLandlordProperties: LandlordPropertyItem[] = [
     occupiedUnits: 2,
     monthlyRevenueRwf: 500000,
     status: "Partial",
-    type: "Villa",
+    type: "HOUSE",
+    hasUnits: false,
   },
 ];
 
@@ -264,7 +269,8 @@ export const mockLandlordNotifications: LandlordNotificationItem[] = [
   {
     id: "notif-1",
     title: "New Rent Payment Receipt Submitted",
-    message: "Jean Claude submitted a payment receipt of 150,000 RWF for September 2026 rent at Kimironko Heights (A-03).",
+    message:
+      "Jean Claude submitted a payment receipt of 150,000 RWF for September 2026 rent at Kimironko Heights (A-03).",
     timestamp: "10 minutes ago",
     category: "payment",
     isUnread: true,
@@ -274,7 +280,8 @@ export const mockLandlordNotifications: LandlordNotificationItem[] = [
   {
     id: "notif-2",
     title: "Blacklist Dispute Statement Submitted",
-    message: "Eric Manzi responded with a payment confirmation receipt for the 50,000 RWF water bill dispute at Kacyiru View.",
+    message:
+      "Eric Manzi responded with a payment confirmation receipt for the 50,000 RWF water bill dispute at Kacyiru View.",
     timestamp: "2 hours ago",
     category: "dispute",
     isUnread: true,
@@ -284,7 +291,8 @@ export const mockLandlordNotifications: LandlordNotificationItem[] = [
   {
     id: "notif-3",
     title: "Tenancy Agreement Renewal Reminder",
-    message: "Tenancy for Divine Uwase at Kabeza Modern Estate is due for renewal in 28 days.",
+    message:
+      "Tenancy for Divine Uwase at Kabeza Modern Estate is due for renewal in 28 days.",
     timestamp: "1 day ago",
     category: "tenancy",
     isUnread: false,
@@ -294,7 +302,8 @@ export const mockLandlordNotifications: LandlordNotificationItem[] = [
   {
     id: "notif-4",
     title: "System Maintenance Notice",
-    message: "Mobile money reconciliation system will undergo scheduled maintenance on Saturday 02:00 - 04:00 AM.",
+    message:
+      "Mobile money reconciliation system will undergo scheduled maintenance on Saturday 02:00 - 04:00 AM.",
     timestamp: "3 days ago",
     category: "system",
     isUnread: false,
@@ -305,25 +314,30 @@ export const mockLandlordFaqs: LandlordFAQItem[] = [
   {
     id: "faq-1",
     question: "How do I register a new tenancy agreement?",
-    answer: "Go to the Tenancies page and click 'Create Tenancy'. Enter the tenant's phone or national ID to initiate verification. Once confirmed, both parties can digitally review and sign.",
+    answer:
+      "Go to the Tenancies page and click 'Create Tenancy'. Enter the tenant's phone or national ID to initiate verification. Once confirmed, both parties can digitally review and sign.",
     category: "Tenancies",
   },
   {
     id: "faq-2",
     question: "How are rent payments reconciled via MTN Mobile Money / Bank?",
-    answer: "When a renter sends rent via MTN Mobile Money or bank transfer, they submit the transaction reference on Urugo. You will receive an immediate notification to review and confirm the payment receipt.",
+    answer:
+      "When a renter sends rent via MTN Mobile Money or bank transfer, they submit the transaction reference on Urugo. You will receive an immediate notification to review and confirm the payment receipt.",
     category: "Payments",
   },
   {
     id: "faq-3",
-    question: "What is the Blacklist Check and how do I report a defaulting tenant?",
-    answer: "The Blacklist Check feature allows landlords to report unresolved rental breaches (unpaid bills, damage). The tenant is notified and has 14 days to resolve or dispute before the report is finalized.",
+    question:
+      "What is the Blacklist Check and how do I report a defaulting tenant?",
+    answer:
+      "The Blacklist Check feature allows landlords to report unresolved rental breaches (unpaid bills, damage). The tenant is notified and has 14 days to resolve or dispute before the report is finalized.",
     category: "Blacklist",
   },
   {
     id: "faq-4",
     question: "How do I process a tenancy closure or security deposit refund?",
-    answer: "Navigate to the active tenancy details page, select 'End Tenancy', perform the joint checkout checklist, and enter any final utility deductions.",
+    answer:
+      "Navigate to the active tenancy details page, select 'End Tenancy', perform the joint checkout checklist, and enter any final utility deductions.",
     category: "Tenancies",
   },
 ];
