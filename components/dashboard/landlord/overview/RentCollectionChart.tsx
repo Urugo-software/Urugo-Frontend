@@ -68,7 +68,7 @@ export function RentCollectionChart({ data }: RentCollectionChartProps) {
               tick={{ fontSize: 12, fill: "#64748B" }}
             />
             <Tooltip
-              formatter={(value: any) => [
+              formatter={(value) => [
                 typeof value === "number" ? formatTooltipValue(value) : value ?? "",
                 "",
               ]}

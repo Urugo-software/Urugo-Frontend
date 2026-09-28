@@ -67,7 +67,7 @@ export function TenancyStatusDonutChart({
                 </Pie>
 
                 <Tooltip
-                  formatter={(val: any, name: any) => [
+                  formatter={(val, name) => [
                     `${val ?? 0} tenancies`,
                     name ?? "",
                   ]}
