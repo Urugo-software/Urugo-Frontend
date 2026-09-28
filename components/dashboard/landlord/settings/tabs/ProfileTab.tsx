@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Save } from "lucide-react";
 import CustomButton from "@/components/shared/CustomButton";
 import { mockLandlordSettings } from "@/data/landlord-data";
+import { SettingsField } from "../SettingsField";
 
 interface ProfileTabProps {
   onSave: () => void;
@@ -20,54 +21,22 @@ export function ProfileTab({ onSave }: ProfileTabProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-8">
       <div>
-        <h3 className="text-base font-bold text-ink">Personal & Business Information</h3>
-        <p className="text-xs text-faint mt-0.5">
+        <h3 className="text-lg font-semibold text-ink">Personal information</h3>
+        <p className="mt-1 text-sm text-body">
           Update your contact info used on tenancy receipts & agreement contracts.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-faint mb-2">
-            Full Legal Name
-          </label>
-          <input
-            type="text"
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            className="w-full px-4 py-2.5 text-sm border border-line bg-white text-ink focus:outline-none focus:border-brand rounded-none"
-          />
-        </div>
-
-        <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-faint mb-2">
-            Phone Number
-          </label>
-          <input
-            type="text"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            className="w-full px-4 py-2.5 text-sm border border-line bg-white text-ink focus:outline-none focus:border-brand rounded-none"
-          />
-        </div>
-
-        <div className="sm:col-span-2">
-          <label className="block text-xs font-bold uppercase tracking-wider text-faint mb-2">
-            Email Address
-          </label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-2.5 text-sm border border-line bg-white text-ink focus:outline-none focus:border-brand rounded-none"
-          />
-        </div>
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+        <SettingsField label="Full legal name" value={fullName} onChange={setFullName} />
+        <SettingsField label="Phone number" value={phone} onChange={setPhone} />
+        <div className="sm:col-span-2"><SettingsField label="Email address" type="email" value={email} onChange={setEmail} /></div>
       </div>
 
-      <div className="pt-4 border-t border-line flex justify-end">
-        <CustomButton title="Save Changes" variant="colored" type="submit" className="rounded-none">
+      <div className="flex justify-end border-t border-line pt-6">
+        <CustomButton title="Save changes" variant="colored" type="submit" className="rounded-lg">
           <Save className="h-4 w-4" />
         </CustomButton>
       </div>

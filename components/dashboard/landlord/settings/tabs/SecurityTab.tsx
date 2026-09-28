@@ -2,6 +2,7 @@
 
 import { Save } from "lucide-react";
 import CustomButton from "@/components/shared/CustomButton";
+import { SettingsField } from "../SettingsField";
 
 interface SecurityTabProps {
   onSave: () => void;
@@ -14,40 +15,21 @@ export function SecurityTab({ onSave }: SecurityTabProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-8">
       <div>
-        <h3 className="text-base font-bold text-ink">Security & Password</h3>
-        <p className="text-xs text-faint mt-0.5">
+        <h3 className="text-lg font-semibold text-ink">Security</h3>
+        <p className="mt-1 text-sm text-body">
           Update your account password and security credentials.
         </p>
       </div>
 
-      <div className="space-y-4">
-        <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-faint mb-2">
-            Current Password
-          </label>
-          <input
-            type="password"
-            placeholder="••••••••"
-            className="w-full px-4 py-2.5 text-sm border border-line bg-white text-ink focus:outline-none focus:border-brand rounded-none"
-          />
-        </div>
-
-        <div>
-          <label className="block text-xs font-bold uppercase tracking-wider text-faint mb-2">
-            New Password
-          </label>
-          <input
-            type="password"
-            placeholder="••••••••"
-            className="w-full px-4 py-2.5 text-sm border border-line bg-white text-ink focus:outline-none focus:border-brand rounded-none"
-          />
-        </div>
+      <div className="grid max-w-2xl gap-5 sm:grid-cols-2">
+        <SettingsField label="Current password" type="password" placeholder="Enter current password" />
+        <SettingsField label="New password" type="password" placeholder="Enter new password" />
       </div>
 
-      <div className="pt-4 border-t border-line flex justify-end">
-        <CustomButton title="Update Password" variant="colored" type="submit" className="rounded-none">
+      <div className="flex justify-end border-t border-line pt-6">
+        <CustomButton title="Update password" variant="colored" type="submit" className="rounded-lg">
           <Save className="h-4 w-4" />
         </CustomButton>
       </div>

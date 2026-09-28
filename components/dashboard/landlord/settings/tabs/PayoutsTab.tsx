@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Save, Smartphone, Building } from "lucide-react";
 import CustomButton from "@/components/shared/CustomButton";
 import { mockLandlordSettings } from "@/data/landlord-data";
+import { SettingsField } from "../SettingsField";
 
 interface PayoutsTabProps {
   onSave: () => void;
@@ -19,46 +20,32 @@ export function PayoutsTab({ onSave }: PayoutsTabProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-8">
       <div>
-        <h3 className="text-base font-bold text-ink">Payout & Rent Collection Accounts</h3>
-        <p className="text-xs text-faint mt-0.5">
+        <h3 className="text-lg font-semibold text-ink">Payout accounts</h3>
+        <p className="mt-1 text-sm text-body">
           Set default channels where tenant rent disbursements are received.
         </p>
       </div>
 
-      <div className="space-y-5">
-        <div className="p-4 border border-line bg-surface/30 space-y-3">
-          <div className="flex items-center gap-2 text-sm font-bold text-ink">
-            <Smartphone className="h-4 w-4 text-emerald-600" />
-            <span>MTN Mobile Money Payout Number</span>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-4 rounded-xl border border-line p-5">
+          <div className="flex items-center gap-2 text-sm font-semibold text-ink">
+            <Smartphone className="h-4 w-4 text-emerald-600" /><span>Mobile Money</span>
           </div>
-          <input
-            type="text"
-            value={momoNumber}
-            onChange={(e) => setMomoNumber(e.target.value)}
-            className="w-full px-4 py-2.5 text-sm border border-line bg-white text-ink focus:outline-none focus:border-brand rounded-none"
-            placeholder="e.g. 0788XXXXXX"
-          />
+          <SettingsField label="MTN payout number" value={momoNumber} onChange={setMomoNumber} placeholder="e.g. 0788 000 000" />
         </div>
 
-        <div className="p-4 border border-line bg-surface/30 space-y-3">
-          <div className="flex items-center gap-2 text-sm font-bold text-ink">
-            <Building className="h-4 w-4 text-brand" />
-            <span>Bank Account Details</span>
+        <div className="space-y-4 rounded-xl border border-line p-5">
+          <div className="flex items-center gap-2 text-sm font-semibold text-ink">
+            <Building className="h-4 w-4 text-brand" /><span>Bank account</span>
           </div>
-          <input
-            type="text"
-            value={bankAccount}
-            onChange={(e) => setBankAccount(e.target.value)}
-            className="w-full px-4 py-2.5 text-sm border border-line bg-white text-ink focus:outline-none focus:border-brand rounded-none"
-            placeholder="e.g. Bank of Kigali - 000XXXXX"
-          />
+          <SettingsField label="Account details" value={bankAccount} onChange={setBankAccount} placeholder="Bank and account number" />
         </div>
       </div>
 
-      <div className="pt-4 border-t border-line flex justify-end">
-        <CustomButton title="Save Payout Details" variant="colored" type="submit" className="rounded-none">
+      <div className="flex justify-end border-t border-line pt-6">
+        <CustomButton title="Save payout details" variant="colored" type="submit" className="rounded-lg">
           <Save className="h-4 w-4" />
         </CustomButton>
       </div>
