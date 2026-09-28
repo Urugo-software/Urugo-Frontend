@@ -14,6 +14,9 @@ import {
   Zap,
   MessageSquare,
   ScrollText,
+  CreditCard,
+  ShieldCheck,
+  Settings,
   LucideIcon,
 } from "lucide-react";
 import { RoleType } from "@/types";
@@ -95,6 +98,23 @@ export const roleNavItems: Record<RoleType, NavItemConfig[]> = {
     },
   ],
 };
+
+export const adminNavItems: NavItemConfig[] = [
+  { label: "Overview", href: "/admin", icon: LayoutDashboard },
+  { label: "Users", href: "/admin/users", icon: User },
+  { label: "Properties", href: "/admin/properties", icon: Building2 },
+  { label: "Verification", href: "/admin/property-verification", icon: ShieldCheck },
+  { label: "Leases", href: "/admin/leases", icon: ScrollText },
+  { label: "Payments", href: "/admin/payments", icon: CreditCard },
+  { label: "Complaints", href: "/admin/complaints", icon: MessageSquare },
+  { label: "Renter's History", href: "/admin/renter-history", icon: FileText },
+  { label: "Analytics", href: "/admin/analytics", icon: Calendar },
+  { label: "Notifications", href: "/admin/notifications", icon: Bell },
+  { label: "Moderation", href: "/admin/moderation", icon: Wrench },
+  { label: "Audit Logs", href: "/admin/audit-logs", icon: Clock },
+  { label: "Admin Management", href: "/admin/admin-management", icon: User },
+  { label: "Settings", href: "/admin/settings", icon: Settings },
+];
 
 export interface SavedPropertyItem {
   id: string;

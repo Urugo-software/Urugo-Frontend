@@ -1,5 +1,5 @@
 "use client";
-import { NavItemConfig, roleNavItems } from "@/data/dashboard-data";
+import { adminNavItems, NavItemConfig, roleNavItems } from "@/data/dashboard-data";
 import { usePathname } from "next/navigation";
 import { SidebarItem } from "../../SidebarItem";
 import { HelpCircle, Settings, X } from "lucide-react";
@@ -11,12 +11,13 @@ function MobileSidebar({
   setMobileSidebarOpen: (open: boolean) => void;
 }) {
   const pathname = usePathname();
+  const isAdmin = pathname.startsWith("/admin");
   const derivedRole = pathname.startsWith("/renter")
     ? "renter"
     : pathname.startsWith("/landlord")
     ? "landlord"
     : "home_seeker";
-  const mobileNavList = roleNavItems[derivedRole] || roleNavItems.home_seeker;
+  const mobileNavList = isAdmin ? adminNavItems : roleNavItems[derivedRole] || roleNavItems.home_seeker;
   const settingsHrefByRole = `/${
     derivedRole === "home_seeker" ? "home-seeker" : derivedRole
   }`;
@@ -50,39 +51,37 @@ function MobileSidebar({
           />
         ))}
 
-        <div className="px-3 pt-4 pb-2">
+        {!isAdmin && <div className="px-3 pt-4 pb-2">
           <span className="text-[11px] font-bold uppercase tracking-widest text-faint">
             Settings
           </span>
-        </div>
-        <SidebarItem
+        </div>}
+        {!isAdmin && <SidebarItem
           href={settingsHrefByRole + "/settings"}
           icon={Settings}
           label="Settings"
           active={pathname === settingsHrefByRole + "/settings"}
           onClick={() => setMobileSidebarOpen(false)}
-        />
-        <SidebarItem
+        />}
+        {!isAdmin && <SidebarItem
           href={settingsHrefByRole + "/help-center"}
           icon={HelpCircle}
           label="Help Center"
           active={pathname === settingsHrefByRole + "/help-center"}
           onClick={() => setMobileSidebarOpen(false)}
-        />
+        />}
       </nav>
       {/* User Session Footer */}
       <div className="absolute bottom-0 inset-x-0 border-t border-line bg-surface px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="grid size-10 shrink-0 place-items-center rounded-full bg-brand-tint text-sm font-bold text-brand">
-            YK
+            {isAdmin ? "AD" : "YK"}
           </div>
           <div className="min-w-0">
             <div className="truncate text-[13.5px] font-bold text-ink">
-              Yves Kamanzi
+              {isAdmin ? "Urugo Admin" : "Yves Kamanzi"}
             </div>
-            <div className="truncate text-[12px] text-faint">
-              Guest · not yet verified
-            </div>
+            <div className="truncate text-[12px] text-faint">{isAdmin ? "Platform administrator" : "Guest account"}</div>
           </div>
         </div>
       </div>
