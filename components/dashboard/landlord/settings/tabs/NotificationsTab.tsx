@@ -15,18 +15,18 @@ export function NotificationsTab({ onSave }: NotificationsTabProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-8">
       <div>
-        <h3 className="text-base font-bold text-ink">Notification Preferences</h3>
-        <p className="text-xs text-faint mt-0.5">
+        <h3 className="text-lg font-semibold text-ink">Notification preferences</h3>
+        <p className="mt-1 text-sm text-body">
           Choose how and when you receive rent collection alerts.
         </p>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-3">
         {mockNotificationPreferences.map((item) => (
-          <label key={item.id} className="flex items-start gap-3 p-4 border border-line bg-white cursor-pointer hover:bg-surface/30">
-            <input type="checkbox" defaultChecked={item.defaultChecked} className="mt-1 accent-brand rounded-none" />
+          <label key={item.id} className="flex cursor-pointer items-start gap-4 rounded-xl border border-line p-4 transition hover:bg-surface/30 sm:p-5">
+            <input type="checkbox" defaultChecked={item.defaultChecked} className="mt-1 h-4 w-4 accent-brand" />
             <div>
               <span className="text-sm font-bold text-ink block">{item.title}</span>
               <span className="text-xs text-faint block mt-0.5">{item.desc}</span>
@@ -35,8 +35,8 @@ export function NotificationsTab({ onSave }: NotificationsTabProps) {
         ))}
       </div>
 
-      <div className="pt-4 border-t border-line flex justify-end">
-        <CustomButton title="Save Preferences" variant="colored" type="submit" className="rounded-none">
+      <div className="flex justify-end border-t border-line pt-6">
+        <CustomButton title="Save preferences" variant="colored" type="submit" className="rounded-lg">
           <Save className="h-4 w-4" />
         </CustomButton>
       </div>

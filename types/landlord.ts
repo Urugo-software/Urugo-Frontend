@@ -1,6 +1,12 @@
 export type TenancyStatus = "Active" | "Ending" | "Closed";
 export type PaymentStatus = "Pending" | "Approved" | "Rejected" | "Disputed";
-export type IssueStatus = "Reported" | "Unresolved" | "Disputed" | "Confirmed" | "Resolved" | "Rejected";
+export type IssueStatus =
+  | "Reported"
+  | "Unresolved"
+  | "Disputed"
+  | "Confirmed"
+  | "Resolved"
+  | "Rejected";
 
 export interface LandlordMetric {
   // Operational Top 5 KPIs
@@ -43,7 +49,13 @@ export interface TenancyOverview {
 
 export interface RecentActivityItem {
   id: string;
-  type: "payment_approved" | "payment_pending" | "tenancy_ending" | "issue_reported" | "dispute_submitted" | "issue_resolved";
+  type:
+    | "payment_approved"
+    | "payment_pending"
+    | "tenancy_ending"
+    | "issue_reported"
+    | "dispute_submitted"
+    | "issue_resolved";
   title: string;
   description: string;
   timestamp: string;
@@ -110,18 +122,6 @@ export interface RentalIssue {
   };
 }
 
-export interface LandlordPropertyItem {
-  id: string;
-  name: string;
-  location: string;
-  image: string;
-  totalUnits: number;
-  occupiedUnits: number;
-  monthlyRevenueRwf: number;
-  status: "Occupied" | "Partial" | "Vacant";
-  type: "Apartment Building" | "Villa" | "Commercial Unit";
-}
-
 export interface LandlordNotificationItem {
   id: string;
   title: string;
@@ -145,11 +145,12 @@ export interface LandlordPropertyItem {
   name: string;
   location: string;
   image: string;
-  totalUnits: number;
-  occupiedUnits: number;
+  totalUnits?: number;
+  occupiedUnits?: number;
   monthlyRevenueRwf: number;
+  hasUnits: boolean;
   status: "Occupied" | "Partial" | "Vacant";
-  type: "Apartment Building" | "Villa" | "Commercial Unit";
+  type: "APARTMENT" | "HOUSE" | "COMMERCIAL";
 }
 
 export interface LandlordNotificationItem {

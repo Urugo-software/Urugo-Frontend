@@ -9,15 +9,27 @@ interface RentalHistoryOverviewProps {
 function getStatusBadge(status: RentalIssue["status"]) {
   switch (status) {
     case "Disputed":
-      return { label: "Renter disagrees", style: "bg-amber-50 text-amber-700 border-amber-200" };
+      return {
+        label: "Renter disagrees",
+        style: "bg-amber-50 text-amber-700 border-amber-200",
+      };
     case "Reported":
-      return { label: "Waiting for review", style: "bg-brand-tint text-brand border-blue-200" };
+      return {
+        label: "Waiting for review",
+        style: "bg-brand-tint text-brand border-blue-200",
+      };
     case "Resolved":
-      return { label: "Resolved", style: "bg-brand-tint text-brand border-blue-200" };
+      return {
+        label: "Resolved",
+        style: "bg-brand-tint text-brand border-blue-200",
+      };
     case "Confirmed":
     case "Unresolved":
     default:
-      return { label: "Confirmed", style: "bg-rose-50 text-rose-700 border-rose-200" };
+      return {
+        label: "Confirmed",
+        style: "bg-rose-50 text-rose-700 border-rose-200",
+      };
   }
 }
 
@@ -49,10 +61,16 @@ export function RentalHistoryOverview({ issues }: RentalHistoryOverviewProps) {
             {/* 1. Renter & Property Header */}
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div>
-                <h2 className="text-lg sm:text-xl font-bold text-ink">{issue.renterName}</h2>
-                <p className="mt-0.5 text-sm font-medium text-body">{issue.propertyName}</p>
+                <h2 className="text-lg sm:text-xl font-bold text-ink">
+                  {issue.renterName}
+                </h2>
+                <p className="mt-0.5 text-sm font-medium text-body">
+                  {issue.propertyName}
+                </p>
               </div>
-              <span className={`px-3 py-1 text-xs font-semibold border ${badge.style}`}>
+              <span
+                className={`px-3 py-1 text-xs font-semibold border ${badge.style}`}
+              >
                 {badge.label}
               </span>
             </div>
@@ -61,7 +79,10 @@ export function RentalHistoryOverview({ issues }: RentalHistoryOverviewProps) {
             <div className="pt-2 border-t border-line/60">
               <h3 className="text-base font-bold text-ink">{title}</h3>
               <p className="mt-1 text-sm font-semibold text-brand">
-                {issue.amountRwf.toLocaleString()} RWF · <span className="text-faint font-normal">{issue.createdDate}</span>
+                {issue.amountRwf.toLocaleString()} RWF ·{" "}
+                <span className="text-faint font-normal">
+                  {issue.createdDate}
+                </span>
               </p>
             </div>
 
@@ -78,8 +99,8 @@ export function RentalHistoryOverview({ issues }: RentalHistoryOverviewProps) {
                 Tenancy: {issue.tenancyPeriod}
               </span>
               <Link
-                href={`/landlord/blacklist-check/${issue.id}`}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand hover:underline"
+                href={`/landlord/renter-history/${issue.id}`}
+                className="inline-flex items-center gap-1.5 text-[13px] font-medium text-faint hover:text-brand  hover:underline"
               >
                 <span>Review details</span>
                 <ArrowRight className="h-3.5 w-3.5" />

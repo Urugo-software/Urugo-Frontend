@@ -20,12 +20,12 @@ export function DashboardHeader({ title = "Dashboard" }: DashboardHeaderProps) {
 
       {/* Header Actions & Routing */}
       <div className=" flex items-center gap-3">
-        <Link className="max-md:hidden" href="/">
+        <Link className="border  border-line max-md:hidden" href="/">
           <CustomButton
             variant="light"
             className="flex justify-center min-w-fit  rounded-none"
           >
-            <h1 className="translate-x-[-18%] group-hover:text-white  text-brand">
+            <h1 className=" group-hover:text-white  text-brand">
               Back to homepage
             </h1>
           </CustomButton>
