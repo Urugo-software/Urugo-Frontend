@@ -25,13 +25,13 @@ export function RenterElectricitySummaryCard({
             <span>{electricity.percentUsed}% of Limit</span>
           </div>
         </div>
-        <p className="text-[12.5px] mt-2 text-body mt-1">
+        <p className="text-[13px] mt-2 text-body mt-1">
           {electricity.statusMessage}
         </p>
       </div>
       <Link
         href="/renter/electricity"
-        className="flex items-center duration-300 justify-between pt-2 text-[12px] hover:font-semibold text-gray-400 hover:text-brand hover:underline"
+        className="flex items-center duration-300 justify-between pt-2 text-[13px] hover:font-semibold text-gray-400 hover:text-brand hover:underline"
       >
         <span>Usage Breakdown</span>
         <ArrowRight className="size-4" />

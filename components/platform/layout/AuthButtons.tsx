@@ -15,7 +15,7 @@ const AuthButtons = () => {
         <CustomButton
           title="Get Started"
           variant="colored"
-          className="bg-brand border border-line"
+          className="bg-brand rounded-full border border-line"
         />
       </Link>
     </div>

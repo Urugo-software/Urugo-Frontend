@@ -5,7 +5,6 @@ import {
   Bot,
   Bell,
   User,
-  Settings,
   Clock,
   Building2,
   FileText,
@@ -15,6 +14,9 @@ import {
   Zap,
   MessageSquare,
   ScrollText,
+  CreditCard,
+  ShieldCheck,
+  Settings,
   LucideIcon,
 } from "lucide-react";
 import { RoleType } from "@/types";
@@ -38,17 +40,36 @@ export const roleNavItems: Record<RoleType, NavItemConfig[]> = {
     { label: "Visits", href: "/home-seeker/visits", icon: Calendar },
     { label: "Waiting List", href: "/home-seeker/waiting-list", icon: Clock },
     { label: "AI Assistant", href: "#", icon: Bot },
-    { label: "Notifications", href: "/home-seeker/notifications", icon: Bell, badge: 1 },
+    {
+      label: "Notifications",
+      href: "/home-seeker/notifications",
+      icon: Bell,
+      badge: 1,
+    },
     { label: "Profile", href: "/home-seeker/profile", icon: User },
   ],
   landlord: [
     { label: "Dashboard", href: "/landlord", icon: LayoutDashboard },
-    { label: "My Properties", href: "/properties", icon: Building2, badge: 8 },
-    { label: "Applications", href: "#", icon: FileText, badge: 3 },
-    { label: "Revenue & Payouts", href: "#", icon: DollarSign },
-    { label: "AI Assistant", href: "#", icon: Bot },
-    { label: "Notifications", href: "#", icon: Bell, badge: 2 },
-    { label: "Settings", href: "#", icon: Settings },
+    {
+      label: "My Properties",
+      href: "/landlord/properties",
+      icon: Building2,
+      badge: 6,
+    },
+    { label: "Renters", href: "/landlord/renters", icon: User, badge: 8 },
+    { label: "Tenancies", href: "/landlord/tenancies", icon: ScrollText },
+    {
+      label: "Renter History",
+      href: "/landlord/renter-history",
+      icon: FileText,
+      badge: 1,
+    },
+    {
+      label: "Notifications",
+      href: "/landlord/notifications",
+      icon: Bell,
+      badge: 2,
+    },
   ],
   renter: [
     { label: "Overview", href: "/renter", icon: LayoutDashboard },
@@ -56,12 +77,44 @@ export const roleNavItems: Record<RoleType, NavItemConfig[]> = {
     { label: "Lease", href: "/renter/lease", icon: ScrollText },
     { label: "Payments", href: "/renter/payments", icon: DollarSign },
     { label: "Electricity", href: "/renter/electricity", icon: Zap },
-    { label: "Maintenance", href: "/renter/maintenance", icon: Wrench, badge: 1 },
-    { label: "Messages", href: "/renter/messages", icon: MessageSquare, badge: 1 },
+    {
+      label: "Maintenance",
+      href: "/renter/maintenance",
+      icon: Wrench,
+      badge: 1,
+    },
+    {
+      label: "Messages",
+      href: "/renter/messages",
+      icon: MessageSquare,
+      badge: 1,
+    },
     { label: "Documents", href: "/renter/documents", icon: Folder },
-    { label: "Notifications", href: "/renter/notifications", icon: Bell, badge: 2 },
+    {
+      label: "Notifications",
+      href: "/renter/notifications",
+      icon: Bell,
+      badge: 2,
+    },
   ],
 };
+
+export const adminNavItems: NavItemConfig[] = [
+  { label: "Overview", href: "/admin", icon: LayoutDashboard },
+  { label: "Users", href: "/admin/users", icon: User },
+  { label: "Properties", href: "/admin/properties", icon: Building2 },
+  { label: "Verification", href: "/admin/property-verification", icon: ShieldCheck },
+  { label: "Leases", href: "/admin/leases", icon: ScrollText },
+  { label: "Payments", href: "/admin/payments", icon: CreditCard },
+  { label: "Complaints", href: "/admin/complaints", icon: MessageSquare },
+  { label: "Renter's History", href: "/admin/renter-history", icon: FileText },
+  { label: "Analytics", href: "/admin/analytics", icon: Calendar },
+  { label: "Notifications", href: "/admin/notifications", icon: Bell },
+  { label: "Moderation", href: "/admin/moderation", icon: Wrench },
+  { label: "Audit Logs", href: "/admin/audit-logs", icon: Clock },
+  { label: "Admin Management", href: "/admin/admin-management", icon: User },
+  { label: "Settings", href: "/admin/settings", icon: Settings },
+];
 
 export interface SavedPropertyItem {
   id: string;
