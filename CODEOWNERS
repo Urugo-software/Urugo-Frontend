@@ -1,0 +1,7 @@
+* @atlas-devel
+/.github/workflows/** @atlas-devel
+/package.json @atlas-devel
+/pnpm-lock.yaml @atlas-devel
+/eslint.config.mjs @atlas-devel
+/tsconfig.json @atlas-devel
+/CODEOWNERS @atlas-devel

@@ -40,5 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# local development docs
-/docs
+# Keep local dashboard guides ignored while allowing the CI policy document.
+/docs/*
+!/docs/ci-and-branch-protection.md
