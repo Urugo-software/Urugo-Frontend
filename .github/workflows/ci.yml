@@ -38,6 +38,9 @@ jobs:
       - name: Run ESLint
         run: pnpm run lint
 
+      - name: Generate Next.js types
+        run: pnpm exec next typegen
+
       - name: Check TypeScript types
         run: pnpm run typecheck
 
