@@ -10,7 +10,7 @@ interface RoleTabSelectorProps {
 }
 
 const ROLES: { id: RoleType; label: string }[] = [
-  { id: "home_seeker", label: "For Home Seekers" },
+  // Home seeker tab hidden until home-seeker flows are enabled
   { id: "landlord", label: "For Landlords" },
   { id: "renter", label: "For Renters" },
 ];

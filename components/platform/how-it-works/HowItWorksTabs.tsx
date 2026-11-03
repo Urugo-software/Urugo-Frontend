@@ -7,7 +7,7 @@ import StepFlowGrid from "./StepFlowGrid";
 import { RoleType } from "@/types";
 
 function HowItWorksTabs() {
-  const [activeRole, setActiveRole] = useState<RoleType>("home_seeker");
+  const [activeRole, setActiveRole] = useState<RoleType>("landlord");
   const currentData = howItWorksData[activeRole];
 
   return (
