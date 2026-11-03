@@ -18,9 +18,9 @@ export function DashboardSidebar({ currentRole }: DashboardSidebarProps) {
     ? "renter"
     : pathname.startsWith("/landlord")
       ? "landlord"
-      : currentRole || "home_seeker";
+      : currentRole || "renter";
 
-  const navList = isAdmin ? adminNavItems : roleNavItems[derivedRole] || roleNavItems.home_seeker;
+  const navList = isAdmin ? adminNavItems : roleNavItems[derivedRole] || roleNavItems.renter;
   const settingsHrefByRole = `/${
     derivedRole === "home_seeker" ? "home-seeker" : derivedRole
   }`;
@@ -108,7 +108,7 @@ export function DashboardSidebar({ currentRole }: DashboardSidebarProps) {
             <div className="truncate text-[13.5px] font-bold text-ink">
               {isAdmin ? "Urugo Admin" : "Yves Kamanzi"}
             </div>
-            <div className="truncate text-[12px] text-faint">{isAdmin ? "Platform administrator" : "Guest account"}</div>
+            <div className="truncate text-[12px] text-faint">{isAdmin ? "Platform administrator" : derivedRole === "landlord" ? "Landlord account" : "Renter account"}</div>
           </div>
         </div>
       </div>

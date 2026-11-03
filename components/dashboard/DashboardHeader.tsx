@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Bell, House } from "lucide-react";
 import CustomButton from "@/components/shared/CustomButton";
-import MobileNavWrapper from "./home-seeker/mobile-nav/mobile-nav-wrapper";
+import MobileNavWrapper from "./mobile-nav/mobile-nav-wrapper";
 
 interface DashboardHeaderProps {
   title?: string;
@@ -14,7 +14,7 @@ export function DashboardHeader({ title = "Dashboard" }: DashboardHeaderProps) {
   const pathname = usePathname();
   const adminTitles: Record<string, string> = { admin: "Overview", users: "Users", properties: "Properties", "property-verification": "Property verification", leases: "Leases", payments: "Payments", complaints: "Complaints", "renter-history": "Renter's History", analytics: "Analytics", notifications: "Notifications", moderation: "Moderation", "audit-logs": "Audit logs", "admin-management": "Admin management", settings: "Settings" };
   const currentTitle = pathname.startsWith("/admin") ? adminTitles[pathname.split("/")[2] || "admin"] || title : title;
-  const notificationsHref = pathname.startsWith("/admin") ? "/admin/complaints" : "/home-seeker/notifications";
+  const notificationsHref = pathname.startsWith("/admin") ? "/admin/complaints" : pathname.startsWith("/landlord") ? "/landlord/notifications" : "/renter/notifications";
   return (
     <header className="sticky top-0 z-20 flex h-18 shrink-0 items-center justify-between border-b border-line  px-4 sm:px-8 backdrop-blur-md">
       {/* Current Page Title */}
