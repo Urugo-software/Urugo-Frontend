@@ -11,7 +11,7 @@ function NavItems({ href, name }: NavItemProps) {
   console.log("isActive", isActive, pathname, href);
   return (
     <Link
-      className={` hover:border-b-2 duration-300 hover:border-brand/80 hover:text-brand rounded-full px-2 text-sm tracking-wide ${isActive ? "border-b-2 border-brand text-brand" : "text-ink"}`}
+      className={` hover:border-b-2 duration-300 hover:border-brand/80 hover:text-brand  px-2 text-sm tracking-wide ${isActive ? "border-b-2 border-brand text-brand" : "text-ink"}`}
       href={href}
     >
       {name}

@@ -13,7 +13,7 @@ const AuthButtons = () => {
       </Link>
       <Link href="/auth/sign-up">
         <CustomButton
-          title="Get Started"
+          title="List Your Property"
           variant="colored"
           className="bg-brand border border-line"
         />

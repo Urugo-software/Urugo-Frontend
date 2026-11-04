@@ -23,12 +23,6 @@ export default function PropertyHeader({
             <span className="animate-pulse">●</span> Available now
           </span>
         )}
-
-        {verified && (
-          <span className="text-xs font-bold px-3.5 py-1.5 rounded-full bg-brand-tint text-brand">
-            ✓ Admin verified
-          </span>
-        )}
       </div>
     </>
   );

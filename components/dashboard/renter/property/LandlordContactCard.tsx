@@ -1,5 +1,6 @@
 import { User, Phone, Mail } from "lucide-react";
 import CardHeader from "./CardHeader";
+import Link from "next/link";
 
 interface Props {
   name: string;
@@ -25,7 +26,9 @@ export function LandlordContactCard({ name, phone, email }: Props) {
           </div>
           <div className="flex items-center mt-2 gap-1.5 text-[12.5px] text-body ">
             <Mail className="size-3.5 text-faint" />
-            <span className="tracking-[0.5px]">{email}</span>
+            <Link className="tracking-[0.5px]" href={"mailto:" + email}>
+              {email}
+            </Link>
           </div>
         </div>
       </div>

@@ -33,7 +33,7 @@ export default function StepCard({ step, index }: StepCardProps) {
           <div className="absolute -inset-1 rounded-full bg-brand/20 opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300 blur-xs" />
 
           {/* Number Circle */}
-          <div className="relative w-14 h-14 rounded-full bg-brand text-white flex items-center justify-center font-black text-xl shadow-md group-hover:scale-105 transition-transform duration-300">
+          <div className="relative w-14 h-14 rounded-full bg-white border border-brand/15 text-brand flex items-center justify-center font-black text-xl shadow-sm   group-hover:scale-105 transition-transform duration-300">
             {step.stepNumber}
           </div>
         </div>

@@ -8,12 +8,12 @@ const AuthButtons = () => {
         <CustomButton
           title="Sign In"
           variant="light"
-          className="hidden md:block bg-white border border-line"
+          className="hidden rounded-full md:block bg-white border border-line"
         />
       </Link>
       <Link href="/auth/sign-up">
         <CustomButton
-          title="Get Started"
+          title="List your Property"
           variant="colored"
           className="bg-brand rounded-full border border-line"
         />
