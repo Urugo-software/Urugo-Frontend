@@ -208,6 +208,22 @@ function HeroSection() {
             />
           ))}
         </div>
+
+        {/* Slider Pagination Indicators (Bottom Center) */}
+        <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20 bg-black/35 backdrop-blur-md px-3 py-1.5 rounded-full">
+          {heroSlides.map((slide, idx) => (
+            <button
+              key={slide.id}
+              type="button"
+              onClick={() => setCurrentSlide(idx)}
+              aria-label={`Go to slide ${idx + 1}`}
+              className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${currentSlide === idx
+                ? "w-5 bg-white"
+                : "w-1.5 bg-white/50 hover:bg-white/80"
+                }`}
+            />
+          ))}
+        </div>
       </div>
 
       {/* Home Stats Counters */}
