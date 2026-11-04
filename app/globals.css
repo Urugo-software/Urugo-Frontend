@@ -10,7 +10,7 @@
   --font-ibm: var(--font-ibm);
 
   /* colors  */
-  --color-brand: rgb(29, 102, 255);
+  --color-brand: #040200;
   --color-brand-deep: #1e40af;
   --color-brand-tint: #eff6ff;
 
@@ -76,6 +76,7 @@
 body {
   color: var(--color-ink);
 }
+
 /* ---break---  */
 :root {
   --background: oklch(1 0 0);
@@ -111,6 +112,7 @@ body {
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
 }
+
 /* ---break---  */
 .dark {
   --background: oklch(0.145 0 0);
@@ -145,14 +147,17 @@ body {
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 }
+
 /* ---break---  */
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+
   html {
     @apply font-sans;
   }
