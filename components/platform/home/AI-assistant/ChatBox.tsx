@@ -5,19 +5,12 @@ function ChatBox() {
       <div className="flex items-center justify-between border-b border-line bg-white px-5 py-3.5">
         <div className="flex items-center gap-3">
           {/* Avatar */}
-          <div className="w-8 h-8 rounded-xl bg-brand flex items-center justify-center shadow-sm shadow-brand/30">
-            <span className="text-white font-extrabold text-[13px] leading-none">
-              U
-            </span>
-          </div>
+
           <div>
-            <p className="text-[13px] font-bold text-ink leading-none mb-0.5">
-              Urugo Assistant
+            <p className="text-[13px] uppercase font-bold text-ink leading-none mb-0.5 py-2">
+              Zoe BOT
             </p>
           </div>
-        </div>
-        <div className="rounded-full border border-brand/20 bg-brand-tint px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.15em] text-brand">
-          AI · Live
         </div>
       </div>
 
@@ -25,7 +18,7 @@ function ChatBox() {
       <div className="flex flex-col gap-4 bg-surface p-5 min-h-[220px]">
         {/* User message */}
         <div className="self-end flex flex-col items-end gap-1 max-w-[82%]">
-          <div className="rounded-2xl rounded-br-md bg-brand px-4 py-2.5 text-[13.5px] leading-relaxed text-white shadow-md shadow-brand/20">
+          <div className="rounded-2xl rounded-br-md bg-brand/90 px-4 py-2.5 text-[13.5px] leading-relaxed text-white shadow-md shadow-brand/20">
             I need a 2-bedroom near Remera, budget around 200k
           </div>
           <span className="text-[10px] text-faint">just now</span>
@@ -35,8 +28,8 @@ function ChatBox() {
         <div className="self-start flex flex-col items-start gap-1 max-w-[82%]">
           <div className="rounded-2xl rounded-bl-md border border-line bg-white px-4 py-3 text-[13px] leading-relaxed text-ink shadow-sm">
             <span className="mb-1.5 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-brand">
-              <span className="w-1 h-1 rounded-full bg-brand inline-block" />8
-              matches found
+              <span className="w-1 h-1 rounded-full bg-brand/90 inline-block" />
+              8 matches found
             </span>
             Got it cheapest first, or best-rated landlords?
           </div>
@@ -45,7 +38,7 @@ function ChatBox() {
 
         {/* User message */}
         <div className="self-end flex flex-col items-end gap-1 max-w-[82%]">
-          <div className="rounded-2xl rounded-br-md bg-brand px-4 py-2.5 text-[13.5px] leading-relaxed text-white shadow-md shadow-brand/20">
+          <div className="rounded-2xl rounded-br-md bg-brand/90 px-4 py-2.5 text-[13.5px] leading-relaxed text-white shadow-md shadow-brand/20">
             {`Best rated, and I'll need parking`}
           </div>
           <span className="text-[10px] text-faint">just now</span>
@@ -58,8 +51,8 @@ function ChatBox() {
               <span className="w-1 h-1 rounded-full bg-brand inline-block" />
               Filtered · 3 results
             </span>
-            Here are 3 verified properties with parking, all 4.5★+. Want a
-            move-in cost breakdown?
+            Here are 3 verified properties with parking. Want a move-in cost
+            breakdown?
           </div>
           <span className="text-[10px] text-faint">Urugo AI</span>
         </div>

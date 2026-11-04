@@ -4,11 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import SectionContainer from "./SectionContainer";
-import {
-  productColumn,
-  contactInfo,
-  legalLinks,
-} from "@/data/footer-data";
+import { productColumn, contactInfo, legalLinks } from "@/data/footer-data";
 
 function PhoneIcon({ className = "w-4 h-4" }: { className?: string }) {
   return (
@@ -65,7 +61,9 @@ function CheckCircleIcon({ className = "w-4 h-4" }: { className?: string }) {
 
 function FooterSection() {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [status, setStatus] = useState<
+    "idle" | "loading" | "success" | "error"
+  >("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubscribe = (e: React.FormEvent) => {
@@ -108,21 +106,6 @@ function FooterSection() {
                 className="inline-flex items-center gap-2.5 group"
                 aria-label="Urugo Home"
               >
-                <div className="w-8 h-8 rounded-lg bg-brand flex items-center justify-center text-white transition-colors group-hover:bg-brand-deep shadow-xs">
-                  <svg
-                    className="w-4 h-4"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden="true"
-                  >
-                    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                    <polyline points="9 22 9 12 15 12 15 22" />
-                  </svg>
-                </div>
                 <span className="font-extrabold text-xl tracking-tight text-brand group-hover:text-brand-deep transition-colors">
                   URUGO
                 </span>
@@ -248,10 +231,6 @@ function FooterSection() {
                     {errorMessage}
                   </p>
                 )}
-
-                <p className="text-xs text-faint">
-                  No spam, ever. Unsubscribe at any time.
-                </p>
               </form>
             )}
           </div>
