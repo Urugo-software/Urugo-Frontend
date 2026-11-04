@@ -22,7 +22,7 @@ function RoleCard({
     <div
       className={`relative flex flex-col border rounded-2xl p-7 transition-all duration-300 ${
         isHighlighted
-          ? "bg-brand border-brand shadow-xl shadow-brand/20"
+          ? "bg-brand/90 border-brand shadow-xl shadow-brand/20"
           : "bg-white border-line hover:border-brand/30 hover:shadow-lg hover:shadow-brand/5"
       }`}
     >

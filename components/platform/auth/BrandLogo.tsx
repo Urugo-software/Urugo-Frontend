@@ -3,22 +3,20 @@ function BrandLogo() {
     <div className=" hidden lg:flex flex-col text-body bg-white  items-center justify-center">
       <h1
         style={{
-          WebkitTextStroke: "2px #1d4ed8",
-          WebkitTextFillColor: "#1d4ed8",
+          WebkitTextStroke: "2px #040200",
+          WebkitTextFillColor: "#ffffff",
         }}
         className="text-9xl font-extrabold  "
       >
         U
       </h1>
-      <p className="text-xs mb-4 font-medium tracking-widest text-brand-deep">
-        URUGO
-      </p>
+
       <p
         style={{
-          WebkitTextStroke: "0.5px #445c9c",
+          WebkitTextStroke: "0.5px black",
           WebkitTextFillColor: "transparent",
         }}
-        className="text-md text-gray-400 font-medium tracking-widest uppercase "
+        className="text-md text-brand font-medium tracking-widest uppercase "
       >
         Rental Platform
       </p>

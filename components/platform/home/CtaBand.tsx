@@ -4,7 +4,7 @@ import Link from "next/link";
 function CtaBand() {
   return (
     <div className=" pt-8 overflow-hidden">
-      <div className="relative  bg-brand rounded-3xl px-10 py-16 text-center text-white">
+      <div className="relative  bg-brand/90 rounded-3xl px-10 py-16 text-center text-white">
         {/* light balloon */}
         <div className="absolute -top-25 -right-20 bg-white/10 w-[420px] h-[420px] rounded-full" />
         <div className="absolute -bottom-45 -left-20 bg-white/10 w-[420px] h-[420px] rounded-full" />
