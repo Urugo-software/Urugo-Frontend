@@ -8,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { RenterPropertySelectProps } from "./types/renter-registration.types";
+import { RenterPropertySelectProps } from "@/types/renter-registration.types";
 
 export function RenterPropertySelect({
   properties,

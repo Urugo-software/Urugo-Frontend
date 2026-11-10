@@ -10,9 +10,9 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useManualRenterRegistration } from "./hooks/useManualRenterRegistration";
+import { useManualRenterRegistration } from "@/hooks/mutate/useManualRenterRegistration";
 import { ManualRenterPreviewCard } from "./ManualRenterPreviewCard";
-import { ManualRenterRegistrationFormProps } from "./types/renter-registration.types";
+import { ManualRenterRegistrationFormProps } from "@/types/renter-registration.types";
 
 export function ManualRenterRegistrationForm({
   properties,

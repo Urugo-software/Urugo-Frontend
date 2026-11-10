@@ -57,6 +57,7 @@ export const roleNavItems: Record<RoleType, NavItemConfig[]> = {
       badge: 6,
     },
     { label: "Renters", href: "/landlord/renters", icon: User, badge: 8 },
+    { label: "Agreements", href: "/landlord/agreements", icon: FileText },
     { label: "Tenancies", href: "/landlord/tenancies", icon: ScrollText },
     {
       label: "Renter History",

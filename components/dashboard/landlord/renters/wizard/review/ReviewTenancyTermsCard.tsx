@@ -6,7 +6,7 @@ import {
   formatRwf,
   InitialPaymentCalculation,
   TenancyConfigDraft,
-} from "../../types/renter-wizard.types";
+} from "@/types/renter-wizard.types";
 
 interface ReviewTenancyTermsCardProps {
   tenancy: TenancyConfigDraft;

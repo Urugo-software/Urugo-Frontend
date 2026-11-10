@@ -3,7 +3,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { X, Wrench } from "lucide-react";
-import { useCreateMaintenanceRequest } from "@/hooks/mutations/useRenterMutations";
+import { useCreateMaintenanceRequest } from "@/hooks/mutate/useRenterMutations";
 import CustomButton from "@/components/shared/CustomButton";
 
 interface FormInputs {

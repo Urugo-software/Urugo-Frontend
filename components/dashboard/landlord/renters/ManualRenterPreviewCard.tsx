@@ -2,7 +2,7 @@
 
 import { CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ManualRenterPreviewCardProps } from "./types/renter-registration.types";
+import { ManualRenterPreviewCardProps } from "@/types/renter-registration.types";
 
 export function ManualRenterPreviewCard({
   draft,

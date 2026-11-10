@@ -3,7 +3,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { X, Smartphone } from "lucide-react";
-import { usePayRent } from "@/hooks/mutations/useRenterMutations";
+import { usePayRent } from "@/hooks/mutate/useRenterMutations";
 import CustomButton from "@/components/shared/CustomButton";
 
 interface PayFormInputs {

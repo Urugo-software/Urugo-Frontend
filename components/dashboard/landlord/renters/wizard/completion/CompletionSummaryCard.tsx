@@ -1,10 +1,10 @@
 "use client";
 
-import { Building2, ExternalLink, User } from "lucide-react";
+import { Building2, User } from "lucide-react";
 import {
   formatRwf,
   FullRenterRegistrationSubmission,
-} from "../../types/renter-wizard.types";
+} from "@/types/renter-wizard.types";
 
 interface CompletionSummaryCardProps {
   submission: FullRenterRegistrationSubmission;

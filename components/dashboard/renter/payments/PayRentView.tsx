@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { usePayRent } from "@/hooks/mutations/useRenterMutations";
+import { usePayRent } from "@/hooks/mutate/useRenterMutations";
 import { PaymentMethod } from "@/data/payment-methods-data";
 import { PayRentHeader } from "./PayRentHeader";
 import { PaymentTypeSelector } from "./PaymentTypeSelector";

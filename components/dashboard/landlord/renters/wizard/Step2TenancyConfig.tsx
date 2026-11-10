@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { RenterPropertySelect } from "../RenterPropertySelect";
-import { Step2TenancyConfigProps } from "../types/renter-wizard.types";
+import { Step2TenancyConfigProps } from "@/types/renter-wizard.types";
 import { TenancyConfigToggleBanner } from "./tenancy/TenancyConfigToggleBanner";
 import { TenancyDurationPicker } from "./tenancy/TenancyDurationPicker";
 import { TenancyPaymentSummaryCard } from "./tenancy/TenancyPaymentSummaryCard";
