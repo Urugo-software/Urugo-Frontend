@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion, type Variants } from "framer-motion";
-import { useRenterWizard } from "@/hooks/useManualRenterRegistration";
+import { useRenterWizard } from "@/hooks/mutate/useManualRenterRegistration";
 import { RenterRegistrationWizardProps } from "@/types/renter-wizard.types";
 import { Step1RenterDetails } from "./wizard/Step1RenterDetails";
 import { Step2TenancyConfig } from "./wizard/Step2TenancyConfig";

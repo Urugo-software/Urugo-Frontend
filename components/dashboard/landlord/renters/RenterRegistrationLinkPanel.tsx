@@ -3,7 +3,7 @@
 import { Check, Copy, Link2, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useSimulatedRenterLink } from "@/hooks/useSimulatedRenterLink";
+import { useSimulatedRenterLink } from "@/hooks/mutate/useSimulatedRenterLink";
 import { RenterRegistrationLinkPanelProps } from "@/types/renter-registration.types";
 
 export function RenterRegistrationLinkPanel({
