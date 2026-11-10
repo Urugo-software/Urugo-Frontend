@@ -3,7 +3,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Send } from "lucide-react";
-import { useSendMessage } from "@/hooks/mutations/useSendMessage";
+import { useSendMessage } from "@/hooks/mutate/useSendMessage";
 
 interface Inputs {
   messageText: string;

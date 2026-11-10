@@ -1,8 +1,9 @@
 "use client";
 
-import { ArrowRight, RotateCcw } from "lucide-react";
+import Link from "next/link";
+import { ArrowRight, RotateCcw, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { WizardCompletionViewProps } from "../types/renter-wizard.types";
+import { WizardCompletionViewProps } from "@/types/renter-wizard.types";
 import { CompletionSuccessBanner } from "./completion/CompletionSuccessBanner";
 import { CompletionSummaryCard } from "./completion/CompletionSummaryCard";
 
@@ -33,12 +34,21 @@ export function WizardCompletionView({
 
         <Button
           type="button"
+          variant="outline"
           onClick={onDone}
+          className="inline-flex h-10.5 cursor-pointer items-center gap-2 rounded-none border-line bg-white px-5 text-xs font-medium text-ink hover:bg-surface transition-colors"
+        >
+          <span>View Renters</span>
+        </Button>
+
+        <Link
+          href="/landlord/agreements"
           className="inline-flex h-10.5 cursor-pointer items-center gap-2 rounded-none bg-ink px-6 text-xs font-medium text-white hover:bg-black transition-colors"
         >
-          <span>Done (View Renters)</span>
-          <ArrowRight className="size-3.5" />
-        </Button>
+          <FileText className="size-3.5" />
+          <span>Prepare Lease Agreement</span>
+          <ArrowRight className="size-3.5 ml-1" />
+        </Link>
       </div>
     </div>
   );

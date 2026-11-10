@@ -12,8 +12,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useDashboardNotifications } from "./hooks/useDashboardNotifications";
-import { DashboardNotificationsDropdownProps } from "./types/dashboard-notifications.types";
+import { useDashboardNotifications } from "@/hooks/query/useDashboardNotifications";
+import { DashboardNotificationsDropdownProps } from "@/types/dashboard-notifications.types";
 
 export function DashboardNotificationsDropdown({
   pathname,

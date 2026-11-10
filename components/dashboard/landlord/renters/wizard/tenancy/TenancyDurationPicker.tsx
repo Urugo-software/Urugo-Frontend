@@ -6,7 +6,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { TenancyDurationOption } from "../../types/renter-wizard.types";
+import { TenancyDurationOption } from "@/types/renter-wizard.types";
 
 export const DURATION_OPTIONS: {
   id: TenancyDurationOption;

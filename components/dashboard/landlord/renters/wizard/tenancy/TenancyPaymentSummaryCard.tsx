@@ -1,11 +1,11 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { CreditCard, Info } from "lucide-react";
+import { CreditCard } from "lucide-react";
 import {
   formatRwf,
   InitialPaymentCalculation,
-} from "../../types/renter-wizard.types";
+} from "@/types/renter-wizard.types";
 
 interface TenancyPaymentSummaryCardProps {
   paymentSummary: InitialPaymentCalculation;

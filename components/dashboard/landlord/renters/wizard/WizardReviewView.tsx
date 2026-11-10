@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { WizardReviewViewProps } from "../types/renter-wizard.types";
+import { WizardReviewViewProps } from "@/types/renter-wizard.types";
 import { ReviewNoticeBanner } from "./review/ReviewNoticeBanner";
 import { ReviewRenterInfoCard } from "./review/ReviewRenterInfoCard";
 import { ReviewTenancyTermsCard } from "./review/ReviewTenancyTermsCard";

@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Copy, Info, Link2, UserPlus } from "lucide-react";
+import { Check, Copy, Link2, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import {
   AddRenterMode,
   Step1RenterDetailsProps,
-} from "../types/renter-wizard.types";
+} from "@/types/renter-wizard.types";
 
 const REGISTRATION_MODES: {
   id: AddRenterMode;
