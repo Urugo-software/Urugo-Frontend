@@ -12,8 +12,11 @@ export async function generateMetadata({ params }: Props) {
 
   return {
     title: agreement
-      ? `${agreement.referenceNumber} — Lease Agreement | Urugo Landlord`
-      : "Lease Agreement Preview | Urugo Landlord",
+      ? `${agreement.referenceNumber} — ${agreement.renter.name} | Lease Agreement`
+      : "Lease Agreement Details | Urugo Landlord",
+    description: agreement
+      ? `Review and manage residential lease agreement ${agreement.referenceNumber} with ${agreement.renter.name}.`
+      : "Residential tenancy contract details and digital signing workspace.",
   };
 }
 
@@ -25,5 +28,11 @@ export default async function AgreementDetailPage({ params }: Props) {
     notFound();
   }
 
-  return <AgreementPreviewContainer initialAgreement={agreement} />;
+  return (
+    <main className="flex flex-1 flex-col min-h-0 min-w-0 overflow-hidden bg-white h-full">
+      <div className="min-h-0 flex-1 overflow-y-auto p-4 pb-16 sm:p-6 sm:pb-20 md:p-8 md:pb-24">
+        <AgreementPreviewContainer initialAgreement={agreement} />
+      </div>
+    </main>
+  );
 }
