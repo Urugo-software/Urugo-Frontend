@@ -97,6 +97,7 @@ export interface Agreement {
 export type AgreementFilterTab =
   | "all"
   | "drafts"
+  | "changes_requested"
   | "in_review"
   | "awaiting_signatures"
   | "signed"
