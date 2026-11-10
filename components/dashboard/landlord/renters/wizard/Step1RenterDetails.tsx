@@ -10,7 +10,10 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { AddRenterMode, Step1RenterDetailsProps } from "../types/renter-wizard.types";
+import {
+  AddRenterMode,
+  Step1RenterDetailsProps,
+} from "../types/renter-wizard.types";
 
 const REGISTRATION_MODES: {
   id: AddRenterMode;
@@ -96,14 +99,7 @@ export function Step1RenterDetails({
 
       {mode === "manual" ? (
         <div className="space-y-8 sm:space-y-9">
-          <div className="flex items-start gap-3 border border-line bg-surface p-4 sm:p-4.5 text-sm text-body">
-            <Info className="mt-0.5 size-5 shrink-0 text-ink" />
-            <span className="leading-relaxed text-ink">
-              Enter the renter&apos;s legal identity details. In Step 2, you can
-              optionally assign a property, monthly rent, and initial move-in
-              schedule.
-            </span>
-          </div>
+          <hr className="flex items-start gap-3 border border-line bg-surface text-sm text-body" />
 
           <FieldGroup className="gap-6 sm:gap-7">
             <Field data-invalid={!!errors.fullName}>
@@ -190,7 +186,8 @@ export function Step1RenterDetails({
                 className="h-11 rounded-none border-line bg-white px-3.5 font-mono text-sm text-ink placeholder:text-faint focus-visible:border-ink focus-visible:ring-1 focus-visible:ring-ink"
               />
               <FieldDescription className="mt-1.5 text-xs text-faint">
-                Must be an official 16-digit Rwandan National Identification number.
+                Must be an official 16-digit Rwandan National Identification
+                number.
               </FieldDescription>
               {errors.nationalId && (
                 <FieldError className="mt-1">{errors.nationalId}</FieldError>
@@ -200,15 +197,6 @@ export function Step1RenterDetails({
         </div>
       ) : (
         <div className="space-y-8 sm:space-y-9">
-          <div className="flex items-start gap-3 border border-line bg-surface p-4 sm:p-4.5 text-sm text-ink">
-            <Info className="mt-0.5 size-5 shrink-0 text-ink" />
-            <span className="leading-relaxed">
-              <strong className="font-semibold">Simulated Link Mode:</strong> Generate
-              an invitation link to share with a prospective tenant. You can optionally
-              associate property terms in Step 2, or skip directly to review.
-            </span>
-          </div>
-
           {!generatedLink ? (
             <div className="border border-dashed border-line bg-surface/50 p-8 sm:p-12 text-center space-y-4">
               <div className="mx-auto flex size-12 items-center justify-center border border-line bg-white text-ink">
@@ -219,8 +207,9 @@ export function Step1RenterDetails({
                   Generate Renter Onboarding Link
                 </h3>
                 <p className="mt-1.5 text-sm text-body max-w-md mx-auto leading-relaxed">
-                  Creates an invitation link that allows the prospective renter to
-                  submit their National ID and complete their profile self-service.
+                  Creates an invitation link that allows the prospective renter
+                  to submit their National ID and complete their profile
+                  self-service.
                 </p>
               </div>
               <Button

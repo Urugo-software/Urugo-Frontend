@@ -12,7 +12,7 @@ export function AddRenterPageHeader() {
         <span>Back to Renters</span>
       </Link>
 
-      <div>
+      {/* <div>
         <h1 className="text-xl font-bold tracking-tight text-ink sm:text-2xl">
           Add Renter
         </h1>
@@ -20,7 +20,7 @@ export function AddRenterPageHeader() {
           Register a renter into your directory and optionally configure their
           tenancy terms, monthly rent, and initial move-in payment schedule.
         </p>
-      </div>
+      </div> */}
     </header>
   );
 }

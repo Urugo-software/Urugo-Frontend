@@ -99,9 +99,7 @@ export function WizardProgressIndicator({
               onClick={() => onStepClick?.(2)}
               aria-current={isStep2Active ? "step" : undefined}
               className={`group flex flex-col items-center text-center ${
-                isStep1Done
-                  ? "cursor-pointer"
-                  : "cursor-default"
+                isStep1Done ? "cursor-pointer" : "cursor-default"
               } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2`}
             >
               {/* Circular Badge */}
