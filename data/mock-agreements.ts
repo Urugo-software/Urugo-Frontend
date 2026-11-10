@@ -1,4 +1,4 @@
-import { Agreement } from "../types/agreement.types";
+import { Agreement } from "@/types/agreement.types";
 import { generateStandardArticles } from "./agreement-templates";
 
 export const mockAgreements: Agreement[] = [

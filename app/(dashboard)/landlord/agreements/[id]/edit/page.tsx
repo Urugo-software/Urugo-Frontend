@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { mockAgreements } from "@/components/dashboard/landlord/agreements/data/mock-agreements";
+import { mockAgreements } from "@/data/mock-agreements";
 import { AgreementEditor } from "@/components/dashboard/landlord/agreements/editor/AgreementEditor";
 
 interface Props {

@@ -4,13 +4,13 @@ import { useMemo } from "react";
 import {
   Agreement,
   AgreementLanguage,
-} from "../types/agreement.types";
+} from "@/types/agreement.types";
 import {
   formatCurrencyRwf,
   formatDate,
   getAgreementVariables,
   renderInterpolatedArticle,
-} from "../utils/agreement-utils";
+} from "@/utils/agreement-utils";
 import { CheckCircle2, ShieldCheck, Printer } from "lucide-react";
 
 interface Props {

@@ -5,7 +5,7 @@ import {
   Agreement,
   AgreementLanguage,
   RenterChangeRequest,
-} from "../types/agreement.types";
+} from "@/types/agreement.types";
 import { AgreementPreviewHeader } from "./AgreementPreviewHeader";
 import { RenterChangeRequestBanner } from "./RenterChangeRequestBanner";
 import { AgreementDocumentView } from "./AgreementDocumentView";

@@ -2,7 +2,7 @@
 
 import { Check, ShieldCheck } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
-import { WizardProgressIndicatorProps } from "../types/renter-wizard.types";
+import { WizardProgressIndicatorProps } from "@/types/renter-wizard.types";
 
 export function WizardProgressIndicator({
   currentStep,

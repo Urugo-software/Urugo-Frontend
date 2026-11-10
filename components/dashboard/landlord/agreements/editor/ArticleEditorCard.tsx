@@ -4,11 +4,10 @@ import {
   ArrowUp,
   ArrowDown,
   Trash2,
-  Sparkles,
   RotateCcw,
 } from "lucide-react";
-import { AgreementArticle } from "../types/agreement.types";
-import { CANONICAL_18_ARTICLES } from "../data/agreement-templates";
+import { AgreementArticle } from "@/types/agreement.types";
+import { CANONICAL_18_ARTICLES } from "@/data/agreement-templates";
 
 interface Props {
   article: AgreementArticle;

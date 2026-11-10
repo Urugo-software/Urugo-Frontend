@@ -3,7 +3,7 @@
 import { mockLandlordProperties } from "@/data/landlord-data";
 import { AddRenterPageHeader } from "./AddRenterPageHeader";
 import { RenterRegistrationWizard } from "./RenterRegistrationWizard";
-import { AddRenterPageViewProps } from "./types/renter-registration.types";
+import { AddRenterPageViewProps } from "@/types/renter-registration.types";
 
 export function AddRenterPageView({
   initialMode = "manual",

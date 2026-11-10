@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ChevronUp, Lock, ShieldCheck } from "lucide-react";
-import { Agreement } from "../types/agreement.types";
-import { formatCurrencyRwf, formatDate } from "../utils/agreement-utils";
+import { ChevronDown, ChevronUp, Lock } from "lucide-react";
+import { Agreement } from "@/types/agreement.types";
+import { formatCurrencyRwf, formatDate } from "@/utils/agreement-utils";
 
 interface Props {
   agreement: Agreement;

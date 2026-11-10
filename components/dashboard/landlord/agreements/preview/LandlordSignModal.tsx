@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { X, CheckCircle2, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Agreement } from "../types/agreement.types";
+import { Agreement } from "@/types/agreement.types";
 import toast from "react-hot-toast";
 
 interface Props {

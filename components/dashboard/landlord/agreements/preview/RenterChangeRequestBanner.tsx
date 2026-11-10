@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { AlertTriangle, ArrowRight, FileEdit, Clock } from "lucide-react";
-import { RenterChangeRequest } from "../types/agreement.types";
-import { formatDate } from "../utils/agreement-utils";
+import { RenterChangeRequest } from "@/types/agreement.types";
+import { formatDate } from "@/utils/agreement-utils";
 
 interface Props {
   agreementId: string;

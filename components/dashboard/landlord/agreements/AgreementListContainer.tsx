@@ -13,9 +13,9 @@ import {
   FileText,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import { Agreement, AgreementFilterTab, AgreementStatus } from "./types/agreement.types";
+import { Agreement, AgreementFilterTab, AgreementStatus } from "@/types/agreement.types";
 import { AgreementStatusBadge } from "./AgreementStatusBadge";
-import { formatDate } from "./utils/agreement-utils";
+import { formatDate } from "@/utils/agreement-utils";
 
 interface Props {
   initialAgreements: Agreement[];

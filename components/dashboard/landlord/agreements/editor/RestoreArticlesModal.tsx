@@ -1,8 +1,8 @@
 "use client";
 
-import { X, RotateCcw, ShieldCheck, AlertCircle } from "lucide-react";
+import { X, RotateCcw, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { StandardArticleDefinition } from "../data/agreement-templates";
+import { StandardArticleDefinition } from "@/data/agreement-templates";
 
 interface Props {
   isOpen: boolean;

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { X, MessageSquarePlus, PenTool, CheckCircle2, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Agreement, RenterChangeRequest } from "../types/agreement.types";
+import { Agreement, RenterChangeRequest } from "@/types/agreement.types";
 import toast from "react-hot-toast";
 
 interface Props {

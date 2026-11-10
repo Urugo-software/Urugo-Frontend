@@ -6,7 +6,7 @@ import {
   CopyStatusMessage,
   LandlordPropertyItem,
   SimulatedRenterInvitationLink,
-} from "../types/renter-registration.types";
+} from "@/types/renter-registration.types";
 
 function buildSimulatedLink(
   property?: LandlordPropertyItem,

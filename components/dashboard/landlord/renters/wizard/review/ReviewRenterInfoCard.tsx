@@ -4,8 +4,8 @@ import { Edit3, User } from "lucide-react";
 import {
   AddRenterMode,
   RenterIdentityDraft,
-} from "../../types/renter-wizard.types";
-import { SimulatedRenterInvitationLink } from "../../types/renter-registration.types";
+} from "@/types/renter-wizard.types";
+import { SimulatedRenterInvitationLink } from "@/types/renter-registration.types";
 
 interface ReviewRenterInfoCardProps {
   mode: AddRenterMode;

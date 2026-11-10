@@ -1,4 +1,4 @@
-import { mockAgreements } from "@/components/dashboard/landlord/agreements/data/mock-agreements";
+import { mockAgreements } from "@/data/mock-agreements";
 import { AgreementsPageHeader } from "@/components/dashboard/landlord/agreements/AgreementsPageHeader";
 import { AgreementListContainer } from "@/components/dashboard/landlord/agreements/AgreementListContainer";
 

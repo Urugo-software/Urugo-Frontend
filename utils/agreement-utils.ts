@@ -2,12 +2,12 @@ import {
   Agreement,
   AgreementArticle,
   AgreementLanguage,
-} from "../types/agreement.types";
+} from "@/types/agreement.types";
 import {
   CANONICAL_18_ARTICLES,
   StandardArticleDefinition,
   interpolateArticleText,
-} from "../data/agreement-templates";
+} from "@/data/agreement-templates";
 
 export function renumberArticles(articles: AgreementArticle[]): AgreementArticle[] {
   return articles.map((art, idx) => ({

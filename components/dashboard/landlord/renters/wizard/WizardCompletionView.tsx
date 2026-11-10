@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { ArrowRight, RotateCcw, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { WizardCompletionViewProps } from "../types/renter-wizard.types";
+import { WizardCompletionViewProps } from "@/types/renter-wizard.types";
 import { CompletionSuccessBanner } from "./completion/CompletionSuccessBanner";
 import { CompletionSummaryCard } from "./completion/CompletionSummaryCard";
 

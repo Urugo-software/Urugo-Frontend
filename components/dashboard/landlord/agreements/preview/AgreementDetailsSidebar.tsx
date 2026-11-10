@@ -7,9 +7,9 @@ import {
   FileEdit,
   PenTool,
 } from "lucide-react";
-import { Agreement } from "../types/agreement.types";
+import { Agreement } from "@/types/agreement.types";
 import { AgreementStatusBadge } from "../AgreementStatusBadge";
-import { formatCurrencyRwf, formatDate } from "../utils/agreement-utils";
+import { formatCurrencyRwf, formatDate } from "@/utils/agreement-utils";
 import { Button } from "@/components/ui/button";
 
 interface Props {

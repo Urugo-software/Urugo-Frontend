@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, Plus, FilePlus } from "lucide-react";
+import { X, FilePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface Props {

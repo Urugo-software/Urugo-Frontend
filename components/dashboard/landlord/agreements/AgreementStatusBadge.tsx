@@ -1,4 +1,4 @@
-import { AgreementStatus } from "./types/agreement.types";
+import { AgreementStatus } from "@/types/agreement.types";
 import { cn } from "@/lib/utils";
 
 interface Props {

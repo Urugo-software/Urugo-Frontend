@@ -9,7 +9,7 @@ import {
   UserCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Agreement, AgreementLanguage } from "../types/agreement.types";
+import { Agreement, AgreementLanguage } from "@/types/agreement.types";
 import { AgreementStatusBadge } from "../AgreementStatusBadge";
 
 interface Props {

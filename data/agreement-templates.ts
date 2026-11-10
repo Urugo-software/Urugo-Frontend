@@ -1,4 +1,4 @@
-import { AgreementArticle, AgreementLanguage } from "../types/agreement.types";
+import { AgreementArticle, AgreementLanguage } from "@/types/agreement.types";
 
 export interface StandardArticleDefinition {
   standardNumber: number;

@@ -5,7 +5,7 @@ import { adminDirectories } from "@/data/admin-dashboard-data";
 import { notificationsData } from "@/data/home-seeker-data";
 import { mockLandlordNotifications } from "@/data/landlord-data";
 import { mockRenterNotifications } from "@/data/renter-extra-data";
-import { HeaderNotificationPreviewItem } from "../types/dashboard-notifications.types";
+import { HeaderNotificationPreviewItem } from "@/types/dashboard-notifications.types";
 
 export function useDashboardNotifications(pathname: string) {
   return useMemo(() => {

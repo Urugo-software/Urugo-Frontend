@@ -6,7 +6,7 @@ import { LandlordPropertyItem } from "@/types/landlord";
 import {
   ManualRenterFormErrors,
   ManualRenterRegistrationDraft,
-} from "../types/renter-registration.types";
+} from "@/types/renter-registration.types";
 import {
   AddRenterMode,
   calculateInitialPayments,
@@ -17,7 +17,7 @@ import {
   TenancyConfigDraft,
   TenancyConfigErrors,
   WizardStep,
-} from "../types/renter-wizard.types";
+} from "@/types/renter-wizard.types";
 import { useSimulatedRenterLink } from "./useSimulatedRenterLink";
 
 export const INITIAL_IDENTITY_DRAFT: RenterIdentityDraft = {

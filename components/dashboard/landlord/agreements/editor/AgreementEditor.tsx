@@ -11,7 +11,6 @@ import {
   Plus,
   RotateCcw,
   AlertTriangle,
-  CheckCircle2,
   FileText,
   Sliders,
 } from "lucide-react";
@@ -22,7 +21,7 @@ import {
   Agreement,
   AgreementArticle,
   AgreementLanguage,
-} from "../types/agreement.types";
+} from "@/types/agreement.types";
 import {
   moveArticleUp,
   moveArticleDown,
@@ -32,8 +31,8 @@ import {
   resetAllToStandardArticles,
   getDeletedStandardArticles,
   validateArticles,
-} from "../utils/agreement-utils";
-import { CANONICAL_18_ARTICLES } from "../data/agreement-templates";
+} from "@/utils/agreement-utils";
+import { CANONICAL_18_ARTICLES } from "@/data/agreement-templates";
 import { ArticleEditorCard } from "./ArticleEditorCard";
 import { AddArticleModal } from "./AddArticleModal";
 import { RestoreArticlesModal } from "./RestoreArticlesModal";
