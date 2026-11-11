@@ -1,10 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import {
-  Agreement,
-  AgreementLanguage,
-} from "@/types/agreement.types";
+import { Agreement, AgreementLanguage } from "@/types/agreement.types";
 import {
   formatCurrencyRwf,
   formatDate,
@@ -12,6 +9,7 @@ import {
   renderInterpolatedArticle,
 } from "@/utils/agreement-utils";
 import { CheckCircle2, ShieldCheck, Printer } from "lucide-react";
+import Logo from "@/components/platform/layout/Logo";
 
 interface Props {
   agreement: Agreement;
@@ -28,7 +26,7 @@ export function AgreementDocumentView({
 
   const variables = useMemo(
     () => getAgreementVariables(agreement),
-    [agreement]
+    [agreement],
   );
 
   return (
@@ -85,16 +83,8 @@ export function AgreementDocumentView({
       <div className="border border-line bg-surface/50 p-3 sm:p-8 lg:p-10 print:border-none print:p-0 print:bg-transparent">
         <article className="relative mx-auto max-w-[820px] border border-line/90 bg-white p-6 sm:p-12 md:p-16 shadow-xs text-ink font-sans print:m-0 print:max-w-none print:border-none print:p-0 print:shadow-none">
           {/* Header Bar */}
-          <div className="border-b-2 border-ink pb-6 mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div className="border-b border-line pb-6 mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
-              <div className="flex items-center gap-2 mb-2">
-                <span className="font-mono text-[12.5px] font-bold tracking-widest uppercase bg-ink text-white px-2 py-0.5">
-                  URUGO OFFICIAL CONTRACT
-                </span>
-                <span className="font-mono text-[12.5px] text-faint">
-                  v{agreement.version}.0
-                </span>
-              </div>
               <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-ink font-heading uppercase">
                 {isKinyarwanda
                   ? "Amasezerano yo Gukodesha Inzu yo Guturamo"
@@ -108,7 +98,9 @@ export function AgreementDocumentView({
             </div>
 
             <div className="text-left sm:text-right font-mono text-[12.5px]">
-              <p className="font-bold text-ink">REF: {agreement.referenceNumber}</p>
+              <p className="font-bold text-ink">
+                REF: {agreement.referenceNumber}
+              </p>
               <p className="text-faint mt-0.5">
                 {isKinyarwanda ? "Itariki: " : "Date: "}
                 {formatDate(agreement.updatedAt)}
@@ -129,7 +121,9 @@ export function AgreementDocumentView({
           <section className="mb-8 space-y-3 break-inside-avoid">
             <h3 className="text-[13px] font-bold uppercase tracking-wider text-ink border-b border-line pb-1.5 flex items-center justify-between">
               <span>
-                {isKinyarwanda ? "1. Ibiranga Impande Zombi" : "1. The Contracting Parties"}
+                {isKinyarwanda
+                  ? "1. Ibiranga Impande Zombi"
+                  : "1. The Contracting Parties"}
               </span>
               <span className="text-[12.5px] text-faint font-normal font-mono">
                 {isKinyarwanda ? "nyir'inzu n'umukode" : "landlord & renter"}
@@ -143,10 +137,14 @@ export function AgreementDocumentView({
                   {isKinyarwanda ? "Nyir'inzu (Landlord)" : "Landlord (Lessor)"}
                 </span>
                 <div className="space-y-1.5 text-[13px]">
-                  <p className="font-bold text-ink text-[15px]">{agreement.landlord.name}</p>
+                  <p className="font-bold text-ink text-[15px]">
+                    {agreement.landlord.name}
+                  </p>
                   <p className="text-faint font-mono text-[12.5px]">
                     {isKinyarwanda ? "Indangamuntu: " : "National ID: "}
-                    <span className="text-ink">{agreement.landlord.nationalId}</span>
+                    <span className="text-ink">
+                      {agreement.landlord.nationalId}
+                    </span>
                   </p>
                   <p className="text-faint font-mono text-[12.5px]">
                     {isKinyarwanda ? "Telefoni: " : "Phone: "}
@@ -154,13 +152,18 @@ export function AgreementDocumentView({
                   </p>
                   {agreement.landlord.email && (
                     <p className="text-faint text-[12.5px]">
-                      Email: <span className="text-ink">{agreement.landlord.email}</span>
+                      Email:{" "}
+                      <span className="text-ink">
+                        {agreement.landlord.email}
+                      </span>
                     </p>
                   )}
                   {agreement.landlord.address && (
                     <p className="text-faint text-[12.5px]">
                       {isKinyarwanda ? "Aderesi: " : "Address: "}
-                      <span className="text-ink">{agreement.landlord.address}</span>
+                      <span className="text-ink">
+                        {agreement.landlord.address}
+                      </span>
                     </p>
                   )}
                 </div>
@@ -169,13 +172,19 @@ export function AgreementDocumentView({
               {/* Renter Box */}
               <div className="border border-line p-4 bg-surface/20">
                 <span className="text-[12.5px] font-bold uppercase tracking-wider text-faint block mb-2">
-                  {isKinyarwanda ? "Umukode (Renter / Tenant)" : "Renter (Lessee)"}
+                  {isKinyarwanda
+                    ? "Umukode (Renter / Tenant)"
+                    : "Renter (Lessee)"}
                 </span>
                 <div className="space-y-1.5 text-[13px]">
-                  <p className="font-bold text-ink text-[15px]">{agreement.renter.name}</p>
+                  <p className="font-bold text-ink text-[15px]">
+                    {agreement.renter.name}
+                  </p>
                   <p className="text-faint font-mono text-[12.5px]">
                     {isKinyarwanda ? "Indangamuntu: " : "National ID: "}
-                    <span className="text-ink">{agreement.renter.nationalId}</span>
+                    <span className="text-ink">
+                      {agreement.renter.nationalId}
+                    </span>
                   </p>
                   <p className="text-faint font-mono text-[12.5px]">
                     {isKinyarwanda ? "Telefoni: " : "Phone: "}
@@ -183,7 +192,8 @@ export function AgreementDocumentView({
                   </p>
                   {agreement.renter.email && (
                     <p className="text-faint text-[12.5px]">
-                      Email: <span className="text-ink">{agreement.renter.email}</span>
+                      Email:{" "}
+                      <span className="text-ink">{agreement.renter.email}</span>
                     </p>
                   )}
                 </div>
@@ -200,7 +210,8 @@ export function AgreementDocumentView({
                   : "2. Premises & Tenancy Financial Schedule"}
               </span>
               <span className="text-[12.5px] text-faint font-normal font-mono">
-                {agreement.property.name} &middot; Unit {agreement.property.unitNumber}
+                {agreement.property.name} &middot; Unit{" "}
+                {agreement.property.unitNumber}
               </span>
             </h3>
 
@@ -209,24 +220,32 @@ export function AgreementDocumentView({
                 <tbody>
                   <tr className="border-b border-line bg-surface/30">
                     <td className="p-3 font-semibold text-faint w-1/3">
-                      {isKinyarwanda ? "Inzu Ikodeshwa / Umuturirwa" : "Premises / Unit Identification"}
+                      {isKinyarwanda
+                        ? "Inzu Ikodeshwa / Umuturirwa"
+                        : "Premises / Unit Identification"}
                     </td>
                     <td className="p-3 font-medium text-ink w-2/3">
-                      {agreement.property.name}, Unit {agreement.property.unitNumber} (
+                      {agreement.property.name}, Unit{" "}
+                      {agreement.property.unitNumber} (
                       {agreement.property.propertyType})
                     </td>
                   </tr>
                   <tr className="border-b border-line">
                     <td className="p-3 font-semibold text-faint">
-                      {isKinyarwanda ? "Aderesi n'Akarere" : "Location & District"}
+                      {isKinyarwanda
+                        ? "Aderesi n'Akarere"
+                        : "Location & District"}
                     </td>
                     <td className="p-3 font-medium text-ink">
-                      {agreement.property.address}, {agreement.property.district}
+                      {agreement.property.address},{" "}
+                      {agreement.property.district}
                     </td>
                   </tr>
                   <tr className="border-b border-line bg-surface/30">
                     <td className="p-3 font-semibold text-faint">
-                      {isKinyarwanda ? "Itariki yo Gutangira" : "Commencement Date & Term"}
+                      {isKinyarwanda
+                        ? "Itariki yo Gutangira"
+                        : "Commencement Date & Term"}
                     </td>
                     <td className="p-3 font-medium text-ink">
                       {formatDate(agreement.tenancyStartDate)} (
@@ -236,7 +255,9 @@ export function AgreementDocumentView({
                   </tr>
                   <tr className="border-b border-line">
                     <td className="p-3 font-semibold text-faint">
-                      {isKinyarwanda ? "Ubukode bwa Buri Kwezi" : "Monthly Agreed Rent"}
+                      {isKinyarwanda
+                        ? "Ubukode bwa Buri Kwezi"
+                        : "Monthly Agreed Rent"}
                     </td>
                     <td className="p-3 font-bold text-ink">
                       {formatCurrencyRwf(agreement.financials.monthlyRentRwf)}
@@ -257,17 +278,27 @@ export function AgreementDocumentView({
                       {isKinyarwanda ? "Ingwate y'Ubukode" : "Security Deposit"}
                     </td>
                     <td className="p-3 font-medium text-ink">
-                      {formatCurrencyRwf(agreement.financials.securityDepositRwf)}
+                      {formatCurrencyRwf(
+                        agreement.financials.securityDepositRwf,
+                      )}
                     </td>
                   </tr>
                   <tr className="bg-surface/50 font-semibold">
                     <td className="p-3 font-bold text-ink">
-                      {isKinyarwanda ? "Amafaranga Yose yo Gutangira" : "Total Initial Payment Due"}
+                      {isKinyarwanda
+                        ? "Amafaranga Yose yo Gutangira"
+                        : "Total Initial Payment Due"}
                     </td>
                     <td className="p-3 font-bold text-ink">
-                      {formatCurrencyRwf(agreement.financials.totalInitialAmountRwf)}
+                      {formatCurrencyRwf(
+                        agreement.financials.totalInitialAmountRwf,
+                      )}
                       <span className="text-[12.5px] font-normal text-faint block mt-0.5">
-                        ({agreement.financials.advanceMonths} {isKinyarwanda ? "amezi y'integuza" : "month(s) advance"} + {isKinyarwanda ? "ingwate" : "deposit"})
+                        ({agreement.financials.advanceMonths}{" "}
+                        {isKinyarwanda
+                          ? "amezi y'integuza"
+                          : "month(s) advance"}{" "}
+                        + {isKinyarwanda ? "ingwate" : "deposit"})
                       </span>
                     </td>
                   </tr>
@@ -285,7 +316,8 @@ export function AgreementDocumentView({
                   : "3. General Covenants & Articles of Agreement"}
               </span>
               <span className="text-[12.5px] text-faint font-mono">
-                {agreement.articles.length} {isKinyarwanda ? "Ingingo" : "Articles"}
+                {agreement.articles.length}{" "}
+                {isKinyarwanda ? "Ingingo" : "Articles"}
               </span>
             </h3>
 
@@ -294,7 +326,10 @@ export function AgreementDocumentView({
                 const rendered = renderInterpolatedArticle(art, variables);
 
                 return (
-                  <div key={art.id} className="text-[13px] leading-relaxed break-inside-avoid">
+                  <div
+                    key={art.id}
+                    className="text-[13px] leading-relaxed break-inside-avoid"
+                  >
                     <h4 className="font-bold text-ink text-[14px] mb-1.5">
                       {isKinyarwanda ? "Ingingo ya" : "Article"} {art.number}:{" "}
                       {rendered.title}
@@ -326,7 +361,9 @@ export function AgreementDocumentView({
               <div className="border border-line p-4 min-h-36 flex flex-col justify-between bg-surface/20">
                 <div>
                   <span className="text-[12.5px] font-bold uppercase tracking-wider text-faint block">
-                    {isKinyarwanda ? "Umukono wa Nyir'inzu" : "Landlord Endorsement"}
+                    {isKinyarwanda
+                      ? "Umukono wa Nyir'inzu"
+                      : "Landlord Endorsement"}
                   </span>
                   <p className="font-bold text-[15px] text-ink mt-1">
                     {agreement.landlord.name}
@@ -339,15 +376,19 @@ export function AgreementDocumentView({
                       <div className="flex items-center gap-1.5 text-[13px] font-semibold text-ink">
                         <CheckCircle2 className="size-3.5 text-emerald-600" />
                         <span>
-                          {isKinyarwanda ? "Yasinye mu buryo bw'ikoranabuhanga" : "Digitally Endorsed"}
+                          {isKinyarwanda
+                            ? "Yasinye mu buryo bw'ikoranabuhanga"
+                            : "Digitally Endorsed"}
                         </span>
                       </div>
                       <p className="text-[12.5px] text-faint font-mono">
-                        Signed: {formatDate(agreement.landlordSignature.signedAt)}
+                        Signed:{" "}
+                        {formatDate(agreement.landlordSignature.signedAt)}
                       </p>
                       {agreement.landlordSignature.ipAddress && (
                         <p className="text-[12.5px] text-faint font-mono">
-                          IP: {agreement.landlordSignature.ipAddress} &middot; Verified
+                          IP: {agreement.landlordSignature.ipAddress} &middot;
+                          Verified
                         </p>
                       )}
                     </div>
@@ -378,7 +419,9 @@ export function AgreementDocumentView({
                       <div className="flex items-center gap-1.5 text-[13px] font-semibold text-ink">
                         <CheckCircle2 className="size-3.5 text-emerald-600" />
                         <span>
-                          {isKinyarwanda ? "Yasinye mu buryo bw'ikoranabuhanga" : "Digitally Endorsed"}
+                          {isKinyarwanda
+                            ? "Yasinye mu buryo bw'ikoranabuhanga"
+                            : "Digitally Endorsed"}
                         </span>
                       </div>
                       <p className="text-[12.5px] text-faint font-mono">
@@ -386,7 +429,8 @@ export function AgreementDocumentView({
                       </p>
                       {agreement.renterSignature.ipAddress && (
                         <p className="text-[12.5px] text-faint font-mono">
-                          IP: {agreement.renterSignature.ipAddress} &middot; Verified
+                          IP: {agreement.renterSignature.ipAddress} &middot;
+                          Verified
                         </p>
                       )}
                     </div>
@@ -406,11 +450,11 @@ export function AgreementDocumentView({
           <div className="mt-12 pt-4 border-t border-line flex flex-col sm:flex-row items-center justify-between text-[12.5px] text-faint font-mono">
             <div className="flex items-center gap-1.5">
               <ShieldCheck className="size-3.5 text-faint" />
-              <span>Urugo Tenancy Registry &middot; Cryptographic Verification Seal</span>
+              <span>
+                Urugo Tenancy Registry &middot; Cryptographic Verification Seal
+              </span>
             </div>
-            <p className="mt-1 sm:mt-0 text-[12.5px]">
-              Doc ID: {agreement.id}
-            </p>
+            <p className="mt-1 sm:mt-0 text-[12.5px]">Doc ID: {agreement.id}</p>
           </div>
         </article>
       </div>
