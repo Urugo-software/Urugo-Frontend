@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { X, CheckCircle2, ShieldCheck } from "lucide-react";
+import { X, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Agreement } from "@/types/agreement.types";
+import { SignModalLegalNotice } from "./modal/SignModalLegalNotice";
 import toast from "react-hot-toast";
 
 interface Props {
@@ -50,10 +51,10 @@ export function LandlordSignModal({
               <ShieldCheck className="size-4" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-ink">
+              <h3 className="text-sm sm:text-[15px] font-bold text-ink">
                 Sign Lease Agreement
               </h3>
-              <p className="text-xs text-body">
+              <p className="text-[12.5px] text-body">
                 Ref: {agreement.referenceNumber}
               </p>
             </div>
@@ -69,22 +70,16 @@ export function LandlordSignModal({
         </div>
 
         {/* Content Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-5">
-          <div className="border border-line bg-surface/40 p-4 text-xs text-body space-y-2">
-            <div className="flex items-center gap-2 font-semibold text-ink">
-              <CheckCircle2 className="size-4 text-ink" />
-              <span>Landlord Electronic Endorsement</span>
-            </div>
-            <p className="leading-relaxed">
-              By confirming below, you legally execute Residential Tenancy Agreement{" "}
-              <strong className="text-ink">{agreement.referenceNumber}</strong> with{" "}
-              <strong className="text-ink">{agreement.renter.name}</strong> for{" "}
-              <strong className="text-ink">{agreement.property.name} (Unit {agreement.property.unitNumber})</strong>.
-            </p>
-          </div>
+        <form onSubmit={handleSubmit} className="p-6 space-y-5 text-[12.5px]">
+          <SignModalLegalNotice
+            referenceNumber={agreement.referenceNumber}
+            renterName={agreement.renter.name}
+            propertyName={agreement.property.name}
+            unitNumber={agreement.property.unitNumber}
+          />
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-faint mb-1.5">
+            <label className="block text-[12.5px] font-semibold uppercase tracking-wider text-faint mb-1.5">
               Full Legal Name
             </label>
             <input
@@ -94,39 +89,37 @@ export function LandlordSignModal({
               onChange={(e) => setSignerName(e.target.value)}
               className="w-full border border-line bg-white px-3 py-2 text-sm font-semibold text-ink focus:border-ink focus:outline-none"
             />
-            <p className="mt-1 text-[11px] text-faint font-mono">
+            <p className="mt-1 text-[12.5px] text-faint font-mono">
               National ID: {agreement.landlord.nationalId}
             </p>
           </div>
 
-          <label className="flex items-start gap-2.5 cursor-pointer text-xs text-body">
+          <label className="flex items-start gap-2.5 cursor-pointer select-none">
             <input
               type="checkbox"
               checked={hasAgreed}
               onChange={(e) => setHasAgreed(e.target.checked)}
-              className="mt-0.5 size-4 rounded-none border-line text-ink focus:ring-ink"
+              className="mt-1 rounded-none border-line text-ink focus:ring-ink"
             />
-            <span>
-              I confirm that I have reviewed the agreement articles, terms, and
-              payment schedule and agree to digitally endorse this document.
+            <span className="text-[12.5px] text-body leading-relaxed">
+              I attest that the terms and covenants contained in this lease agreement accurately represent the agreed terms under Rwandan residential tenancy law.
             </span>
           </label>
 
-          <div className="pt-3 border-t border-line flex justify-end gap-2">
+          <div className="pt-2 flex justify-end gap-2 border-t border-line">
             <Button
               type="button"
               variant="outline"
               onClick={onClose}
-              className="rounded-none border-line text-xs font-medium h-9 px-4 cursor-pointer"
+              className="rounded-none border-line text-[12.5px] font-medium h-9 px-4"
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              disabled={!hasAgreed || !signerName.trim()}
-              className="rounded-none bg-ink text-white hover:bg-black text-xs font-semibold h-9 px-5 cursor-pointer disabled:opacity-50"
+              className="rounded-none bg-ink text-white hover:bg-black text-[12.5px] font-semibold h-9 px-5"
             >
-              Confirm & Endorse Agreement
+              Sign & Finalize Agreement
             </Button>
           </div>
         </form>

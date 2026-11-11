@@ -70,8 +70,8 @@ export function LoginForm({
                 Password
               </FieldLabel>
               <Link
-                href="#"
-                className="text-xs tracking-tight font-medium text-brand-deep underline-offset-4 transition hover:text-brand hover:underline sm:ml-auto"
+                href="/auth/forgot-password"
+                className="text-xs tracking-tight font-medium text-brand underline-offset-4 transition hover:text-brand hover:underline sm:ml-auto"
               >
                 Forgot your password?
               </Link>

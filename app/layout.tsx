@@ -1,12 +1,9 @@
-import { ibm, epilogue } from "@/lib/fonts";
+import { ibm, epilogue, merriweather } from "@/lib/fonts";
 import type { Metadata } from "next";
 import "./globals.css";
-import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { QueryProvider } from "@/components/provider/QueryClient";
 import { Toaster } from "react-hot-toast";
-
-const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: "Urugo",
@@ -25,6 +22,7 @@ export default function RootLayout({
         "h-full",
         "antialiased",
         ibm.variable,
+        merriweather.variable,
         epilogue.className,
         "font-sans",
       )}

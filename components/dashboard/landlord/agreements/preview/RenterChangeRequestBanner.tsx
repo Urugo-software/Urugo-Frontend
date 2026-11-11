@@ -19,13 +19,13 @@ export function RenterChangeRequestBanner({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="flex items-start gap-3">
           <div className="grid size-7 shrink-0 place-items-center bg-amber-200 text-amber-900 mt-0.5">
-            <AlertTriangle className="size-3.5" />
+            <AlertTriangle className="size-4" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-amber-950">
+            <h3 className="text-sm sm:text-[15px] font-bold text-amber-950">
               Renter Proposed Revisions ({changeRequests.length})
             </h3>
-            <p className="mt-0.5 text-xs text-amber-900/80">
+            <p className="mt-0.5 text-[13px] text-amber-900/80">
               The renter reviewed the contract draft and requested adjustments before signing.
             </p>
           </div>
@@ -33,7 +33,7 @@ export function RenterChangeRequestBanner({
 
         <Link
           href={`/landlord/agreements/${agreementId}/edit`}
-          className="inline-flex h-8.5 shrink-0 items-center justify-center gap-1.5 bg-amber-900 px-3.5 text-xs font-semibold text-white hover:bg-black transition-colors"
+          className="inline-flex h-8.5 shrink-0 items-center justify-center gap-1.5 bg-amber-900 px-3.5 text-[12.5px] font-semibold text-white hover:bg-black transition-colors"
         >
           <FileEdit className="size-3.5" />
           <span>Open Editor to Revise</span>
@@ -45,26 +45,26 @@ export function RenterChangeRequestBanner({
         {changeRequests.map((cr) => (
           <div
             key={cr.id}
-            className="border border-amber-200/90 bg-white p-3.5 text-xs text-ink space-y-1.5"
+            className="border border-amber-200/90 bg-white p-3.5 text-[13px] text-ink space-y-1.5"
           >
             <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line pb-1.5">
-              <span className="font-bold text-ink">
+              <span className="font-bold text-ink text-[13.5px]">
                 Article {cr.articleNumber}: {cr.articleTitle}
               </span>
-              <span className="text-[11px] text-faint inline-flex items-center gap-1 font-mono">
-                <Clock className="size-3" />
+              <span className="text-[12.5px] text-faint inline-flex items-center gap-1 font-mono">
+                <Clock className="size-3.5" />
                 {formatDate(cr.createdAt)}
               </span>
             </div>
             <div>
-              <span className="font-semibold text-amber-950 uppercase tracking-wider text-[10px] block">
+              <span className="font-semibold text-amber-950 uppercase tracking-wider text-[12.5px] block">
                 Requested Adjustment:
               </span>
               <p className="mt-0.5 text-ink leading-relaxed">{cr.requestedChange}</p>
             </div>
             {cr.reason && (
               <div>
-                <span className="font-semibold text-faint uppercase tracking-wider text-[10px] block">
+                <span className="font-semibold text-faint uppercase tracking-wider text-[12.5px] block">
                   Renter Explanation:
                 </span>
                 <p className="mt-0.5 text-faint italic leading-relaxed">
