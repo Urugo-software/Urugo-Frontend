@@ -1,6 +1,6 @@
 "use client";
 
-import { useForgotPassword } from "@/hooks/mutations/useForgotPassword";
+import { useForgotPassword } from "@/hooks/mutate/useForgotPassword";
 
 import { ForgotPasswordForm } from "./ForgotPasswordForm";
 

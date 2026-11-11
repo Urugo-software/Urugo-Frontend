@@ -35,7 +35,7 @@ export function SidebarItem({
         <span>{label}</span>
       </div>
       {badge !== undefined && (
-        <span className="grid min-w-[20px] place-items-center rounded-full bg-brand px-1.5 py-0.5 text-[11px] font-bold text-white">
+        <span className="grid  md:w-[18px] md:h-[18px] place-items-center rounded-full bg-red-500   p-0.5 text-[11px] font-bold text-white">
           {badge}
         </span>
       )}

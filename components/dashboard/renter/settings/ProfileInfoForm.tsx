@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { useUpdateRenterProfile } from "@/hooks/mutations/useRenterMutations";
+import { useUpdateRenterProfile } from "@/hooks/mutate/useRenterMutations";
 import CustomButton from "@/components/shared/CustomButton";
 
 interface ProfileInputs {
