@@ -85,12 +85,12 @@ export function RestoreArticlesModal({
                     >
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="font-mono text-[11px] font-bold text-ink">
+                          <span className="font-mono text-[11px] font-semibold text-ink">
                             Standard #{def.standardNumber}
                           </span>
                           {def.isMandatory && (
-                            <span className="text-[10px] uppercase font-bold text-amber-800 bg-amber-50 border border-amber-200 px-1.5 py-0.2">
-                              Statutory Recommended
+                            <span className="text-[10px] text-faint">
+                              (recommended)
                             </span>
                           )}
                         </div>
