@@ -1,5 +1,3 @@
-"use client";
-
 import { Agreement } from "@/types/agreement.types";
 import { SidebarStatusCard } from "./sidebar/SidebarStatusCard";
 import { SidebarSigningProgressCard } from "./sidebar/SidebarSigningProgressCard";
