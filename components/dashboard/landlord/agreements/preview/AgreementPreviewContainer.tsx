@@ -49,9 +49,9 @@ export function AgreementPreviewContainer({ initialAgreement }: Props) {
         )}
 
       {/* 3. Main Workspace: Document Focus (left) + Compact Sidebar (right) */}
-      <div className="flex flex-col lg:flex-row items-start gap-8">
+      <div className="flex flex-col lg:flex-row items-start gap-8 print:block">
         {/* Main Document Area */}
-        <main className="w-full lg:flex-1 min-w-0">
+        <main className="w-full lg:flex-1 min-w-0 print:block print:w-full">
           <AgreementDocumentView
             agreement={agreement}
             displayLanguage={activeLanguage}

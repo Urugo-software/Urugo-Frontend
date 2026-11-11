@@ -42,15 +42,21 @@ export function DocumentPartySignatureBlock({
 
           <div className="text-[12px] text-body space-y-0.5">
             <p>
-              <span className="text-faint">{isKinyarwanda ? "Amazina: " : "Name: "}</span>
+              <span className="text-faint">
+                {isKinyarwanda ? "Amazina: " : "Name: "}
+              </span>
               <strong className="text-ink font-medium">{party.name}</strong>
             </p>
             <p className="font-mono text-[11.5px]">
-              <span className="text-faint">{isKinyarwanda ? "Indangamuntu: " : "National ID: "}</span>
+              <span className="text-faint">
+                {isKinyarwanda ? "Indangamuntu: " : "National ID: "}
+              </span>
               <span className="text-ink">{party.nationalId}</span>
             </p>
             <p className="font-mono text-[11.5px]">
-              <span className="text-faint">{isKinyarwanda ? "Itariki: " : "Date: "}</span>
+              <span className="text-faint">
+                {isKinyarwanda ? "Itariki: " : "Date: "}
+              </span>
               <span className="text-ink">{formatDate(signature.signedAt)}</span>
             </p>
             {signature.ipAddress && (
@@ -65,21 +71,29 @@ export function DocumentPartySignatureBlock({
         <div className="space-y-2 pt-6">
           <div className="border-b border-zinc-400 border-dashed pb-0.5">
             <span className="text-faint text-[11px] italic">
-              {isKinyarwanda ? "Umukono wa " + roleTitle : "Signature of " + roleTitle}
+              {isKinyarwanda
+                ? "Umukono wa " + roleTitle
+                : "Signature of " + roleTitle}
             </span>
           </div>
 
           <div className="text-[12px] text-body space-y-1">
             <p>
-              <span className="text-faint">{isKinyarwanda ? "Amazina: " : "Name: "}</span>
+              <span className="text-faint">
+                {isKinyarwanda ? "Amazina: " : "Name: "}
+              </span>
               <strong className="text-ink font-medium">{party.name}</strong>
             </p>
             <p className="font-mono text-[11.5px]">
-              <span className="text-faint">{isKinyarwanda ? "Indangamuntu: " : "National ID: "}</span>
+              <span className="text-faint">
+                {isKinyarwanda ? "Indangamuntu: " : "National ID: "}
+              </span>
               <span className="text-ink">{party.nationalId}</span>
             </p>
             <p>
-              <span className="text-faint">{isKinyarwanda ? "Itariki: " : "Date: "}</span>
+              <span className="text-faint">
+                {isKinyarwanda ? "Itariki: " : "Date: "}
+              </span>
               <span className="text-zinc-400">____________________</span>
             </p>
             <span className="inline-block font-mono text-[11px] text-faint italic">

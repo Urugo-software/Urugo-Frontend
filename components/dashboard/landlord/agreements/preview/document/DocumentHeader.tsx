@@ -16,7 +16,7 @@ export function DocumentHeader({
   isKinyarwanda,
 }: Props) {
   return (
-    <header className="border-b border-zinc-200 pb-6 mb-8 text-[12.5px]">
+    <div className="border-b border-zinc-200 pb-6 mb-8 text-[12.5px]">
       {/* Top Formal Branding & Document Metadata */}
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pb-4 border-b border-zinc-100">
         <div>
@@ -63,6 +63,6 @@ export function DocumentHeader({
             : "Governed by the statutory residential tenancy regulations of the Republic of Rwanda"}
         </p>
       </div>
-    </header>
+    </div>
   );
 }

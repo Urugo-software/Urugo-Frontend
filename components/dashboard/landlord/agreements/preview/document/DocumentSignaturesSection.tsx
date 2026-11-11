@@ -19,7 +19,7 @@ export function DocumentSignaturesSection({
   isKinyarwanda,
 }: Props) {
   return (
-    <section className="mt-10 pt-6 border border-line break-inside-avoid text-[12.5px]">
+    <section className="mt-10 pt-6  break-inside-avoid text-[12.5px]">
       <div className="mb-6">
         <h2 className="text-[12px] font-bold uppercase tracking-wider text-ink">
           {isKinyarwanda
@@ -48,7 +48,7 @@ export function DocumentSignaturesSection({
           party={renter}
           signature={renterSignature}
           roleTitleEn="Tenant / Renter (Lessee)"
-          roleTitleRw="Umukode (Tenant)"
+          roleTitleRw="Ukodesha (Tenant)"
           isKinyarwanda={isKinyarwanda}
         />
       </div>

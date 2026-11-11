@@ -169,31 +169,50 @@ body {
   font-family: var(--font-merriweather), Georgia, Cambria, "Times New Roman", Times, serif;
 }
 
-/* Print Styles for Lease Agreements & Documents */
+/* Print Styles for Lease Agreements & Multi-Page Documents */
 @media print {
   @page {
     size: A4 portrait;
     margin: 15mm 15mm 15mm 15mm;
   }
 
+  html,
   body {
+    height: auto !important;
+    min-height: 100% !important;
+    max-height: none !important;
+    overflow: visible !important;
+    position: static !important;
     background: #ffffff !important;
     color: #0e1116 !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
 
-  /* Hide interactive / non-document elements */
+  /* Unconstrain height and unclip overflow across all ancestor containers */
+  body,
+  body * {
+    overflow: visible !important;
+  }
+
+  main,
+  section,
+  div {
+    max-height: none !important;
+  }
+
+  /* Hide interactive, navigation, sidebar, and button elements */
   nav,
   aside,
-  header,
+  button,
   .print\:hidden,
   [data-print-hide="true"] {
     display: none !important;
   }
 
-  /* Ensure document takes full page width without screen constraints */
+  /* Ensure document flows naturally across all printed pages */
   .agreement-printable-document {
+    display: block !important;
     box-shadow: none !important;
     border: none !important;
     padding: 0 !important;
@@ -201,18 +220,26 @@ body {
     max-width: 100% !important;
     width: 100% !important;
     background: #ffffff !important;
+    page-break-after: auto !important;
+    break-after: auto !important;
   }
 
   .agreement-printable-canvas {
+    display: block !important;
     background: #ffffff !important;
     border: none !important;
     padding: 0 !important;
     margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
   }
 
-  /* Prevent awkward page break splits */
+  /* Prevent awkward page break splits within discrete contract items */
   .break-inside-avoid,
-  .article-avoid-break {
+  .article-avoid-break,
+  tr,
+  table,
+  section {
     break-inside: avoid !important;
     page-break-inside: avoid !important;
   }

@@ -39,8 +39,8 @@ export function AgreementDocumentView({
       />
 
       {/* Centered Realistic A4 Document Canvas */}
-      <div className="agreement-printable-canvas border border-zinc-200/80 bg-zinc-100/60 p-3 sm:p-8 lg:p-10 print:border-none print:p-0 print:bg-white">
-        <article className="agreement-printable-document font-contract relative mx-auto max-w-[816px] border border-zinc-300/80 bg-white p-7 sm:p-12 md:p-16 shadow-md text-ink print:m-0 print:max-w-none print:border-none print:p-0 print:shadow-none">
+      <div className="agreement-printable-canvas border border-zinc-200/80 bg-zinc-100/60 p-3 sm:p-8 lg:p-10 print:border-none print:p-0 print:bg-white print:block print:w-full">
+        <article className="agreement-printable-document font-contract relative mx-auto max-w-[816px] border border-zinc-300/80 bg-white p-7 sm:p-12 md:p-16 shadow-md text-ink print:m-0 print:max-w-none print:border-none print:p-0 print:shadow-none print:block print:w-full">
           {/* A. Document Header & Branding */}
           <DocumentHeader
             version={agreement.version}
