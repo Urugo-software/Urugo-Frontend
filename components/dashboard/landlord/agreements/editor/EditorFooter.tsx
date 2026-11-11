@@ -10,7 +10,7 @@ interface Props {
 
 export function EditorFooter({ onSave, onSendToRenter }: Props) {
   return (
-    <div className="flex items-center justify-end gap-2.5 border-t border-line pt-4 mt-6">
+    <div className="flex items-center justify-end gap-2.5 border-t border-line py-4 sm:px-8  lg:px-16 ">
       <Button
         type="button"
         variant="outline"

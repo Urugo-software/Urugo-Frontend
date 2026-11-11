@@ -36,14 +36,14 @@ export function AgreementDocumentView({
       {/* Minimal Document Toolbar */}
       <div className="flex flex-wrap items-center justify-between gap-3 border border-line bg-white px-4 py-2.5 print:hidden">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold uppercase tracking-wider text-faint">
+          <span className="text-[12.5px] font-semibold uppercase tracking-wider text-faint">
             Document Language:
           </span>
           <div className="inline-flex items-center border border-line bg-surface p-0.5">
             <button
               type="button"
               onClick={() => onLanguageChange && onLanguageChange("en")}
-              className={`px-3 py-1 text-xs font-semibold cursor-pointer transition-colors ${
+              className={`px-3 py-1 text-[12.5px] font-semibold cursor-pointer transition-colors ${
                 displayLanguage === "en"
                   ? "bg-white text-ink shadow-xs"
                   : "text-faint hover:text-ink"
@@ -54,7 +54,7 @@ export function AgreementDocumentView({
             <button
               type="button"
               onClick={() => onLanguageChange && onLanguageChange("rw")}
-              className={`px-3 py-1 text-xs font-semibold cursor-pointer transition-colors ${
+              className={`px-3 py-1 text-[12.5px] font-semibold cursor-pointer transition-colors ${
                 displayLanguage === "rw"
                   ? "bg-white text-ink shadow-xs"
                   : "text-faint hover:text-ink"
@@ -65,15 +65,15 @@ export function AgreementDocumentView({
           </div>
         </div>
 
-        <div className="flex items-center gap-3 text-xs text-body">
-          <span className="font-mono text-faint">
+        <div className="flex items-center gap-3 text-[12.5px] text-body">
+          <span className="font-mono text-faint text-[12.5px]">
             {agreement.articles.length} {isKinyarwanda ? "Ingingo" : "Articles"}
           </span>
           <span>&middot;</span>
           <button
             type="button"
             onClick={() => window.print()}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-ink hover:underline cursor-pointer"
+            className="inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-ink hover:underline cursor-pointer"
           >
             <Printer className="size-3.5 text-faint" />
             <span>Print / PDF</span>
@@ -88,10 +88,10 @@ export function AgreementDocumentView({
           <div className="border-b-2 border-ink pb-6 mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <span className="font-mono text-[10px] font-bold tracking-widest uppercase bg-ink text-white px-2 py-0.5">
+                <span className="font-mono text-[12.5px] font-bold tracking-widest uppercase bg-ink text-white px-2 py-0.5">
                   URUGO OFFICIAL CONTRACT
                 </span>
-                <span className="font-mono text-xs text-faint">
+                <span className="font-mono text-[12.5px] text-faint">
                   v{agreement.version}.0
                 </span>
               </div>
@@ -100,14 +100,14 @@ export function AgreementDocumentView({
                   ? "Amasezerano yo Gukodesha Inzu yo Guturamo"
                   : "Residential Tenancy Lease Agreement"}
               </h2>
-              <p className="text-xs text-faint mt-1">
+              <p className="text-[13px] text-faint mt-1">
                 {isKinyarwanda
                   ? "Yateguwe hakurikijwe amategeko n'amabwiriza agenga ubutaka n'ubukode mu Rwanda"
                   : "Executed under the statutory tenancy regulations of the Republic of Rwanda"}
               </p>
             </div>
 
-            <div className="text-left sm:text-right font-mono text-xs">
+            <div className="text-left sm:text-right font-mono text-[12.5px]">
               <p className="font-bold text-ink">REF: {agreement.referenceNumber}</p>
               <p className="text-faint mt-0.5">
                 {isKinyarwanda ? "Itariki: " : "Date: "}
@@ -117,7 +117,7 @@ export function AgreementDocumentView({
           </div>
 
           {/* Recitals / Preamble */}
-          <div className="mb-8 text-xs leading-relaxed text-body bg-surface/40 border border-line p-4">
+          <div className="mb-8 text-[13px] leading-relaxed text-body bg-surface/40 border border-line p-4">
             <p>
               {isKinyarwanda
                 ? "Aya masezerano asinywe hagati y'impande zombi zivugwa muri iyi nyandiko. Nyir'inzu yemeranyije n'Umukode gukodesha inzu yo guturamo ifite ibiranga byavuzwe hano munsi, hashingiwe ku ngingo zikurikira n'amabwiriza yose akubiyemo."
@@ -127,11 +127,11 @@ export function AgreementDocumentView({
 
           {/* SECTION 1: PARTIES IDENTIFICATION */}
           <section className="mb-8 space-y-3 break-inside-avoid">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-ink border-b border-line pb-1.5 flex items-center justify-between">
+            <h3 className="text-[13px] font-bold uppercase tracking-wider text-ink border-b border-line pb-1.5 flex items-center justify-between">
               <span>
                 {isKinyarwanda ? "1. Ibiranga Impande Zombi" : "1. The Contracting Parties"}
               </span>
-              <span className="text-[10px] text-faint font-normal font-mono">
+              <span className="text-[12.5px] text-faint font-normal font-mono">
                 {isKinyarwanda ? "nyir'inzu n'umukode" : "landlord & renter"}
               </span>
             </h3>
@@ -139,26 +139,26 @@ export function AgreementDocumentView({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Landlord Box */}
               <div className="border border-line p-4 bg-surface/20">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-faint block mb-2">
+                <span className="text-[12.5px] font-bold uppercase tracking-wider text-faint block mb-2">
                   {isKinyarwanda ? "Nyir'inzu (Landlord)" : "Landlord (Lessor)"}
                 </span>
-                <div className="space-y-1 text-xs">
-                  <p className="font-bold text-ink text-sm">{agreement.landlord.name}</p>
-                  <p className="text-faint font-mono">
+                <div className="space-y-1.5 text-[13px]">
+                  <p className="font-bold text-ink text-[15px]">{agreement.landlord.name}</p>
+                  <p className="text-faint font-mono text-[12.5px]">
                     {isKinyarwanda ? "Indangamuntu: " : "National ID: "}
                     <span className="text-ink">{agreement.landlord.nationalId}</span>
                   </p>
-                  <p className="text-faint font-mono">
+                  <p className="text-faint font-mono text-[12.5px]">
                     {isKinyarwanda ? "Telefoni: " : "Phone: "}
                     <span className="text-ink">{agreement.landlord.phone}</span>
                   </p>
                   {agreement.landlord.email && (
-                    <p className="text-faint">
+                    <p className="text-faint text-[12.5px]">
                       Email: <span className="text-ink">{agreement.landlord.email}</span>
                     </p>
                   )}
                   {agreement.landlord.address && (
-                    <p className="text-faint">
+                    <p className="text-faint text-[12.5px]">
                       {isKinyarwanda ? "Aderesi: " : "Address: "}
                       <span className="text-ink">{agreement.landlord.address}</span>
                     </p>
@@ -168,21 +168,21 @@ export function AgreementDocumentView({
 
               {/* Renter Box */}
               <div className="border border-line p-4 bg-surface/20">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-faint block mb-2">
+                <span className="text-[12.5px] font-bold uppercase tracking-wider text-faint block mb-2">
                   {isKinyarwanda ? "Umukode (Renter / Tenant)" : "Renter (Lessee)"}
                 </span>
-                <div className="space-y-1 text-xs">
-                  <p className="font-bold text-ink text-sm">{agreement.renter.name}</p>
-                  <p className="text-faint font-mono">
+                <div className="space-y-1.5 text-[13px]">
+                  <p className="font-bold text-ink text-[15px]">{agreement.renter.name}</p>
+                  <p className="text-faint font-mono text-[12.5px]">
                     {isKinyarwanda ? "Indangamuntu: " : "National ID: "}
                     <span className="text-ink">{agreement.renter.nationalId}</span>
                   </p>
-                  <p className="text-faint font-mono">
+                  <p className="text-faint font-mono text-[12.5px]">
                     {isKinyarwanda ? "Telefoni: " : "Phone: "}
                     <span className="text-ink">{agreement.renter.phone}</span>
                   </p>
                   {agreement.renter.email && (
-                    <p className="text-faint">
+                    <p className="text-faint text-[12.5px]">
                       Email: <span className="text-ink">{agreement.renter.email}</span>
                     </p>
                   )}
@@ -193,19 +193,19 @@ export function AgreementDocumentView({
 
           {/* SECTION 2: PREMISES & FINANCIAL SUMMARY */}
           <section className="mb-8 space-y-3 break-inside-avoid">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-ink border-b border-line pb-1.5 flex items-center justify-between">
+            <h3 className="text-[13px] font-bold uppercase tracking-wider text-ink border-b border-line pb-1.5 flex items-center justify-between">
               <span>
                 {isKinyarwanda
                   ? "2. Ibiranga Inzu n'Imiterere y'Ubwishyu"
                   : "2. Premises & Tenancy Financial Schedule"}
               </span>
-              <span className="text-[10px] text-faint font-normal font-mono">
+              <span className="text-[12.5px] text-faint font-normal font-mono">
                 {agreement.property.name} &middot; Unit {agreement.property.unitNumber}
               </span>
             </h3>
 
             <div className="overflow-x-auto border border-line">
-              <table className="w-full text-left text-xs border-collapse">
+              <table className="w-full text-left text-[13px] border-collapse">
                 <tbody>
                   <tr className="border-b border-line bg-surface/30">
                     <td className="p-3 font-semibold text-faint w-1/3">
@@ -266,7 +266,7 @@ export function AgreementDocumentView({
                     </td>
                     <td className="p-3 font-bold text-ink">
                       {formatCurrencyRwf(agreement.financials.totalInitialAmountRwf)}
-                      <span className="text-[11px] font-normal text-faint block mt-0.5">
+                      <span className="text-[12.5px] font-normal text-faint block mt-0.5">
                         ({agreement.financials.advanceMonths} {isKinyarwanda ? "amezi y'integuza" : "month(s) advance"} + {isKinyarwanda ? "ingwate" : "deposit"})
                       </span>
                     </td>
@@ -278,13 +278,13 @@ export function AgreementDocumentView({
 
           {/* SECTION 3: ARTICLES OF AGREEMENT */}
           <section className="mb-10 space-y-6">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-ink border-b border-line pb-1.5 flex items-center justify-between">
+            <h3 className="text-[13px] font-bold uppercase tracking-wider text-ink border-b border-line pb-1.5 flex items-center justify-between">
               <span>
                 {isKinyarwanda
                   ? "3. Ingingo n'Amabwiriza y'Amasezerano"
                   : "3. General Covenants & Articles of Agreement"}
               </span>
-              <span className="text-[10px] text-faint font-mono">
+              <span className="text-[12.5px] text-faint font-mono">
                 {agreement.articles.length} {isKinyarwanda ? "Ingingo" : "Articles"}
               </span>
             </h3>
@@ -294,12 +294,12 @@ export function AgreementDocumentView({
                 const rendered = renderInterpolatedArticle(art, variables);
 
                 return (
-                  <div key={art.id} className="text-xs leading-relaxed break-inside-avoid">
-                    <h4 className="font-bold text-ink text-[13px] mb-1.5">
+                  <div key={art.id} className="text-[13px] leading-relaxed break-inside-avoid">
+                    <h4 className="font-bold text-ink text-[14px] mb-1.5">
                       {isKinyarwanda ? "Ingingo ya" : "Article"} {art.number}:{" "}
                       {rendered.title}
                     </h4>
-                    <p className="text-body text-[12.5px] leading-relaxed text-justify">
+                    <p className="text-body text-[13.5px] leading-relaxed text-justify">
                       {rendered.content}
                     </p>
                   </div>
@@ -310,12 +310,12 @@ export function AgreementDocumentView({
 
           {/* SECTION 4: SIGNATURES & ATTESTATION */}
           <section className="mt-12 pt-8 border-t-2 border-ink space-y-4 break-inside-avoid">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-ink">
+            <h3 className="text-[13px] font-bold uppercase tracking-wider text-ink">
               {isKinyarwanda
                 ? "4. Isinywa ry'Amasezerano n'Ibyemezo"
                 : "4. Execution & Digital Signatures"}
             </h3>
-            <p className="text-xs text-faint">
+            <p className="text-[13px] text-faint">
               {isKinyarwanda
                 ? "Mu gushyira umukono kuri iyi nyandiko, impande zombi zemeje ko zasomye, zasobanukiwe kandi zemeye amabwiriza yose akubiye muri aya masezerano."
                 : "In witness whereof, the parties hereto have digitally endorsed this Agreement on the dates recorded below through the Urugo Verified Tenancy Service."}
@@ -325,10 +325,10 @@ export function AgreementDocumentView({
               {/* Landlord Signature Block */}
               <div className="border border-line p-4 min-h-36 flex flex-col justify-between bg-surface/20">
                 <div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-faint block">
+                  <span className="text-[12.5px] font-bold uppercase tracking-wider text-faint block">
                     {isKinyarwanda ? "Umukono wa Nyir'inzu" : "Landlord Endorsement"}
                   </span>
-                  <p className="font-bold text-sm text-ink mt-1">
+                  <p className="font-bold text-[15px] text-ink mt-1">
                     {agreement.landlord.name}
                   </p>
                 </div>
@@ -336,23 +336,23 @@ export function AgreementDocumentView({
                 <div className="pt-4 border-t border-line mt-4">
                   {agreement.landlordSignature ? (
                     <div className="space-y-1">
-                      <div className="flex items-center gap-1.5 text-xs font-semibold text-ink">
+                      <div className="flex items-center gap-1.5 text-[13px] font-semibold text-ink">
                         <CheckCircle2 className="size-3.5 text-emerald-600" />
                         <span>
                           {isKinyarwanda ? "Yasinye mu buryo bw'ikoranabuhanga" : "Digitally Endorsed"}
                         </span>
                       </div>
-                      <p className="text-[10px] text-faint font-mono">
+                      <p className="text-[12.5px] text-faint font-mono">
                         Signed: {formatDate(agreement.landlordSignature.signedAt)}
                       </p>
                       {agreement.landlordSignature.ipAddress && (
-                        <p className="text-[10px] text-faint font-mono">
+                        <p className="text-[12.5px] text-faint font-mono">
                           IP: {agreement.landlordSignature.ipAddress} &middot; Verified
                         </p>
                       )}
                     </div>
                   ) : (
-                    <div className="text-xs text-faint italic">
+                    <div className="text-[12.5px] text-faint italic">
                       {isKinyarwanda
                         ? "[Bitegereje umukono wa Nyir'inzu]"
                         : "[Pending Landlord Signature]"}
@@ -364,10 +364,10 @@ export function AgreementDocumentView({
               {/* Renter Signature Block */}
               <div className="border border-line p-4 min-h-36 flex flex-col justify-between bg-surface/20">
                 <div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-faint block">
+                  <span className="text-[12.5px] font-bold uppercase tracking-wider text-faint block">
                     {isKinyarwanda ? "Umukono w'Umukode" : "Renter Endorsement"}
                   </span>
-                  <p className="font-bold text-sm text-ink mt-1">
+                  <p className="font-bold text-[15px] text-ink mt-1">
                     {agreement.renter.name}
                   </p>
                 </div>
@@ -375,23 +375,23 @@ export function AgreementDocumentView({
                 <div className="pt-4 border-t border-line mt-4">
                   {agreement.renterSignature ? (
                     <div className="space-y-1">
-                      <div className="flex items-center gap-1.5 text-xs font-semibold text-ink">
+                      <div className="flex items-center gap-1.5 text-[13px] font-semibold text-ink">
                         <CheckCircle2 className="size-3.5 text-emerald-600" />
                         <span>
                           {isKinyarwanda ? "Yasinye mu buryo bw'ikoranabuhanga" : "Digitally Endorsed"}
                         </span>
                       </div>
-                      <p className="text-[10px] text-faint font-mono">
+                      <p className="text-[12.5px] text-faint font-mono">
                         Signed: {formatDate(agreement.renterSignature.signedAt)}
                       </p>
                       {agreement.renterSignature.ipAddress && (
-                        <p className="text-[10px] text-faint font-mono">
+                        <p className="text-[12.5px] text-faint font-mono">
                           IP: {agreement.renterSignature.ipAddress} &middot; Verified
                         </p>
                       )}
                     </div>
                   ) : (
-                    <div className="text-xs text-faint italic">
+                    <div className="text-[12.5px] text-faint italic">
                       {isKinyarwanda
                         ? "[Bitegereje umukono w'Umukode]"
                         : "[Pending Renter Signature]"}
@@ -403,12 +403,12 @@ export function AgreementDocumentView({
           </section>
 
           {/* Footer watermark & security seal */}
-          <div className="mt-12 pt-4 border-t border-line flex flex-col sm:flex-row items-center justify-between text-[10px] text-faint font-mono">
-            <div className="flex items-center gap-1">
-              <ShieldCheck className="size-3 text-faint" />
+          <div className="mt-12 pt-4 border-t border-line flex flex-col sm:flex-row items-center justify-between text-[12.5px] text-faint font-mono">
+            <div className="flex items-center gap-1.5">
+              <ShieldCheck className="size-3.5 text-faint" />
               <span>Urugo Tenancy Registry &middot; Cryptographic Verification Seal</span>
             </div>
-            <p className="mt-1 sm:mt-0">
+            <p className="mt-1 sm:mt-0 text-[12.5px]">
               Doc ID: {agreement.id}
             </p>
           </div>

@@ -75,21 +75,22 @@ export function RenterReviewSimulatorModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
       <div className="w-full max-w-lg border border-line bg-white shadow-xl">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-line px-5 py-4 bg-surface/50">
+        <div className="flex items-center justify-between border-b border-line px-5 py-3.5 bg-surface/50">
           <div className="flex items-center gap-2">
             <div className="grid size-6 place-items-center bg-ink text-white">
               <User className="size-3.5" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-ink">
+              <h3 className="text-sm sm:text-[15px] font-bold text-ink">
                 Renter Review & Action Simulator
               </h3>
-              <p className="text-[11px] text-faint">
+              <p className="text-[12.5px] text-faint">
                 Simulating actions for {agreement.renter.name}
               </p>
             </div>
           </div>
           <button
+            type="button"
             onClick={onClose}
             className="text-faint hover:text-ink cursor-pointer p-1"
           >
@@ -98,11 +99,11 @@ export function RenterReviewSimulatorModal({
         </div>
 
         {/* Action Toggle Tabs */}
-        <div className="grid grid-cols-2 border-b border-line">
+        <div className="grid grid-cols-2 border-b border-line text-[12.5px]">
           <button
             type="button"
             onClick={() => setActiveTab("request_change")}
-            className={`flex items-center justify-center gap-2 py-2.5 text-xs font-semibold cursor-pointer border-b-2 ${
+            className={`flex items-center justify-center gap-2 py-2.5 font-semibold cursor-pointer border-b-2 transition-colors ${
               activeTab === "request_change"
                 ? "border-ink bg-white text-ink"
                 : "border-transparent bg-surface text-faint hover:text-ink"
@@ -114,7 +115,7 @@ export function RenterReviewSimulatorModal({
           <button
             type="button"
             onClick={() => setActiveTab("sign")}
-            className={`flex items-center justify-center gap-2 py-2.5 text-xs font-semibold cursor-pointer border-b-2 ${
+            className={`flex items-center justify-center gap-2 py-2.5 font-semibold cursor-pointer border-b-2 transition-colors ${
               activeTab === "sign"
                 ? "border-ink bg-white text-ink"
                 : "border-transparent bg-surface text-faint hover:text-ink"
@@ -126,17 +127,17 @@ export function RenterReviewSimulatorModal({
         </div>
 
         {/* Content Form */}
-        <div className="p-6">
+        <div className="p-6 text-[12.5px]">
           {activeTab === "request_change" ? (
             <form onSubmit={handleSubmitChange} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-ink mb-1">
+                <label className="block text-[12.5px] font-semibold text-ink mb-1.5">
                   Select Article to Revise
                 </label>
                 <select
                   value={selectedArticleId}
                   onChange={(e) => setSelectedArticleId(e.target.value)}
-                  className="w-full border border-line bg-white p-2 text-xs text-ink focus:border-ink focus:outline-none"
+                  className="w-full border border-line bg-white px-3 py-2 text-[13px] text-ink focus:border-ink focus:outline-none"
                 >
                   {agreement.articles.map((art) => (
                     <option key={art.id} value={art.id}>
@@ -147,20 +148,20 @@ export function RenterReviewSimulatorModal({
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-ink mb-1">
+                <label className="block text-[12.5px] font-semibold text-ink mb-1.5">
                   Requested Adjustment / Revision
                 </label>
                 <textarea
-                  rows={3}
+                  rows={4}
                   value={requestedChangeText}
                   onChange={(e) => setRequestedChangeText(e.target.value)}
                   placeholder="e.g. Please clarify that water heater maintenance is covered by landlord, or change payment date to 5th."
-                  className="w-full border border-line bg-white p-2.5 text-xs text-ink placeholder:text-faint focus:border-ink focus:outline-none"
+                  className="w-full border border-line bg-white p-3 text-[13px] text-ink placeholder:text-faint focus:border-ink focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-ink mb-1">
+                <label className="block text-[12.5px] font-semibold text-ink mb-1.5">
                   Explanation / Rationale (Optional)
                 </label>
                 <input
@@ -168,22 +169,22 @@ export function RenterReviewSimulatorModal({
                   value={reasonText}
                   onChange={(e) => setReasonText(e.target.value)}
                   placeholder="e.g. Salary pay date is on the 3rd of the month."
-                  className="w-full border border-line bg-white p-2 text-xs text-ink placeholder:text-faint focus:border-ink focus:outline-none"
+                  className="w-full border border-line bg-white px-3 py-2 text-[13px] text-ink placeholder:text-faint focus:border-ink focus:outline-none"
                 />
               </div>
 
-              <div className="pt-2 flex justify-end gap-2">
+              <div className="pt-2 flex justify-end gap-2 border-t border-line">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={onClose}
-                  className="rounded-none border-line text-xs font-medium"
+                  className="rounded-none border-line text-[12.5px] font-medium h-8.5 px-4"
                 >
                   Cancel
                 </Button>
                 <Button
                   type="submit"
-                  className="rounded-none bg-amber-900 text-white hover:bg-black text-xs font-semibold"
+                  className="rounded-none bg-amber-900 text-white hover:bg-black text-[12.5px] font-semibold h-8.5 px-4"
                 >
                   Submit Revision Request
                 </Button>
@@ -191,40 +192,40 @@ export function RenterReviewSimulatorModal({
             </form>
           ) : (
             <form onSubmit={handleSign} className="space-y-4">
-              <div className="border border-line bg-surface/50 p-4 text-xs text-body space-y-2">
+              <div className="border border-line bg-surface/50 p-4 text-[13px] text-body space-y-2">
                 <div className="flex items-center gap-2 font-semibold text-ink">
                   <CheckCircle2 className="size-4 text-ink" />
                   <span>Legal Acknowledgment</span>
                 </div>
-                <p>
+                <p className="leading-relaxed">
                   By typing your legal name and confirming below, you acknowledge having read and accepted all covenants of Lease Agreement <strong>{agreement.referenceNumber}</strong>.
                 </p>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-ink mb-1">
+                <label className="block text-[12.5px] font-semibold text-ink mb-1.5">
                   Full Legal Name as Signature
                 </label>
                 <input
                   type="text"
                   value={signerName}
                   onChange={(e) => setSignerName(e.target.value)}
-                  className="w-full border border-line bg-white p-2 text-xs font-semibold text-ink focus:border-ink focus:outline-none"
+                  className="w-full border border-line bg-white px-3 py-2 text-sm font-semibold text-ink focus:border-ink focus:outline-none"
                 />
               </div>
 
-              <div className="pt-2 flex justify-end gap-2">
+              <div className="pt-2 flex justify-end gap-2 border-t border-line">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={onClose}
-                  className="rounded-none border-line text-xs font-medium"
+                  className="rounded-none border-line text-[12.5px] font-medium h-8.5 px-4"
                 >
                   Cancel
                 </Button>
                 <Button
                   type="submit"
-                  className="rounded-none bg-ink text-white hover:bg-black text-xs font-semibold"
+                  className="rounded-none bg-ink text-white hover:bg-black text-[12.5px] font-semibold h-8.5 px-4"
                 >
                   Sign & Endorse Agreement
                 </Button>

@@ -51,7 +51,7 @@ export function AgreementEditor({ initialAgreement }: Props) {
     <main className="flex flex-1 flex-col min-h-0 min-w-0 overflow-hidden bg-white h-full">
       {/* Scrollable Container with Comfortable Left/Right Paddings */}
       <div className="min-h-0 flex-1 overflow-y-auto px-4 py-6 sm:px-8 sm:py-8 md:px-12 md:py-10 lg:px-16 pb-24">
-        <div className="max-w-5xl mx-auto space-y-5 text-[12.5px]">
+        <div className="max-w-[2500px] mx-auto space-y-5 text-[12.5px]">
           {/* 1. Compact Page Header */}
           <EditorHeader
             referenceNumber={agreement.referenceNumber}
@@ -103,12 +103,6 @@ export function AgreementEditor({ initialAgreement }: Props) {
             ))}
           </div>
 
-          {/* 6. Compact Footer Action Bar */}
-          <EditorFooter
-            onSave={handleSaveDraft}
-            onSendToRenter={handleSendToRenter}
-          />
-
           {/* Modals */}
           <AddArticleModal
             isOpen={isAddModalOpen}
@@ -134,6 +128,13 @@ export function AgreementEditor({ initialAgreement }: Props) {
           />
         </div>
       </div>
+     
+        {/* Compact Footer Action Bar */}
+        <EditorFooter
+          onSave={handleSaveDraft}
+          onSendToRenter={handleSendToRenter}
+        />
+      
     </main>
   );
 }

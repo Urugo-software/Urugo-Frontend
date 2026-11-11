@@ -44,7 +44,7 @@ export function AgreementPreviewHeader({
       <div>
         <Link
           href="/landlord/agreements"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-faint hover:text-ink transition-colors"
+          className="inline-flex items-center gap-1.5 text-[12.5px] font-medium text-faint hover:text-ink transition-colors"
         >
           <ArrowLeft className="size-3.5" />
           <span>Back to Agreements</span>
@@ -62,19 +62,19 @@ export function AgreementPreviewHeader({
             <AgreementStatusBadge status={agreement.status} />
           </div>
 
-          <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-body">
-            <span className="font-mono text-faint">
+          <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-body">
+            <span className="font-mono text-faint text-[12.5px]">
               Ref: <strong className="text-ink font-semibold">{agreement.referenceNumber}</strong>
             </span>
             <span>&middot;</span>
             <span>Unit {agreement.property.unitNumber}, {agreement.property.name}</span>
             <span>&middot;</span>
-            <span className="font-mono">v{agreement.version}.0</span>
+            <span className="font-mono text-[12.5px]">v{agreement.version}.0</span>
             <span>&middot;</span>
             <button
               type="button"
               onClick={() => onLanguageChange(activeLanguage === "en" ? "rw" : "en")}
-              className="inline-flex items-center gap-1 font-medium text-ink hover:underline cursor-pointer"
+              className="inline-flex items-center gap-1 font-medium text-ink hover:underline cursor-pointer text-[12.5px]"
               title="Click to switch document language"
             >
               <span>{activeLanguage === "rw" ? "Kinyarwanda" : "English"}</span>
@@ -89,7 +89,7 @@ export function AgreementPreviewHeader({
             type="button"
             variant="outline"
             onClick={handlePrint}
-            className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-none border-line bg-white px-3 text-xs font-medium text-ink hover:bg-surface transition-colors"
+            className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-none border-line bg-white px-3 text-[12.5px] font-medium text-ink hover:bg-surface transition-colors"
           >
             <Printer className="size-3.5 text-faint" />
             <span>Print / PDF</span>
@@ -100,7 +100,7 @@ export function AgreementPreviewHeader({
             <Button
               type="button"
               onClick={onOpenLandlordSign}
-              className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-none bg-ink px-4 text-xs font-semibold text-white hover:bg-black transition-colors"
+              className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-none bg-ink px-4 text-[12.5px] font-semibold text-white hover:bg-black transition-colors"
             >
               <PenTool className="size-3.5" />
               <span>Sign Agreement</span>
@@ -111,7 +111,7 @@ export function AgreementPreviewHeader({
           {isEditable && (
             <Link
               href={`/landlord/agreements/${agreement.id}/edit`}
-              className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-none bg-ink px-4 text-xs font-semibold text-white hover:bg-black transition-colors"
+              className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-none bg-ink px-4 text-[12.5px] font-semibold text-white hover:bg-black transition-colors"
             >
               <FileEdit className="size-3.5" />
               <span>
@@ -128,7 +128,7 @@ export function AgreementPreviewHeader({
               type="button"
               variant="outline"
               onClick={onOpenRenterSimulator}
-              className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-none border-dashed border-line bg-surface/50 px-3 text-xs font-medium text-faint hover:text-ink hover:bg-surface transition-colors"
+              className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-none border-dashed border-line bg-surface/50 px-3 text-[12.5px] font-medium text-faint hover:text-ink hover:bg-surface transition-colors"
               title="Test renter actions (review, request changes, or sign)"
             >
               <UserCheck className="size-3.5" />

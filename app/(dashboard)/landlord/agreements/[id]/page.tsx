@@ -29,7 +29,7 @@ export default async function AgreementDetailPage({ params }: Props) {
   }
 
   return (
-    <main className="flex flex-1 flex-col min-h-0 min-w-0 overflow-hidden bg-white h-full">
+    <main className="flex flex-1 flex-col min-h-0 min-w-0 overflow-hidden bg-white h-full text-[12.5px]">
       <div className="min-h-0 flex-1 overflow-y-auto p-4 pb-16 sm:p-8 sm:pb-20 md:p-10 md:pb-24 space-y-6">
         <AgreementPreviewContainer initialAgreement={agreement} />
       </div>

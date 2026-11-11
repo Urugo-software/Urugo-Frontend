@@ -109,7 +109,7 @@ export function AgreementDetailsSidebar({
       {/* 1. Status & Next Action Panel */}
       <div className="border border-line bg-white p-5 space-y-3.5">
         <div className="flex items-center justify-between pb-3 border-b border-line">
-          <span className="text-xs font-semibold uppercase tracking-wider text-faint">
+          <span className="text-[12.5px] font-semibold uppercase tracking-wider text-faint">
             Agreement Status
           </span>
           <AgreementStatusBadge status={agreement.status} />
@@ -117,12 +117,12 @@ export function AgreementDetailsSidebar({
 
         {/* Contextual Next Step Prompt */}
         <div className="space-y-2">
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-faint block">
+          <span className="text-[12.5px] font-semibold uppercase tracking-wider text-faint block">
             Next Action
           </span>
           {isAwaitingLandlord && (
             <div className="space-y-2.5">
-              <p className="text-xs text-body leading-relaxed">
+              <p className="text-[13px] text-body leading-relaxed">
                 The renter has signed. Your digital endorsement is required to
                 finalize and execute this contract.
               </p>
@@ -130,7 +130,7 @@ export function AgreementDetailsSidebar({
                 <Button
                   type="button"
                   onClick={onOpenLandlordSign}
-                  className="w-full rounded-none bg-ink text-white hover:bg-black text-xs font-semibold h-9 flex items-center justify-center gap-1.5 cursor-pointer"
+                  className="w-full rounded-none bg-ink text-white hover:bg-black text-[12.5px] font-semibold h-9 flex items-center justify-center gap-1.5 cursor-pointer"
                 >
                   <PenTool className="size-3.5" />
                   <span>Sign Agreement Now</span>
@@ -141,7 +141,7 @@ export function AgreementDetailsSidebar({
 
           {isChangesRequested && (
             <div className="space-y-2.5">
-              <p className="text-xs text-body leading-relaxed">
+              <p className="text-[13px] text-body leading-relaxed">
                 The renter proposed changes to{" "}
                 <strong className="text-ink">
                   {agreement.changeRequests?.length ?? 1} clause(s)
@@ -150,7 +150,7 @@ export function AgreementDetailsSidebar({
               </p>
               <Link
                 href={`/landlord/agreements/${agreement.id}/edit`}
-                className="w-full inline-flex items-center justify-center gap-1.5 rounded-none bg-ink text-white hover:bg-black text-xs font-semibold h-9 cursor-pointer transition-colors"
+                className="w-full inline-flex items-center justify-center gap-1.5 rounded-none bg-ink text-white hover:bg-black text-[12.5px] font-semibold h-9 cursor-pointer transition-colors"
               >
                 <FileEdit className="size-3.5" />
                 <span>Open Clause Editor</span>
@@ -160,13 +160,13 @@ export function AgreementDetailsSidebar({
 
           {isDraft && (
             <div className="space-y-2.5">
-              <p className="text-xs text-body leading-relaxed">
+              <p className="text-[13px] text-body leading-relaxed">
                 This agreement is currently in draft. You can customize the 18
                 statutory clauses before sending to the renter.
               </p>
               <Link
                 href={`/landlord/agreements/${agreement.id}/edit`}
-                className="w-full inline-flex items-center justify-center gap-1.5 rounded-none bg-ink text-white hover:bg-black text-xs font-semibold h-9 cursor-pointer transition-colors"
+                className="w-full inline-flex items-center justify-center gap-1.5 rounded-none bg-ink text-white hover:bg-black text-[12.5px] font-semibold h-9 cursor-pointer transition-colors"
               >
                 <FileEdit className="size-3.5" />
                 <span>Edit Clauses</span>
@@ -175,23 +175,23 @@ export function AgreementDetailsSidebar({
           )}
 
           {agreement.status === "Sent" && (
-            <p className="text-xs text-body leading-relaxed">
+            <p className="text-[13px] text-body leading-relaxed">
               Agreement sent to <strong className="text-ink">{agreement.renter.name}</strong>. Awaiting their review.
             </p>
           )}
 
           {agreement.status === "Awaiting Renter Signature" && (
-            <p className="text-xs text-body leading-relaxed">
+            <p className="text-[13px] text-body leading-relaxed">
               Waiting for <strong className="text-ink">{agreement.renter.name}</strong> to sign.
             </p>
           )}
 
           {isSigned && (
             <div className="space-y-1">
-              <p className="text-xs text-body leading-relaxed">
+              <p className="text-[13px] text-body leading-relaxed">
                 Both parties have signed. This agreement is legally active and recorded.
               </p>
-              <span className="text-[11px] font-mono text-faint block">
+              <span className="text-[12.5px] font-mono text-faint block">
                 Ref: {agreement.referenceNumber} &middot; v{agreement.version}.0
               </span>
             </div>
@@ -201,28 +201,28 @@ export function AgreementDetailsSidebar({
 
       {/* 2. Signing Progress (SpotDraft / Juro style) */}
       <div className="border border-line bg-white p-5 space-y-3.5">
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-faint border-b border-line pb-2.5">
+        <h3 className="text-[12.5px] font-semibold uppercase tracking-wider text-faint border-b border-line pb-2.5">
           Signing Progress
         </h3>
 
-        <div className="space-y-3 text-xs">
+        <div className="space-y-3 text-[13px]">
           {/* Renter Signature Row */}
           <div className="flex items-start justify-between gap-3">
             <div className="space-y-0.5">
-              <span className="font-semibold text-ink block">
+              <span className="font-semibold text-ink block text-[13px]">
                 {agreement.renter.name}
               </span>
-              <span className="text-[11px] text-faint">Renter (Lessee)</span>
+              <span className="text-[12.5px] text-faint">Renter (Lessee)</span>
             </div>
             <div className="text-right">
               {agreement.renterSignature ? (
-                <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-700">
-                  <CheckCircle2 className="size-3 shrink-0" />
+                <span className="inline-flex items-center gap-1 text-[12.5px] font-medium text-emerald-700">
+                  <CheckCircle2 className="size-3.5 shrink-0" />
                   <span>Signed {formatDate(agreement.renterSignature.signedAt)}</span>
                 </span>
               ) : (
-                <span className="inline-flex items-center gap-1 text-[11px] font-medium text-amber-700">
-                  <Clock className="size-3 shrink-0" />
+                <span className="inline-flex items-center gap-1 text-[12.5px] font-medium text-amber-700">
+                  <Clock className="size-3.5 shrink-0" />
                   <span>Pending</span>
                 </span>
               )}
@@ -232,29 +232,29 @@ export function AgreementDetailsSidebar({
           {/* Landlord Signature Row */}
           <div className="flex items-start justify-between gap-3 pt-2.5 border-t border-line/60">
             <div className="space-y-0.5">
-              <span className="font-semibold text-ink block">
+              <span className="font-semibold text-ink block text-[13px]">
                 {agreement.landlord.name}
               </span>
-              <span className="text-[11px] text-faint">Landlord (Lessor)</span>
+              <span className="text-[12.5px] text-faint">Landlord (Lessor)</span>
             </div>
             <div className="text-right">
               {agreement.landlordSignature ? (
-                <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-700">
-                  <CheckCircle2 className="size-3 shrink-0" />
+                <span className="inline-flex items-center gap-1 text-[12.5px] font-medium text-emerald-700">
+                  <CheckCircle2 className="size-3.5 shrink-0" />
                   <span>Signed {formatDate(agreement.landlordSignature.signedAt)}</span>
                 </span>
               ) : isAwaitingLandlord ? (
                 <button
                   type="button"
                   onClick={onOpenLandlordSign}
-                  className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-800 underline hover:text-black cursor-pointer"
+                  className="inline-flex items-center gap-1 text-[12.5px] font-semibold text-amber-800 underline hover:text-black cursor-pointer"
                 >
-                  <PenTool className="size-3 shrink-0" />
+                  <PenTool className="size-3.5 shrink-0" />
                   <span>Sign Now</span>
                 </button>
               ) : (
-                <span className="inline-flex items-center gap-1 text-[11px] font-medium text-faint">
-                  <Clock className="size-3 shrink-0" />
+                <span className="inline-flex items-center gap-1 text-[12.5px] font-medium text-faint">
+                  <Clock className="size-3.5 shrink-0" />
                   <span>Pending</span>
                 </span>
               )}
@@ -265,48 +265,48 @@ export function AgreementDetailsSidebar({
 
       {/* 3. Key Financial & Tenancy Terms */}
       <div className="border border-line bg-white p-5 space-y-3.5">
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-faint border-b border-line pb-2.5">
+        <h3 className="text-[12.5px] font-semibold uppercase tracking-wider text-faint border-b border-line pb-2.5">
           Key Tenancy Terms
         </h3>
 
-        <div className="grid grid-cols-2 gap-3 text-xs">
+        <div className="grid grid-cols-2 gap-3 text-[13px]">
           <div>
-            <span className="text-[11px] text-faint block">Monthly Rent</span>
-            <span className="font-bold text-ink text-sm">
+            <span className="text-[12.5px] text-faint block">Monthly Rent</span>
+            <span className="font-bold text-ink text-[14px]">
               {formatCurrencyRwf(agreement.financials.monthlyRentRwf)}
             </span>
           </div>
 
           <div>
-            <span className="text-[11px] text-faint block">Security Deposit</span>
-            <span className="font-semibold text-ink">
+            <span className="text-[12.5px] text-faint block">Security Deposit</span>
+            <span className="font-semibold text-ink text-[13.5px]">
               {formatCurrencyRwf(agreement.financials.securityDepositRwf)}
             </span>
           </div>
 
           <div>
-            <span className="text-[11px] text-faint block">Payment Due</span>
+            <span className="text-[12.5px] text-faint block">Payment Due</span>
             <span className="font-medium text-ink">
               {agreement.financials.paymentDueDay}th of each month
             </span>
           </div>
 
           <div>
-            <span className="text-[11px] text-faint block">Advance Rent</span>
+            <span className="text-[12.5px] text-faint block">Advance Rent</span>
             <span className="font-medium text-ink">
               {agreement.financials.advanceMonths} month(s)
             </span>
           </div>
 
           <div>
-            <span className="text-[11px] text-faint block">Commencement</span>
+            <span className="text-[12.5px] text-faint block">Commencement</span>
             <span className="font-medium text-ink">
               {formatDate(agreement.tenancyStartDate)}
             </span>
           </div>
 
           <div>
-            <span className="text-[11px] text-faint block">Duration</span>
+            <span className="text-[12.5px] text-faint block">Duration</span>
             <span className="font-medium text-ink">
               {agreement.tenancyDurationMonths ?? 12} Months
             </span>
@@ -316,55 +316,55 @@ export function AgreementDetailsSidebar({
 
       {/* 4. Demarcated Premises & Parties */}
       <div className="border border-line bg-white p-5 space-y-3.5">
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-faint border-b border-line pb-2.5">
+        <h3 className="text-[12.5px] font-semibold uppercase tracking-wider text-faint border-b border-line pb-2.5">
           Premises & Parties
         </h3>
 
-        <div className="space-y-3 text-xs">
+        <div className="space-y-3 text-[13px]">
           <div>
-            <span className="text-[11px] text-faint block">Property & Unit</span>
+            <span className="text-[12.5px] text-faint block">Property & Unit</span>
             <span className="font-semibold text-ink block">
               {agreement.property.name} &middot; Unit {agreement.property.unitNumber}
             </span>
-            <span className="text-body text-[11px]">
+            <span className="text-body text-[12.5px]">
               {agreement.property.address}, {agreement.property.district}
             </span>
           </div>
 
           <div className="pt-2 border-t border-line/60">
-            <span className="text-[11px] text-faint block">Renter</span>
+            <span className="text-[12.5px] text-faint block">Renter</span>
             <span className="font-semibold text-ink block">
               {agreement.renter.name}
             </span>
-            <span className="text-[11px] text-body block font-mono">
+            <span className="text-[12.5px] text-body block font-mono">
               {agreement.renter.phone} &middot; ID: {agreement.renter.nationalId}
             </span>
           </div>
 
           <div className="pt-2 border-t border-line/60">
-            <span className="text-[11px] text-faint block">Landlord</span>
+            <span className="text-[12.5px] text-faint block">Landlord</span>
             <span className="font-semibold text-ink block">
               {agreement.landlord.name}
             </span>
-            <span className="text-[11px] text-body block font-mono">
+            <span className="text-[12.5px] text-body block font-mono">
               {agreement.landlord.phone} &middot; ID: {agreement.landlord.nationalId}
             </span>
           </div>
         </div>
       </div>
 
-      {/* 5. Activity History / Audit Trail (Compact SpotDraft / DocuSign style) */}
+      {/* 5. Activity History / Audit Trail */}
       <div className="border border-line bg-white p-5 space-y-3.5">
         <div className="flex items-center justify-between border-b border-line pb-2.5">
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-faint">
+          <h3 className="text-[12.5px] font-semibold uppercase tracking-wider text-faint">
             Activity History
           </h3>
-          <span className="text-[10px] font-mono text-faint">Audit Trail</span>
+          <span className="text-[12.5px] font-mono text-faint">Audit Trail</span>
         </div>
 
         <div className="relative pl-4 space-y-4 before:absolute before:left-1.5 before:top-1.5 before:bottom-1.5 before:w-0.5 before:bg-line">
           {activities.map((act, i) => (
-            <div key={i} className="relative text-xs">
+            <div key={i} className="relative text-[13px]">
               <span
                 className={`absolute -left-4 top-1 size-2 rounded-full ${
                   act.status === "completed"
@@ -378,11 +378,11 @@ export function AgreementDetailsSidebar({
                 <span className="font-medium text-ink block leading-snug">
                   {act.title}
                 </span>
-                <span className="text-[11px] text-body block leading-relaxed">
+                <span className="text-[12.5px] text-body block leading-relaxed">
                   {act.detail}
                 </span>
                 {act.date && (
-                  <span className="text-[10px] text-faint font-mono block">
+                  <span className="text-[12.5px] text-faint font-mono block">
                     {formatDate(act.date)}
                   </span>
                 )}
