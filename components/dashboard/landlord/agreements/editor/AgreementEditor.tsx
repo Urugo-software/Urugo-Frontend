@@ -1,7 +1,7 @@
 "use client";
 
 import { Agreement } from "@/types/agreement.types";
-import { useAgreementEditor } from "./hooks/useAgreementEditor";
+import { useAgreementEditor } from "@/hooks/useAgreementEditor";
 import { EditorHeader } from "./EditorHeader";
 import { EditorSystemMetadataCard } from "./EditorSystemMetadataCard";
 import { EditorValidationAlert } from "./EditorValidationAlert";
@@ -11,12 +11,23 @@ import { EditorFooter } from "./EditorFooter";
 import { AddArticleModal } from "./AddArticleModal";
 import { RestoreArticlesModal } from "./RestoreArticlesModal";
 import { EditorResetConfirmModal } from "./EditorResetConfirmModal";
+import { SelectTemplateModal } from "./SelectTemplateModal";
 
 interface Props {
   initialAgreement: Agreement;
+  onEditTenancy?: () => void;
+  onConfirmAgreement?: (finalAgreement: Agreement) => void;
+  onSaveAgreement?: (agreement: Agreement) => void;
+  onBackToTenancy?: () => void;
 }
 
-export function AgreementEditor({ initialAgreement }: Props) {
+export function AgreementEditor({
+  initialAgreement,
+  onEditTenancy,
+  onConfirmAgreement,
+  onSaveAgreement,
+  onBackToTenancy,
+}: Props) {
   const {
     agreement,
     articles,
@@ -29,9 +40,11 @@ export function AgreementEditor({ initialAgreement }: Props) {
     isAddModalOpen,
     isRestoreModalOpen,
     isConfirmResetOpen,
+    isTemplateModalOpen,
     setIsAddModalOpen,
     setIsRestoreModalOpen,
     setIsConfirmResetOpen,
+    setIsTemplateModalOpen,
     handleToggleExpand,
     handleUpdateArticle,
     handleMoveUp,
@@ -41,11 +54,17 @@ export function AgreementEditor({ initialAgreement }: Props) {
     handleRestoreStandardArticle,
     handleRestoreAll,
     handleResetEntireAgreement,
+    handleSelectTemplate,
+    handleSelectStandard,
     handleLanguageToggle,
     handleSaveDraft,
     handleSendToRenter,
     handleNavigateAway,
-  } = useAgreementEditor(initialAgreement);
+  } = useAgreementEditor(initialAgreement, {
+    onSend: onConfirmAgreement,
+    onSave: onSaveAgreement,
+    onBack: onBackToTenancy,
+  });
 
   return (
     <main className="flex flex-1 flex-col min-h-0 min-w-0 overflow-hidden bg-white h-full">
@@ -68,7 +87,10 @@ export function AgreementEditor({ initialAgreement }: Props) {
           />
 
           {/* 2. Compact Tenancy Details */}
-          <EditorSystemMetadataCard agreement={agreement} />
+          <EditorSystemMetadataCard
+            agreement={agreement}
+            onEditTenancy={onEditTenancy}
+          />
 
           {/* 3. Validation Alert */}
           {showValidation && (
@@ -82,6 +104,7 @@ export function AgreementEditor({ initialAgreement }: Props) {
             onOpenAddModal={() => setIsAddModalOpen(true)}
             onOpenRestoreModal={() => setIsRestoreModalOpen(true)}
             onOpenResetConfirm={() => setIsConfirmResetOpen(true)}
+            onOpenTemplateModal={() => setIsTemplateModalOpen(true)}
           />
 
           {/* 5. Collapsible Accordion Articles List */}
@@ -125,6 +148,14 @@ export function AgreementEditor({ initialAgreement }: Props) {
             language={language}
             onClose={() => setIsConfirmResetOpen(false)}
             onConfirm={handleResetEntireAgreement}
+          />
+
+          <SelectTemplateModal
+            isOpen={isTemplateModalOpen}
+            language={language}
+            onClose={() => setIsTemplateModalOpen(false)}
+            onSelectTemplate={handleSelectTemplate}
+            onSelectStandard={handleSelectStandard}
           />
         </div>
       </div>

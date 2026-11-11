@@ -123,6 +123,15 @@ export function CompletionSummaryCard({
                   </span>
                 </div>
               )}
+
+              {submission.agreementRef && (
+                <div className="flex items-center justify-between border-t border-line/70 pt-2.5">
+                  <span className="text-body">Lease Agreement</span>
+                  <span className="font-mono text-ink font-semibold">
+                    {submission.agreementRef} ({submission.selectedLanguage === "rw" ? "Kinyarwanda" : "English"})
+                  </span>
+                </div>
+              )}
             </div>
           ) : (
             <div className="py-2 text-xs text-body leading-relaxed">

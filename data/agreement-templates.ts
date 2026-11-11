@@ -1,4 +1,8 @@
-import { AgreementArticle, AgreementLanguage } from "@/types/agreement.types";
+import {
+  AgreementArticle,
+  AgreementLanguage,
+  SavedAgreementTemplate,
+} from "@/types/agreement.types";
 
 export interface StandardArticleDefinition {
   standardNumber: number;
@@ -215,3 +219,59 @@ export function interpolateArticleText(
   }
   return result;
 }
+
+export const SAVED_AGREEMENT_TEMPLATES: SavedAgreementTemplate[] = [
+  {
+    id: "tpl-en-standard",
+    name: "Standard Residential Tenancy (English)",
+    description: "Official 18 statutory clauses compliant with Law No. 27/2021 on land and rental governance.",
+    language: "en",
+    lastModified: "2026-10-15",
+    articles: generateStandardArticles("en"),
+  },
+  {
+    id: "tpl-en-furnished",
+    name: "Furnished Apartment Tenancy (English)",
+    description: "Standard statutory covenants plus specialized clause for furniture inventory and maintenance.",
+    language: "en",
+    lastModified: "2026-11-01",
+    articles: [
+      ...generateStandardArticles("en"),
+      {
+        id: "art-custom-furnished-en",
+        number: 19,
+        title: "Furnishings and Inventory Schedule",
+        content: "The premises are let inclusive of the appliances, fixtures, and furniture detailed in the initial move-in inventory schedule. The Renter agrees to maintain all provided furnishings in good repair, subject to fair wear and tear.",
+        isStandard: false,
+        isCustom: true,
+      },
+    ],
+  },
+  {
+    id: "tpl-rw-standard",
+    name: "Inyandiko Rusange yo Gukodesha Inzu (Kinyarwanda)",
+    description: "Ingingo 18 z'ibanze zikurikije amategeko n'amabwiriza agenga ubutaka n'ubukode mu Rwanda.",
+    language: "rw",
+    lastModified: "2026-10-15",
+    articles: generateStandardArticles("rw"),
+  },
+  {
+    id: "tpl-rw-furnished",
+    name: "Inyandiko y'Inzu Ifite Ibikoresho (Kinyarwanda)",
+    description: "Amasezerano akubiyemo ingingo 18 z'ibanze hiyongereyeho amabwiriza yo kubungabunga ibikoresho byo mu nzu.",
+    language: "rw",
+    lastModified: "2026-11-01",
+    articles: [
+      ...generateStandardArticles("rw"),
+      {
+        id: "art-custom-furnished-rw",
+        number: 19,
+        title: "Ibikoresho n'Umutungo Uri mu Nzu",
+        content: "Inzu ikodeshejwe irimo ibikoresho, ibyuma n'intebe byanditswe ku mugereka w'ibikoresho basinyanye igihe Umukode yinjiraga. Umukode yemeye kubungabunga ibyo bikoresho mu buryo bukwiye no kutabyangiza nkana.",
+        isStandard: false,
+        isCustom: true,
+      },
+    ],
+  },
+];
+

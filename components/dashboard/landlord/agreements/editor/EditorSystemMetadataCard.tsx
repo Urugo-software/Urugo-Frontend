@@ -8,9 +8,10 @@ import { Button } from "@/components/ui/button";
 
 interface Props {
   agreement: Agreement;
+  onEditTenancy?: () => void;
 }
 
-export function EditorSystemMetadataCard({ agreement }: Props) {
+export function EditorSystemMetadataCard({ agreement, onEditTenancy }: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -21,13 +22,24 @@ export function EditorSystemMetadataCard({ agreement }: Props) {
           <span className="font-semibold text-ink text-[12.5px] uppercase tracking-wider">
             Tenancy Details
           </span>
-          <button
-            type="button"
-            onClick={() => setIsModalOpen(true)}
-            className="text-[12.5px] text-faint hover:text-ink font-medium underline inline-flex items-center gap-1 cursor-pointer"
-          >
-            <span>View details</span>
-          </button>
+          <div className="flex items-center gap-3">
+            {onEditTenancy && (
+              <button
+                type="button"
+                onClick={onEditTenancy}
+                className="text-[12px] text-blue-700 hover:text-blue-900 font-semibold underline cursor-pointer"
+              >
+                Edit Tenancy Details
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => setIsModalOpen(true)}
+              className="text-[12.5px] text-faint hover:text-ink font-medium underline inline-flex items-center gap-1 cursor-pointer"
+            >
+              <span>View details</span>
+            </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">

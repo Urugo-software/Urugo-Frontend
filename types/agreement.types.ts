@@ -94,6 +94,22 @@ export interface Agreement {
   supersedes?: string;
 }
 
+export interface SavedAgreementTemplate {
+  id: string;
+  name: string;
+  description: string;
+  language: AgreementLanguage;
+  lastModified: string;
+  articles: AgreementArticle[];
+}
+
+export interface ActivityItem {
+  title: string;
+  date: string;
+  detail: string;
+  status: "completed" | "pending" | "attention";
+}
+
 export type AgreementFilterTab =
   | "all"
   | "drafts"

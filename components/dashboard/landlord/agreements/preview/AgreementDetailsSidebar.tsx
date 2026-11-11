@@ -4,7 +4,7 @@ import { SidebarSigningProgressCard } from "./sidebar/SidebarSigningProgressCard
 import { SidebarKeyTermsCard } from "./sidebar/SidebarKeyTermsCard";
 import { SidebarPremisesCard } from "./sidebar/SidebarPremisesCard";
 import { SidebarActivityAuditCard } from "./sidebar/SidebarActivityAuditCard";
-import { useAgreementActivities } from "./hooks/useAgreementActivities";
+import { useAgreementActivities } from "@/hooks/useAgreementActivities";
 
 interface Props {
   agreement: Agreement;

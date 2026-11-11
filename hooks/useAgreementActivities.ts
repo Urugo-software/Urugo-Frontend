@@ -1,6 +1,5 @@
 import { useMemo } from "react";
-import { Agreement } from "@/types/agreement.types";
-import { ActivityItem } from "../sidebar/SidebarActivityAuditCard";
+import { Agreement, ActivityItem } from "@/types/agreement.types";
 
 export function useAgreementActivities(agreement: Agreement): ActivityItem[] {
   const isAwaitingLandlord = agreement.status === "Awaiting Landlord Signature";

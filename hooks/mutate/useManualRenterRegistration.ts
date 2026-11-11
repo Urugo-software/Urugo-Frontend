@@ -2,7 +2,9 @@
 
 import { useMemo, useState } from "react";
 import toast from "react-hot-toast";
-import { LandlordPropertyItem } from "@/types/landlord";
+import { LandlordPropertyItem, LandlordRenter } from "@/types/landlord";
+import { Agreement, AgreementLanguage } from "@/types/agreement.types";
+import { generateStandardArticles } from "@/data/agreement-templates";
 import {
   ManualRenterFormErrors,
   ManualRenterRegistrationDraft,
@@ -109,6 +111,181 @@ export function validateTenancyConfig(
   return errors;
 }
 
+export function buildInitialAgreement(
+  tenancy: TenancyConfigDraft,
+  identity: RenterIdentityDraft,
+  property: LandlordPropertyItem | undefined,
+  language: AgreementLanguage,
+): Agreement {
+  const durationMonths =
+    tenancy.durationOption === "custom"
+      ? typeof tenancy.customDurationMonths === "number" &&
+        tenancy.customDurationMonths > 0
+        ? tenancy.customDurationMonths
+        : 12
+      : tenancy.durationOption === "open"
+        ? 12
+        : parseInt(tenancy.durationOption, 10) || 12;
+
+  const startDateStr =
+    tenancy.startDate || new Date().toISOString().split("T")[0];
+  const startDateObj = new Date(startDateStr);
+  const endDateObj = new Date(startDateObj);
+  endDateObj.setMonth(endDateObj.getMonth() + durationMonths);
+  endDateObj.setDate(endDateObj.getDate() - 1);
+  const endDateStr = endDateObj.toISOString().split("T")[0];
+
+  const monthlyRent =
+    typeof tenancy.monthlyRentRwf === "number" && tenancy.monthlyRentRwf > 0
+      ? tenancy.monthlyRentRwf
+      : 0;
+
+  const deposit =
+    typeof tenancy.securityDepositRwf === "number" &&
+    tenancy.securityDepositRwf > 0
+      ? tenancy.securityDepositRwf
+      : 0;
+
+  const initialMonths = tenancy.initialPaymentMonths || 1;
+  const advanceAmount = monthlyRent * initialMonths;
+  const totalInitial = advanceAmount + deposit;
+
+  const randSuffix = Math.floor(1000 + Math.random() * 9000);
+  const agreementId = `agr-${Date.now()}`;
+  const referenceNumber = `AGR-2026-${randSuffix}`;
+  const nowIso = new Date().toISOString();
+
+  return {
+    id: agreementId,
+    referenceNumber,
+    landlord: {
+      name: "Paul Kagabo",
+      phone: "+250 788 111 222",
+      nationalId: "1198580012345678",
+      email: "paul.kagabo@urugo.rw",
+      address: "KG 123 St, Kimihurura, Gasabo, Kigali",
+    },
+    renter: {
+      name: identity.fullName.trim() || "Prospective Tenant",
+      phone: identity.phoneNumber.trim() || "+250 788 000 000",
+      nationalId: identity.nationalId.replace(/\s+/g, "") || "1199000000000000",
+      email: identity.email.trim().toLowerCase() || "renter@urugo.rw",
+      address: "Kigali, Rwanda",
+    },
+    property: {
+      id: property?.id || "prop-101",
+      name: property?.name || "Residential Property",
+      unitNumber: property?.totalUnits ? "Unit A-01" : "Whole House",
+      address: property?.location || "Kigali, Rwanda",
+      district: "Gasabo",
+      propertyType: "Residential Apartment",
+    },
+    financials: {
+      monthlyRentRwf: monthlyRent,
+      paymentDueDay: tenancy.paymentDueDay || 1,
+      advanceMonths: initialMonths,
+      totalAdvanceRwf: advanceAmount,
+      securityDepositRwf: deposit,
+      otherChargesRwf: 0,
+      totalInitialAmountRwf: totalInitial,
+      currency: "RWF",
+    },
+    tenancyStartDate: startDateStr,
+    tenancyEndDate: endDateStr,
+    tenancyDurationMonths: durationMonths,
+    language,
+    status: "Draft",
+    version: 1,
+    createdAt: nowIso,
+    updatedAt: nowIso,
+    articles: generateStandardArticles(language),
+  };
+}
+
+export function refreshAgreementMetadata(
+  existing: Agreement,
+  tenancy: TenancyConfigDraft,
+  identity: RenterIdentityDraft,
+  property: LandlordPropertyItem | undefined,
+  language: AgreementLanguage,
+): Agreement {
+  const durationMonths =
+    tenancy.durationOption === "custom"
+      ? typeof tenancy.customDurationMonths === "number" &&
+        tenancy.customDurationMonths > 0
+        ? tenancy.customDurationMonths
+        : 12
+      : tenancy.durationOption === "open"
+        ? 12
+        : parseInt(tenancy.durationOption, 10) || 12;
+
+  const startDateStr =
+    tenancy.startDate || new Date().toISOString().split("T")[0];
+  const startDateObj = new Date(startDateStr);
+  const endDateObj = new Date(startDateObj);
+  endDateObj.setMonth(endDateObj.getMonth() + durationMonths);
+  endDateObj.setDate(endDateObj.getDate() - 1);
+  const endDateStr = endDateObj.toISOString().split("T")[0];
+
+  const monthlyRent =
+    typeof tenancy.monthlyRentRwf === "number" && tenancy.monthlyRentRwf > 0
+      ? tenancy.monthlyRentRwf
+      : 0;
+
+  const deposit =
+    typeof tenancy.securityDepositRwf === "number" &&
+    tenancy.securityDepositRwf > 0
+      ? tenancy.securityDepositRwf
+      : 0;
+
+  const initialMonths = tenancy.initialPaymentMonths || 1;
+  const advanceAmount = monthlyRent * initialMonths;
+  const totalInitial = advanceAmount + deposit;
+
+  let articles = existing.articles;
+  if (language !== existing.language) {
+    articles = generateStandardArticles(language);
+  }
+
+  return {
+    ...existing,
+    renter: {
+      name: identity.fullName.trim() || existing.renter.name,
+      phone: identity.phoneNumber.trim() || existing.renter.phone,
+      nationalId:
+        identity.nationalId.replace(/\s+/g, "") || existing.renter.nationalId,
+      email: identity.email.trim().toLowerCase() || existing.renter.email,
+      address: existing.renter.address,
+    },
+    property: {
+      id: property?.id || existing.property.id,
+      name: property?.name || existing.property.name,
+      unitNumber: property?.totalUnits
+        ? "Unit A-01"
+        : existing.property.unitNumber,
+      address: property?.location || existing.property.address,
+      district: existing.property.district,
+      propertyType: existing.property.propertyType,
+    },
+    financials: {
+      monthlyRentRwf: monthlyRent,
+      paymentDueDay: tenancy.paymentDueDay || 1,
+      advanceMonths: initialMonths,
+      totalAdvanceRwf: advanceAmount,
+      securityDepositRwf: deposit,
+      otherChargesRwf: existing.financials.otherChargesRwf,
+      totalInitialAmountRwf: totalInitial,
+      currency: "RWF",
+    },
+    tenancyStartDate: startDateStr,
+    tenancyEndDate: endDateStr,
+    tenancyDurationMonths: durationMonths,
+    language,
+    articles,
+    updatedAt: new Date().toISOString(),
+  };
+}
+
 export function useRenterWizard(
   properties: LandlordPropertyItem[],
   initialMode: AddRenterMode = "manual",
@@ -118,6 +295,9 @@ export function useRenterWizard(
   const [isReviewing, setIsReviewing] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [mode, setMode] = useState<AddRenterMode>(initialMode);
+  const [selectedLanguage, setSelectedLanguage] =
+    useState<AgreementLanguage>("en");
+  const [agreementDraft, setAgreementDraft] = useState<Agreement | null>(null);
 
   const [identityDraft, setIdentityDraft] =
     useState<RenterIdentityDraft>(INITIAL_IDENTITY_DRAFT);
@@ -157,6 +337,20 @@ export function useRenterWizard(
     }
   };
 
+  const selectExistingRenter = (renter: LandlordRenter) => {
+    setIdentityDraft({
+      fullName: renter.name,
+      email: `${renter.name.toLowerCase().replace(/\s+/g, ".")}@gmail.com`,
+      phoneNumber: renter.phone,
+      nationalId:
+        "11992800" + Math.floor(10000000 + Math.random() * 90000000),
+      isExistingRenter: true,
+      existingRenterId: renter.id,
+    });
+    setIdentityErrors({});
+    toast.success(`Selected verified tenant: ${renter.name}`);
+  };
+
   const updateTenancyField = <K extends keyof TenancyConfigDraft>(
     field: K,
     value: TenancyConfigDraft[K],
@@ -187,7 +381,28 @@ export function useRenterWizard(
     }
   };
 
+  // Step 1 -> Step 2
   const goToStep2 = () => {
+    const errors = validateTenancyConfig(tenancyDraft);
+    if (Object.keys(errors).length > 0) {
+      setTenancyErrors(errors);
+      toast.error("Please select a property and set rent before proceeding.");
+      return;
+    }
+    setStepDirection(1);
+    setStep(2);
+    setIsReviewing(false);
+  };
+
+  // Step 2 -> Step 1
+  const goToStep1 = () => {
+    setStepDirection(-1);
+    setStep(1);
+    setIsReviewing(false);
+  };
+
+  // Step 2 -> Step 3
+  const goToStep3 = () => {
     if (mode === "manual") {
       const errors = validateRenterIdentity(identityDraft);
       if (Object.keys(errors).length > 0) {
@@ -195,16 +410,99 @@ export function useRenterWizard(
         toast.error("Please fill in the required identity fields.");
         return;
       }
+    } else if (mode === "existing") {
+      if (!identityDraft.fullName || !identityDraft.isExistingRenter) {
+        toast.error("Please select an existing renter from your portfolio.");
+        return;
+      }
     }
     setStepDirection(1);
-    setStep(2);
+    setStep(3);
     setIsReviewing(false);
   };
 
-  const goToStep1 = () => {
-    setStepDirection(-1);
-    setStep(1);
+  // Step 3 -> Step 4 (Populate Agreement & Launch Editor directly in session)
+  const goToStep4 = () => {
+    if (!selectedLanguage) {
+      toast.error("Please select an agreement language.");
+      return;
+    }
+
+    const selectedProp = properties.find(
+      (p) => p.id === tenancyDraft.propertyId,
+    );
+
+    if (!agreementDraft) {
+      const initialAgreement = buildInitialAgreement(
+        tenancyDraft,
+        identityDraft,
+        selectedProp,
+        selectedLanguage,
+      );
+      setAgreementDraft(initialAgreement);
+    } else {
+      setAgreementDraft((prev) => {
+        if (!prev) {
+          return buildInitialAgreement(
+            tenancyDraft,
+            identityDraft,
+            selectedProp,
+            selectedLanguage,
+          );
+        }
+        return refreshAgreementMetadata(
+          prev,
+          tenancyDraft,
+          identityDraft,
+          selectedProp,
+          selectedLanguage,
+        );
+      });
+    }
+
+    setStepDirection(1);
+    setStep(4);
     setIsReviewing(false);
+  };
+
+  const handleAgreementSaved = (saved: Agreement) => {
+    setAgreementDraft(saved);
+  };
+
+  const handleAgreementConfirmed = (finalAgreement: Agreement) => {
+    const selectedProp = properties.find(
+      (p) => p.id === tenancyDraft.propertyId,
+    );
+
+    const snapshot: FullRenterRegistrationSubmission = {
+      mode,
+      identity: {
+        fullName: identityDraft.fullName.trim(),
+        email: identityDraft.email.trim().toLowerCase(),
+        phoneNumber: identityDraft.phoneNumber.trim(),
+        nationalId: identityDraft.nationalId.replace(/\s+/g, ""),
+        isExistingRenter: identityDraft.isExistingRenter,
+        existingRenterId: identityDraft.existingRenterId,
+      },
+      simulatedLink: linkState.generatedLink || undefined,
+      tenancy: { ...tenancyDraft },
+      propertyName: selectedProp?.name,
+      propertyLocation: selectedProp?.location,
+      paymentSummary: tenancyDraft.isConfigured ? paymentSummary : undefined,
+      selectedLanguage,
+      agreementId: finalAgreement.id,
+      agreementRef: finalAgreement.referenceNumber,
+      agreement: finalAgreement,
+      submittedAt: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    };
+
+    setSubmission(snapshot);
+    setIsSubmitted(true);
+    setStep(5);
+    toast.success("Tenancy agreement finalized and sent for digital review!");
   };
 
   const goToReview = (skipTenancy = false) => {
@@ -247,6 +545,8 @@ export function useRenterWizard(
         email: identityDraft.email.trim().toLowerCase(),
         phoneNumber: identityDraft.phoneNumber.trim(),
         nationalId: identityDraft.nationalId.replace(/\s+/g, ""),
+        isExistingRenter: identityDraft.isExistingRenter,
+        existingRenterId: identityDraft.existingRenterId,
       },
       simulatedLink: linkState.generatedLink || undefined,
       tenancy: { ...tenancyDraft },
@@ -273,6 +573,8 @@ export function useRenterWizard(
     setIdentityErrors({});
     setTenancyDraft(INITIAL_TENANCY_DRAFT);
     setTenancyErrors({});
+    setSelectedLanguage("en");
+    setAgreementDraft(null);
     setSubmission(null);
   };
 
@@ -283,9 +585,14 @@ export function useRenterWizard(
     isSubmitted,
     mode,
     setMode,
+    selectedLanguage,
+    setSelectedLanguage,
+    agreementDraft,
+    setAgreementDraft,
     identityDraft,
     identityErrors,
     updateIdentityField,
+    selectExistingRenter,
     tenancyDraft,
     tenancyErrors,
     updateTenancyField,
@@ -295,6 +602,10 @@ export function useRenterWizard(
     submission,
     goToStep1,
     goToStep2,
+    goToStep3,
+    goToStep4,
+    handleAgreementSaved,
+    handleAgreementConfirmed,
     goToReview,
     backFromReview,
     confirmSubmission,

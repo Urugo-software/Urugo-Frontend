@@ -1,7 +1,7 @@
 "use client";
 
 import { Agreement } from "@/types/agreement.types";
-import { useAgreementPreview } from "./hooks/useAgreementPreview";
+import { useAgreementPreview } from "@/hooks/useAgreementPreview";
 import { AgreementPreviewHeader } from "./AgreementPreviewHeader";
 import { RenterChangeRequestBanner } from "./RenterChangeRequestBanner";
 import { AgreementDocumentView } from "./AgreementDocumentView";

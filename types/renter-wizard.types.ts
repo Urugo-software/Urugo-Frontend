@@ -1,18 +1,21 @@
-import { LandlordPropertyItem } from "@/types/landlord";
+import { LandlordPropertyItem, LandlordRenter } from "@/types/landlord";
+import { AgreementLanguage, Agreement } from "@/types/agreement.types";
 import {
   CopyStatusMessage,
   SimulatedRenterInvitationLink,
 } from "./renter-registration.types";
 
-export type AddRenterMode = "manual" | "link";
-export type WizardStep = 1 | 2;
-export type WizardStage = "step1" | "step2" | "review" | "completed";
+export type AddRenterMode = "manual" | "link" | "existing";
+export type WizardStep = 1 | 2 | 3 | 4 | 5;
+export type WizardStage = "step1" | "step2" | "step3" | "editor" | "completed";
 
 export interface RenterIdentityDraft {
   fullName: string;
   email: string;
   phoneNumber: string;
   nationalId: string;
+  isExistingRenter?: boolean;
+  existingRenterId?: string;
 }
 
 export interface RenterIdentityErrors {
@@ -20,6 +23,7 @@ export interface RenterIdentityErrors {
   email?: string;
   phoneNumber?: string;
   nationalId?: string;
+  existingRenterId?: string;
 }
 
 export type TenancyDurationOption = "6" | "12" | "24" | "open" | "custom";
@@ -103,33 +107,20 @@ export interface FullRenterRegistrationSubmission {
   propertyName?: string;
   propertyLocation?: string;
   paymentSummary?: InitialPaymentCalculation;
+  selectedLanguage?: AgreementLanguage;
+  agreementId?: string;
+  agreementRef?: string;
+  agreement?: Agreement;
   submittedAt: string;
 }
 
 export interface WizardProgressIndicatorProps {
   currentStep: WizardStep;
-  isReviewing: boolean;
+  isReviewing?: boolean;
   onStepClick?: (step: WizardStep) => void;
 }
 
-export interface Step1RenterDetailsProps {
-  mode: AddRenterMode;
-  onModeChange: (mode: AddRenterMode) => void;
-  draft: RenterIdentityDraft;
-  errors: RenterIdentityErrors;
-  onFieldChange: (field: keyof RenterIdentityDraft, value: string) => void;
-  onContinue: () => void;
-  onSkipTenancy: () => void;
-  onCancel: () => void;
-  // Link mode props
-  generatedLink: SimulatedRenterInvitationLink | null;
-  copied: boolean;
-  copyStatus: CopyStatusMessage | null;
-  onGenerateLink: () => void;
-  onCopyLink: () => void;
-}
-
-export interface Step2TenancyConfigProps {
+export interface Step1TenancyConfigProps {
   properties: LandlordPropertyItem[];
   draft: TenancyConfigDraft;
   errors: TenancyConfigErrors;
@@ -139,9 +130,39 @@ export interface Step2TenancyConfigProps {
     value: TenancyConfigDraft[K],
   ) => void;
   onSelectProperty: (propertyId: string) => void;
-  onBack: () => void;
-  onSkip: () => void;
+  onCancel: () => void;
   onContinue: () => void;
+}
+
+export interface Step2RenterDetailsProps {
+  mode: AddRenterMode;
+  onModeChange: (mode: AddRenterMode) => void;
+  draft: RenterIdentityDraft;
+  errors: RenterIdentityErrors;
+  onFieldChange: (field: keyof RenterIdentityDraft, value: string) => void;
+  onSelectExistingRenter: (renter: LandlordRenter) => void;
+  existingRenters: LandlordRenter[];
+  onBack: () => void;
+  onContinue: () => void;
+  // Link mode props
+  generatedLink: SimulatedRenterInvitationLink | null;
+  copied: boolean;
+  copyStatus: CopyStatusMessage | null;
+  onGenerateLink: () => void;
+  onCopyLink: () => void;
+}
+
+export interface Step3AgreementLanguageProps {
+  selectedLanguage: AgreementLanguage | null;
+  onSelectLanguage: (language: AgreementLanguage) => void;
+  onBack: () => void;
+  onContinue: () => void;
+}
+
+export interface Step4AgreementEditorProps {
+  agreement: Agreement;
+  onBackToTenancy: () => void;
+  onConfirmAgreement: (finalAgreement: Agreement) => void;
 }
 
 export interface WizardReviewViewProps {
