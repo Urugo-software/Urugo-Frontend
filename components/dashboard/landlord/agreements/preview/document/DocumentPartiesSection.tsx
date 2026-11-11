@@ -1,80 +1,79 @@
 "use client";
 
 import { AgreementParty } from "@/types/agreement.types";
+import { formatDate } from "@/utils/agreement-utils";
 
 interface Props {
   landlord: AgreementParty;
   renter: AgreementParty;
+  updatedAt: string;
   isKinyarwanda: boolean;
 }
 
 export function DocumentPartiesSection({
   landlord,
   renter,
+  updatedAt,
   isKinyarwanda,
 }: Props) {
   return (
-    <section className="mb-8 space-y-3 break-inside-avoid text-[12.5px]">
-      <h3 className="text-[13px] font-bold uppercase tracking-wider text-ink border-b border-line pb-1.5 flex items-center justify-between">
-        <span>
-          {isKinyarwanda ? "1. Ibiranga Impande Zombi" : "1. The Contracting Parties"}
-        </span>
-        <span className="text-[12.5px] text-faint font-normal font-mono">
-          {isKinyarwanda ? "nyir'inzu n'umukode" : "landlord & renter"}
-        </span>
-      </h3>
+    <section className="mb-7 text-[13px] leading-relaxed break-inside-avoid">
+      {/* Formal Preamble / Recital */}
+      <p className="text-justify text-ink mb-4">
+        {isKinyarwanda ? (
+          <>
+            Aya Masezerano yo Gukodesha Inzu yo Guturamo (hano mu nyandiko yiswe{" "}
+            <strong>&ldquo;Amasezerano&rdquo;</strong>) asinywe kandi agiriwe
+            agaciro ku itariki ya <strong>{formatDate(updatedAt)}</strong>, hagati
+            y&rsquo;impande zikurikira:
+          </>
+        ) : (
+          <>
+            This Residential Lease Agreement (the{" "}
+            <strong>&ldquo;Agreement&rdquo;</strong>) is made and entered into
+            as of <strong>{formatDate(updatedAt)}</strong>, by and between the
+            contracting parties designated below:
+          </>
+        )}
+      </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Landlord Box */}
-        <div className="border border-line p-4 bg-surface/20">
-          <span className="text-[12.5px] font-bold uppercase tracking-wider text-faint block mb-2">
-            {isKinyarwanda ? "Nyir'inzu (Landlord)" : "Landlord (Lessor)"}
+      {/* Structured Parties Details */}
+      <div className="space-y-3.5 pl-3 border-l-2 border-zinc-200">
+        {/* Landlord Party */}
+        <div>
+          <span className="font-bold uppercase tracking-wider text-ink text-[12px] block">
+            {isKinyarwanda ? "1. Nyir'inzu (Landlord):" : "1. Landlord (Lessor):"}
           </span>
-          <div className="space-y-1.5 text-[13px]">
-            <p className="font-bold text-ink text-[15px]">{landlord.name}</p>
-            <p className="text-faint font-mono text-[12.5px]">
-              {isKinyarwanda ? "Indangamuntu: " : "National ID: "}
-              <span className="text-ink">{landlord.nationalId}</span>
-            </p>
-            <p className="text-faint font-mono text-[12.5px]">
-              {isKinyarwanda ? "Telefoni: " : "Phone: "}
-              <span className="text-ink">{landlord.phone}</span>
-            </p>
-            {landlord.email && (
-              <p className="text-faint text-[12.5px]">
-                Email: <span className="text-ink">{landlord.email}</span>
-              </p>
-            )}
-            {landlord.address && (
-              <p className="text-faint text-[12.5px]">
-                {isKinyarwanda ? "Aderesi: " : "Address: "}
-                <span className="text-ink">{landlord.address}</span>
-              </p>
-            )}
-          </div>
+          <p className="text-ink mt-0.5">
+            <strong>{landlord.name}</strong>,{" "}
+            {isKinyarwanda ? "Indangamuntu No. " : "National ID No. "}
+            <span className="font-mono text-[12.5px]">{landlord.nationalId}</span>
+            {landlord.phone && <>, {isKinyarwanda ? "Telefoni: " : "Tel: "}{landlord.phone}</>}
+            {landlord.email && <>, Email: {landlord.email}</>}
+            {landlord.address && <>, {isKinyarwanda ? "Aderesi: " : "Address: "}{landlord.address}</>}
+            <span className="text-body italic">
+              {" "}
+              ({isKinyarwanda ? "hano yiswe \"Nyir'inzu\"" : "hereinafter referred to as the \"Landlord\""})
+            </span>.
+          </p>
         </div>
 
-        {/* Renter Box */}
-        <div className="border border-line p-4 bg-surface/20">
-          <span className="text-[12.5px] font-bold uppercase tracking-wider text-faint block mb-2">
-            {isKinyarwanda ? "Umukode (Renter / Tenant)" : "Renter (Lessee)"}
+        {/* Renter Party */}
+        <div>
+          <span className="font-bold uppercase tracking-wider text-ink text-[12px] block">
+            {isKinyarwanda ? "2. Umukode (Tenant):" : "2. Tenant / Renter (Lessee):"}
           </span>
-          <div className="space-y-1.5 text-[13px]">
-            <p className="font-bold text-ink text-[15px]">{renter.name}</p>
-            <p className="text-faint font-mono text-[12.5px]">
-              {isKinyarwanda ? "Indangamuntu: " : "National ID: "}
-              <span className="text-ink">{renter.nationalId}</span>
-            </p>
-            <p className="text-faint font-mono text-[12.5px]">
-              {isKinyarwanda ? "Telefoni: " : "Phone: "}
-              <span className="text-ink">{renter.phone}</span>
-            </p>
-            {renter.email && (
-              <p className="text-faint text-[12.5px]">
-                Email: <span className="text-ink">{renter.email}</span>
-              </p>
-            )}
-          </div>
+          <p className="text-ink mt-0.5">
+            <strong>{renter.name}</strong>,{" "}
+            {isKinyarwanda ? "Indangamuntu No. " : "National ID No. "}
+            <span className="font-mono text-[12.5px]">{renter.nationalId}</span>
+            {renter.phone && <>, {isKinyarwanda ? "Telefoni: " : "Tel: "}{renter.phone}</>}
+            {renter.email && <>, Email: {renter.email}</>}
+            <span className="text-body italic">
+              {" "}
+              ({isKinyarwanda ? "hano yiswe \"Umukode\"" : "hereinafter referred to as the \"Tenant\""})
+            </span>.
+          </p>
         </div>
       </div>
     </section>

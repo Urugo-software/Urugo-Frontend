@@ -1,7 +1,7 @@
 "use client";
 
 import { AgreementParty, AgreementSignature } from "@/types/agreement.types";
-import { DocumentPartySignatureCard } from "./DocumentPartySignatureCard";
+import { DocumentPartySignatureBlock } from "./DocumentPartySignatureBlock";
 
 interface Props {
   landlord: AgreementParty;
@@ -19,53 +19,37 @@ export function DocumentSignaturesSection({
   isKinyarwanda,
 }: Props) {
   return (
-    <section className="mt-12 pt-8 border-t-2 border-ink space-y-4 break-inside-avoid text-[12.5px]">
-      <h3 className="text-[13px] font-bold uppercase tracking-wider text-ink">
-        {isKinyarwanda
-          ? "4. Isinywa ry'Amasezerano n'Ibyemezo"
-          : "4. Execution & Digital Signatures"}
-      </h3>
-      <p className="text-[13px] text-faint">
-        {isKinyarwanda
-          ? "Mu gushyira umukono kuri iyi nyandiko, impande zombi zemeje ko zasomye, zasobanukiwe kandi zemeye amabwiriza yose akubiye muri aya masezerano."
-          : "In witness whereof, the parties hereto have digitally endorsed this Agreement on the dates recorded below through the Urugo Verified Tenancy Service."}
-      </p>
+    <section className="mt-10 pt-6 border-t-2 border-zinc-800 break-inside-avoid text-[12.5px]">
+      <div className="mb-6">
+        <h2 className="text-[12px] font-bold uppercase tracking-wider text-ink">
+          {isKinyarwanda
+            ? "Gushyira Umukono ku Masezerano"
+            : "Execution & Signatures"}
+        </h2>
+        <p className="text-[12.5px] text-body mt-1">
+          {isKinyarwanda
+            ? "HAMYANYWE N'IBI, Nyir'inzu n'Umukode bashyize umukono kuri iyi nyandiko ku munsi n'umwaka byavuzwe haruguru."
+            : "IN WITNESS WHEREOF, the Landlord and Tenant have executed this Residential Lease Agreement as of the date first written above."}
+        </p>
+      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-2">
         {/* Landlord Signature Block */}
-        <DocumentPartySignatureCard
+        <DocumentPartySignatureBlock
           party={landlord}
           signature={landlordSignature}
-          roleLabel={
-            isKinyarwanda ? "Umukono wa Nyir'inzu" : "Landlord Endorsement"
-          }
-          pendingText={
-            isKinyarwanda
-              ? "[Bitegereje umukono wa Nyir'inzu]"
-              : "[Pending Landlord Signature]"
-          }
-          signedText={
-            isKinyarwanda
-              ? "Yasinye mu buryo bw'ikoranabuhanga"
-              : "Digitally Endorsed"
-          }
+          roleTitleEn="Landlord (Lessor)"
+          roleTitleRw="Nyir'inzu (Landlord)"
+          isKinyarwanda={isKinyarwanda}
         />
 
-        {/* Renter Signature Block */}
-        <DocumentPartySignatureCard
+        {/* Tenant Signature Block */}
+        <DocumentPartySignatureBlock
           party={renter}
           signature={renterSignature}
-          roleLabel={isKinyarwanda ? "Umukono w'Umukode" : "Renter Endorsement"}
-          pendingText={
-            isKinyarwanda
-              ? "[Bitegereje umukono w'Umukode]"
-              : "[Pending Renter Signature]"
-          }
-          signedText={
-            isKinyarwanda
-              ? "Yasinye mu buryo bw'ikoranabuhanga"
-              : "Digitally Endorsed"
-          }
+          roleTitleEn="Tenant / Renter (Lessee)"
+          roleTitleRw="Umukode (Tenant)"
+          isKinyarwanda={isKinyarwanda}
         />
       </div>
     </section>

@@ -1,19 +1,30 @@
 "use client";
 
-import { ShieldCheck } from "lucide-react";
-
 interface Props {
   agreementId: string;
+  referenceNumber: string;
+  version: number;
 }
 
-export function DocumentFooterSeal({ agreementId }: Props) {
+export function DocumentFooterSeal({
+  agreementId,
+  referenceNumber,
+  version,
+}: Props) {
   return (
-    <div className="mt-12 pt-4 border-t border-line flex flex-col sm:flex-row items-center justify-between text-[12.5px] text-faint font-mono">
-      <div className="flex items-center gap-1.5">
-        <ShieldCheck className="size-3.5 text-faint" />
-        <span>Urugo Tenancy Registry &middot; Cryptographic Verification Seal</span>
+    <footer className="mt-12 pt-4 border-t border-zinc-200 flex flex-col sm:flex-row items-start sm:items-center justify-between text-[11.5px] text-faint font-mono gap-2 break-inside-avoid">
+      <div>
+        <span>URUGO Residential Lease Agreement</span>
+        <span className="mx-1.5">&middot;</span>
+        <span>REF: {referenceNumber}</span>
+        <span className="mx-1.5">&middot;</span>
+        <span>v{version}.0</span>
       </div>
-      <p className="mt-1 sm:mt-0 text-[12.5px]">Doc ID: {agreementId}</p>
-    </div>
+      <div className="flex items-center gap-3">
+        <span>Doc ID: {agreementId}</span>
+        <span className="text-zinc-400">|</span>
+        <span className="text-zinc-600">Page 1 of 1</span>
+      </div>
+    </footer>
   );
 }
