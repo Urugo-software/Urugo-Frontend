@@ -37,14 +37,14 @@ export function AddArticleModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
       <div className="w-full max-w-lg border border-line bg-white shadow-xl">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-line px-5 py-4 bg-surface/50">
+        <div className="flex items-center justify-between border-b border-line px-5 py-3.5 bg-surface/50">
           <div className="flex items-center gap-2">
             <div className="grid size-6 place-items-center bg-ink text-white">
               <FilePlus className="size-3.5" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-ink">Add Custom Article</h3>
-              <p className="text-[11px] text-faint">
+              <h3 className="text-sm font-semibold text-ink">Add Custom Article</h3>
+              <p className="text-[12.5px] text-faint">
                 Insert an additional clause into the lease agreement
               </p>
             </div>
@@ -58,9 +58,9 @@ export function AddArticleModal({
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="p-6 space-y-4 text-[12.5px]">
           <div>
-            <label className="block text-xs font-semibold text-ink mb-1">
+            <label className="block text-[12.5px] font-semibold text-ink mb-1.5">
               Article Title / Heading
             </label>
             <input
@@ -69,18 +69,18 @@ export function AddArticleModal({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Parking Rights and Vehicle Registration"
-              className="w-full border border-line bg-white p-2.5 text-xs font-semibold text-ink focus:border-ink focus:outline-none"
+              className="w-full border border-line bg-white px-3 py-2 text-[13px] sm:text-sm font-medium text-ink focus:border-ink focus:outline-none"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-ink mb-1">
+            <label className="block text-[12.5px] font-semibold text-ink mb-1.5">
               Position in Document
             </label>
             <select
               value={insertPosition}
               onChange={(e) => setInsertPosition(Number(e.target.value))}
-              className="w-full border border-line bg-white p-2 text-xs text-ink focus:border-ink focus:outline-none"
+              className="w-full border border-line bg-white px-3 py-2 text-[13px] sm:text-sm text-ink focus:border-ink focus:outline-none"
             >
               <option value={totalArticles}>At the end (Article {totalArticles + 1})</option>
               <option value={0}>At the beginning (Article 1)</option>
@@ -93,16 +93,16 @@ export function AddArticleModal({
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-ink mb-1">
+            <label className="block text-[12.5px] font-semibold text-ink mb-1.5">
               Article Content & Terms
             </label>
             <textarea
               required
-              rows={4}
+              rows={5}
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="Provide the complete legal provisions for this custom clause..."
-              className="w-full border border-line bg-white p-3 text-xs leading-relaxed text-ink focus:border-ink focus:outline-none"
+              className="w-full border border-line bg-white p-3 text-[13px] sm:text-sm leading-relaxed text-ink focus:border-ink focus:outline-none font-sans"
             />
           </div>
 
@@ -111,13 +111,13 @@ export function AddArticleModal({
               type="button"
               variant="outline"
               onClick={onClose}
-              className="rounded-none border-line text-xs font-medium"
+              className="rounded-none border-line text-[12.5px] font-medium h-8.5 px-4"
             >
               Cancel
             </Button>
             <Button
               type="submit"
-              className="rounded-none bg-ink text-white hover:bg-black text-xs font-semibold"
+              className="rounded-none bg-ink text-white hover:bg-black text-[12.5px] font-semibold h-8.5 px-4"
             >
               Add Article
             </Button>
