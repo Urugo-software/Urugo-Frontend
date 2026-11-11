@@ -15,7 +15,7 @@ function SignUpFormHeader({
       <h1 className="mb-3 text-center text-2xl font-bold uppercase tracking-wider text-brand ">
         {title}
       </h1>
-      <p className="mx-auto mb-6 max-w-xs text-sm leading-6 text-gray-400 sm:mb-8 sm:max-w-sm sm:text-base">
+      <p className="mx-auto max-w-xs text-sm leading-6 text-gray-400 sm:max-w-sm sm:text-base">
         {description}
       </p>
     </div>

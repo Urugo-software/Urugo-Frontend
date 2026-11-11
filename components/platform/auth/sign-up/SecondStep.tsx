@@ -1,70 +1,37 @@
-import Link from "next/link";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Field, FieldDescription, FieldSeparator } from "@/components/ui/field";
+import { Field } from "@/components/ui/field";
 
-import { SignUpGoogleIcon } from "./SignUpGoogleIcon";
-import { SignUpWizardField } from "./SignUpWizardField";
-
-const primaryButtonClassName =
-  "h-11 w-full rounded-xl bg-brand text-white transition-colors duration-300 hover:bg-brand/80 cursor-pointer";
-const outlineButtonClassName = "h-11 w-full rounded-xl border-ink";
+import { SignUpWizardField, type SignUpField, type SignUpValues } from "./SignUpWizardField";
 
 type SecondStepProps = {
-  fields: ReadonlyArray<{
-    id: string;
-    label: string;
-    type: string;
-    autoComplete?: string;
-    placeholder?: string;
-    required?: boolean;
-    description?: string;
-  }>;
+  fields: readonly SignUpField[];
+  values: SignUpValues;
+  onChange: (id: keyof SignUpValues, value: string) => void;
   onBack: () => void;
 };
 
-function SecondStep({ fields, onBack }: SecondStepProps) {
+function SecondStep({ fields, values, onChange, onBack }: SecondStepProps) {
   return (
     <>
       {fields.map((field) => (
-        <SignUpWizardField key={field.id} {...field} />
+        <SignUpWizardField
+          key={field.id}
+          {...field}
+          value={values[field.id]}
+          onChange={(event) => onChange(field.id, event.target.value)}
+        />
       ))}
       <Field>
-        <div className="grid gap-3 sm:grid-cols-[auto_1fr] sm:items-center">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onBack}
-            className="h-11 w-full rounded-xl border-ink sm:w-32"
-          >
-            Back
+        <div className="grid gap-3 sm:grid-cols-[auto_1fr]">
+          <Button type="button" variant="outline" onClick={onBack} className="h-11 rounded-xl sm:w-32">
+            <ArrowLeft aria-hidden="true" /> Back
           </Button>
-          <Button type="submit" className={primaryButtonClassName}>
-            Create account
+          <Button type="submit" className="h-11 rounded-xl bg-brand text-white hover:bg-brand/80">
+            Continue <ArrowRight aria-hidden="true" />
           </Button>
         </div>
-      </Field>
-      <FieldSeparator className="text-muted-foreground">
-        Or continue with
-      </FieldSeparator>
-      <Field>
-        <Button
-          variant="outline"
-          type="button"
-          className={outlineButtonClassName}
-        >
-          <SignUpGoogleIcon />
-          Sign up with Google
-        </Button>
-        <FieldDescription className="pt-4 text-center text-sm">
-          Already have an account?{" "}
-          <Link
-            href="/auth/sign-in"
-            className="font-medium text-brand underline-offset-4 hover:underline"
-          >
-            Sign in
-          </Link>
-        </FieldDescription>
       </Field>
     </>
   );
