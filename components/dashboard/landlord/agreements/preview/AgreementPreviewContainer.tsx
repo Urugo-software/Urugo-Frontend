@@ -1,11 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import {
-  Agreement,
-  AgreementLanguage,
-  RenterChangeRequest,
-} from "@/types/agreement.types";
+import { Agreement } from "@/types/agreement.types";
+import { useAgreementPreview } from "./hooks/useAgreementPreview";
 import { AgreementPreviewHeader } from "./AgreementPreviewHeader";
 import { RenterChangeRequestBanner } from "./RenterChangeRequestBanner";
 import { AgreementDocumentView } from "./AgreementDocumentView";
@@ -18,66 +14,22 @@ interface Props {
 }
 
 export function AgreementPreviewContainer({ initialAgreement }: Props) {
-  const [agreement, setAgreement] = useState<Agreement>(initialAgreement);
-  const [activeLanguage, setActiveLanguage] = useState<AgreementLanguage>(
-    initialAgreement.language
-  );
-  const [isSimulatorOpen, setIsSimulatorOpen] = useState(false);
-  const [isLandlordSignOpen, setIsLandlordSignOpen] = useState(false);
-
-  const handleSubmitChangeRequest = (newRequest: RenterChangeRequest) => {
-    setAgreement((prev) => ({
-      ...prev,
-      status: "Changes Requested",
-      updatedAt: new Date().toISOString(),
-      changeRequests: [...(prev.changeRequests || []), newRequest],
-    }));
-  };
-
-  const handleLandlordSign = (signerName: string) => {
-    setAgreement((prev) => ({
-      ...prev,
-      status: "Signed",
-      updatedAt: new Date().toISOString(),
-      landlordSignature: {
-        signedBy: signerName,
-        nationalId: prev.landlord.nationalId,
-        signedAt: new Date().toISOString(),
-        signatureType: "Electronic",
-        ipAddress: "197.243.18.12",
-      },
-    }));
-  };
-
-  const handleRenterSign = (signerName: string) => {
-    setAgreement((prev) => ({
-      ...prev,
-      status: prev.landlordSignature ? "Signed" : "Awaiting Landlord Signature",
-      updatedAt: new Date().toISOString(),
-      renterSignature: {
-        signedBy: signerName,
-        nationalId: prev.renter.nationalId,
-        signedAt: new Date().toISOString(),
-        signatureType: "Electronic",
-        ipAddress: "197.243.20.15",
-      },
-    }));
-  };
-
-  const handleSignFromSimulator = (signerName: string) => {
-    const isLandlord = signerName
-      .toLowerCase()
-      .includes(agreement.landlord.name.toLowerCase());
-    if (isLandlord) {
-      handleLandlordSign(signerName);
-    } else {
-      handleRenterSign(signerName);
-    }
-  };
+  const {
+    agreement,
+    activeLanguage,
+    isSimulatorOpen,
+    isLandlordSignOpen,
+    setActiveLanguage,
+    setIsSimulatorOpen,
+    setIsLandlordSignOpen,
+    handleSubmitChangeRequest,
+    handleLandlordSign,
+    handleSignFromSimulator,
+  } = useAgreementPreview(initialAgreement);
 
   return (
     <div className="space-y-6">
-      {/* 1. Minimal Agreement Header (SpotDraft style) */}
+      {/* 1. Minimal Agreement Header */}
       <AgreementPreviewHeader
         agreement={agreement}
         activeLanguage={activeLanguage}
@@ -98,7 +50,7 @@ export function AgreementPreviewContainer({ initialAgreement }: Props) {
 
       {/* 3. Main Workspace: Document Focus (left) + Compact Sidebar (right) */}
       <div className="flex flex-col lg:flex-row items-start gap-8">
-        {/* Main Document Area (Visual Focus) */}
+        {/* Main Document Area */}
         <main className="w-full lg:flex-1 min-w-0">
           <AgreementDocumentView
             agreement={agreement}
@@ -107,7 +59,7 @@ export function AgreementPreviewContainer({ initialAgreement }: Props) {
           />
         </main>
 
-        {/* Agreement Information & Activity Sidebar (Desktop right, Mobile stacked) */}
+        {/* Agreement Information & Activity Sidebar */}
         <div className="w-full lg:w-80 xl:w-96 shrink-0 print:hidden">
           <div className="lg:sticky lg:top-4">
             <AgreementDetailsSidebar

@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { X, CheckCircle2, ShieldCheck } from "lucide-react";
+import { X, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Agreement } from "@/types/agreement.types";
+import { SignModalLegalNotice } from "./modal/SignModalLegalNotice";
 import toast from "react-hot-toast";
 
 interface Props {
@@ -70,18 +71,12 @@ export function LandlordSignModal({
 
         {/* Content Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-5 text-[12.5px]">
-          <div className="border border-line bg-surface/40 p-4 text-[13px] text-body space-y-2">
-            <div className="flex items-center gap-2 font-semibold text-ink">
-              <CheckCircle2 className="size-4 text-ink" />
-              <span>Landlord Electronic Endorsement</span>
-            </div>
-            <p className="leading-relaxed">
-              By confirming below, you legally execute Residential Tenancy Agreement{" "}
-              <strong className="text-ink">{agreement.referenceNumber}</strong> with{" "}
-              <strong className="text-ink">{agreement.renter.name}</strong> for{" "}
-              <strong className="text-ink">{agreement.property.name} (Unit {agreement.property.unitNumber})</strong>.
-            </p>
-          </div>
+          <SignModalLegalNotice
+            referenceNumber={agreement.referenceNumber}
+            renterName={agreement.renter.name}
+            propertyName={agreement.property.name}
+            unitNumber={agreement.property.unitNumber}
+          />
 
           <div>
             <label className="block text-[12.5px] font-semibold uppercase tracking-wider text-faint mb-1.5">
