@@ -1,5 +1,3 @@
-"use client";
-
 import { AgreementProperty } from "@/types/agreement.types";
 
 interface Props {
@@ -35,11 +33,11 @@ export function DocumentPropertySection({ property, isKinyarwanda }: Props) {
             </>
           ) : (
             <>
-              <strong>WHEREAS</strong>, the Landlord is the lawful owner or authorized
-              custodian of the residential real property located at{" "}
+              <strong>WHEREAS</strong>, the Landlord is the lawful owner or
+              authorized custodian of the residential real property located at{" "}
               <strong>{property.address}</strong>, District of{" "}
-              <strong>{property.district}</strong>, Republic of Rwanda, designated
-              as <strong>{property.name}</strong>
+              <strong>{property.district}</strong>, Republic of Rwanda,
+              designated as <strong>{property.name}</strong>
               {property.unitNumber && (
                 <>
                   , Unit No. <strong>{property.unitNumber}</strong>
@@ -55,8 +53,9 @@ export function DocumentPropertySection({ property, isKinyarwanda }: Props) {
           {isKinyarwanda ? (
             <>
               <strong>KANDI KUKO</strong> Umukode yifuza gukodesha iyo Nzu
-              Ikodeshwa hagamijwe guturamo gusa, kandi Nyir&rsquo;inzu akaba yemeye
-              kuyimukodesha hakurikijwe ingingo n&rsquo;amabwiriza akurikira:
+              Ikodeshwa hagamijwe guturamo gusa, kandi Nyir&rsquo;inzu akaba
+              yemeye kuyimukodesha hakurikijwe ingingo n&rsquo;amabwiriza
+              akurikira:
             </>
           ) : (
             <>

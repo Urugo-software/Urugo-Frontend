@@ -24,25 +24,23 @@ export function DocumentHeader({
             <span className="font-extrabold text-base tracking-tight text-ink uppercase">
               URUGO
             </span>
-            <span className="size-1.5 rounded-full bg-blue-700" />
-            <span className="text-[12.5px] font-medium text-body">
-              {isKinyarwanda
-                ? "Urubuga rw'Ubukode bw'Inzu mu Rwanda"
-                : "Residential Tenancy Registry"}
-            </span>
           </div>
           <p className="text-[12px] text-faint mt-0.5">
             Kigali, Republic of Rwanda
           </p>
         </div>
 
-        <div className="text-left sm:text-right font-mono text-[12px] text-body space-y-0.5">
+        <div className="text-left  font-ibm text-[11.5px] text-body space-y-0.5">
           <p>
             <span className="text-faint">REF: </span>
-            <strong className="text-ink font-semibold">{referenceNumber}</strong>
+            <strong className="text-ink font-semibold">
+              {referenceNumber}
+            </strong>
           </p>
           <p>
-            <span className="text-faint">{isKinyarwanda ? "Itariki: " : "Date: "}</span>
+            <span className="text-faint">
+              {isKinyarwanda ? "Itariki: " : "Date: "}
+            </span>
             <span className="text-ink">{formatDate(updatedAt)}</span>
           </p>
           <p>
@@ -54,12 +52,12 @@ export function DocumentHeader({
 
       {/* Main Document Title */}
       <div className="text-center pt-6">
-        <h1 className="text-lg sm:text-xl font-bold tracking-tight text-ink font-heading uppercase">
+        <h1 className="text-lg sm:text-xl tracking-wide font-bold  text-ink font-heading uppercase">
           {isKinyarwanda
             ? "Amasezerano y'Ubukode bw'Inzu yo Guturamo"
             : "Residential Lease Agreement"}
         </h1>
-        <p className="text-[12.5px] text-body mt-1">
+        <p className="text-[13px] text-body mt-1">
           {isKinyarwanda
             ? "Yateguwe hakurikijwe amategeko n'amabwiriza agenga ubutaka n'ubukode mu Rwanda"
             : "Governed by the statutory residential tenancy regulations of the Republic of Rwanda"}

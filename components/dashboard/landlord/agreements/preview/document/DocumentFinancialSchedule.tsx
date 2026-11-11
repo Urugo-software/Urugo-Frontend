@@ -1,5 +1,3 @@
-"use client";
-
 import { AgreementFinancials } from "@/types/agreement.types";
 import { formatCurrencyRwf, formatDate } from "@/utils/agreement-utils";
 
@@ -75,12 +73,18 @@ export function DocumentFinancialSchedule({
             {scheduleRows.map((row, idx) => (
               <tr
                 key={idx}
-                className={idx !== scheduleRows.length - 1 ? "border-b border-zinc-200" : ""}
+                className={
+                  idx !== scheduleRows.length - 1
+                    ? "border-b border-zinc-200"
+                    : ""
+                }
               >
                 <td className="py-2.5 px-3 text-body font-medium w-5/12 border-r border-zinc-200 bg-zinc-50/50">
                   {isKinyarwanda ? row.labelRw : row.labelEn}
                 </td>
-                <td className={`py-2.5 px-3 text-ink ${row.isBold ? "font-bold" : "font-normal"}`}>
+                <td
+                  className={`py-2.5 px-3 text-ink ${row.isBold ? "font-bold" : "font-normal"}`}
+                >
                   {row.value}
                   {row.note && (
                     <span className="block text-[11.5px] text-faint font-normal mt-0.5">

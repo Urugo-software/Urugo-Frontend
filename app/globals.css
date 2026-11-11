@@ -8,6 +8,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-ibm: var(--font-ibm);
+  --font-contract: var(--font-merriweather), Georgia, Cambria, "Times New Roman", Times, serif;
 
   /* colors  */
   --color-brand: #040200;
@@ -162,6 +163,10 @@ body {
   html {
     @apply font-sans;
   }
+}
+
+.font-contract {
+  font-family: var(--font-merriweather), Georgia, Cambria, "Times New Roman", Times, serif;
 }
 
 /* Print Styles for Lease Agreements & Documents */

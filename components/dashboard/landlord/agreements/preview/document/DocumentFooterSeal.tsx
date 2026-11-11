@@ -1,5 +1,3 @@
-"use client";
-
 interface Props {
   agreementId: string;
   referenceNumber: string;
@@ -12,7 +10,7 @@ export function DocumentFooterSeal({
   version,
 }: Props) {
   return (
-    <footer className="mt-12 pt-4 border-t border-zinc-200 flex flex-col sm:flex-row items-start sm:items-center justify-between text-[11.5px] text-faint font-mono gap-2 break-inside-avoid">
+    <footer className="mt-12 pt-4 border-t border-zinc-200 flex flex-col sm:flex-row items-start sm:items-center justify-between text-[11.5px] text-faint  gap-2 break-inside-avoid">
       <div>
         <span>URUGO Residential Lease Agreement</span>
         <span className="mx-1.5">&middot;</span>
