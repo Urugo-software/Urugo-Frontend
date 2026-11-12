@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Plus } from "lucide-react";
+import { Button } from "@base-ui/react/button";
 
 interface Props {
   newAgreementHref?: string;
@@ -19,10 +20,10 @@ export function AgreementsPageHeader({
         </p>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-start xl:items-center gap-3">
         <Link
           href={newAgreementHref}
-          className="inline-flex h-9.5 items-center justify-center gap-2 rounded-none bg-ink px-4 text-xs sm:text-sm font-semibold text-white hover:bg-black transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink cursor-pointer"
+          className="hidden md:inline-flex h-9.5 items-center justify-center gap-2 rounded-none bg-ink px-4 text-xs sm:text-sm font-semibold text-white hover:bg-black transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink cursor-pointer"
         >
           <Plus className="size-4" />
           <span>New Agreement</span>

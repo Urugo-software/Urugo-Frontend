@@ -76,7 +76,7 @@ export function CompletionSummaryCard({
               <div className="flex items-center justify-between gap-2 border border-line bg-surface p-2.5  text-xs text-ink break-all">
                 <span>{submission.simulatedLink?.url}</span>
               </div>
-              <p className="text-[11px] text-faint">
+              <p className="text-[12.5px] text-faint">
                 Link active for 24 hours. Renter completes onboarding
                 self-service.
               </p>
@@ -120,6 +120,15 @@ export function CompletionSummaryCard({
                   </span>
                   <span className=" font-semibold text-ink">
                     {formatRwf(submission.paymentSummary.totalInitialAmount)}
+                  </span>
+                </div>
+              )}
+
+              {submission.agreementRef && (
+                <div className="flex items-center justify-between border-t border-line/70 pt-2.5">
+                  <span className="text-body">Lease Agreement</span>
+                  <span className="font-mono text-ink font-semibold">
+                    {submission.agreementRef} ({submission.selectedLanguage === "rw" ? "Kinyarwanda" : "English"})
                   </span>
                 </div>
               )}

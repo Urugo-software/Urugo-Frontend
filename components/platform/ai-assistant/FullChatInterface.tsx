@@ -271,7 +271,7 @@ Here are a few verified listings currently active on the Urugo registry:`;
           <div>
             <div className="flex items-center gap-2">
               <h1 className="text-base font-bold text-ink">Urugo AI Assistant</h1>
-              <span className="rounded-full bg-brand-tint px-2.5 py-0.5 text-[11px] font-bold text-brand border border-brand/10">
+              <span className="rounded-full bg-brand-tint px-2.5 py-0.5 text-[12.5px] font-bold text-brand border border-brand/10">
                 v2.4 Live
               </span>
             </div>
@@ -350,7 +350,7 @@ Here are a few verified listings currently active on the Urugo registry:`;
                         <span className="grid size-9 place-items-center rounded-xl bg-brand-tint text-brand transition-colors group-hover:bg-brand group-hover:text-white">
                           <IconComponent className="size-4" />
                         </span>
-                        <span className="rounded-full bg-surface px-2.5 py-0.5 text-[11px] font-semibold text-faint group-hover:text-body">
+                        <span className="rounded-full bg-surface px-2.5 py-0.5 text-[12.5px] font-semibold text-faint group-hover:text-body">
                           {item.tag}
                         </span>
                       </div>
@@ -379,7 +379,7 @@ Here are a few verified listings currently active on the Urugo registry:`;
                       <div className="rounded-2xl rounded-tr-xs bg-brand px-5 py-3.5 text-sm text-white shadow-md shadow-brand/10 leading-relaxed">
                         {msg.content}
                       </div>
-                      <span className="text-[11px] text-faint px-1">{msg.timestamp}</span>
+                      <span className="text-[12.5px] text-faint px-1">{msg.timestamp}</span>
                     </div>
                   ) : (
                     /* Assistant Message Card */
@@ -390,7 +390,7 @@ Here are a few verified listings currently active on the Urugo registry:`;
 
                       <div className="flex flex-1 flex-col gap-3 rounded-2xl rounded-tl-xs border border-line bg-white p-4 text-sm text-ink shadow-xs">
                         {msg.badge && (
-                          <div className="inline-flex items-center gap-1.5 self-start rounded-full bg-brand-tint px-3 py-1 text-[11px] font-bold text-brand">
+                          <div className="inline-flex items-center gap-1.5 self-start rounded-full bg-brand-tint px-3 py-1 text-[12.5px] font-bold text-brand">
                             <Sparkles className="size-3 text-brand" />
                             {msg.badge}
                           </div>
@@ -434,7 +434,7 @@ Here are a few verified listings currently active on the Urugo registry:`;
                               title="Copy message"
                             >
                               {copiedId === msg.id ? (
-                                <span className="inline-flex items-center gap-1 text-success font-bold text-[11px]">
+                                <span className="inline-flex items-center gap-1 text-success font-bold text-[12.5px]">
                                   <Check className="size-3.5" /> Copied
                                 </span>
                               ) : (
@@ -504,7 +504,7 @@ Here are a few verified listings currently active on the Urugo registry:`;
                   <Sparkles className="size-4 text-brand" />
                   <h3 className="text-xs font-bold uppercase tracking-wider text-ink">3D Robot Companion</h3>
                 </div>
-                <span className="rounded-full bg-brand-tint px-2 py-0.5 text-[10px] font-bold text-brand capitalize">
+                <span className="rounded-full bg-brand-tint px-2 py-0.5 text-[12.5px] font-bold text-brand capitalize">
                   {animState}
                 </span>
               </div>
@@ -513,7 +513,7 @@ Here are a few verified listings currently active on the Urugo registry:`;
               </div>
               <div className="p-4 border-t border-line text-center text-xs text-body">
                 <p className="font-semibold text-ink">Urugo AI Assistant Bot</p>
-                <p className="mt-0.5 text-[11px] text-faint">Reacts visually as it searches listings & answers queries.</p>
+                <p className="mt-0.5 text-[12.5px] text-faint">Reacts visually as it searches listings & answers queries.</p>
               </div>
             </motion.aside>
           )}
@@ -525,7 +525,7 @@ Here are a few verified listings currently active on the Urugo registry:`;
         <div className="mx-auto flex w-full max-w-3xl flex-col gap-2">
           {/* Quick Suggestion Pills above input */}
           <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-faint shrink-0">Suggestions:</span>
+            <span className="text-[12.5px] font-bold uppercase tracking-wider text-faint shrink-0">Suggestions:</span>
             {["2BR under 200k", "Remera listings", "Upfront move-in breakdown", "Guest sign up"].map((tag) => (
               <button
                 key={tag}
@@ -568,7 +568,7 @@ Here are a few verified listings currently active on the Urugo registry:`;
             </button>
           </form>
 
-          <p className="text-center text-[11px] text-faint">
+          <p className="text-center text-[12.5px] text-faint">
             Urugo AI provides real-time rental insights and property estimates based on Kigali registry data.
           </p>
         </div>

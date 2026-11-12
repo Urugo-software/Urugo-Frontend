@@ -81,6 +81,9 @@ export interface Agreement {
   tenancyStartDate: string;
   tenancyEndDate?: string;
   tenancyDurationMonths?: number;
+  commencementType?: "fixed_date" | "first_payment_confirmation";
+  commencementStatus?: "pending_first_payment" | "confirmed";
+  firstPaymentConfirmedAt?: string;
   language: AgreementLanguage;
   status: AgreementStatus;
   version: number;
@@ -92,6 +95,22 @@ export interface Agreement {
   changeRequests?: RenterChangeRequest[];
   supersededBy?: string;
   supersedes?: string;
+}
+
+export interface SavedAgreementTemplate {
+  id: string;
+  name: string;
+  description: string;
+  language: AgreementLanguage;
+  lastModified: string;
+  articles: AgreementArticle[];
+}
+
+export interface ActivityItem {
+  title: string;
+  date: string;
+  detail: string;
+  status: "completed" | "pending" | "attention";
 }
 
 export type AgreementFilterTab =

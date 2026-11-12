@@ -24,7 +24,7 @@ export function TenancyConfigToggleBanner({
                 Tenancy & Lease Terms
               </h3>
               <span
-                className={`inline-flex items-center gap-1 border px-2 py-0.5 text-[11px] font-medium transition-colors ${
+                className={`inline-flex items-center gap-1 border px-2 py-0.5 text-[12.5px] font-medium transition-colors ${
                   isConfigured
                     ? "border-emerald-200 bg-emerald-50 text-emerald-800"
                     : "border-neutral-200 bg-white text-body"
@@ -40,7 +40,7 @@ export function TenancyConfigToggleBanner({
                 )}
               </span>
             </div>
-            <p className="mt-1 text-xs text-body leading-relaxed max-w-xl">
+            <p className="mt-1 text-[12.5px] text-body leading-relaxed max-w-xl">
               Connect this renter to a specific property unit, configure recurring
               monthly rent, and calculate move-in payments.
             </p>
@@ -48,7 +48,7 @@ export function TenancyConfigToggleBanner({
         </div>
 
         {/* Custom Toggle Switch */}
-        <label className="flex items-center gap-2.5 cursor-pointer self-start sm:self-auto select-none border border-line bg-white px-3.5 py-2 text-xs font-medium text-ink hover:bg-surface/80 transition-all shadow-2xs">
+        <label className="flex items-center gap-2.5 cursor-pointer self-start sm:self-auto select-none border border-line bg-white px-3.5 py-2 text-[12.5px] font-medium text-ink hover:bg-surface/80 transition-all shadow-2xs">
           <input
             type="checkbox"
             checked={isConfigured}

@@ -16,7 +16,7 @@ export function LandlordProfileSidebar({
 
       <div className="p-6 space-y-6 flex-1">
         <div className="space-y-3">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-faint">
+          <div className="text-[12.5px] font-bold uppercase tracking-wider text-faint">
             Direct Contact
           </div>
           <LandlordContactItem

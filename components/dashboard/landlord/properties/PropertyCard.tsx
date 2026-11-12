@@ -67,7 +67,7 @@ export function PropertyCard({ property: prop }: PropertyCardProps) {
           <div className="grid grid-cols-2 gap-3 pt-3 border-t border-line/60">
             {typeof occupancyPct === "number" && (
               <div className="p-3 border border-line/60 bg-surface/30">
-                <span className="text-[11px] font-semibold text-faint uppercase block">
+                <span className="text-[12.5px] font-semibold text-faint uppercase block">
                   Units Occupied
                 </span>
                 <span className="text-base font-bold text-ink block mt-0.5">
@@ -80,12 +80,12 @@ export function PropertyCard({ property: prop }: PropertyCardProps) {
             )}
 
             <div className="p-3 border border-line/60 bg-surface/30 ">
-              <span className="text-[11px] font-semibold text-faint uppercase block">
+              <span className="text-[12.5px] font-semibold text-faint uppercase block">
                 Monthly Revenue
               </span>
               <span className="text-base font-bold text-ink block mt-0.5">
                 {prop.monthlyRevenueRwf.toLocaleString()}{" "}
-                <span className="text-[11px] text-faint">RWF</span>
+                <span className="text-[12.5px] text-faint">RWF</span>
               </span>
             </div>
           </div>

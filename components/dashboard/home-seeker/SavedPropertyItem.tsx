@@ -38,7 +38,7 @@ export function SavedPropertyItem({ item }: { item: SavedPropertyItemData }) {
         </div>
       </div>
       <span
-        className={`rounded-full px-3 py-1.5 text-[11.5px] font-bold ${status.className}`}
+        className={`rounded-full px-3 py-1.5 text-[12.5px] font-bold ${status.className}`}
       >
         {status.label}
       </span>

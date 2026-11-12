@@ -1,8 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
-import { LandlordPropertyItem } from "@/types/landlord";
+import { LandlordPropertyItem, LandlordRenter } from "@/types/landlord";
+import { Agreement, AgreementLanguage } from "@/types/agreement.types";
+import { generateStandardArticles } from "@/data/agreement-templates";
 import {
   ManualRenterFormErrors,
   ManualRenterRegistrationDraft,
@@ -32,6 +34,8 @@ export const INITIAL_TENANCY_DRAFT: TenancyConfigDraft = {
   propertyId: "",
   monthlyRentRwf: "",
   startDate: "2026-12-01",
+  useFirstPaymentAsCommencement: false,
+  commencementStatus: "manual",
   durationOption: "12",
   customDurationMonths: "",
   paymentDueDay: 1,
@@ -94,8 +98,20 @@ export function validateTenancyConfig(
     errors.monthlyRentRwf = "Enter a valid positive monthly rent in RWF.";
   }
 
-  if (!draft.startDate) {
+  // If first-payment commencement is enabled, manual start date is not required
+  if (!draft.useFirstPaymentAsCommencement && !draft.startDate) {
     errors.startDate = "Tenancy start date is required.";
+  }
+
+  // Monthly Rent Due Day validation: must be a valid day from 1 to 31
+  if (
+    typeof draft.paymentDueDay !== "number" ||
+    isNaN(draft.paymentDueDay) ||
+    draft.paymentDueDay < 1 ||
+    draft.paymentDueDay > 31
+  ) {
+    errors.paymentDueDay =
+      "Please select an agreed monthly rent due date between 1 and 31.";
   }
 
   if (
@@ -109,26 +125,326 @@ export function validateTenancyConfig(
   return errors;
 }
 
+export function buildInitialAgreement(
+  tenancy: TenancyConfigDraft,
+  identity: RenterIdentityDraft,
+  property: LandlordPropertyItem | undefined,
+  language: AgreementLanguage,
+): Agreement {
+  const durationMonths =
+    tenancy.durationOption === "custom"
+      ? typeof tenancy.customDurationMonths === "number" &&
+        tenancy.customDurationMonths > 0
+        ? tenancy.customDurationMonths
+        : 12
+      : tenancy.durationOption === "open"
+        ? 12
+        : parseInt(tenancy.durationOption, 10) || 12;
+
+  const isPaymentBased = Boolean(tenancy.useFirstPaymentAsCommencement);
+  const confirmedDate = tenancy.confirmedPaymentDate;
+
+  let startDateStr = "";
+  let endDateStr: string | undefined = undefined;
+
+  if (isPaymentBased) {
+    if (confirmedDate) {
+      startDateStr = confirmedDate;
+      const startDateObj = new Date(confirmedDate);
+      const endDateObj = new Date(startDateObj);
+      endDateObj.setMonth(endDateObj.getMonth() + durationMonths);
+      endDateObj.setDate(endDateObj.getDate() - 1);
+      endDateStr = endDateObj.toISOString().split("T")[0];
+    } else {
+      startDateStr = "PENDING_FIRST_PAYMENT";
+      endDateStr = undefined;
+    }
+  } else {
+    startDateStr = tenancy.startDate || new Date().toISOString().split("T")[0];
+    const startDateObj = new Date(startDateStr);
+    const endDateObj = new Date(startDateObj);
+    endDateObj.setMonth(endDateObj.getMonth() + durationMonths);
+    endDateObj.setDate(endDateObj.getDate() - 1);
+    endDateStr = endDateObj.toISOString().split("T")[0];
+  }
+
+  const monthlyRent =
+    typeof tenancy.monthlyRentRwf === "number" && tenancy.monthlyRentRwf > 0
+      ? tenancy.monthlyRentRwf
+      : 0;
+
+  const deposit =
+    typeof tenancy.securityDepositRwf === "number" &&
+    tenancy.securityDepositRwf > 0
+      ? tenancy.securityDepositRwf
+      : 0;
+
+  const initialMonths = tenancy.initialPaymentMonths || 1;
+  const advanceAmount = monthlyRent * initialMonths;
+  const totalInitial = advanceAmount + deposit;
+
+  const randSuffix = Math.floor(1000 + Math.random() * 9000);
+  const agreementId = `agr-${Date.now()}`;
+  const referenceNumber = `AGR-2026-${randSuffix}`;
+  const nowIso = new Date().toISOString();
+
+  return {
+    id: agreementId,
+    referenceNumber,
+    landlord: {
+      name: "Paul Kagabo",
+      phone: "+250 788 111 222",
+      nationalId: "1198580012345678",
+      email: "paul.kagabo@urugo.rw",
+      address: "KG 123 St, Kimihurura, Gasabo, Kigali",
+    },
+    renter: {
+      name: identity.fullName.trim() || "Prospective Tenant",
+      phone: identity.phoneNumber.trim() || "+250 788 000 000",
+      nationalId: identity.nationalId.replace(/\s+/g, "") || "1199000000000000",
+      email: identity.email.trim().toLowerCase() || "renter@urugo.rw",
+      address: "Kigali, Rwanda",
+    },
+    property: {
+      id: property?.id || "prop-101",
+      name: property?.name || "Residential Property",
+      unitNumber: property?.totalUnits ? "Unit A-01" : "Whole House",
+      address: property?.location || "Kigali, Rwanda",
+      district: "Gasabo",
+      propertyType: "Residential Apartment",
+    },
+    financials: {
+      monthlyRentRwf: monthlyRent,
+      paymentDueDay: tenancy.paymentDueDay || 1,
+      advanceMonths: initialMonths,
+      totalAdvanceRwf: advanceAmount,
+      securityDepositRwf: deposit,
+      otherChargesRwf: 0,
+      totalInitialAmountRwf: totalInitial,
+      currency: "RWF",
+    },
+    tenancyStartDate: startDateStr,
+    tenancyEndDate: endDateStr,
+    tenancyDurationMonths: durationMonths,
+    commencementType: isPaymentBased ? "first_payment_confirmation" : "fixed_date",
+    commencementStatus: isPaymentBased
+      ? confirmedDate
+        ? "confirmed"
+        : "pending_first_payment"
+      : "confirmed",
+    firstPaymentConfirmedAt: confirmedDate,
+    language,
+    status: "Draft",
+    version: 1,
+    createdAt: nowIso,
+    updatedAt: nowIso,
+    articles: generateStandardArticles(language),
+  };
+}
+
+export function refreshAgreementMetadata(
+  existing: Agreement,
+  tenancy: TenancyConfigDraft,
+  identity: RenterIdentityDraft,
+  property: LandlordPropertyItem | undefined,
+  language: AgreementLanguage,
+): Agreement {
+  const durationMonths =
+    tenancy.durationOption === "custom"
+      ? typeof tenancy.customDurationMonths === "number" &&
+        tenancy.customDurationMonths > 0
+        ? tenancy.customDurationMonths
+        : 12
+      : tenancy.durationOption === "open"
+        ? 12
+        : parseInt(tenancy.durationOption, 10) || 12;
+
+  const isPaymentBased = Boolean(tenancy.useFirstPaymentAsCommencement);
+  const alreadyConfirmedDate =
+    existing.firstPaymentConfirmedAt || tenancy.confirmedPaymentDate;
+
+  let startDateStr = "";
+  let endDateStr: string | undefined = undefined;
+
+  if (isPaymentBased) {
+    if (alreadyConfirmedDate) {
+      startDateStr = alreadyConfirmedDate;
+      const startDateObj = new Date(alreadyConfirmedDate);
+      const endDateObj = new Date(startDateObj);
+      endDateObj.setMonth(endDateObj.getMonth() + durationMonths);
+      endDateObj.setDate(endDateObj.getDate() - 1);
+      endDateStr = endDateObj.toISOString().split("T")[0];
+    } else {
+      startDateStr = "PENDING_FIRST_PAYMENT";
+      endDateStr = undefined;
+    }
+  } else {
+    startDateStr = tenancy.startDate || new Date().toISOString().split("T")[0];
+    const startDateObj = new Date(startDateStr);
+    const endDateObj = new Date(startDateObj);
+    endDateObj.setMonth(endDateObj.getMonth() + durationMonths);
+    endDateObj.setDate(endDateObj.getDate() - 1);
+    endDateStr = endDateObj.toISOString().split("T")[0];
+  }
+
+  const monthlyRent =
+    typeof tenancy.monthlyRentRwf === "number" && tenancy.monthlyRentRwf > 0
+      ? tenancy.monthlyRentRwf
+      : 0;
+
+  const deposit =
+    typeof tenancy.securityDepositRwf === "number" &&
+    tenancy.securityDepositRwf > 0
+      ? tenancy.securityDepositRwf
+      : 0;
+
+  const initialMonths = tenancy.initialPaymentMonths || 1;
+  const advanceAmount = monthlyRent * initialMonths;
+  const totalInitial = advanceAmount + deposit;
+
+  let articles = existing.articles;
+  if (language !== existing.language) {
+    articles = generateStandardArticles(language);
+  }
+
+  return {
+    ...existing,
+    renter: {
+      name: identity.fullName.trim() || existing.renter.name,
+      phone: identity.phoneNumber.trim() || existing.renter.phone,
+      nationalId:
+        identity.nationalId.replace(/\s+/g, "") || existing.renter.nationalId,
+      email: identity.email.trim().toLowerCase() || existing.renter.email,
+      address: existing.renter.address,
+    },
+    property: {
+      id: property?.id || existing.property.id,
+      name: property?.name || existing.property.name,
+      unitNumber: property?.totalUnits
+        ? "Unit A-01"
+        : existing.property.unitNumber,
+      address: property?.location || existing.property.address,
+      district: existing.property.district,
+      propertyType: existing.property.propertyType,
+    },
+    financials: {
+      monthlyRentRwf: monthlyRent,
+      paymentDueDay: tenancy.paymentDueDay || 1,
+      advanceMonths: initialMonths,
+      totalAdvanceRwf: advanceAmount,
+      securityDepositRwf: deposit,
+      otherChargesRwf: existing.financials.otherChargesRwf,
+      totalInitialAmountRwf: totalInitial,
+      currency: "RWF",
+    },
+    tenancyStartDate: startDateStr,
+    tenancyEndDate: endDateStr,
+    tenancyDurationMonths: durationMonths,
+    commencementType: isPaymentBased ? "first_payment_confirmation" : "fixed_date",
+    commencementStatus: isPaymentBased
+      ? alreadyConfirmedDate
+        ? "confirmed"
+        : "pending_first_payment"
+      : "confirmed",
+    firstPaymentConfirmedAt: alreadyConfirmedDate,
+    language,
+    articles,
+    updatedAt: new Date().toISOString(),
+  };
+}
+
+// Storage key for preserving wizard session across refreshes
+const WIZARD_STORAGE_KEY = "urugo_tenancy_wizard_session";
+
+interface WizardStoredSession {
+  step?: WizardStep;
+  mode?: AddRenterMode;
+  selectedLanguage?: AgreementLanguage;
+  identityDraft?: RenterIdentityDraft;
+  tenancyDraft?: TenancyConfigDraft;
+  agreementDraft?: Agreement | null;
+}
+
+function getStoredWizardSession(): WizardStoredSession | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = sessionStorage.getItem(WIZARD_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
 export function useRenterWizard(
   properties: LandlordPropertyItem[],
   initialMode: AddRenterMode = "manual",
 ) {
-  const [step, setStep] = useState<WizardStep>(1);
+  const [initialSession] = useState<WizardStoredSession | null>(() =>
+    getStoredWizardSession(),
+  );
+
+  const [step, setStep] = useState<WizardStep>(() =>
+    initialSession?.step && initialSession.step >= 1 && initialSession.step <= 4
+      ? initialSession.step
+      : 1,
+  );
   const [stepDirection, setStepDirection] = useState<1 | -1>(1);
   const [isReviewing, setIsReviewing] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [mode, setMode] = useState<AddRenterMode>(initialMode);
+  const [mode, setMode] = useState<AddRenterMode>(
+    () => initialSession?.mode ?? initialMode,
+  );
+  const [selectedLanguage, setSelectedLanguage] = useState<AgreementLanguage>(
+    () => initialSession?.selectedLanguage ?? "en",
+  );
+  const [agreementDraft, setAgreementDraft] = useState<Agreement | null>(
+    () => initialSession?.agreementDraft ?? null,
+  );
 
-  const [identityDraft, setIdentityDraft] =
-    useState<RenterIdentityDraft>(INITIAL_IDENTITY_DRAFT);
+  const [identityDraft, setIdentityDraft] = useState<RenterIdentityDraft>(
+    () => initialSession?.identityDraft ?? INITIAL_IDENTITY_DRAFT,
+  );
   const [identityErrors, setIdentityErrors] = useState<RenterIdentityErrors>({});
 
-  const [tenancyDraft, setTenancyDraft] =
-    useState<TenancyConfigDraft>(INITIAL_TENANCY_DRAFT);
+  const [tenancyDraft, setTenancyDraft] = useState<TenancyConfigDraft>(
+    () => initialSession?.tenancyDraft ?? INITIAL_TENANCY_DRAFT,
+  );
   const [tenancyErrors, setTenancyErrors] = useState<TenancyConfigErrors>({});
 
   const [submission, setSubmission] =
     useState<FullRenterRegistrationSubmission | null>(null);
+
+  // Save wizard draft whenever session inputs change
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      if (!isSubmitted) {
+        sessionStorage.setItem(
+          WIZARD_STORAGE_KEY,
+          JSON.stringify({
+            step,
+            mode,
+            selectedLanguage,
+            identityDraft,
+            tenancyDraft,
+            agreementDraft,
+          }),
+        );
+      } else {
+        sessionStorage.removeItem(WIZARD_STORAGE_KEY);
+      }
+    } catch {
+      // Ignore quota issues
+    }
+  }, [
+    step,
+    mode,
+    selectedLanguage,
+    identityDraft,
+    tenancyDraft,
+    agreementDraft,
+    isSubmitted,
+  ]);
 
   // Link mode helper
   const linkState = useSimulatedRenterLink(properties);
@@ -155,6 +471,20 @@ export function useRenterWizard(
     if (field in identityErrors) {
       setIdentityErrors((prev) => ({ ...prev, [field]: undefined }));
     }
+  };
+
+  const selectExistingRenter = (renter: LandlordRenter) => {
+    setIdentityDraft({
+      fullName: renter.name,
+      email: `${renter.name.toLowerCase().replace(/\s+/g, ".")}@gmail.com`,
+      phoneNumber: renter.phone,
+      nationalId:
+        "11992800" + Math.floor(10000000 + Math.random() * 90000000),
+      isExistingRenter: true,
+      existingRenterId: renter.id,
+    });
+    setIdentityErrors({});
+    toast.success(`Selected verified tenant: ${renter.name}`);
   };
 
   const updateTenancyField = <K extends keyof TenancyConfigDraft>(
@@ -187,7 +517,28 @@ export function useRenterWizard(
     }
   };
 
+  // Step 1 -> Step 2
   const goToStep2 = () => {
+    const errors = validateTenancyConfig(tenancyDraft);
+    if (Object.keys(errors).length > 0) {
+      setTenancyErrors(errors);
+      toast.error("Please select a property and set rent before proceeding.");
+      return;
+    }
+    setStepDirection(1);
+    setStep(2);
+    setIsReviewing(false);
+  };
+
+  // Step 2 -> Step 1
+  const goToStep1 = () => {
+    setStepDirection(-1);
+    setStep(1);
+    setIsReviewing(false);
+  };
+
+  // Step 2 -> Step 3
+  const goToStep3 = () => {
     if (mode === "manual") {
       const errors = validateRenterIdentity(identityDraft);
       if (Object.keys(errors).length > 0) {
@@ -195,16 +546,99 @@ export function useRenterWizard(
         toast.error("Please fill in the required identity fields.");
         return;
       }
+    } else if (mode === "existing") {
+      if (!identityDraft.fullName || !identityDraft.isExistingRenter) {
+        toast.error("Please select an existing renter from your portfolio.");
+        return;
+      }
     }
     setStepDirection(1);
-    setStep(2);
+    setStep(3);
     setIsReviewing(false);
   };
 
-  const goToStep1 = () => {
-    setStepDirection(-1);
-    setStep(1);
+  // Step 3 -> Step 4 (Populate Agreement & Launch Editor directly in session)
+  const goToStep4 = () => {
+    if (!selectedLanguage) {
+      toast.error("Please select an agreement language.");
+      return;
+    }
+
+    const selectedProp = properties.find(
+      (p) => p.id === tenancyDraft.propertyId,
+    );
+
+    if (!agreementDraft) {
+      const initialAgreement = buildInitialAgreement(
+        tenancyDraft,
+        identityDraft,
+        selectedProp,
+        selectedLanguage,
+      );
+      setAgreementDraft(initialAgreement);
+    } else {
+      setAgreementDraft((prev) => {
+        if (!prev) {
+          return buildInitialAgreement(
+            tenancyDraft,
+            identityDraft,
+            selectedProp,
+            selectedLanguage,
+          );
+        }
+        return refreshAgreementMetadata(
+          prev,
+          tenancyDraft,
+          identityDraft,
+          selectedProp,
+          selectedLanguage,
+        );
+      });
+    }
+
+    setStepDirection(1);
+    setStep(4);
     setIsReviewing(false);
+  };
+
+  const handleAgreementSaved = (saved: Agreement) => {
+    setAgreementDraft(saved);
+  };
+
+  const handleAgreementConfirmed = (finalAgreement: Agreement) => {
+    const selectedProp = properties.find(
+      (p) => p.id === tenancyDraft.propertyId,
+    );
+
+    const snapshot: FullRenterRegistrationSubmission = {
+      mode,
+      identity: {
+        fullName: identityDraft.fullName.trim(),
+        email: identityDraft.email.trim().toLowerCase(),
+        phoneNumber: identityDraft.phoneNumber.trim(),
+        nationalId: identityDraft.nationalId.replace(/\s+/g, ""),
+        isExistingRenter: identityDraft.isExistingRenter,
+        existingRenterId: identityDraft.existingRenterId,
+      },
+      simulatedLink: linkState.generatedLink || undefined,
+      tenancy: { ...tenancyDraft },
+      propertyName: selectedProp?.name,
+      propertyLocation: selectedProp?.location,
+      paymentSummary: tenancyDraft.isConfigured ? paymentSummary : undefined,
+      selectedLanguage,
+      agreementId: finalAgreement.id,
+      agreementRef: finalAgreement.referenceNumber,
+      agreement: finalAgreement,
+      submittedAt: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    };
+
+    setSubmission(snapshot);
+    setIsSubmitted(true);
+    setStep(5);
+    toast.success("Tenancy agreement finalized and sent for digital review!");
   };
 
   const goToReview = (skipTenancy = false) => {
@@ -247,6 +681,8 @@ export function useRenterWizard(
         email: identityDraft.email.trim().toLowerCase(),
         phoneNumber: identityDraft.phoneNumber.trim(),
         nationalId: identityDraft.nationalId.replace(/\s+/g, ""),
+        isExistingRenter: identityDraft.isExistingRenter,
+        existingRenterId: identityDraft.existingRenterId,
       },
       simulatedLink: linkState.generatedLink || undefined,
       tenancy: { ...tenancyDraft },
@@ -265,6 +701,13 @@ export function useRenterWizard(
   };
 
   const resetWizard = () => {
+    if (typeof window !== "undefined") {
+      try {
+        sessionStorage.removeItem(WIZARD_STORAGE_KEY);
+      } catch {
+        // Ignore storage removal error
+      }
+    }
     setStep(1);
     setStepDirection(1);
     setIsReviewing(false);
@@ -273,6 +716,8 @@ export function useRenterWizard(
     setIdentityErrors({});
     setTenancyDraft(INITIAL_TENANCY_DRAFT);
     setTenancyErrors({});
+    setSelectedLanguage("en");
+    setAgreementDraft(null);
     setSubmission(null);
   };
 
@@ -283,9 +728,14 @@ export function useRenterWizard(
     isSubmitted,
     mode,
     setMode,
+    selectedLanguage,
+    setSelectedLanguage,
+    agreementDraft,
+    setAgreementDraft,
     identityDraft,
     identityErrors,
     updateIdentityField,
+    selectExistingRenter,
     tenancyDraft,
     tenancyErrors,
     updateTenancyField,
@@ -295,6 +745,10 @@ export function useRenterWizard(
     submission,
     goToStep1,
     goToStep2,
+    goToStep3,
+    goToStep4,
+    handleAgreementSaved,
+    handleAgreementConfirmed,
     goToReview,
     backFromReview,
     confirmSubmission,

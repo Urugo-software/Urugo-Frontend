@@ -17,7 +17,7 @@ export function TenancySkippedNotice({ onEnable }: TenancySkippedNoticeProps) {
         <h3 className="text-sm font-semibold text-ink">
           Tenancy Terms Currently Skipped
         </h3>
-        <p className="text-xs text-body leading-relaxed">
+        <p className="text-[12.5px] text-body leading-relaxed">
           This renter will be added as an unassigned directory profile without
           an active lease or scheduled payment obligation. You can assign them to a
           property anytime later.
@@ -27,7 +27,7 @@ export function TenancySkippedNotice({ onEnable }: TenancySkippedNoticeProps) {
         <Button
           type="button"
           onClick={onEnable}
-          className="inline-flex h-9.5 cursor-pointer items-center gap-2 rounded-none border border-line bg-white px-4 text-xs font-medium text-ink hover:bg-surface shadow-2xs transition-colors"
+          className="inline-flex h-9.5 cursor-pointer items-center gap-2 rounded-none border border-line bg-white px-4 text-[12.5px] font-medium text-ink hover:bg-surface shadow-2xs transition-colors"
         >
           <Plus className="size-3.5" />
           <span>Configure Tenancy Terms</span>

@@ -8,6 +8,7 @@ import {
   StandardArticleDefinition,
   interpolateArticleText,
 } from "@/data/agreement-templates";
+import { getOrdinalSuffix } from "@/utils/rent-schedule-utils";
 
 export function renumberArticles(articles: AgreementArticle[]): AgreementArticle[] {
   return articles.map((art, idx) => ({
@@ -164,7 +165,12 @@ export function formatCurrencyRwf(amount: number): string {
   }).format(amount) + " RWF";
 }
 
-export function formatDate(dateStr: string): string {
+export function formatDate(dateStr: string, language: AgreementLanguage = "en"): string {
+  if (!dateStr || dateStr === "PENDING_FIRST_PAYMENT") {
+    return language === "rw"
+      ? "Gitegereje kwemezwa kw'ubwishyu bwa mbere bwa lwayi"
+      : "Pending first rent payment confirmation";
+  }
   try {
     const d = new Date(dateStr);
     if (isNaN(d.getTime())) return dateStr;
@@ -181,6 +187,31 @@ export function formatDate(dateStr: string): string {
 export function getAgreementVariables(
   agreement: Agreement
 ): Record<string, string | number | undefined> {
+  const dueDay = agreement.financials.paymentDueDay || 1;
+  const ordinal = `${dueDay}${getOrdinalSuffix(dueDay)}`;
+  const shorterMonthNote =
+    dueDay >= 29
+      ? agreement.language === "rw"
+        ? " (cyangwa umunsi wa nyuma w'ukwezi kugufi)"
+        : " (or the final calendar day of shorter months)"
+      : "";
+
+  let commencementDisplay = "";
+  if (
+    agreement.commencementType === "first_payment_confirmation" &&
+    !agreement.firstPaymentConfirmedAt
+  ) {
+    commencementDisplay =
+      agreement.language === "rw"
+        ? "itariki ubwishyu bwa mbere bwa lwayi buzaba bwemejweho"
+        : "the date the first rent payment is successfully confirmed";
+  } else {
+    commencementDisplay = formatDate(
+      agreement.firstPaymentConfirmedAt || agreement.tenancyStartDate,
+      agreement.language,
+    );
+  }
+
   return {
     LANDLORD_NAME: agreement.landlord.name,
     LANDLORD_PHONE: agreement.landlord.phone,
@@ -194,9 +225,11 @@ export function getAgreementVariables(
     PROPERTY_ADDRESS: agreement.property.address,
     UNIT_NUMBER: agreement.property.unitNumber,
     MONTHLY_RENT: formatCurrencyRwf(agreement.financials.monthlyRentRwf).replace(" RWF", ""),
-    PAYMENT_DUE_DAY: agreement.financials.paymentDueDay,
+    PAYMENT_DUE_DAY: dueDay,
+    PAYMENT_DUE_DAY_ORDINAL: ordinal,
+    SHORTER_MONTH_NOTE: shorterMonthNote,
     SECURITY_DEPOSIT: formatCurrencyRwf(agreement.financials.securityDepositRwf).replace(" RWF", ""),
-    COMMENCEMENT_DATE: formatDate(agreement.tenancyStartDate),
+    COMMENCEMENT_DATE: commencementDisplay,
     DURATION_MONTHS: agreement.tenancyDurationMonths ?? 12,
   };
 }

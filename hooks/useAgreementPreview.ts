@@ -10,7 +10,7 @@ import {
 export function useAgreementPreview(initialAgreement: Agreement) {
   const [agreement, setAgreement] = useState<Agreement>(initialAgreement);
   const [activeLanguage, setActiveLanguage] = useState<AgreementLanguage>(
-    initialAgreement.language
+    initialAgreement.language,
   );
   const [isSimulatorOpen, setIsSimulatorOpen] = useState(false);
   const [isLandlordSignOpen, setIsLandlordSignOpen] = useState(false);
@@ -24,7 +24,7 @@ export function useAgreementPreview(initialAgreement: Agreement) {
         changeRequests: [...(prev.changeRequests || []), newRequest],
       }));
     },
-    []
+    [],
   );
 
   const handleLandlordSign = useCallback((signerName: string) => {
@@ -52,23 +52,17 @@ export function useAgreementPreview(initialAgreement: Agreement) {
         nationalId: prev.renter.nationalId,
         signedAt: new Date().toISOString(),
         signatureType: "Electronic",
-        ipAddress: "197.243.20.15",
+        ipAddress: "197.243.22.84",
       },
     }));
   }, []);
 
   const handleSignFromSimulator = useCallback(
     (signerName: string) => {
-      const isLandlord = signerName
-        .toLowerCase()
-        .includes(agreement.landlord.name.toLowerCase());
-      if (isLandlord) {
-        handleLandlordSign(signerName);
-      } else {
-        handleRenterSign(signerName);
-      }
+      handleRenterSign(signerName);
+      setIsSimulatorOpen(false);
     },
-    [agreement.landlord.name, handleLandlordSign, handleRenterSign]
+    [handleRenterSign],
   );
 
   return {

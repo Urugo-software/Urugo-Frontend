@@ -55,7 +55,7 @@ export function DashboardNotificationsDropdown({
                 Notifications
               </DropdownMenuLabel>
               {unreadCount > 0 && (
-                <span className="inline-flex items-center border border-blue-200 bg-brand-tint px-2 py-0.5 text-[11px] font-semibold text-brand-blue">
+                <span className="inline-flex items-center border border-blue-200 bg-brand-tint px-2 py-0.5 text-[12.5px] font-semibold text-brand-blue">
                   {unreadCount} new
                 </span>
               )}
@@ -95,7 +95,7 @@ export function DashboardNotificationsDropdown({
                       <span className="truncate text-xs font-semibold text-ink">
                         {item.title}
                       </span>
-                      <span className="shrink-0 text-[10.5px] text-faint">
+                      <span className="shrink-0 text-[12.5px] text-faint">
                         {item.timestamp}
                       </span>
                     </div>
