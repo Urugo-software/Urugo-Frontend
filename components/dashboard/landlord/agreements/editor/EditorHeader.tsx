@@ -12,6 +12,7 @@ interface Props {
   onNavigateToPreview: () => void;
   onNavigateBack: () => void;
   onSave: () => void;
+  backButtonLabel?: string;
 }
 
 export function EditorHeader({
@@ -22,6 +23,7 @@ export function EditorHeader({
   onNavigateToPreview,
   onNavigateBack,
   onSave,
+  backButtonLabel,
 }: Props) {
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between border-b border-line pb-4 pt-1">
@@ -33,7 +35,7 @@ export function EditorHeader({
           className="inline-flex items-center gap-1 text-[12.5px] font-medium text-faint hover:text-ink transition-colors cursor-pointer"
         >
           <ArrowLeft className="size-3.5" />
-          <span>Back to Agreement</span>
+          <span>{backButtonLabel || "Back to Agreement"}</span>
         </button>
         <span className="text-faint text-[12.5px]">&middot;</span>
         <h1 className="text-sm sm:text-[15px] font-semibold text-ink">

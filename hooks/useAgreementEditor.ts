@@ -26,6 +26,7 @@ export interface UseAgreementEditorOptions {
   onSave?: (agreement: Agreement) => void;
   onSend?: (agreement: Agreement) => void;
   onBack?: () => void;
+  onPreview?: (agreement: Agreement) => void;
 }
 
 export function useAgreementEditor(
@@ -41,6 +42,7 @@ export function useAgreementEditor(
     initialAgreement.language,
   );
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [isPreviewMode, setIsPreviewMode] = useState(false);
 
   // Accordion state: single expanded article, first expanded by default
   const [expandedArticleId, setExpandedArticleId] = useState<string | null>(
@@ -202,32 +204,41 @@ export function useAgreementEditor(
       }
 
       setLanguage(newLang);
+      setAgreement((prev) => ({
+        ...prev,
+        language: newLang,
+      }));
 
       // Translate standard clauses that match standard definitions
-      setArticles((prev) =>
-        prev.map((art) => {
-          if (art.isStandard && art.standardNumber) {
-            const def = CANONICAL_18_ARTICLES.find(
-              (d) => d.standardNumber === art.standardNumber,
-            );
-            if (def) {
-              return {
-                ...art,
-                title: newLang === "rw" ? def.titleRw : def.titleEn,
-                content: newLang === "rw" ? def.contentRw : def.contentEn,
-              };
-            }
+      const translatedArticles = articles.map((art) => {
+        if (art.isStandard && art.standardNumber) {
+          const def = CANONICAL_18_ARTICLES.find(
+            (d) => d.standardNumber === art.standardNumber,
+          );
+          if (def) {
+            return {
+              ...art,
+              title: newLang === "rw" ? def.titleRw : def.titleEn,
+              content: newLang === "rw" ? def.contentRw : def.contentEn,
+            };
           }
-          return art;
-        }),
-      );
+        }
+        return art;
+      });
 
+      setArticles(translatedArticles);
       setHasUnsavedChanges(true);
+      options?.onSave?.({
+        ...agreement,
+        articles: translatedArticles,
+        language: newLang,
+        updatedAt: new Date().toISOString(),
+      });
       toast.success(
         `Language switched to ${newLang === "rw" ? "Kinyarwanda" : "English"}`,
       );
     },
-    [language, hasUnsavedChanges],
+    [language, hasUnsavedChanges, articles, agreement, options],
   );
 
   // Save draft
@@ -284,16 +295,43 @@ export function useAgreementEditor(
     }
   }, [articles, language, validation, agreement, router, options]);
 
+  // Open in-session document preview
+  const handleOpenPreview = useCallback(() => {
+    if (!validation.isValid) {
+      setShowValidation(true);
+      toast.error(
+        validation.errors[0] || "Please resolve validation errors before previewing.",
+      );
+      return;
+    }
+
+    const workingAgreement: Agreement = {
+      ...agreement,
+      articles,
+      language,
+      updatedAt: new Date().toISOString(),
+    };
+    setAgreement(workingAgreement);
+    options?.onSave?.(workingAgreement);
+    options?.onPreview?.(workingAgreement);
+    setIsPreviewMode(true);
+  }, [agreement, articles, language, validation, options]);
+
+  // Close preview and return to editor view
+  const handleClosePreview = useCallback(() => {
+    setIsPreviewMode(false);
+  }, []);
+
   // Navigate away with unsaved check
   const handleNavigateAway = useCallback(
-    (targetUrl: string) => {
+    (targetUrl: string, isBackAction = false) => {
       if (hasUnsavedChanges) {
         const leave = window.confirm(
           "You have unsaved changes in this agreement. Are you sure you want to leave?",
         );
         if (!leave) return;
       }
-      if (options?.onBack) {
+      if (isBackAction && options?.onBack) {
         options.onBack();
       } else {
         router.push(targetUrl);
@@ -315,6 +353,10 @@ export function useAgreementEditor(
     isRestoreModalOpen,
     isConfirmResetOpen,
     isTemplateModalOpen,
+    isPreviewMode,
+    setIsPreviewMode,
+    handleOpenPreview,
+    handleClosePreview,
     setIsAddModalOpen,
     setIsRestoreModalOpen,
     setIsConfirmResetOpen,

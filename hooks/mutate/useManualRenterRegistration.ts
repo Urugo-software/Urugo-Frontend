@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 import { LandlordPropertyItem, LandlordRenter } from "@/types/landlord";
 import { Agreement, AgreementLanguage } from "@/types/agreement.types";
@@ -286,29 +286,98 @@ export function refreshAgreementMetadata(
   };
 }
 
+// Storage key for preserving wizard session across refreshes
+const WIZARD_STORAGE_KEY = "urugo_tenancy_wizard_session";
+
+interface WizardStoredSession {
+  step?: WizardStep;
+  mode?: AddRenterMode;
+  selectedLanguage?: AgreementLanguage;
+  identityDraft?: RenterIdentityDraft;
+  tenancyDraft?: TenancyConfigDraft;
+  agreementDraft?: Agreement | null;
+}
+
+function getStoredWizardSession(): WizardStoredSession | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = sessionStorage.getItem(WIZARD_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
 export function useRenterWizard(
   properties: LandlordPropertyItem[],
   initialMode: AddRenterMode = "manual",
 ) {
-  const [step, setStep] = useState<WizardStep>(1);
+  const [initialSession] = useState<WizardStoredSession | null>(() =>
+    getStoredWizardSession(),
+  );
+
+  const [step, setStep] = useState<WizardStep>(() =>
+    initialSession?.step && initialSession.step >= 1 && initialSession.step <= 4
+      ? initialSession.step
+      : 1,
+  );
   const [stepDirection, setStepDirection] = useState<1 | -1>(1);
   const [isReviewing, setIsReviewing] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [mode, setMode] = useState<AddRenterMode>(initialMode);
-  const [selectedLanguage, setSelectedLanguage] =
-    useState<AgreementLanguage>("en");
-  const [agreementDraft, setAgreementDraft] = useState<Agreement | null>(null);
+  const [mode, setMode] = useState<AddRenterMode>(
+    () => initialSession?.mode ?? initialMode,
+  );
+  const [selectedLanguage, setSelectedLanguage] = useState<AgreementLanguage>(
+    () => initialSession?.selectedLanguage ?? "en",
+  );
+  const [agreementDraft, setAgreementDraft] = useState<Agreement | null>(
+    () => initialSession?.agreementDraft ?? null,
+  );
 
-  const [identityDraft, setIdentityDraft] =
-    useState<RenterIdentityDraft>(INITIAL_IDENTITY_DRAFT);
+  const [identityDraft, setIdentityDraft] = useState<RenterIdentityDraft>(
+    () => initialSession?.identityDraft ?? INITIAL_IDENTITY_DRAFT,
+  );
   const [identityErrors, setIdentityErrors] = useState<RenterIdentityErrors>({});
 
-  const [tenancyDraft, setTenancyDraft] =
-    useState<TenancyConfigDraft>(INITIAL_TENANCY_DRAFT);
+  const [tenancyDraft, setTenancyDraft] = useState<TenancyConfigDraft>(
+    () => initialSession?.tenancyDraft ?? INITIAL_TENANCY_DRAFT,
+  );
   const [tenancyErrors, setTenancyErrors] = useState<TenancyConfigErrors>({});
 
   const [submission, setSubmission] =
     useState<FullRenterRegistrationSubmission | null>(null);
+
+  // Save wizard draft whenever session inputs change
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      if (!isSubmitted) {
+        sessionStorage.setItem(
+          WIZARD_STORAGE_KEY,
+          JSON.stringify({
+            step,
+            mode,
+            selectedLanguage,
+            identityDraft,
+            tenancyDraft,
+            agreementDraft,
+          }),
+        );
+      } else {
+        sessionStorage.removeItem(WIZARD_STORAGE_KEY);
+      }
+    } catch {
+      // Ignore quota issues
+    }
+  }, [
+    step,
+    mode,
+    selectedLanguage,
+    identityDraft,
+    tenancyDraft,
+    agreementDraft,
+    isSubmitted,
+  ]);
 
   // Link mode helper
   const linkState = useSimulatedRenterLink(properties);
@@ -565,6 +634,13 @@ export function useRenterWizard(
   };
 
   const resetWizard = () => {
+    if (typeof window !== "undefined") {
+      try {
+        sessionStorage.removeItem(WIZARD_STORAGE_KEY);
+      } catch {
+        // Ignore storage removal error
+      }
+    }
     setStep(1);
     setStepDirection(1);
     setIsReviewing(false);

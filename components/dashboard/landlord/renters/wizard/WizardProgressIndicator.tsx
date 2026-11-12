@@ -1,7 +1,10 @@
 "use client";
 
 import { Check } from "lucide-react";
-import { WizardProgressIndicatorProps, WizardStep } from "@/types/renter-wizard.types";
+import {
+  WizardProgressIndicatorProps,
+  WizardStep,
+} from "@/types/renter-wizard.types";
 
 interface StepMeta {
   number: WizardStep;
@@ -21,7 +24,10 @@ export function WizardProgressIndicator({
   onStepClick,
 }: WizardProgressIndicatorProps) {
   // Percentage for progress line
-  const progressLinePercent = Math.min(100, Math.max(0, ((currentStep - 1) / (STEPS.length - 1)) * 100));
+  const progressLinePercent = Math.min(
+    100,
+    Math.max(0, ((currentStep - 1) / (STEPS.length - 1)) * 100),
+  );
 
   return (
     <div className="border-b border-line bg-white px-4 py-6 sm:px-8">
@@ -60,7 +66,7 @@ export function WizardProgressIndicator({
                   <div
                     className={`flex size-9 sm:size-10 items-center justify-center rounded-full font-bold text-xs sm:text-sm transition-all duration-200 ${
                       isActive
-                        ? "bg-ink text-white ring-4 ring-neutral-200 shadow-xs"
+                        ? " bg-white text-black ring-4 ring-brand shadow-xs"
                         : isDone
                           ? "bg-ink text-white group-hover:bg-neutral-800"
                           : "border-2 border-line bg-white text-faint"

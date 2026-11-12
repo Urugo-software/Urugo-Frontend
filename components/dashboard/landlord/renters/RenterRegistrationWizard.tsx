@@ -223,6 +223,7 @@ export function RenterRegistrationWizard({
             >
               {agreementDraft && (
                 <AgreementEditor
+                  key={`${agreementDraft.id}-${selectedLanguage}-${agreementDraft.financials.monthlyRentRwf}`}
                   initialAgreement={agreementDraft}
                   onEditTenancy={goToStep1}
                   onBackToTenancy={goToStep3}
