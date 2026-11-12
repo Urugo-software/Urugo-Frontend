@@ -27,7 +27,7 @@ export function LandlordContactItem({ label, value, href, icon: Icon }: Props) {
           <Icon className="size-4" />
         </div>
         <div className="min-w-0">
-          <div className="text-[10px] text-faint font-semibold">{label}</div>
+          <div className="text-[12.5px] text-faint font-semibold">{label}</div>
           <Link
             href={href}
             className="text-xs font-bold text-ink hover:text-brand transition-colors block truncate"

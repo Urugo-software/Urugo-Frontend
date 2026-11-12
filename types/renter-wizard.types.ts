@@ -33,6 +33,9 @@ export interface TenancyConfigDraft {
   propertyId: string;
   monthlyRentRwf: number | "";
   startDate: string;
+  useFirstPaymentAsCommencement?: boolean;
+  commencementStatus?: "pending_first_payment" | "confirmed" | "manual";
+  confirmedPaymentDate?: string;
   durationOption: TenancyDurationOption;
   customDurationMonths: number | "";
   paymentDueDay: number;
@@ -44,6 +47,7 @@ export interface TenancyConfigErrors {
   propertyId?: string;
   monthlyRentRwf?: string;
   startDate?: string;
+  paymentDueDay?: string;
   customDurationMonths?: string;
 }
 

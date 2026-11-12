@@ -36,7 +36,7 @@ function PropertyCardHeader({
           <div className="text-base sm:text-lg font-extrabold text-brand tracking-tight">
             {price}
           </div>
-          <div className="text-[11px] font-medium text-body">
+          <div className="text-[12.5px] font-medium text-body">
             {currency} / {period}
           </div>
         </div>

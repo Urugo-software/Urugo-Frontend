@@ -8,7 +8,7 @@ export function ChatMessageItem({ msg }: { msg: ChatMessage }) {
     <div
       className={`flex flex-col ${isRenter ? "items-end" : "items-start"} mb-3`}
     >
-      <div className="flex items-center gap-1.5 mb-1 text-[10px] text-faint">
+      <div className="flex items-center gap-1.5 mb-1 text-[12.5px] text-faint">
         <span className="font-semibold text-ink">{msg.senderName}</span>
         <span>·</span>
         <span>{msg.timestamp}</span>

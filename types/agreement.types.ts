@@ -81,6 +81,9 @@ export interface Agreement {
   tenancyStartDate: string;
   tenancyEndDate?: string;
   tenancyDurationMonths?: number;
+  commencementType?: "fixed_date" | "first_payment_confirmation";
+  commencementStatus?: "pending_first_payment" | "confirmed";
+  firstPaymentConfirmedAt?: string;
   language: AgreementLanguage;
   status: AgreementStatus;
   version: number;

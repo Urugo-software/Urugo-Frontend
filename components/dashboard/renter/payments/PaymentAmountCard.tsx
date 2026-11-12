@@ -21,7 +21,7 @@ export function PaymentAmountCard({ amountRwf, period, unitNumber }: Props) {
         </div>
       </div>
       <div className="text-right">
-        <span className="text-[11px] font-medium uppercase tracking-wider text-faint">
+        <span className="text-[12.5px] font-medium uppercase tracking-wider text-faint">
           Amount Due
         </span>
         <div className="text-lg font-bold text-ink">

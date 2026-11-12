@@ -37,7 +37,7 @@ export function ConversationContent() {
         </Message>
         <Message user>{userMessages[1]}</Message>
         <Message>
-          <strong className="mb-1.5 block text-[11px] uppercase tracking-wide text-brand">
+          <strong className="mb-1.5 block text-[12.5px] uppercase tracking-wide text-brand">
             Account created
           </strong>
           Perfect, Yves — you&apos;re all set as a guest. Now, what are you
@@ -45,7 +45,7 @@ export function ConversationContent() {
         </Message>
         <Message user>{userMessages[2]}</Message>
         <Message>
-          <strong className="mb-1.5 block text-[11px] uppercase tracking-wide text-brand">
+          <strong className="mb-1.5 block text-[12.5px] uppercase tracking-wide text-brand">
             3 matches found
           </strong>
           Here are 3 verified 2-bedroom properties near Remera with parking, all

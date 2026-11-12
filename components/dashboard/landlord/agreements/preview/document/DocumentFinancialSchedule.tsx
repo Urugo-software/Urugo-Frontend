@@ -1,5 +1,9 @@
 import { AgreementFinancials } from "@/types/agreement.types";
-import { formatCurrencyRwf, formatDate } from "@/utils/agreement-utils";
+import { formatCurrencyRwf } from "@/utils/agreement-utils";
+import {
+  formatAgreedDueDayDisplay,
+  formatCommencementDisplay,
+} from "@/utils/rent-schedule-utils";
 
 interface Props {
   financials: AgreementFinancials;
@@ -14,11 +18,17 @@ export function DocumentFinancialSchedule({
   tenancyDurationMonths = 12,
   isKinyarwanda,
 }: Props) {
+  const commencement = formatCommencementDisplay({
+    startDate: tenancyStartDate,
+    language: isKinyarwanda ? "rw" : "en",
+  });
+
   const scheduleRows = [
     {
       labelEn: "Lease Commencement Date",
       labelRw: "Itariki yo Gutangira",
-      value: formatDate(tenancyStartDate),
+      value: commencement.display,
+      isPending: commencement.isPending,
     },
     {
       labelEn: "Lease Duration / Term",
@@ -34,9 +44,10 @@ export function DocumentFinancialSchedule({
     {
       labelEn: "Rent Payment Due Date",
       labelRw: "Itariki y'Ubwishyu ya Buri Kwezi",
-      value: isKinyarwanda
-        ? `Mbere y'itariki ya ${financials.paymentDueDay} ya buri kwezi`
-        : `On or before the ${financials.paymentDueDay}th day of each calendar month`,
+      value: formatAgreedDueDayDisplay(
+        financials.paymentDueDay,
+        isKinyarwanda ? "rw" : "en",
+      ),
     },
     {
       labelEn: "Refundable Security Deposit",
@@ -61,7 +72,7 @@ export function DocumentFinancialSchedule({
 
   return (
     <section className="mb-8 text-[12.5px] break-inside-avoid">
-      <h2 className="text-[12px] font-bold uppercase tracking-wider text-ink mb-2">
+      <h2 className="text-[12.5px] font-bold uppercase tracking-wider text-ink mb-2">
         {isKinyarwanda
           ? "Imbonerahamwe y'Iby'Ingenzi by'Ubukode n'Ubwishyu"
           : "Summary of Lease Terms & Financial Schedule"}
@@ -85,9 +96,11 @@ export function DocumentFinancialSchedule({
                 <td
                   className={`py-2.5 px-3 text-ink ${row.isBold ? "font-bold" : "font-normal"}`}
                 >
-                  {row.value}
+                  <span className={row.isPending ? "italic text-amber-900" : ""}>
+                    {row.value}
+                  </span>
                   {row.note && (
-                    <span className="block text-[11.5px] text-faint font-normal mt-0.5">
+                    <span className="block text-[12.5px] text-faint font-normal mt-0.5">
                       {row.note}
                     </span>
                   )}

@@ -34,6 +34,8 @@ export const INITIAL_TENANCY_DRAFT: TenancyConfigDraft = {
   propertyId: "",
   monthlyRentRwf: "",
   startDate: "2026-12-01",
+  useFirstPaymentAsCommencement: false,
+  commencementStatus: "manual",
   durationOption: "12",
   customDurationMonths: "",
   paymentDueDay: 1,
@@ -96,8 +98,20 @@ export function validateTenancyConfig(
     errors.monthlyRentRwf = "Enter a valid positive monthly rent in RWF.";
   }
 
-  if (!draft.startDate) {
+  // If first-payment commencement is enabled, manual start date is not required
+  if (!draft.useFirstPaymentAsCommencement && !draft.startDate) {
     errors.startDate = "Tenancy start date is required.";
+  }
+
+  // Monthly Rent Due Day validation: must be a valid day from 1 to 31
+  if (
+    typeof draft.paymentDueDay !== "number" ||
+    isNaN(draft.paymentDueDay) ||
+    draft.paymentDueDay < 1 ||
+    draft.paymentDueDay > 31
+  ) {
+    errors.paymentDueDay =
+      "Please select an agreed monthly rent due date between 1 and 31.";
   }
 
   if (
@@ -127,13 +141,32 @@ export function buildInitialAgreement(
         ? 12
         : parseInt(tenancy.durationOption, 10) || 12;
 
-  const startDateStr =
-    tenancy.startDate || new Date().toISOString().split("T")[0];
-  const startDateObj = new Date(startDateStr);
-  const endDateObj = new Date(startDateObj);
-  endDateObj.setMonth(endDateObj.getMonth() + durationMonths);
-  endDateObj.setDate(endDateObj.getDate() - 1);
-  const endDateStr = endDateObj.toISOString().split("T")[0];
+  const isPaymentBased = Boolean(tenancy.useFirstPaymentAsCommencement);
+  const confirmedDate = tenancy.confirmedPaymentDate;
+
+  let startDateStr = "";
+  let endDateStr: string | undefined = undefined;
+
+  if (isPaymentBased) {
+    if (confirmedDate) {
+      startDateStr = confirmedDate;
+      const startDateObj = new Date(confirmedDate);
+      const endDateObj = new Date(startDateObj);
+      endDateObj.setMonth(endDateObj.getMonth() + durationMonths);
+      endDateObj.setDate(endDateObj.getDate() - 1);
+      endDateStr = endDateObj.toISOString().split("T")[0];
+    } else {
+      startDateStr = "PENDING_FIRST_PAYMENT";
+      endDateStr = undefined;
+    }
+  } else {
+    startDateStr = tenancy.startDate || new Date().toISOString().split("T")[0];
+    const startDateObj = new Date(startDateStr);
+    const endDateObj = new Date(startDateObj);
+    endDateObj.setMonth(endDateObj.getMonth() + durationMonths);
+    endDateObj.setDate(endDateObj.getDate() - 1);
+    endDateStr = endDateObj.toISOString().split("T")[0];
+  }
 
   const monthlyRent =
     typeof tenancy.monthlyRentRwf === "number" && tenancy.monthlyRentRwf > 0
@@ -193,6 +226,13 @@ export function buildInitialAgreement(
     tenancyStartDate: startDateStr,
     tenancyEndDate: endDateStr,
     tenancyDurationMonths: durationMonths,
+    commencementType: isPaymentBased ? "first_payment_confirmation" : "fixed_date",
+    commencementStatus: isPaymentBased
+      ? confirmedDate
+        ? "confirmed"
+        : "pending_first_payment"
+      : "confirmed",
+    firstPaymentConfirmedAt: confirmedDate,
     language,
     status: "Draft",
     version: 1,
@@ -219,13 +259,33 @@ export function refreshAgreementMetadata(
         ? 12
         : parseInt(tenancy.durationOption, 10) || 12;
 
-  const startDateStr =
-    tenancy.startDate || new Date().toISOString().split("T")[0];
-  const startDateObj = new Date(startDateStr);
-  const endDateObj = new Date(startDateObj);
-  endDateObj.setMonth(endDateObj.getMonth() + durationMonths);
-  endDateObj.setDate(endDateObj.getDate() - 1);
-  const endDateStr = endDateObj.toISOString().split("T")[0];
+  const isPaymentBased = Boolean(tenancy.useFirstPaymentAsCommencement);
+  const alreadyConfirmedDate =
+    existing.firstPaymentConfirmedAt || tenancy.confirmedPaymentDate;
+
+  let startDateStr = "";
+  let endDateStr: string | undefined = undefined;
+
+  if (isPaymentBased) {
+    if (alreadyConfirmedDate) {
+      startDateStr = alreadyConfirmedDate;
+      const startDateObj = new Date(alreadyConfirmedDate);
+      const endDateObj = new Date(startDateObj);
+      endDateObj.setMonth(endDateObj.getMonth() + durationMonths);
+      endDateObj.setDate(endDateObj.getDate() - 1);
+      endDateStr = endDateObj.toISOString().split("T")[0];
+    } else {
+      startDateStr = "PENDING_FIRST_PAYMENT";
+      endDateStr = undefined;
+    }
+  } else {
+    startDateStr = tenancy.startDate || new Date().toISOString().split("T")[0];
+    const startDateObj = new Date(startDateStr);
+    const endDateObj = new Date(startDateObj);
+    endDateObj.setMonth(endDateObj.getMonth() + durationMonths);
+    endDateObj.setDate(endDateObj.getDate() - 1);
+    endDateStr = endDateObj.toISOString().split("T")[0];
+  }
 
   const monthlyRent =
     typeof tenancy.monthlyRentRwf === "number" && tenancy.monthlyRentRwf > 0
@@ -280,6 +340,13 @@ export function refreshAgreementMetadata(
     tenancyStartDate: startDateStr,
     tenancyEndDate: endDateStr,
     tenancyDurationMonths: durationMonths,
+    commencementType: isPaymentBased ? "first_payment_confirmation" : "fixed_date",
+    commencementStatus: isPaymentBased
+      ? alreadyConfirmedDate
+        ? "confirmed"
+        : "pending_first_payment"
+      : "confirmed",
+    firstPaymentConfirmedAt: alreadyConfirmedDate,
     language,
     articles,
     updatedAt: new Date().toISOString(),

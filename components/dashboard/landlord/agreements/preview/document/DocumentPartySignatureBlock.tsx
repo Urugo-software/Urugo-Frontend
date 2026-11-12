@@ -23,7 +23,7 @@ export function DocumentPartySignatureBlock({
 
   return (
     <div className="space-y-3 break-inside-avoid text-[12.5px]">
-      <span className="font-bold uppercase tracking-wider text-ink text-[12px] block">
+      <span className="font-bold uppercase tracking-wider text-ink text-[12.5px] block">
         {roleTitle}
       </span>
 
@@ -34,33 +34,33 @@ export function DocumentPartySignatureBlock({
             <span className="font-serif italic text-base sm:text-lg text-ink font-semibold">
               {signature.signedBy}
             </span>
-            <span className="inline-flex items-center gap-1 text-[11px] font-mono text-blue-700">
+            <span className="inline-flex items-center gap-1 text-[12.5px] font-mono text-blue-700">
               <Check className="size-3" />
               <span>Signed</span>
             </span>
           </div>
 
-          <div className="text-[12px] text-body space-y-0.5">
+          <div className="text-[12.5px] text-body space-y-0.5">
             <p>
               <span className="text-faint">
                 {isKinyarwanda ? "Amazina: " : "Name: "}
               </span>
               <strong className="text-ink font-medium">{party.name}</strong>
             </p>
-            <p className="font-mono text-[11.5px]">
+            <p className="font-mono text-[12.5px]">
               <span className="text-faint">
                 {isKinyarwanda ? "Indangamuntu: " : "National ID: "}
               </span>
               <span className="text-ink">{party.nationalId}</span>
             </p>
-            <p className="font-mono text-[11.5px]">
+            <p className="font-mono text-[12.5px]">
               <span className="text-faint">
                 {isKinyarwanda ? "Itariki: " : "Date: "}
               </span>
               <span className="text-ink">{formatDate(signature.signedAt)}</span>
             </p>
             {signature.ipAddress && (
-              <p className="font-mono text-[11px] text-faint">
+              <p className="font-mono text-[12.5px] text-faint">
                 IP: {signature.ipAddress} &middot; Electronic Record
               </p>
             )}
@@ -70,21 +70,21 @@ export function DocumentPartySignatureBlock({
         /* Pending Blank Signature Area for Execution */
         <div className="space-y-2 pt-6">
           <div className="border-b border-zinc-400 border-dashed pb-0.5">
-            <span className="text-faint text-[11px] italic">
+            <span className="text-faint text-[12.5px] italic">
               {isKinyarwanda
                 ? "Umukono wa " + roleTitle
                 : "Signature of " + roleTitle}
             </span>
           </div>
 
-          <div className="text-[12px] text-body space-y-1">
+          <div className="text-[12.5px] text-body space-y-1">
             <p>
               <span className="text-faint">
                 {isKinyarwanda ? "Amazina: " : "Name: "}
               </span>
               <strong className="text-ink font-medium">{party.name}</strong>
             </p>
-            <p className="font-mono text-[11.5px]">
+            <p className="font-mono text-[12.5px]">
               <span className="text-faint">
                 {isKinyarwanda ? "Indangamuntu: " : "National ID: "}
               </span>
@@ -96,7 +96,7 @@ export function DocumentPartySignatureBlock({
               </span>
               <span className="text-zinc-400">____________________</span>
             </p>
-            <span className="inline-block font-mono text-[11px] text-faint italic">
+            <span className="inline-block font-mono text-[12.5px] text-faint italic">
               {isKinyarwanda ? "[Bitegereje umukono]" : "[Awaiting Signature]"}
             </span>
           </div>

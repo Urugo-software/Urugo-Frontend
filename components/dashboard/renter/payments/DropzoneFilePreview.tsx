@@ -25,7 +25,7 @@ export function DropzoneFilePreview({ file, previewUrl, onRemove }: Props) {
         )}
         <div className="min-w-0">
           <div className="text-xs font-bold text-ink truncate">{file.name}</div>
-          <div className="text-[11px] text-body mt-0.5">
+          <div className="text-[12.5px] text-body mt-0.5">
             {(file.size / 1024).toFixed(1)} KB &bull; Attached
           </div>
         </div>

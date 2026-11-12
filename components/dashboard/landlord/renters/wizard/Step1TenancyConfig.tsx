@@ -1,6 +1,6 @@
 "use client";
 
-import { Building } from "lucide-react";
+import { Building, Calendar, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -29,8 +29,9 @@ export function Step1TenancyConfig({
     <div className="space-y-8 sm:space-y-9 text-[12.5px]">
       <div>
         <h3 className="text-lg font-bold text-ink">Tenancy Configurations</h3>
-        <p className="text-body text-xs mt-1">
-          Specify property, unit, rental rates, commencement date, and payment schedule.
+        <p className="text-body text-[12.5px] mt-1">
+          Specify property, unit, rental rates, commencement date, and payment
+          schedule.
         </p>
       </div>
 
@@ -39,7 +40,7 @@ export function Step1TenancyConfig({
         <div className="border border-line bg-white p-5 sm:p-6 space-y-6 shadow-2xs">
           <div className="flex items-center gap-2 border-b border-line pb-3">
             <Building className="size-4 text-ink" />
-            <h4 className="text-xs font-semibold text-ink uppercase tracking-wider">
+            <h4 className="text-[12.5px] font-semibold text-ink uppercase tracking-wider">
               1. Property & Pricing
             </h4>
           </div>
@@ -47,7 +48,7 @@ export function Step1TenancyConfig({
           <FieldGroup className="space-y-5">
             {/* Property Selector */}
             <Field className="space-y-1.5">
-              <FieldLabel className="text-xs font-semibold uppercase tracking-wider text-faint">
+              <FieldLabel className="text-[12.5px] font-semibold uppercase tracking-wider text-faint">
                 Select Leased Property <span className="text-red-500">*</span>
               </FieldLabel>
               <RenterPropertySelect
@@ -57,7 +58,7 @@ export function Step1TenancyConfig({
                 emptyLabel="Choose a property from your portfolio..."
               />
               {errors.propertyId && (
-                <FieldError className="text-[11px] text-red-600">
+                <FieldError className="text-[12.5px] text-red-600 font-medium">
                   {errors.propertyId}
                 </FieldError>
               )}
@@ -66,7 +67,7 @@ export function Step1TenancyConfig({
             {/* Monthly Rent */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field className="space-y-1.5">
-                <FieldLabel className="text-xs font-semibold uppercase tracking-wider text-faint">
+                <FieldLabel className="text-[12.5px] font-semibold uppercase tracking-wider text-faint">
                   Monthly Rent (RWF) <span className="text-red-500">*</span>
                 </FieldLabel>
                 <div className="relative">
@@ -75,21 +76,23 @@ export function Step1TenancyConfig({
                     min={0}
                     step={5000}
                     placeholder="e.g. 150000"
-                    value={draft.monthlyRentRwf === "" ? "" : draft.monthlyRentRwf}
+                    value={
+                      draft.monthlyRentRwf === "" ? "" : draft.monthlyRentRwf
+                    }
                     onChange={(e) =>
                       onUpdateDraft(
                         "monthlyRentRwf",
                         e.target.value === "" ? "" : Number(e.target.value),
                       )
                     }
-                    className="h-10 text-xs font-semibold pr-16 rounded-none border-line"
+                    className="h-10 text-[12.5px] font-semibold pr-16 rounded-none border-line"
                   />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-bold text-faint">
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[12.5px] font-bold text-faint">
                     RWF
                   </span>
                 </div>
                 {errors.monthlyRentRwf && (
-                  <FieldError className="text-[11px] text-red-600">
+                  <FieldError className="text-[12.5px] text-red-600 font-medium">
                     {errors.monthlyRentRwf}
                   </FieldError>
                 )}
@@ -97,7 +100,7 @@ export function Step1TenancyConfig({
 
               {/* Security Deposit */}
               <Field className="space-y-1.5">
-                <FieldLabel className="text-xs font-semibold uppercase tracking-wider text-faint">
+                <FieldLabel className="text-[12.5px] font-semibold uppercase tracking-wider text-faint">
                   Security Deposit (RWF)
                 </FieldLabel>
                 <div className="relative">
@@ -117,9 +120,9 @@ export function Step1TenancyConfig({
                         e.target.value === "" ? "" : Number(e.target.value),
                       )
                     }
-                    className="h-10 text-xs font-semibold pr-16 rounded-none border-line"
+                    className="h-10 text-[12.5px] font-semibold pr-16 rounded-none border-line"
                   />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] font-bold text-faint">
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[12.5px] font-bold text-faint">
                     RWF
                   </span>
                 </div>
@@ -128,24 +131,88 @@ export function Step1TenancyConfig({
           </FieldGroup>
         </div>
 
-        {/* Section 2: Lease Term & Schedule */}
+        {/* Section 2: Lease Term & Commencement */}
         <div className="border border-line bg-white p-5 sm:p-6 space-y-6 shadow-2xs">
-          <Field className="space-y-1.5">
-            <FieldLabel className="text-xs font-semibold uppercase tracking-wider text-faint">
-              Tenancy Commencement Date <span className="text-red-500">*</span>
-            </FieldLabel>
-            <Input
-              type="date"
-              value={draft.startDate}
-              onChange={(e) => onUpdateDraft("startDate", e.target.value)}
-              className="h-10 text-xs font-medium rounded-none border-line max-w-xs"
-            />
-            {errors.startDate && (
-              <FieldError className="text-[11px] text-red-600">
-                {errors.startDate}
-              </FieldError>
-            )}
-          </Field>
+          <div className="flex items-center gap-2 border-b border-line pb-3">
+            <Calendar className="size-4 text-ink" />
+            <h4 className="text-[12.5px] font-semibold text-ink uppercase tracking-wider">
+              2. Lease Term & Commencement
+            </h4>
+          </div>
+
+          {/* Optional First Rent Payment Commencement Toggle */}
+          <div className="border border-line bg-surface/60 p-4 space-y-3">
+            <label className="flex items-start gap-3 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={Boolean(draft.useFirstPaymentAsCommencement)}
+                onChange={(e) =>
+                  onUpdateDraft(
+                    "useFirstPaymentAsCommencement",
+                    e.target.checked,
+                  )
+                }
+                className="mt-0.5 size-4 rounded-none border-line accent-brand-blue cursor-pointer"
+              />
+              <div className="space-y-1">
+                <span className="text-[13px] font-semibold text-ink block">
+                  Use First Rent Payment Date as Tenancy Commencement Date
+                </span>
+                <p className="text-[12.5px] text-body leading-relaxed">
+                  When enabled, the tenancy commencement date will be based on
+                  the date the first rent payment is successfully received and
+                  recorded.
+                </p>
+              </div>
+            </label>
+
+            {draft.useFirstPaymentAsCommencement ? (
+              <div className=" flex-col mt-2 border-t border-line/80 pt-3 flex items-start gap-2.5 text-[12.5px] text-body">
+                <div className=" rounded-lg shrink-0 items-center px-2 py-0.5 font-semibold text-[12.5px] bg-amber-100 text-amber-900 border border-amber-300">
+                  Pending First Payment
+                </div>
+                <div className="leading-snug">
+                  The commencement date will remain in a pending state until
+                  verified confirmation of the first rent payment. Once
+                  confirmed, the actual confirmation date will be recorded as
+                  the official commencement date.
+                </div>
+              </div>
+            ) : null}
+          </div>
+
+          {/* Manual Tenancy Commencement Date (When first-payment commencement is disabled) */}
+          {!draft.useFirstPaymentAsCommencement ? (
+            <Field className="space-y-1.5">
+              <FieldLabel className="text-[12.5px] font-semibold uppercase tracking-wider text-faint">
+                Tenancy Commencement Date{" "}
+                <span className="text-red-500">*</span>
+              </FieldLabel>
+              <Input
+                type="date"
+                value={draft.startDate}
+                onChange={(e) => onUpdateDraft("startDate", e.target.value)}
+                className="h-10 text-[12.5px] font-medium rounded-none border-line max-w-xs"
+              />
+              <p className="text-[12.5px] text-body">
+                Official commencement date agreed upon with the renter.
+              </p>
+              {errors.startDate && (
+                <FieldError className="text-[12.5px] text-red-600 font-medium">
+                  {errors.startDate}
+                </FieldError>
+              )}
+            </Field>
+          ) : (
+            <div className="rounded-none border border-line bg-surface p-3 text-[12.5px] text-body">
+              <span className="font-semibold text-ink">
+                Commencement Schedule:
+              </span>{" "}
+              Official lease start date will be automatically established upon
+              receipt and recording of the first rent payment. The recurring
+              monthly rent due date remains on the agreed day of each month.
+            </div>
+          )}
 
           <TenancyDurationPicker
             durationOption={draft.durationOption}
@@ -160,9 +227,17 @@ export function Step1TenancyConfig({
 
         {/* Section 3: Schedule & Initial Settlement */}
         <div className="border border-line bg-white p-5 sm:p-6 space-y-6 shadow-2xs">
+          <div className="flex items-center gap-2 border-b border-line pb-3">
+            <DollarSign className="size-4 text-ink" />
+            <h4 className="text-[12.5px] font-semibold text-ink uppercase tracking-wider">
+              3. Payment Schedule & Initial Settlement
+            </h4>
+          </div>
+
           <TenancySchedulePicker
             paymentDueDay={draft.paymentDueDay}
             initialPaymentMonths={draft.initialPaymentMonths}
+            error={errors.paymentDueDay}
             onChangeDueDay={(val) => onUpdateDraft("paymentDueDay", val)}
             onChangeInitialMonths={(val) =>
               onUpdateDraft("initialPaymentMonths", val)
@@ -180,7 +255,7 @@ export function Step1TenancyConfig({
           type="button"
           variant="outline"
           onClick={onCancel}
-          className="h-10 rounded-none border-line text-xs font-medium px-4"
+          className="h-10 rounded-none border-line text-[12.5px] font-medium px-4"
         >
           Cancel
         </Button>
@@ -188,7 +263,7 @@ export function Step1TenancyConfig({
         <Button
           type="button"
           onClick={onContinue}
-          className="h-10 rounded-none bg-ink text-white hover:bg-black text-xs font-semibold px-6 cursor-pointer"
+          className="h-10 rounded-none bg-ink text-white hover:bg-black text-[12.5px] font-semibold px-6 cursor-pointer"
         >
           Continue to Renter Details &rarr;
         </Button>

@@ -53,7 +53,7 @@ export function Step3AgreementLanguage({
             </p>
           </div>
 
-          <div className="mt-4 pt-3 border-t border-line flex items-center gap-1.5 text-[11.5px] text-faint">
+          <div className="mt-4 pt-3 border-t border-line flex items-center gap-1.5 text-[12.5px] text-faint">
             <FileText className="size-3.5" />
             <span>18 English statutory covenants &middot; Single document</span>
           </div>
@@ -91,7 +91,7 @@ export function Step3AgreementLanguage({
             </p>
           </div>
 
-          <div className="mt-4 pt-3 border-t border-line flex items-center gap-1.5 text-[11.5px] text-faint">
+          <div className="mt-4 pt-3 border-t border-line flex items-center gap-1.5 text-[12.5px] text-faint">
             <FileText className="size-3.5" />
             <span>Ingingo 18 mu Kinyarwanda &middot; Inyandiko imwe rukumbi</span>
           </div>

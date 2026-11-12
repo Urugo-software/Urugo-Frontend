@@ -82,7 +82,7 @@ export function WizardProgressIndicator({
                   {/* Step Meta Info */}
                   <div className="mt-2 space-y-0.5 max-w-[80px] sm:max-w-none">
                     <span
-                      className={`block text-[10px] font-bold uppercase tracking-widest ${
+                      className={`block text-[12.5px] font-bold uppercase tracking-widest ${
                         isActive
                           ? "text-ink"
                           : isDone
@@ -95,7 +95,7 @@ export function WizardProgressIndicator({
                     <span className="block text-xs sm:text-sm font-bold text-ink">
                       {s.label}
                     </span>
-                    <span className="hidden md:block text-[11px] text-body">
+                    <span className="hidden md:block text-[12.5px] text-body">
                       {s.subtitle}
                     </span>
                   </div>

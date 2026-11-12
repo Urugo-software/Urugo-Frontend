@@ -44,7 +44,7 @@ function PropertyCardImage({
 
       {/* Availability Pill */}
       <div className="absolute bottom-2.5 left-2.5 z-10">
-        <span className="inline-flex items-center gap-1 py-1 px-2 bg-brand backdrop-blur-sm  text-[10.5px] font-medium rounded-sm uppercase tracking-wide text-white shadow-xs">
+        <span className="inline-flex items-center gap-1 py-1 px-2 bg-brand backdrop-blur-sm text-[12.5px] font-medium rounded-sm uppercase tracking-wide text-white shadow-xs">
           {availabilityStatus}
         </span>
       </div>

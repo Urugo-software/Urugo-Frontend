@@ -8,7 +8,7 @@ interface Props {
 export function DocumentPropertySection({ property, isKinyarwanda }: Props) {
   return (
     <section className="mb-7 text-[13px] leading-relaxed break-inside-avoid">
-      <h2 className="text-[12px] font-bold uppercase tracking-wider text-ink mb-2">
+      <h2 className="text-[12.5px] font-bold uppercase tracking-wider text-ink mb-2">
         {isKinyarwanda
           ? "Ibyerekeye Inzu n'Icyerekezo Cy'Ubukode"
           : "Recitals & Demised Premises"}

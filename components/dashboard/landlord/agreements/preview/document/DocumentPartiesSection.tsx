@@ -41,7 +41,7 @@ export function DocumentPartiesSection({
       <div className="space-y-3.5 pl-3 border-l-2 border-zinc-200">
         {/* Landlord Party */}
         <div>
-          <span className="font-bold uppercase tracking-wider text-ink text-[12px] block">
+          <span className="font-bold uppercase tracking-wider text-ink text-[12.5px] block">
             {isKinyarwanda ? "1. Nyir'inzu (Landlord):" : "1. Landlord (Lessor):"}
           </span>
           <p className="text-ink mt-0.5">
@@ -60,7 +60,7 @@ export function DocumentPartiesSection({
 
         {/* Renter Party */}
         <div>
-          <span className="font-bold uppercase tracking-wider text-ink text-[12px] block">
+          <span className="font-bold uppercase tracking-wider text-ink text-[12.5px] block">
             {isKinyarwanda ? "2. Umukode (Tenant):" : "2. Tenant / Renter (Lessee):"}
           </span>
           <p className="text-ink mt-0.5">

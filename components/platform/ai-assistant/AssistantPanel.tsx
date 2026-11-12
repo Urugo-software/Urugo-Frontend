@@ -218,12 +218,12 @@ export function AssistantPanel({ onClose }: AssistantPanelProps) {
                   </div>
                 ) : (
                   <div className="flex max-w-[95%] sm:max-w-[90%] gap-2.5 items-start">
-                    <div className="grid size-7 shrink-0 place-items-center rounded-lg bg-brand text-white shadow-xs mt-0.5 text-[10px]">
+                    <div className="grid size-7 shrink-0 place-items-center rounded-lg bg-brand text-white shadow-xs mt-0.5 text-[12.5px]">
                       <Bot className="size-4" />
                     </div>
                     <div className="flex flex-1 flex-col gap-2.5 rounded-2xl rounded-tl-xs border border-line bg-white p-3.5 sm:p-4 text-xs sm:text-sm text-ink shadow-xs">
                       {msg.badge && (
-                        <span className="inline-flex items-center gap-1 self-start rounded-full bg-brand-tint px-2.5 py-0.5 text-[10px] font-bold text-brand">
+                        <span className="inline-flex items-center gap-1 self-start rounded-full bg-brand-tint px-2.5 py-0.5 text-[12.5px] font-bold text-brand">
                           <Sparkles className="size-3" />
                           {msg.badge}
                         </span>
@@ -242,7 +242,7 @@ export function AssistantPanel({ onClose }: AssistantPanelProps) {
                               key={action}
                               type="button"
                               onClick={() => handleSend(action)}
-                              className="inline-flex items-center gap-1 rounded-full border border-brand/20 bg-brand-tint px-2.5 py-1 text-[11px] font-semibold text-brand transition hover:bg-brand hover:text-white"
+                              className="inline-flex items-center gap-1 rounded-full border border-brand/20 bg-brand-tint px-2.5 py-1 text-[12.5px] font-semibold text-brand transition hover:bg-brand hover:text-white"
                             >
                               {action}
                               <ChevronRight className="size-3" />
@@ -251,7 +251,7 @@ export function AssistantPanel({ onClose }: AssistantPanelProps) {
                         </div>
                       )}
 
-                      <div className="mt-0.5 flex items-center justify-between border-t border-line/30 pt-1 text-[10px] text-faint">
+                      <div className="mt-0.5 flex items-center justify-between border-t border-line/30 pt-1 text-[12.5px] text-faint">
                         <span>{msg.timestamp}</span>
                         <button
                           type="button"
@@ -273,7 +273,7 @@ export function AssistantPanel({ onClose }: AssistantPanelProps) {
                   <Bot className="size-4 animate-pulse" />
                 </div>
                 <div className="flex items-center gap-1 rounded-2xl rounded-tl-xs border border-line bg-white px-3 py-2 text-xs text-brand shadow-xs">
-                  <span className="font-semibold text-[11px]">Searching Kigali Registry</span>
+                  <span className="font-semibold text-[12.5px]">Searching Kigali Registry</span>
                   <span className="size-1 rounded-full bg-brand animate-bounce [animation-delay:-0.3s]" />
                   <span className="size-1 rounded-full bg-brand animate-bounce [animation-delay:-0.15s]" />
                   <span className="size-1 rounded-full bg-brand animate-bounce" />
@@ -291,7 +291,7 @@ export function AssistantPanel({ onClose }: AssistantPanelProps) {
               key={prompt}
               type="button"
               onClick={() => handleSend(prompt)}
-              className="shrink-0 rounded-full border border-line bg-surface px-3 py-1 text-[11px] font-semibold text-body transition hover:border-brand hover:bg-brand-tint hover:text-brand"
+              className="shrink-0 rounded-full border border-line bg-surface px-3 py-1 text-[12.5px] font-semibold text-body transition hover:border-brand hover:bg-brand-tint hover:text-brand"
             >
               {prompt}
             </button>

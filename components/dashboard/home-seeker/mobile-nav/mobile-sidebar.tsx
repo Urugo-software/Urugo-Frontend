@@ -52,7 +52,7 @@ function MobileSidebar({
         ))}
 
         {!isAdmin && <div className="px-3 pt-4 pb-2">
-          <span className="text-[11px] font-bold uppercase tracking-widest text-faint">
+          <span className="text-[12.5px] font-bold uppercase tracking-widest text-faint">
             Settings
           </span>
         </div>}
@@ -81,7 +81,7 @@ function MobileSidebar({
             <div className="truncate text-[13.5px] font-bold text-ink">
               {isAdmin ? "Urugo Admin" : "Yves Kamanzi"}
             </div>
-            <div className="truncate text-[12px] text-faint">{isAdmin ? "Platform administrator" : "Guest account"}</div>
+            <div className="truncate text-[12.5px] text-faint">{isAdmin ? "Platform administrator" : "Guest account"}</div>
           </div>
         </div>
       </div>

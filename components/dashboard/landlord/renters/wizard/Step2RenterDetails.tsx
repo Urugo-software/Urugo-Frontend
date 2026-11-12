@@ -1,7 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { UserPlus, Users, Link as LinkIcon, CheckCircle2, Search, Link2, Copy, Check } from "lucide-react";
+import {
+  UserPlus,
+  Users,
+  Link as LinkIcon,
+  CheckCircle2,
+  Search,
+  Link2,
+  Copy,
+  Check,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -29,10 +38,11 @@ export function Step2RenterDetails({
 }: Step2RenterDetailsProps) {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredRenters = existingRenters.filter((r) =>
-    r.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    r.phone.includes(searchTerm) ||
-    r.propertyName.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredRenters = existingRenters.filter(
+    (r) =>
+      r.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      r.phone.includes(searchTerm) ||
+      r.propertyName.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (
@@ -40,7 +50,8 @@ export function Step2RenterDetails({
       <div>
         <h3 className="text-lg font-bold text-ink">Renter Details</h3>
         <p className="text-body text-xs mt-1">
-          Register a new tenant or select an already verified tenant in your Urugo portfolio.
+          Register a new tenant or select an already verified tenant in your
+          Urugo portfolio.
         </p>
       </div>
 
@@ -59,10 +70,10 @@ export function Step2RenterDetails({
             <UserPlus className="size-4" />
           </div>
           <div>
-            <strong className="block text-xs font-bold uppercase tracking-wider text-ink">
+            <strong className="block text-[12.5px] font-bold uppercase tracking-wider text-ink">
               Option A: Register New Renter
             </strong>
-            <span className="text-[11.5px] text-faint">
+            <span className="text-[12.5px] text-faint">
               Create a new tenant record manually or via invitation link
             </span>
           </div>
@@ -81,10 +92,10 @@ export function Step2RenterDetails({
             <Users className="size-4" />
           </div>
           <div>
-            <strong className="block text-xs font-bold uppercase tracking-wider text-ink">
+            <strong className="block text-[12.5px] font-bold uppercase tracking-wider text-ink">
               Option B: Select Existing Renter
             </strong>
-            <span className="text-[11.5px] text-faint">
+            <span className="text-[12.5px] text-faint">
               Assign a verified tenant already recorded in your account
             </span>
           </div>
@@ -122,17 +133,18 @@ export function Step2RenterDetails({
                 >
                   <div className="flex items-start justify-between">
                     <div>
-                      <h4 className="font-bold text-xs sm:text-sm text-ink flex items-center gap-1.5">
+                      <h4 className="font-bold text-[13px] sm:text-sm text-ink flex items-center gap-1.5">
                         <span>{renter.name}</span>
                         {renter.isIdentityVerified && (
                           <CheckCircle2 className="size-3.5 text-blue-700" />
                         )}
                       </h4>
-                      <p className="text-[11.5px] text-faint font-mono mt-0.5">
+                      <p className="text-[12.5px] text-faint font-mono mt-0.5">
                         {renter.phone}
                       </p>
-                      <p className="text-[11.5px] text-body mt-1">
-                        Current: {renter.propertyName} &middot; {renter.unitNumber}
+                      <p className="text-[12.5px] text-body mt-1">
+                        Current: {renter.propertyName} &middot;{" "}
+                        {renter.unitNumber}
                       </p>
                     </div>
 
@@ -154,14 +166,14 @@ export function Step2RenterDetails({
           {draft.isExistingRenter && (
             <div className="p-4 border border-zinc-300 bg-surface/40 flex items-center justify-between">
               <div>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-faint block">
+                <span className="text-[12.5px] font-bold uppercase tracking-wider text-faint block">
                   Selected Registered Tenant
                 </span>
-                <p className="font-bold text-ink text-xs mt-0.5">
+                <p className="font-bold text-ink text-[13px] mt-0.5">
                   {draft.fullName} &middot; National ID: {draft.nationalId}
                 </p>
               </div>
-              <span className="text-xs text-emerald-700 font-semibold flex items-center gap-1">
+              <span className="text-[12.5px] text-emerald-700 font-semibold flex items-center gap-1">
                 <CheckCircle2 className="size-3.5" /> Reusing existing record
               </span>
             </div>
@@ -197,7 +209,7 @@ export function Step2RenterDetails({
               }`}
             >
               <LinkIcon className="size-3" />
-              <span>Simulated Invitation Link</span>
+              <span>Invitation Link</span>
             </button>
           </div>
 
@@ -213,7 +225,9 @@ export function Step2RenterDetails({
                       Generate Renter Onboarding Link
                     </h4>
                     <p className="mt-1 text-xs text-body max-w-sm mx-auto leading-relaxed">
-                      Creates an invitation link that allows the prospective renter to submit their National ID and complete their profile self-service.
+                      Creates an invitation link that allows the prospective
+                      renter to submit their National ID and complete their
+                      profile self-service.
                     </p>
                   </div>
                   <Button
@@ -228,11 +242,12 @@ export function Step2RenterDetails({
               ) : (
                 <div className="border border-line bg-surface/60 p-5 space-y-4">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <span className="inline-flex items-center gap-1.5 border border-line bg-white px-2 py-0.5 text-[11px] font-semibold text-ink">
+                    <span className="inline-flex items-center gap-1.5 border border-line bg-white px-2 py-0.5 text-[12.5px] font-semibold text-ink">
                       Simulated Link Ready
                     </span>
-                    <span className="text-[11px] text-faint">
-                      Created at {generatedLink.createdAt} &middot; Expires in {generatedLink.expiresInLabel}
+                    <span className="text-[12.5px] text-faint">
+                      Created at {generatedLink.createdAt} &middot; Expires in{" "}
+                      {generatedLink.expiresInLabel}
                     </span>
                   </div>
 
@@ -242,12 +257,12 @@ export function Step2RenterDetails({
                       readOnly
                       value={generatedLink.url}
                       aria-label="Simulated registration invitation link"
-                      className="h-9 flex-1 rounded-none border-line bg-white px-3 font-mono text-xs text-ink"
+                      className="h-9 flex-1 rounded-none border-line bg-white px-3 font-mono text-[12.5px] text-ink"
                     />
                     <Button
                       type="button"
                       onClick={onCopyLink}
-                      className="h-9 shrink-0 cursor-pointer gap-1.5 rounded-none bg-ink px-4 text-xs font-semibold text-white hover:bg-black transition-colors"
+                      className="h-9 shrink-0 cursor-pointer gap-1.5 rounded-none bg-ink px-4 text-[12.5px] font-semibold text-white hover:bg-black transition-colors"
                     >
                       {copied ? (
                         <>
@@ -269,18 +284,19 @@ export function Step2RenterDetails({
             <FieldGroup className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Full Legal Name */}
               <Field className="space-y-1.5 sm:col-span-2">
-                <FieldLabel className="text-xs font-semibold uppercase tracking-wider text-faint">
-                  Full Legal Name <span className="text-red-500">*</span>
+                <FieldLabel className="text-[12.5px] font-semibold uppercase tracking-wider text-faint">
+                  Full Legal Name{" "}
+                  <span className="text-red-500 text-xl">*</span>
                 </FieldLabel>
                 <Input
                   type="text"
                   placeholder="e.g. Divine Uwase"
                   value={draft.fullName}
                   onChange={(e) => onFieldChange("fullName", e.target.value)}
-                  className="h-10 text-xs rounded-none border-line"
+                  className="h-10 text-[12.5px] rounded-none border-line"
                 />
                 {errors.fullName && (
-                  <FieldError className="text-[11px] text-red-600">
+                  <FieldError className="text-[12.5px] text-red-600">
                     {errors.fullName}
                   </FieldError>
                 )}
@@ -288,18 +304,18 @@ export function Step2RenterDetails({
 
               {/* Email Address */}
               <Field className="space-y-1.5">
-                <FieldLabel className="text-xs font-semibold uppercase tracking-wider text-faint">
-                  Email Address <span className="text-red-500">*</span>
+                <FieldLabel className="text-[12.5px] font-semibold uppercase tracking-wider text-faint">
+                  Email Address <span className="text-red-500 text-xl">*</span>
                 </FieldLabel>
                 <Input
                   type="email"
                   placeholder="e.g. divine.uwase@example.rw"
                   value={draft.email}
                   onChange={(e) => onFieldChange("email", e.target.value)}
-                  className="h-10 text-xs rounded-none border-line"
+                  className="h-10 text-[12.5px] rounded-none border-line"
                 />
                 {errors.email && (
-                  <FieldError className="text-[11px] text-red-600">
+                  <FieldError className="text-[12.5px] text-red-600">
                     {errors.email}
                   </FieldError>
                 )}
@@ -307,18 +323,18 @@ export function Step2RenterDetails({
 
               {/* Phone Number */}
               <Field className="space-y-1.5">
-                <FieldLabel className="text-xs font-semibold uppercase tracking-wider text-faint">
-                  Phone Number <span className="text-red-500">*</span>
+                <FieldLabel className="text-[12.5px] font-semibold uppercase tracking-wider text-faint">
+                  Phone Number <span className="text-red-500 text-xl">*</span>
                 </FieldLabel>
                 <Input
                   type="tel"
                   placeholder="e.g. +250 788 123 456"
                   value={draft.phoneNumber}
                   onChange={(e) => onFieldChange("phoneNumber", e.target.value)}
-                  className="h-10 text-xs rounded-none border-line"
+                  className="h-10 text-[12.5px] rounded-none border-line"
                 />
                 {errors.phoneNumber && (
-                  <FieldError className="text-[11px] text-red-600">
+                  <FieldError className="text-[12.5px] text-red-600">
                     {errors.phoneNumber}
                   </FieldError>
                 )}
@@ -326,8 +342,9 @@ export function Step2RenterDetails({
 
               {/* National ID */}
               <Field className="space-y-1.5 sm:col-span-2">
-                <FieldLabel className="text-xs font-semibold uppercase tracking-wider text-faint">
-                  National ID (16 Digits) <span className="text-red-500">*</span>
+                <FieldLabel className="text-[12.5px] font-semibold uppercase tracking-wider text-faint">
+                  National ID (16 Digits){" "}
+                  <span className="text-red-500 text-xl">*</span>
                 </FieldLabel>
                 <Input
                   type="text"
@@ -335,10 +352,10 @@ export function Step2RenterDetails({
                   placeholder="e.g. 1199670054321098"
                   value={draft.nationalId}
                   onChange={(e) => onFieldChange("nationalId", e.target.value)}
-                  className="h-10 text-xs font-mono rounded-none border-line"
+                  className="h-10 text-[12.5px] font-mono rounded-none border-line"
                 />
                 {errors.nationalId && (
-                  <FieldError className="text-[11px] text-red-600">
+                  <FieldError className="text-[12.5px] text-red-600">
                     {errors.nationalId}
                   </FieldError>
                 )}

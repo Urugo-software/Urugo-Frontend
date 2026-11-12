@@ -39,9 +39,9 @@ export const CANONICAL_18_ARTICLES: StandardArticleDefinition[] = [
     titleEn: "Monthly Rent and Payment Terms",
     titleRw: "Ubukode n'Uburyo bwo Kwishyura",
     contentEn:
-      "The agreed monthly rent is fixed at {{MONTHLY_RENT}} RWF, payable in advance on or before the {{PAYMENT_DUE_DAY}}th day of each calendar month. Payments must be remitted via verifiable digital payment methods (such as MTN Mobile Money, Airtel Money, or direct bank transfer) into the designated Landlord account. A late payment fee of 2% may be assessed if rent remains unpaid after five (5) days beyond the due date.",
+      "The agreed monthly rent is fixed at {{MONTHLY_RENT}} RWF, payable in advance on or before the {{PAYMENT_DUE_DAY_ORDINAL}} day of each calendar month{{SHORTER_MONTH_NOTE}}. Payments must be remitted via verifiable digital payment methods (such as MTN Mobile Money, Airtel Money, or direct bank transfer) into the designated Landlord account. A late payment fee of 2% may be assessed if rent remains unpaid after five (5) days beyond the due date.",
     contentRw:
-      "Ubukode bwumvikanyweho bungana na {{MONTHLY_RENT}} RWF ku kwezi, bukishyurwa mbere y'itariki ya {{PAYMENT_DUE_DAY}} ya buri kwezi. Ubwishyu bukorwa hifashishijwe uburyo bw'ikoranabuhanga bugaragara (nk'urugero MTN Mobile Money, Airtel Money, cyangwa konti ya banki) kuri konti yagenwe na Nyir'inzu. Iyo ubukode burengeje iminsi itanu (5) bishobora gutuma hishyuzwa inyungu y'ubukererwe ya 2%.",
+      "Ubukode bwumvikanyweho bungana na {{MONTHLY_RENT}} RWF ku kwezi, bukishyurwa mbere y'itariki ya {{PAYMENT_DUE_DAY}} ya buri kwezi{{SHORTER_MONTH_NOTE}}. Ubwishyu bukorwa hifashishijwe uburyo bw'ikoranabuhanga bugaragara (nk'urugero MTN Mobile Money, Airtel Money, cyangwa konti ya banki) kuri konti yagenwe na Nyir'inzu. Iyo ubukode burengeje iminsi itanu (5) bishobora gutuma hishyuzwa inyungu y'ubukererwe ya 2%.",
     isMandatory: true,
   },
   {
@@ -213,6 +213,12 @@ export function interpolateArticleText(
   variables: Record<string, string | number | undefined>
 ): string {
   let result = text;
+  if (variables.PAYMENT_DUE_DAY_ORDINAL) {
+    result = result.replace(
+      /{{PAYMENT_DUE_DAY}}th/g,
+      String(variables.PAYMENT_DUE_DAY_ORDINAL)
+    );
+  }
   for (const [key, val] of Object.entries(variables)) {
     const placeholder = new RegExp(`{{${key}}}`, "g");
     result = result.replace(placeholder, String(val ?? ""));

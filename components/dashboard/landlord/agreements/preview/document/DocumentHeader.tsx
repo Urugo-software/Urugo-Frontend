@@ -25,12 +25,12 @@ export function DocumentHeader({
               URUGO
             </span>
           </div>
-          <p className="text-[12px] text-faint mt-0.5">
+          <p className="text-[12.5px] text-faint mt-0.5">
             Kigali, Republic of Rwanda
           </p>
         </div>
 
-        <div className="text-left  font-ibm text-[11.5px] text-body space-y-0.5">
+        <div className="text-left font-ibm text-[12.5px] text-body space-y-0.5">
           <p>
             <span className="text-faint">REF: </span>
             <strong className="text-ink font-semibold">

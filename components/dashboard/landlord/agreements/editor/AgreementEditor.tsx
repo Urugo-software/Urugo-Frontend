@@ -103,7 +103,7 @@ export function AgreementEditor({
                 <span className="font-mono text-faint text-xs">
                   ({agreement.referenceNumber})
                 </span>
-                <span className="inline-flex items-center border border-line bg-surface px-2 py-0.5 text-[11px] font-medium text-ink">
+                <span className="inline-flex items-center border border-line bg-surface px-2 py-0.5 text-[12.5px] font-medium text-ink">
                   {language === "rw" ? "Kinyarwanda" : "English"}
                 </span>
               </div>

@@ -58,20 +58,20 @@ export function SelectTemplateModal({
           <div className="border border-line p-4 space-y-2 bg-surface/20">
             <div className="flex items-start justify-between">
               <div>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-faint block">
+                <span className="text-[12.5px] font-bold uppercase tracking-wider text-faint block">
                   Option A: Default
                 </span>
-                <h4 className="font-bold text-ink text-xs sm:text-sm mt-0.5">
+                <h4 className="font-bold text-ink text-[13px] sm:text-sm mt-0.5">
                   Standard Statutory Lease Agreement ({language === "rw" ? "Kinyarwanda" : "English"})
                 </h4>
-                <p className="text-[12px] text-body mt-1">
+                <p className="text-[12.5px] text-body mt-1">
                   18 standard legal clauses strictly aligned with Rwandan residential tenancy regulations.
                 </p>
               </div>
               <Button
                 type="button"
                 onClick={onSelectStandard}
-                className="h-8 rounded-none bg-ink text-white hover:bg-black text-[11.5px] px-3 shrink-0"
+                className="h-8 rounded-none bg-ink text-white hover:bg-black text-[12.5px] px-3 shrink-0"
               >
                 Use Standard
               </Button>
@@ -80,12 +80,12 @@ export function SelectTemplateModal({
 
           {/* Option B: Saved Templates */}
           <div className="pt-2">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-faint block mb-2">
+            <span className="text-[12.5px] font-bold uppercase tracking-wider text-faint block mb-2">
               Option B: Your Saved Templates ({language.toUpperCase()})
             </span>
 
             {compatibleTemplates.length === 0 ? (
-              <p className="text-xs text-faint italic p-3 border border-line">
+              <p className="text-[12.5px] text-faint italic p-3 border border-line">
                 No custom templates saved for {language === "rw" ? "Kinyarwanda" : "English"} yet.
               </p>
             ) : (
@@ -98,14 +98,14 @@ export function SelectTemplateModal({
                     <div className="space-y-1">
                       <div className="flex items-center gap-1.5">
                         <FileText className="size-3.5 text-blue-700" />
-                        <h4 className="font-bold text-ink text-xs">
+                        <h4 className="font-bold text-ink text-[13px]">
                           {tpl.name}
                         </h4>
                       </div>
-                      <p className="text-[11.5px] text-body">
+                      <p className="text-[12.5px] text-body">
                         {tpl.description}
                       </p>
-                      <span className="text-[11px] text-faint font-mono block">
+                      <span className="text-[12.5px] text-faint font-mono block">
                         {tpl.articles.length} clauses &middot; Last updated: {tpl.lastModified}
                       </span>
                     </div>
@@ -114,7 +114,7 @@ export function SelectTemplateModal({
                       type="button"
                       variant="outline"
                       onClick={() => onSelectTemplate(tpl)}
-                      className="h-8 rounded-none border-line text-[11.5px] font-semibold px-3 shrink-0 hover:bg-surface"
+                      className="h-8 rounded-none border-line text-[12.5px] font-semibold px-3 shrink-0 hover:bg-surface"
                     >
                       Load Template
                     </Button>
