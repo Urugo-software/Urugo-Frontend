@@ -29,8 +29,8 @@ export function RentersListContainer() {
           </p>
         </div>
 
-        <div className="flex w-full sm:w-auto flex-wrap justify-between sm:justify-end gap-3">
-          <div className="w-full sm:w-72">
+        <div className="flex w-full justify-between  gap-3">
+          <div className="w-full  lg:w-100">
             <RenterSearchFilter
               searchQuery={searchQuery}
               onSearchChange={setSearchQuery}

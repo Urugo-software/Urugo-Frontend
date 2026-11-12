@@ -11,14 +11,21 @@ import {
   Copy,
   Check,
   FileText,
+  Plus,
 } from "lucide-react";
 import toast from "react-hot-toast";
-import { Agreement, AgreementFilterTab, AgreementStatus } from "@/types/agreement.types";
+import {
+  Agreement,
+  AgreementFilterTab,
+  AgreementStatus,
+} from "@/types/agreement.types";
 import { AgreementStatusBadge } from "./AgreementStatusBadge";
 import { formatDate } from "@/utils/agreement-utils";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   initialAgreements: Agreement[];
+  newAgreementHref: string;
 }
 
 const TABS: { id: AgreementFilterTab; label: string }[] = [
@@ -31,11 +38,17 @@ const TABS: { id: AgreementFilterTab; label: string }[] = [
   { id: "archived", label: "Archived" },
 ];
 
-const TAB_STATUS_MAP: Record<Exclude<AgreementFilterTab, "all">, AgreementStatus[]> = {
+const TAB_STATUS_MAP: Record<
+  Exclude<AgreementFilterTab, "all">,
+  AgreementStatus[]
+> = {
   drafts: ["Draft", "Ready for Review"],
   in_review: ["Sent", "Viewed"],
   changes_requested: ["Changes Requested"],
-  awaiting_signatures: ["Awaiting Renter Signature", "Awaiting Landlord Signature"],
+  awaiting_signatures: [
+    "Awaiting Renter Signature",
+    "Awaiting Landlord Signature",
+  ],
   signed: ["Signed"],
   archived: ["Declined", "Expired", "Superseded", "Cancelled"],
 };
@@ -46,7 +59,10 @@ const EDITABLE_STATUSES: AgreementStatus[] = [
   "Changes Requested",
 ];
 
-export function AgreementListContainer({ initialAgreements }: Props) {
+export function AgreementListContainer({
+  initialAgreements,
+  newAgreementHref,
+}: Props) {
   const [agreements] = useState<Agreement[]>(initialAgreements);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<AgreementFilterTab>("all");
@@ -76,12 +92,28 @@ export function AgreementListContainer({ initialAgreements }: Props) {
       // Search matching
       const query = searchQuery.trim().toLowerCase();
       if (query) {
-        const matchesRef = agreement.referenceNumber.toLowerCase().includes(query);
-        const matchesRenter = agreement.renter.name.toLowerCase().includes(query);
-        const matchesProp = agreement.property.name.toLowerCase().includes(query);
-        const matchesUnit = agreement.property.unitNumber.toLowerCase().includes(query);
-        const matchesDistrict = agreement.property.district?.toLowerCase().includes(query);
-        if (!matchesRef && !matchesRenter && !matchesProp && !matchesUnit && !matchesDistrict) {
+        const matchesRef = agreement.referenceNumber
+          .toLowerCase()
+          .includes(query);
+        const matchesRenter = agreement.renter.name
+          .toLowerCase()
+          .includes(query);
+        const matchesProp = agreement.property.name
+          .toLowerCase()
+          .includes(query);
+        const matchesUnit = agreement.property.unitNumber
+          .toLowerCase()
+          .includes(query);
+        const matchesDistrict = agreement.property.district
+          ?.toLowerCase()
+          .includes(query);
+        if (
+          !matchesRef &&
+          !matchesRenter &&
+          !matchesProp &&
+          !matchesUnit &&
+          !matchesDistrict
+        ) {
           return false;
         }
       }
@@ -110,8 +142,8 @@ export function AgreementListContainer({ initialAgreements }: Props) {
       {/* Search and Status Tabs Bar - SpotDraft / DocuSign minimal style */}
       <div className="space-y-4">
         {/* Search Input */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div className="relative w-full sm:max-w-xs">
+        <div className="flex flex-row   items-center sm:justify-between gap-4">
+          <div className="relative h-full w-full sm:max-w-xs">
             <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-faint" />
             <input
               type="text"
@@ -131,6 +163,14 @@ export function AgreementListContainer({ initialAgreements }: Props) {
               </button>
             )}
           </div>
+          <Link href={newAgreementHref}>
+            <Button
+              type="button"
+              className="h-10 block md:hidden cursor-pointer gap-2 rounded-none bg-white border border-line px-4 text-sm font-semibold text-ink hover:bg-gray-100/60 hover:text-ink "
+            >
+              <Plus className="size-4 font-semibold" />
+            </Button>
+          </Link>
         </div>
 
         {/* Clean Text Tabs - Minimal, no repeated counts, no oversized buttons */}
@@ -204,7 +244,9 @@ export function AgreementListContainer({ initialAgreements }: Props) {
               </thead>
               <tbody className="divide-y divide-line">
                 {filteredAgreements.map((agreement) => {
-                  const isEditable = EDITABLE_STATUSES.includes(agreement.status);
+                  const isEditable = EDITABLE_STATUSES.includes(
+                    agreement.status,
+                  );
                   const isMenuOpen = openMenuId === agreement.id;
 
                   return (
@@ -231,7 +273,8 @@ export function AgreementListContainer({ initialAgreements }: Props) {
                           {agreement.property.name}
                         </span>
                         <span className="text-xs text-body block mt-0.5">
-                          Unit {agreement.property.unitNumber} &middot; {agreement.property.district}
+                          Unit {agreement.property.unitNumber} &middot;{" "}
+                          {agreement.property.district}
                         </span>
                       </td>
 
@@ -292,7 +335,12 @@ export function AgreementListContainer({ initialAgreements }: Props) {
 
                                 <button
                                   type="button"
-                                  onClick={() => handleCopyReference(agreement.referenceNumber, agreement.id)}
+                                  onClick={() =>
+                                    handleCopyReference(
+                                      agreement.referenceNumber,
+                                      agreement.id,
+                                    )
+                                  }
                                   className="w-full flex items-center gap-2 px-3 py-2 text-xs font-medium text-ink hover:bg-surface transition-colors cursor-pointer"
                                 >
                                   {copiedId === agreement.id ? (
@@ -345,8 +393,14 @@ export function AgreementListContainer({ initialAgreements }: Props) {
 
                   {/* Property Info */}
                   <div className="text-xs text-body">
-                    <span className="font-medium text-ink">{agreement.property.name}</span>
-                    <span className="text-faint"> &middot; Unit {agreement.property.unitNumber} ({agreement.property.district})</span>
+                    <span className="font-medium text-ink">
+                      {agreement.property.name}
+                    </span>
+                    <span className="text-faint">
+                      {" "}
+                      &middot; Unit {agreement.property.unitNumber} (
+                      {agreement.property.district})
+                    </span>
                   </div>
 
                   {/* Bottom row: Last updated & Actions */}
@@ -371,7 +425,9 @@ export function AgreementListContainer({ initialAgreements }: Props) {
                         >
                           <FileEdit className="size-3" />
                           <span>
-                            {agreement.status === "Changes Requested" ? "Revise" : "Edit"}
+                            {agreement.status === "Changes Requested"
+                              ? "Revise"
+                              : "Edit"}
                           </span>
                         </Link>
                       )}
