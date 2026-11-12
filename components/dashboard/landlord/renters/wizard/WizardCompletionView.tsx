@@ -42,11 +42,19 @@ export function WizardCompletionView({
         </Button>
 
         <Link
-          href="/landlord/agreements"
+          href={
+            submission.agreementId
+              ? `/landlord/agreements/${submission.agreementId}`
+              : "/landlord/agreements"
+          }
           className="inline-flex h-10.5 cursor-pointer items-center gap-2 rounded-none bg-ink px-6 text-xs font-medium text-white hover:bg-black transition-colors"
         >
           <FileText className="size-3.5" />
-          <span>Prepare Lease Agreement</span>
+          <span>
+            {submission.agreementId
+              ? `View Agreement (${submission.agreementRef || "Draft"})`
+              : "Prepare Lease Agreement"}
+          </span>
           <ArrowRight className="size-3.5 ml-1" />
         </Link>
       </div>

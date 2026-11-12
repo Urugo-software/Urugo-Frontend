@@ -21,7 +21,7 @@ export function DocumentSignaturesSection({
   return (
     <section className="mt-10 pt-6  break-inside-avoid text-[12.5px]">
       <div className="mb-6">
-        <h2 className="text-[12px] font-bold uppercase tracking-wider text-ink">
+        <h2 className="text-[12.5px] font-bold uppercase tracking-wider text-ink">
           {isKinyarwanda
             ? "Gushyira Umukono ku Masezerano"
             : "Execution & Signatures"}

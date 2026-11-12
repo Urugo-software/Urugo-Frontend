@@ -1,5 +1,6 @@
 import { MapPin, User, Phone, Mail } from "lucide-react";
 import { RenterLease } from "@/types/renter";
+import { getOrdinalSuffix } from "@/utils/rent-schedule-utils";
 
 interface Props {
   lease: RenterLease;
@@ -20,7 +21,10 @@ export function LeaseDetailsGrid({ lease }: Props) {
       label: "Monthly Rent",
       value: `RWF ${lease.monthlyRentRwf.toLocaleString()}`,
     },
-    { label: "Payment Due", value: `${lease.paymentDueDay}th of each month` },
+    {
+      label: "Payment Due",
+      value: `${lease.paymentDueDay}${getOrdinalSuffix(lease.paymentDueDay)} of each month${lease.paymentDueDay >= 29 ? " (or month end)" : ""}`,
+    },
   ];
 
   if (lease.securityDepositRwf !== undefined) {

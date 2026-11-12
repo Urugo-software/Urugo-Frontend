@@ -36,7 +36,7 @@ export function PaymentHistoryTable({
                 </td>
                 <td className="px-5 py-3.5">
                   <span
-                    className={`inline-block rounded-full px-3 py-0.5 text-[11px] font-semibold ${
+                    className={`inline-block rounded-full px-3 py-0.5 text-[12.5px] font-semibold ${
                       item.status === "Paid"
                         ? "bg-emerald-100 text-emerald-700"
                         : "bg-amber-100 text-amber-700"

@@ -3,15 +3,28 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 import { Agreement } from "@/types/agreement.types";
-import { formatCurrencyRwf, formatDate } from "@/utils/agreement-utils";
+import { formatCurrencyRwf } from "@/utils/agreement-utils";
+import {
+  formatCommencementDisplay,
+  getOrdinalSuffix,
+} from "@/utils/rent-schedule-utils";
 import { Button } from "@/components/ui/button";
 
 interface Props {
   agreement: Agreement;
+  onEditTenancy?: () => void;
 }
 
-export function EditorSystemMetadataCard({ agreement }: Props) {
+export function EditorSystemMetadataCard({ agreement, onEditTenancy }: Props) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const commencement = formatCommencementDisplay({
+    startDate: agreement.tenancyStartDate,
+    commencementStatus: agreement.commencementStatus,
+    confirmedPaymentDate: agreement.firstPaymentConfirmedAt,
+  });
+
+  const dueDay = agreement.financials.paymentDueDay || 1;
+  const dueSuffix = getOrdinalSuffix(dueDay);
 
   return (
     <>
@@ -21,13 +34,24 @@ export function EditorSystemMetadataCard({ agreement }: Props) {
           <span className="font-semibold text-ink text-[12.5px] uppercase tracking-wider">
             Tenancy Details
           </span>
-          <button
-            type="button"
-            onClick={() => setIsModalOpen(true)}
-            className="text-[12.5px] text-faint hover:text-ink font-medium underline inline-flex items-center gap-1 cursor-pointer"
-          >
-            <span>View details</span>
-          </button>
+          <div className="flex items-center gap-3">
+            {onEditTenancy && (
+              <button
+                type="button"
+                onClick={onEditTenancy}
+                className="text-[12.5px] text-blue-700 hover:text-blue-900 font-semibold underline cursor-pointer"
+              >
+                Edit Tenancy Details
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={() => setIsModalOpen(true)}
+              className="text-[12.5px] text-faint hover:text-ink font-medium underline inline-flex items-center gap-1 cursor-pointer"
+            >
+              <span>View details</span>
+            </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
@@ -56,9 +80,11 @@ export function EditorSystemMetadataCard({ agreement }: Props) {
             </span>
           </div>
           <div>
-            <span className="text-[12.5px] text-faint block">Start Date</span>
-            <span className="text-[13px] font-medium text-ink">
-              {formatDate(agreement.tenancyStartDate)}
+            <span className="text-[12.5px] text-faint block">Commencement</span>
+            <span
+              className={`text-[13px] font-medium ${commencement.isPending ? "text-amber-800 italic" : "text-ink"}`}
+            >
+              {commencement.display}
             </span>
           </div>
           <div>
@@ -130,9 +156,10 @@ export function EditorSystemMetadataCard({ agreement }: Props) {
                 </span>
                 <div className="border border-line p-3 bg-surface/20 grid grid-cols-2 gap-2">
                   <div>
-                    <span className="text-faint block text-[12.5px]">Rent Payment Due</span>
+                    <span className="text-faint block text-[12.5px]">Monthly Rent Due Date</span>
                     <span className="font-medium text-ink text-[13px]">
-                      Day {agreement.financials.paymentDueDay} of each month
+                      {dueDay}{dueSuffix} of each month
+                      {dueDay >= 29 ? " (or month end)" : ""}
                     </span>
                   </div>
                   <div>

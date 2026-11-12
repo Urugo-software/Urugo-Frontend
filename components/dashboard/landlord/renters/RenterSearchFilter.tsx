@@ -20,7 +20,7 @@ export function RenterSearchFilter({
         placeholder="Search by renter name, property..."
         value={searchQuery}
         onChange={(e) => onSearchChange(e.target.value)}
-        className="pl-9 h-full rounded-none text-[14px] "
+        className="pl-9 py-2.5 h-full rounded-none text-[14px] "
       />
     </div>
   );

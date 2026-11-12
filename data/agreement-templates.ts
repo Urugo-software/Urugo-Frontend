@@ -1,4 +1,8 @@
-import { AgreementArticle, AgreementLanguage } from "@/types/agreement.types";
+import {
+  AgreementArticle,
+  AgreementLanguage,
+  SavedAgreementTemplate,
+} from "@/types/agreement.types";
 
 export interface StandardArticleDefinition {
   standardNumber: number;
@@ -35,9 +39,9 @@ export const CANONICAL_18_ARTICLES: StandardArticleDefinition[] = [
     titleEn: "Monthly Rent and Payment Terms",
     titleRw: "Ubukode n'Uburyo bwo Kwishyura",
     contentEn:
-      "The agreed monthly rent is fixed at {{MONTHLY_RENT}} RWF, payable in advance on or before the {{PAYMENT_DUE_DAY}}th day of each calendar month. Payments must be remitted via verifiable digital payment methods (such as MTN Mobile Money, Airtel Money, or direct bank transfer) into the designated Landlord account. A late payment fee of 2% may be assessed if rent remains unpaid after five (5) days beyond the due date.",
+      "The agreed monthly rent is fixed at {{MONTHLY_RENT}} RWF, payable in advance on or before the {{PAYMENT_DUE_DAY_ORDINAL}} day of each calendar month{{SHORTER_MONTH_NOTE}}. Payments must be remitted via verifiable digital payment methods (such as MTN Mobile Money, Airtel Money, or direct bank transfer) into the designated Landlord account. A late payment fee of 2% may be assessed if rent remains unpaid after five (5) days beyond the due date.",
     contentRw:
-      "Ubukode bwumvikanyweho bungana na {{MONTHLY_RENT}} RWF ku kwezi, bukishyurwa mbere y'itariki ya {{PAYMENT_DUE_DAY}} ya buri kwezi. Ubwishyu bukorwa hifashishijwe uburyo bw'ikoranabuhanga bugaragara (nk'urugero MTN Mobile Money, Airtel Money, cyangwa konti ya banki) kuri konti yagenwe na Nyir'inzu. Iyo ubukode burengeje iminsi itanu (5) bishobora gutuma hishyuzwa inyungu y'ubukererwe ya 2%.",
+      "Ubukode bwumvikanyweho bungana na {{MONTHLY_RENT}} RWF ku kwezi, bukishyurwa mbere y'itariki ya {{PAYMENT_DUE_DAY}} ya buri kwezi{{SHORTER_MONTH_NOTE}}. Ubwishyu bukorwa hifashishijwe uburyo bw'ikoranabuhanga bugaragara (nk'urugero MTN Mobile Money, Airtel Money, cyangwa konti ya banki) kuri konti yagenwe na Nyir'inzu. Iyo ubukode burengeje iminsi itanu (5) bishobora gutuma hishyuzwa inyungu y'ubukererwe ya 2%.",
     isMandatory: true,
   },
   {
@@ -209,9 +213,71 @@ export function interpolateArticleText(
   variables: Record<string, string | number | undefined>
 ): string {
   let result = text;
+  if (variables.PAYMENT_DUE_DAY_ORDINAL) {
+    result = result.replace(
+      /{{PAYMENT_DUE_DAY}}th/g,
+      String(variables.PAYMENT_DUE_DAY_ORDINAL)
+    );
+  }
   for (const [key, val] of Object.entries(variables)) {
     const placeholder = new RegExp(`{{${key}}}`, "g");
     result = result.replace(placeholder, String(val ?? ""));
   }
   return result;
 }
+
+export const SAVED_AGREEMENT_TEMPLATES: SavedAgreementTemplate[] = [
+  {
+    id: "tpl-en-standard",
+    name: "Standard Residential Tenancy (English)",
+    description: "Official 18 statutory clauses compliant with Law No. 27/2021 on land and rental governance.",
+    language: "en",
+    lastModified: "2026-10-15",
+    articles: generateStandardArticles("en"),
+  },
+  {
+    id: "tpl-en-furnished",
+    name: "Furnished Apartment Tenancy (English)",
+    description: "Standard statutory covenants plus specialized clause for furniture inventory and maintenance.",
+    language: "en",
+    lastModified: "2026-11-01",
+    articles: [
+      ...generateStandardArticles("en"),
+      {
+        id: "art-custom-furnished-en",
+        number: 19,
+        title: "Furnishings and Inventory Schedule",
+        content: "The premises are let inclusive of the appliances, fixtures, and furniture detailed in the initial move-in inventory schedule. The Renter agrees to maintain all provided furnishings in good repair, subject to fair wear and tear.",
+        isStandard: false,
+        isCustom: true,
+      },
+    ],
+  },
+  {
+    id: "tpl-rw-standard",
+    name: "Inyandiko Rusange yo Gukodesha Inzu (Kinyarwanda)",
+    description: "Ingingo 18 z'ibanze zikurikije amategeko n'amabwiriza agenga ubutaka n'ubukode mu Rwanda.",
+    language: "rw",
+    lastModified: "2026-10-15",
+    articles: generateStandardArticles("rw"),
+  },
+  {
+    id: "tpl-rw-furnished",
+    name: "Inyandiko y'Inzu Ifite Ibikoresho (Kinyarwanda)",
+    description: "Amasezerano akubiyemo ingingo 18 z'ibanze hiyongereyeho amabwiriza yo kubungabunga ibikoresho byo mu nzu.",
+    language: "rw",
+    lastModified: "2026-11-01",
+    articles: [
+      ...generateStandardArticles("rw"),
+      {
+        id: "art-custom-furnished-rw",
+        number: 19,
+        title: "Ibikoresho n'Umutungo Uri mu Nzu",
+        content: "Inzu ikodeshejwe irimo ibikoresho, ibyuma n'intebe byanditswe ku mugereka w'ibikoresho basinyanye igihe Umukode yinjiraga. Umukode yemeye kubungabunga ibyo bikoresho mu buryo bukwiye no kutabyangiza nkana.",
+        isStandard: false,
+        isCustom: true,
+      },
+    ],
+  },
+];
+

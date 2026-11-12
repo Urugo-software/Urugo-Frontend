@@ -3,9 +3,12 @@
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion, type Variants } from "framer-motion";
 import { useRenterWizard } from "@/hooks/mutate/useManualRenterRegistration";
-import { RenterRegistrationWizardProps } from "@/types/renter-wizard.types";
-import { Step1RenterDetails } from "./wizard/Step1RenterDetails";
-import { Step2TenancyConfig } from "./wizard/Step2TenancyConfig";
+import { RenterRegistrationWizardProps, WizardStep } from "@/types/renter-wizard.types";
+import { mockLandlordRenters } from "@/data/landlord-data";
+import { Step1TenancyConfig } from "./wizard/Step1TenancyConfig";
+import { Step2RenterDetails } from "./wizard/Step2RenterDetails";
+import { Step3AgreementLanguage } from "./wizard/Step3AgreementLanguage";
+import { AgreementEditor } from "../agreements/editor/AgreementEditor";
 import { WizardCompletionView } from "./wizard/WizardCompletionView";
 import { WizardProgressIndicator } from "./wizard/WizardProgressIndicator";
 import { WizardReviewView } from "./wizard/WizardReviewView";
@@ -53,9 +56,13 @@ export function RenterRegistrationWizard({
     isSubmitted,
     mode,
     setMode,
+    selectedLanguage,
+    setSelectedLanguage,
+    agreementDraft,
     identityDraft,
     identityErrors,
     updateIdentityField,
+    selectExistingRenter,
     tenancyDraft,
     tenancyErrors,
     updateTenancyField,
@@ -65,7 +72,10 @@ export function RenterRegistrationWizard({
     submission,
     goToStep1,
     goToStep2,
-    goToReview,
+    goToStep3,
+    goToStep4,
+    handleAgreementSaved,
+    handleAgreementConfirmed,
     backFromReview,
     confirmSubmission,
     resetWizard,
@@ -75,12 +85,16 @@ export function RenterRegistrationWizard({
     router.push("/landlord/renters");
   };
 
-  const handleStepIndicatorClick = (targetStep: 1 | 2) => {
+  const handleStepIndicatorClick = (targetStep: WizardStep) => {
     if (isSubmitted) return;
     if (targetStep === 1) {
       goToStep1();
     } else if (targetStep === 2) {
       goToStep2();
+    } else if (targetStep === 3) {
+      goToStep3();
+    } else if (targetStep === 4) {
+      goToStep4();
     }
   };
 
@@ -98,7 +112,7 @@ export function RenterRegistrationWizard({
       )}
 
       {/* Animated Step Content */}
-      <div className="p-6 sm:p-8 md:p-10">
+      <div className={step === 4 ? "p-0" : "p-6 sm:p-8 md:p-10"}>
         <AnimatePresence mode="wait" custom={stepDirection}>
           {isSubmitted && submission ? (
             <motion.div
@@ -144,23 +158,18 @@ export function RenterRegistrationWizard({
               animate="center"
               exit="exit"
             >
-              <Step1RenterDetails
-                mode={mode}
-                onModeChange={setMode}
-                draft={identityDraft}
-                errors={identityErrors}
-                onFieldChange={updateIdentityField}
-                onContinue={goToStep2}
-                onSkipTenancy={() => goToReview(true)}
+              <Step1TenancyConfig
+                properties={properties}
+                draft={tenancyDraft}
+                errors={tenancyErrors}
+                paymentSummary={paymentSummary}
+                onUpdateDraft={updateTenancyField}
+                onSelectProperty={selectProperty}
                 onCancel={handleCancel}
-                generatedLink={linkState.generatedLink}
-                copied={linkState.copied}
-                copyStatus={linkState.copyStatus}
-                onGenerateLink={linkState.generateLink}
-                onCopyLink={linkState.copyLink}
+                onContinue={goToStep2}
               />
             </motion.div>
-          ) : (
+          ) : step === 2 ? (
             <motion.div
               key="step-2"
               custom={stepDirection}
@@ -169,17 +178,59 @@ export function RenterRegistrationWizard({
               animate="center"
               exit="exit"
             >
-              <Step2TenancyConfig
-                properties={properties}
-                draft={tenancyDraft}
-                errors={tenancyErrors}
-                paymentSummary={paymentSummary}
-                onUpdateDraft={updateTenancyField}
-                onSelectProperty={selectProperty}
+              <Step2RenterDetails
+                mode={mode}
+                onModeChange={setMode}
+                draft={identityDraft}
+                errors={identityErrors}
+                onFieldChange={updateIdentityField}
+                onSelectExistingRenter={selectExistingRenter}
+                existingRenters={mockLandlordRenters}
                 onBack={goToStep1}
-                onSkip={() => goToReview(true)}
-                onContinue={() => goToReview(false)}
+                onContinue={goToStep3}
+                generatedLink={linkState.generatedLink}
+                copied={linkState.copied}
+                copyStatus={linkState.copyStatus}
+                onGenerateLink={linkState.generateLink}
+                onCopyLink={linkState.copyLink}
               />
+            </motion.div>
+          ) : step === 3 ? (
+            <motion.div
+              key="step-3"
+              custom={stepDirection}
+              variants={activeVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+            >
+              <Step3AgreementLanguage
+                selectedLanguage={selectedLanguage}
+                onSelectLanguage={setSelectedLanguage}
+                onBack={goToStep2}
+                onContinue={goToStep4}
+              />
+            </motion.div>
+          ) : (
+            <motion.div
+              key="step-4"
+              custom={stepDirection}
+              variants={activeVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              className="min-h-[600px] flex flex-col"
+            >
+              {agreementDraft && (
+                <AgreementEditor
+                  key={`${agreementDraft.id}-${selectedLanguage}-${agreementDraft.financials.monthlyRentRwf}`}
+                  initialAgreement={agreementDraft}
+                  onEditTenancy={goToStep1}
+                  onBackToTenancy={goToStep3}
+                  onSaveAgreement={handleAgreementSaved}
+                  onConfirmAgreement={handleAgreementConfirmed}
+                />
+              )}
             </motion.div>
           )}
         </AnimatePresence>

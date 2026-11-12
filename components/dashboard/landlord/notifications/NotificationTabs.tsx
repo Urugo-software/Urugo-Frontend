@@ -39,7 +39,7 @@ export function NotificationTabs({
           >
             {tab.label}
             <span
-              className={`text-[11px] font-semibold ${
+              className={`text-[12.5px] font-semibold ${
                 isActive ? "text-white/80" : "text-faint"
               }`}
             >

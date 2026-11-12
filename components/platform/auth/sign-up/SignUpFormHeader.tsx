@@ -9,7 +9,7 @@ function SignUpFormHeader({
 }) {
   return (
     <div className="text-center sm:mt-2">
-      <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.28em] text-brand sm:text-xs sm:tracking-[0.35em]">
+      <p className="mb-3 text-[12.5px] font-semibold uppercase tracking-[0.28em] text-brand sm:text-[12.5px] sm:tracking-[0.35em]">
         {stepLabel}
       </p>
       <h1 className="mb-3 text-center text-2xl font-bold uppercase tracking-wider text-brand ">

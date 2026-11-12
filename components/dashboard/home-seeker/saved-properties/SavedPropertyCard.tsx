@@ -30,7 +30,7 @@ export function SavedPropertyCard({
           className="object-cover transition duration-500 "
         />
         <span
-          className={`absolute top-3 left-3 rounded-full px-2.5 py-1 text-[11px] font-bold tracking-wide uppercase ${
+          className={`absolute top-3 left-3 rounded-full px-2.5 py-1 text-[12.5px] font-bold tracking-wide uppercase ${
             isAvailable
               ? "bg-white text-brand shadow-sm"
               : "bg-white text-warn shadow-sm"

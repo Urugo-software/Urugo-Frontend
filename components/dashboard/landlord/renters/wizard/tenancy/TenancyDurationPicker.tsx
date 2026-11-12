@@ -36,12 +36,12 @@ export function TenancyDurationPicker({
   onChangeCustomMonths,
 }: TenancyDurationPickerProps) {
   return (
-    <Field>
-      <div className="flex items-center justify-between mb-2">
-        <FieldLabel className="text-xs font-medium text-ink">
+    <Field className="space-y-2">
+      <div className="flex items-center justify-between mb-1">
+        <FieldLabel className="text-[12.5px] font-semibold text-ink">
           Tenancy Duration
         </FieldLabel>
-        <span className="text-[11px] text-faint">Standard or flexible terms</span>
+        <span className="text-[12.5px] font-medium text-faint">Standard or flexible terms</span>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
@@ -52,16 +52,16 @@ export function TenancyDurationPicker({
               key={opt.id}
               type="button"
               onClick={() => onChangeDuration(opt.id)}
-              className={`group relative flex flex-col items-center justify-center h-12 cursor-pointer border px-2 py-1 text-center transition-all ${
+              className={`group relative flex flex-col items-center justify-center h-13 cursor-pointer border px-2 py-1 text-center transition-all ${
                 isSelected
                   ? "border-ink bg-ink text-white shadow-xs"
                   : "border-line bg-white text-ink hover:border-neutral-400 hover:bg-surface/50"
               }`}
             >
-              <span className="text-xs font-medium">{opt.label}</span>
+              <span className="text-[12.5px] font-medium">{opt.label}</span>
               {opt.tag && (
                 <span
-                  className={`text-[10px] transition-colors ${
+                  className={`text-[12.5px] transition-colors ${
                     isSelected ? "text-neutral-300" : "text-faint group-hover:text-body"
                   }`}
                 >
@@ -87,18 +87,18 @@ export function TenancyDurationPicker({
                   e.target.value === "" ? "" : Number(e.target.value),
                 )
               }
-              className="h-10 rounded-none border-line bg-white px-3.5 pr-14 font-mono text-sm text-ink focus-visible:border-ink focus-visible:ring-1 focus-visible:ring-ink"
+              className="h-10 rounded-none border-line bg-white px-3.5 pr-14 font-mono text-[13px] text-ink focus-visible:border-ink focus-visible:ring-1 focus-visible:ring-ink"
             />
-            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-faint">
+            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[12.5px] text-faint">
               months
             </span>
           </div>
-          <span className="text-xs text-body">
+          <span className="text-[12.5px] text-body">
             Custom agreed duration for this lease
           </span>
         </div>
       )}
-      {error && <FieldError className="mt-1">{error}</FieldError>}
+      {error && <FieldError className="mt-1 text-[12.5px]">{error}</FieldError>}
     </Field>
   );
 }

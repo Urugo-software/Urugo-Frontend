@@ -36,11 +36,11 @@ export function TenancyPaymentSummaryCard({
       <div className="border-b border-line bg-surface/60 px-4 py-3.5 sm:px-5 flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <CreditCard className="size-4 text-ink" />
-          <h4 className="text-xs font-semibold text-ink uppercase tracking-wider">
+          <h4 className="text-[12.5px] font-semibold text-ink uppercase tracking-wider">
             Move-In Payment Breakdown
           </h4>
         </div>
-        <span className="inline-flex items-center border border-line bg-white px-2 py-0.5 text-[11px] font-medium text-body">
+        <span className="inline-flex items-center border border-line bg-white px-2 py-0.5 text-[12.5px] font-medium text-body">
           Preliminary Schedule
         </span>
       </div>
@@ -62,7 +62,7 @@ export function TenancyPaymentSummaryCard({
           </span>
         </div>
 
-        <div className="flex items-center justify-between text-xs border-b border-line/80 pb-3">
+        <div className="flex items-center justify-between text-[12.5px] border-b border-line/80 pb-3">
           <span className="text-body">
             Initial Advance Subtotal{" "}
             <span className="text-faint">
@@ -90,7 +90,7 @@ export function TenancyPaymentSummaryCard({
             <span className="block text-sm font-semibold text-ink">
               Total Initial Move-in Due
             </span>
-            <span className="text-[12px] text-body">
+            <span className="text-[12.5px] text-body">
               Advance rent + refundable security deposit
             </span>
           </div>
