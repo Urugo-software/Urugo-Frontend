@@ -6,20 +6,21 @@ import { useState } from "react";
 import { PropertyCardImageProps } from "@/types";
 
 function PropertyCardImage({
+  viewMode = "list",
   image,
   headline,
 
   availabilityStatus,
-}: PropertyCardImageProps) {
+}: PropertyCardImageProps & { viewMode?: "grid" | "list" }) {
   const [isLiked, setIsLiked] = useState(false);
 
   return (
-    <div className="relative w-full h-48 sm:w-52 sm:h-40 shrink-0 overflow-hidden rounded-xl bg-surface">
+    <div className={`relative w-full h-48 ${viewMode === "list" ? "sm:w-52 sm:h-40" : "sm:h-52"} shrink-0 overflow-hidden rounded-xl bg-surface`}>
       <Image
         fill
         src={image}
         alt={headline}
-        sizes="(max-width: 640px) 100vw, 210px"
+        sizes={viewMode === "grid" ? "(max-width: 767px) 100vw, (max-width: 1279px) 50vw, 33vw" : "(max-width: 640px) 100vw, 210px"}
         className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
       />
 

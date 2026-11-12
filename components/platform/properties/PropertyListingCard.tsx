@@ -21,17 +21,19 @@ function PropertyListingCard({
   isVerified,
   availabilityStatus = "Available",
   index = 0,
-}: PropertyListingCardProps) {
+  viewMode = "list",
+}: PropertyListingCardProps & { viewMode?: "grid" | "list" }) {
   return (
     <motion.article
       initial={{ opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, delay: index * 0.07, ease: "easeOut" }}
       whileHover={{ y: -3, transition: { duration: 0.2 } }}
-      className="group relative flex flex-col sm:flex-row gap-4 sm:gap-5 rounded-2xl border border-line/80 bg-white p-3.5 sm:p-4 transition-all duration-300 hover:border-brand/40 hover:shadow-xl hover:shadow-brand/5"
+      className={`group relative flex flex-col ${viewMode === "list" ? "sm:flex-row" : ""} gap-4 sm:gap-5 rounded-2xl border border-line/80 bg-white p-3.5 sm:p-4 transition-all duration-300 hover:border-brand/40 hover:shadow-xl hover:shadow-brand/5`}
     >
       {/* Property Image with Badges */}
       <PropertyCardImage
+        viewMode={viewMode}
         image={image}
         headline={headline}
         isVerified={isVerified}
@@ -42,6 +44,7 @@ function PropertyListingCard({
       <div className="min-w-0 flex-1 flex flex-col justify-between py-0.5">
         <PropertyCardHeader
           id={id}
+          viewMode={viewMode}
           headline={headline}
           ownerName={ownerName}
           location={location}
