@@ -77,7 +77,9 @@ function PropertyListing({ showFilter, onToggleFilter }: PropertyListingProps) {
                     width={20}
                     height={20}
                     unoptimized
-                    className="h-5 w-5 transition-all duration-200 group-hover:brightness-0 group-hover:[filter:brightness(0)]"
+                    className={`h-5 w-5 transition-all duration-200 group-hover:brightness-0 group-hover:[filter:brightness(0)] ${
+                      viewMode === mode ? "brightness-0 [filter:brightness(0)]" : ""
+                    }`}
                   />
                 </button>
               ))}
