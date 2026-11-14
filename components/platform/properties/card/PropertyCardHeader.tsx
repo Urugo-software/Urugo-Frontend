@@ -3,6 +3,7 @@ import { MapPin } from "lucide-react";
 import { PropertyCardHeaderProps } from "@/types";
 
 function PropertyCardHeader({
+  viewMode = "list",
   id,
   headline,
   ownerName,
@@ -10,10 +11,10 @@ function PropertyCardHeader({
   price,
   currency,
   period,
-}: PropertyCardHeaderProps) {
+}: PropertyCardHeaderProps & { viewMode?: "grid" | "list" }) {
   return (
     <div>
-      <div className="flex items-start justify-between gap-3">
+      <div className={`flex ${viewMode === "grid" ? "flex-col" : ""} items-start justify-between gap-3`}>
         <div className="min-w-0 flex-1">
           <Link href={`/properties/${id}`}>
             <h3 className="truncate text-base sm:text-[17px] font-bold text-ink tracking-tight capitalize transition-colors group-hover:text-brand">
@@ -32,7 +33,7 @@ function PropertyCardHeader({
         </div>
 
         {/* Price Badge */}
-        <div className="shrink-0 text-right">
+        <div className={`shrink-0 ${viewMode === "grid" ? "text-left" : "text-right"}`}>
           <div className="text-base sm:text-lg font-extrabold text-brand tracking-tight">
             {price}
           </div>
