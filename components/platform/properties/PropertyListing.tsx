@@ -3,6 +3,7 @@
 import { listed_properties } from "@/data/properties";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronDown, SlidersHorizontal } from "lucide-react";
+import Image from "next/image";
 import { useState } from "react";
 import PropertyFilter from "./PropertyFilter";
 import PropertyListingCard from "./PropertyListingCard";
@@ -16,6 +17,7 @@ import { PropertyListingProps } from "@/types";
 
 function PropertyListing({ showFilter, onToggleFilter }: PropertyListingProps) {
   const [currentPage, setCurrentPage] = useState(1);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
 
   const totalItems = listed_properties.length;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
@@ -46,6 +48,42 @@ function PropertyListing({ showFilter, onToggleFilter }: PropertyListingProps) {
         <div className="my-4 flex items-center justify-between gap-4 flex-wrap">
           <TotalAvailableProperties total={totalItems} />
 
+          <div className="flex items-center gap-3">
+            <div
+              role="group"
+              aria-label="Property display"
+              className="flex items-center gap-1 rounded-xl border border-line bg-white p-1"
+            >
+              {([
+                { mode: "grid", label: "Grid view", icon: "/assets/icons/grid-view.svg" },
+                { mode: "list", label: "List view", icon: "/assets/icons/list-view.svg" },
+              ] as const).map(({ mode, label, icon }) => (
+                <button
+                  key={mode}
+                  type="button"
+                  aria-label={label}
+                  aria-pressed={viewMode === mode}
+                  title={label}
+                  onClick={() => setViewMode(mode)}
+                  className={`group flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 ${
+                    viewMode === mode
+                      ? "bg-brand/10 text-brand"
+                      : "text-faint hover:bg-surface hover:text-brand"
+                  }`}
+                >
+                  <Image
+                    src={icon}
+                    alt={label}
+                    width={20}
+                    height={20}
+                    unoptimized
+                    className={`h-5 w-5 transition-all duration-200 group-hover:brightness-0 group-hover:[filter:brightness(0)] ${
+                      viewMode === mode ? "brightness-0 [filter:brightness(0)]" : ""
+                    }`}
+                  />
+                </button>
+              ))}
+            </div>
           {onToggleFilter && (
             <motion.button
               whileHover={{ scale: 1.02 }}
@@ -67,6 +105,7 @@ function PropertyListing({ showFilter, onToggleFilter }: PropertyListingProps) {
               />
             </motion.button>
           )}
+          </div>
         </div>
 
         {/* Mobile Dropdown Filter (Visible only on screens < xl) */}
@@ -94,12 +133,13 @@ function PropertyListing({ showFilter, onToggleFilter }: PropertyListingProps) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -12 }}
           transition={{ duration: 0.3 }}
-          className="mt-8 flex flex-col gap-4"
+          className={viewMode === "grid" ? "mt-8 grid grid-cols-1 gap-4 md:grid-cols-2" : "mt-8 flex flex-col gap-4"}
         >
           {paginatedProperties.map((prop, idx) => (
             <PropertyListingCard
               key={prop.id}
               index={idx}
+              viewMode={viewMode}
               id={prop.id}
               image={prop.image}
               headline={prop.headline}

@@ -12,9 +12,10 @@ const statusStyles: Record<string, string> = {
 
 interface PropertyCardProps {
   property: LandlordPropertyItem;
+  viewMode?: "grid" | "list";
 }
 
-export function PropertyCard({ property: prop }: PropertyCardProps) {
+export function PropertyCard({ property: prop, viewMode = "grid" }: PropertyCardProps) {
   const occupancyPct =
     prop.hasUnits &&
     typeof prop.occupiedUnits === "number" &&
@@ -24,16 +25,28 @@ export function PropertyCard({ property: prop }: PropertyCardProps) {
       : undefined;
 
   return (
-    <div className="border border-line bg-white shadow-2xs flex flex-col justify-between hover:border-brand/40 transition-colors rounded-none">
-      <div>
+    <div
+      className={`border border-line bg-white shadow-2xs flex ${
+        viewMode === "list"
+          ? "flex-col md:flex-row md:items-stretch"
+          : "flex-col justify-between"
+      } hover:border-brand/40 transition-colors rounded-none`}
+    >
+      <div className={viewMode === "list" ? "flex-1 flex flex-col sm:flex-row" : ""}>
         {/* Header Image / Badge Banner */}
-        <div className="relative h-44 bg-surface/80 border-b border-line overflow-hidden">
+        <div
+          className={`relative ${
+            viewMode === "list"
+              ? "h-48 sm:h-auto sm:w-64 shrink-0 border-b sm:border-b-0 sm:border-r"
+              : "h-44 border-b"
+          } bg-surface/80 border-line overflow-hidden`}
+        >
           {prop.image ? (
             <Image
               src={prop.image}
               alt={prop.name}
               fill
-              className=" object-cover"
+              className="object-cover"
             />
           ) : (
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent z-10" />
@@ -57,7 +70,7 @@ export function PropertyCard({ property: prop }: PropertyCardProps) {
         </div>
 
         {/* Content Body */}
-        <div className="p-5 space-y-4">
+        <div className={`p-5 space-y-4 ${viewMode === "list" ? "flex-1 flex flex-col justify-center" : ""}`}>
           <div className="flex items-start gap-2 text-[13px] text-body">
             <MapPin className="h-4 w-4 text-faint shrink-0 mt-0.5" />
             <span className="truncate">{prop.location}</span>
@@ -93,7 +106,13 @@ export function PropertyCard({ property: prop }: PropertyCardProps) {
       </div>
 
       {/* Action Footer */}
-      <div className="p-4 bg-surface/40 border-t border-line flex items-center justify-between gap-3">
+      <div
+        className={`p-4 bg-surface/40 border-t ${
+          viewMode === "list"
+            ? "md:border-t-0 md:border-l md:w-56 md:flex-col md:justify-center md:items-stretch"
+            : "flex items-center justify-between"
+        } border-line flex items-center justify-between gap-3`}
+      >
         {prop.hasUnits ? (
           <Link
             href={`/landlord/tenancies?property=${prop.id}`}

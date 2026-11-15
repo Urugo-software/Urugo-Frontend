@@ -6,12 +6,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown, Search, SlidersHorizontal } from "lucide-react";
+import Image from "next/image";
 
 interface PropertiesToolbarProps {
   searchTerm: string;
   onSearchChange: (value: string) => void;
   filterStatus: string;
   onFilterChange: (value: string) => void;
+  viewMode?: "grid" | "list";
+  onViewModeChange?: (mode: "grid" | "list") => void;
 }
 
 export function PropertiesToolbar({
@@ -19,6 +22,8 @@ export function PropertiesToolbar({
   onSearchChange,
   filterStatus,
   onFilterChange,
+  viewMode,
+  onViewModeChange,
 }: PropertiesToolbarProps) {
   return (
     <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 border border-line bg-white p-4  shadow-2xs">
@@ -69,6 +74,44 @@ export function PropertiesToolbar({
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+
+        {onViewModeChange && viewMode && (
+          <div
+            role="group"
+            aria-label="Property display"
+            className="flex items-center gap-1 border border-line bg-white p-1 ml-2"
+          >
+            {([
+              { mode: "grid", label: "Grid view", icon: "/assets/icons/grid-view.svg" },
+              { mode: "list", label: "List view", icon: "/assets/icons/list-view.svg" },
+            ] as const).map(({ mode, label, icon }) => (
+              <button
+                key={mode}
+                type="button"
+                aria-label={label}
+                aria-pressed={viewMode === mode}
+                title={label}
+                onClick={() => onViewModeChange(mode)}
+                className={`group flex h-9 w-9 cursor-pointer items-center justify-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand ${
+                  viewMode === mode
+                    ? "bg-brand/10 text-brand"
+                    : "text-faint hover:bg-surface hover:text-brand"
+                }`}
+              >
+                <Image
+                  src={icon}
+                  alt={label}
+                  width={18}
+                  height={18}
+                  unoptimized
+                  className={`h-4.5 w-4.5 transition-all duration-200 group-hover:brightness-0 group-hover:[filter:brightness(0)] ${
+                    viewMode === mode ? "brightness-0 [filter:brightness(0)]" : ""
+                  }`}
+                />
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

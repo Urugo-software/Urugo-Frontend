@@ -10,6 +10,7 @@ import { PropertyCard } from "./PropertyCard";
 export function LandlordPropertiesView() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState<string>("All Statuses");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   const filteredProperties = mockLandlordProperties.filter(
     (prop: LandlordPropertyItem) => {
@@ -31,11 +32,19 @@ export function LandlordPropertiesView() {
         onSearchChange={setSearchTerm}
         filterStatus={filterStatus}
         onFilterChange={setFilterStatus}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div
+        className={
+          viewMode === "grid"
+            ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            : "flex flex-col gap-4"
+        }
+      >
         {filteredProperties.map((prop) => (
-          <PropertyCard key={prop.id} property={prop} />
+          <PropertyCard key={prop.id} property={prop} viewMode={viewMode} />
         ))}
       </div>
     </div>
