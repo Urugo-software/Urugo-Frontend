@@ -10,7 +10,7 @@ function LeftSide() {
       initial={{ opacity: 0, x: -15 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.4 }}
-      className="sm:min-w-[300px] w-[300px] max-md:w-full h-full flex flex-col gap-2"
+      className="hidden md:flex sm:min-w-[300px] w-[300px] max-md:w-full h-full  flex-col gap-2"
     >
       {/* talk to an agent card */}
       <motion.div
