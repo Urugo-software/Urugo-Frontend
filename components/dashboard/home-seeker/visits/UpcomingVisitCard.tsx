@@ -37,7 +37,7 @@ export function UpcomingVisitCard({ visit, onCancel }: UpcomingVisitCardProps) {
               <div className="text-[13px] text-body">{visit.location}</div>
             </div>
             <span
-              className={`rounded-full px-3 py-1.5 text-[11.5px] font-bold ${
+              className={`rounded-full px-3 py-1.5 text-[12.5px] font-bold ${
                 isConfirmed
                   ? "bg-success-tint text-success"
                   : "bg-warn-tint text-warn"

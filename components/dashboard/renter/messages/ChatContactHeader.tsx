@@ -22,7 +22,7 @@ export function ChatContactHeader({
           <h3 className="text-sm font-bold text-ink flex items-center gap-2">
             {contact.name}
           </h3>
-          <p className="text-[11px] text-body">
+          <p className="text-[12.5px] text-body">
             {contact.property} · {contact.unit}
           </p>
         </div>

@@ -1,37 +1,30 @@
+import { ArrowRight } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 
-import { SignUpWizardField } from "./SignUpWizardField";
-
-const primaryButtonClassName =
-  "h-11 w-full rounded-xl bg-brand text-white transition-colors duration-300 hover:bg-brand/80 cursor-pointer";
+import { SignUpWizardField, type SignUpField, type SignUpValues } from "./SignUpWizardField";
 
 type FirstStepProps = {
-  fields: ReadonlyArray<{
-    id: string;
-    label: string;
-    type: string;
-    autoComplete?: string;
-    placeholder?: string;
-    required?: boolean;
-    description?: string;
-  }>;
-  onContinue: () => void;
+  fields: readonly SignUpField[];
+  values: SignUpValues;
+  onChange: (id: keyof SignUpValues, value: string) => void;
 };
 
-function FirstStep({ fields, onContinue }: FirstStepProps) {
+function FirstStep({ fields, values, onChange }: FirstStepProps) {
   return (
     <>
       {fields.map((field) => (
-        <SignUpWizardField key={field.id} {...field} />
+        <SignUpWizardField
+          key={field.id}
+          {...field}
+          value={values[field.id]}
+          onChange={(event) => onChange(field.id, event.target.value)}
+        />
       ))}
       <Field>
-        <Button
-          type="button"
-          onClick={onContinue}
-          className={primaryButtonClassName}
-        >
-          Continue
+        <Button type="submit" className="h-11 w-full cursor-pointer rounded-xl bg-brand text-white hover:bg-brand/80">
+          Continue <ArrowRight aria-hidden="true" />
         </Button>
       </Field>
     </>

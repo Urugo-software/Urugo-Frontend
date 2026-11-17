@@ -19,7 +19,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@/hooks/mutations/*": ["./hooks/mutate/*"]
     }
   },
   "include": [

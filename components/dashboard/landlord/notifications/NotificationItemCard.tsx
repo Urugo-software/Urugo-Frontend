@@ -41,7 +41,7 @@ export function NotificationItemCard({
 
         <div className="min-w-0 space-y-1.5">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[10.5px] font-semibold uppercase tracking-wide text-faint">
+            <span className="text-[12.5px] font-semibold uppercase tracking-wide text-faint">
               {label}
             </span>
             {notif.isUnread && (
@@ -54,7 +54,7 @@ export function NotificationItemCard({
           <p className="text-[13.5px] leading-relaxed text-body">
             {notif.message}
           </p>
-          <span className="block pt-1 text-[11px] text-faint">
+          <span className="block pt-1 text-[12.5px] text-faint">
             {notif.timestamp}
           </span>
         </div>

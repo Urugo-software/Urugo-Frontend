@@ -46,13 +46,13 @@ export function NextViewingCard() {
           <div className="truncate text-[12.5px] font-bold text-ink">
             {nextViewingData.propertyName}
           </div>
-          <div className="text-[11px] text-body">
+          <div className="text-[12.5px] text-body">
             {nextViewingData.time} · {nextViewingData.agent}
           </div>
         </div>
       </div>
 
-      <div className="rounded-[9px] bg-surface p-3.5 text-[12px] leading-relaxed text-body">
+      <div className="rounded-[9px] bg-surface p-3.5 text-[12.5px] leading-relaxed text-body">
         {nextViewingData.note}
       </div>
     </div>

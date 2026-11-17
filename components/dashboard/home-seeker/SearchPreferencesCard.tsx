@@ -18,7 +18,7 @@ export function SearchPreferencesCard({
         <button
           type="button"
           onClick={onOpenAIWidget}
-          className="text-[12px] font-semibold text-brand transition hover:underline cursor-pointer"
+          className="text-[12.5px] font-semibold text-brand transition hover:underline cursor-pointer"
         >
           Update →
         </button>

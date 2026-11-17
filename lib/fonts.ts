@@ -1,4 +1,4 @@
-import { IBM_Plex_Mono, Inter, Epilogue } from "next/font/google";
+import { IBM_Plex_Mono, Epilogue, Merriweather } from "next/font/google";
 
 export const ibm = IBM_Plex_Mono({
   variable: "--font-ibm",
@@ -9,4 +9,10 @@ export const ibm = IBM_Plex_Mono({
 export const epilogue = Epilogue({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+});
+
+export const merriweather = Merriweather({
+  variable: "--font-merriweather",
+  subsets: ["latin"],
+  weight: ["300", "400", "700"],
 });

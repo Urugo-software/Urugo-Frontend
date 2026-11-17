@@ -27,7 +27,7 @@ export function DropzoneDropArea({ getRootProps, getInputProps, isDragActive }: 
       <div className="mt-3 text-xs font-bold text-ink">
         {isDragActive ? "Drop receipt here..." : "Drag & drop payment receipt here"}
       </div>
-      <p className="mt-1 text-[11px] text-body">
+      <p className="mt-1 text-[12.5px] text-body">
         or click to browse files (PNG, JPG, WEBP, or PDF)
       </p>
     </div>

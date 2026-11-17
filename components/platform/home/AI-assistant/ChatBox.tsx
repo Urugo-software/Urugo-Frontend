@@ -21,19 +21,19 @@ function ChatBox() {
           <div className="rounded-2xl rounded-br-md bg-brand/90 px-4 py-2.5 text-[13.5px] leading-relaxed text-white shadow-md shadow-brand/20">
             I need a 2-bedroom near Remera, budget around 200k
           </div>
-          <span className="text-[10px] text-faint">just now</span>
+          <span className="text-[12.5px] text-faint">just now</span>
         </div>
 
         {/* AI reply */}
         <div className="self-start flex flex-col items-start gap-1 max-w-[82%]">
           <div className="rounded-2xl rounded-bl-md border border-line bg-white px-4 py-3 text-[13px] leading-relaxed text-ink shadow-sm">
-            <span className="mb-1.5 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-brand">
+            <span className="mb-1.5 flex items-center gap-1.5 text-[12.5px] font-bold uppercase tracking-widest text-brand">
               <span className="w-1 h-1 rounded-full bg-brand/90 inline-block" />
               8 matches found
             </span>
             Got it cheapest first, or best-rated landlords?
           </div>
-          <span className="text-[10px] text-faint">Urugo AI</span>
+          <span className="text-[12.5px] text-faint">Urugo AI</span>
         </div>
 
         {/* User message */}
@@ -41,20 +41,20 @@ function ChatBox() {
           <div className="rounded-2xl rounded-br-md bg-brand/90 px-4 py-2.5 text-[13.5px] leading-relaxed text-white shadow-md shadow-brand/20">
             {`Best rated, and I'll need parking`}
           </div>
-          <span className="text-[10px] text-faint">just now</span>
+          <span className="text-[12.5px] text-faint">just now</span>
         </div>
 
         {/* AI reply */}
         <div className="self-start flex flex-col items-start gap-1 max-w-[86%]">
           <div className="rounded-2xl rounded-bl-md border border-line bg-white px-4 py-3 text-[13px] leading-relaxed text-ink shadow-sm">
-            <span className="mb-1.5 flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-brand">
+            <span className="mb-1.5 flex items-center gap-1.5 text-[12.5px] font-bold uppercase tracking-widest text-brand">
               <span className="w-1 h-1 rounded-full bg-brand inline-block" />
               Filtered · 3 results
             </span>
             Here are 3 verified properties with parking. Want a move-in cost
             breakdown?
           </div>
-          <span className="text-[10px] text-faint">Urugo AI</span>
+          <span className="text-[12.5px] text-faint">Urugo AI</span>
         </div>
       </div>
 

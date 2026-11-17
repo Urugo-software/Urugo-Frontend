@@ -30,7 +30,7 @@ export function NotificationItemCard({ notif }: { notif: RenterNotification }) {
           <h4 className="text-[13.5px] font-bold text-ink truncate">
             {notif.title}
           </h4>
-          <span className="text-[11px] text-faint shrink-0">{notif.date}</span>
+          <span className="text-[12.5px] text-faint shrink-0">{notif.date}</span>
         </div>
         <p className="mt-1 text-[12.5px] lg:text-[13px] text-body leading-relaxed">
           {notif.message}
