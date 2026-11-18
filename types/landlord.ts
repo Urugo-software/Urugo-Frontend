@@ -159,7 +159,7 @@ export interface LandlordPropertyItem {
   expectedMonthlyRentRwf?: number;
   collectedRentThisMonthRwf?: number;
   hasUnits: boolean;
-  status: "Occupied" | "Partial" | "Vacant";
+  status?: "Occupied" | "Partial" | "Vacant";
   type: "APARTMENT" | "HOUSE" | "COMMERCIAL";
 }
 

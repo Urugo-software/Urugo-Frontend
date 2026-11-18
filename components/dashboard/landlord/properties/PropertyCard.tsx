@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { Layers, Pencil } from "lucide-react";
+import { FolderInput, Layers, Pencil } from "lucide-react";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import type { LandlordPropertyItem } from "@/types/landlord";
+import { formatCurrencyRwf } from "@/utils/agreement-utils";
 import { PortfolioCard, type ViewMode } from "./PortfolioCard";
 
 const statusStyles = {
@@ -17,6 +18,7 @@ export function PropertyCard({ property, viewMode = "grid", membershipActions }:
   membershipActions?: ReactNode;
 }) {
   const { id, name, type, location, image, status, hasUnits, occupiedUnits, totalUnits, monthlyRevenueRwf } = property;
+  const editHref = `/landlord/properties/${encodeURIComponent(id)}/edit`;
   const showOccupancy = hasUnits && occupiedUnits !== undefined && totalUnits !== undefined && totalUnits > 0;
   return (
     <PortfolioCard name={name} location={location} cover={image} mode={viewMode}
@@ -26,8 +28,12 @@ export function PropertyCard({ property, viewMode = "grid", membershipActions }:
         </Link>
       }
       menu={<>
-        <DropdownMenuItem render={<Link href={`/landlord/properties/${encodeURIComponent(id)}/edit`} />}><Pencil /> Edit Property</DropdownMenuItem>
-        {membershipActions}
+        <DropdownMenuItem render={<Link href={editHref} />}><Pencil /> Edit Property</DropdownMenuItem>
+        {membershipActions ?? (!property.groupId && (
+          <DropdownMenuItem render={<Link href={`${editHref}#property-group`} />}>
+            <FolderInput /> Add to Group
+          </DropdownMenuItem>
+        ))}
       </>}
     >
       <div className="flex flex-wrap items-center gap-2 text-xs font-semibold">
@@ -36,7 +42,9 @@ export function PropertyCard({ property, viewMode = "grid", membershipActions }:
       </div>
       <dl className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
         {showOccupancy && <div><dt className="text-body">Units occupied</dt><dd className="font-semibold">{occupiedUnits} / {totalUnits} ({Math.round(occupiedUnits / totalUnits * 100)}%)</dd></div>}
-        {monthlyRevenueRwf !== undefined && <div><dt className="text-body">Monthly revenue</dt><dd className="font-semibold">{monthlyRevenueRwf.toLocaleString("en-US")} RWF</dd></div>}
+        {monthlyRevenueRwf !== undefined && <div><dt className="text-body">Monthly revenue</dt><dd className="font-semibold">{formatCurrencyRwf(monthlyRevenueRwf)}</dd></div>}
+        {property.expectedMonthlyRentRwf !== undefined && <div><dt className="text-body">Expected monthly rent</dt><dd className="font-semibold">{formatCurrencyRwf(property.expectedMonthlyRentRwf)}</dd></div>}
+        {property.collectedRentThisMonthRwf !== undefined && <div><dt className="text-body">Rent collected this month</dt><dd className="font-semibold">{formatCurrencyRwf(property.collectedRentThisMonthRwf)}</dd></div>}
       </dl>
     </PortfolioCard>
   );
