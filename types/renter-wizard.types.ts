@@ -97,7 +97,7 @@ export function getDefaultPropertyRent(property: LandlordPropertyItem): number {
   if (property.id === "prop-101") return 150000;
   if (property.id === "prop-102") return 160000;
   if (property.id === "prop-103") return 250000;
-  if (property.totalUnits && property.totalUnits > 0) {
+  if (property.totalUnits && property.totalUnits > 0 && property.monthlyRevenueRwf !== undefined) {
     return Math.round(property.monthlyRevenueRwf / property.totalUnits);
   }
   return property.monthlyRevenueRwf || 150000;
