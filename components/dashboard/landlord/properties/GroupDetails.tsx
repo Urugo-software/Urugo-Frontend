@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowLeft, MapPin } from "lucide-react";
 import { useLandlordProperties } from "@/store/landlord-properties.store";
 import { partitionProperties } from "@/utils/property-groups";
+import { EagerCoverContext } from "./PropertyCover";
 import { PropertyList } from "./PropertyList";
 import { useMembershipControls } from "./membership/useMembershipControls";
 
@@ -23,7 +24,9 @@ export function GroupDetails({ id }: { id: string }) {
         {group.location && <p className="flex items-center gap-2 text-body"><MapPin className="size-4" />{group.location}</p>}
         {members.length ? <section aria-label="Properties in this group" className="space-y-3">
           <h2 className="text-lg font-semibold">{members.length} {members.length === 1 ? "property" : "properties"}</h2>
-          <PropertyList properties={members} renderMembershipActions={membership.propertyMenu} />
+          <EagerCoverContext.Provider value={members.find((property) => property.image)?.image}>
+            <PropertyList properties={members} renderMembershipActions={membership.propertyMenu} />
+          </EagerCoverContext.Provider>
         </section> : <p className="border border-dashed border-line bg-white p-6 text-body">This group has no properties yet.</p>}
       </> : <p className="text-body">This group could not be found in your current portfolio.</p>}
       {membership.dialog}

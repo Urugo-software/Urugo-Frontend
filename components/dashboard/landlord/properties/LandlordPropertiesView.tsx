@@ -10,6 +10,7 @@ import { GroupList } from "./GroupList";
 import type { ViewMode } from "./PortfolioCard";
 import { AddPropertyLink, PropertiesHeader } from "./PropertiesHeader";
 import { PropertiesToolbar } from "./PropertiesToolbar";
+import { EagerCoverContext } from "./PropertyCover";
 import { PropertyList } from "./PropertyList";
 import { useMembershipControls } from "./membership/useMembershipControls";
 
@@ -34,6 +35,8 @@ export function LandlordPropertiesView() {
       members.some((property) => matchesStatus(property.status) && (groupMatch || matchesText(property)));
   });
   if (groupOrder === "name") visibleGroups.sort((a, b) => a.name.localeCompare(b.name));
+  const eagerCover = visibleGroups.find((group) => group.coverImage)?.coverImage
+    ?? visibleProperties.find((property) => property.image)?.image;
 
   function clearFilters() {
     setSearchTerm("");
@@ -48,21 +51,23 @@ export function LandlordPropertiesView() {
           onFilterChange={setFilterStatus} viewMode={viewMode} onViewModeChange={setViewMode}
           groupOrder={groupOrder} onOrderChange={setGroupOrder} showGroupOrder={groups.length > 1} />
       )}
-      {visibleGroups.length > 0 && (
-        <section aria-labelledby="group-heading" className="space-y-3">
-          <h2 id="group-heading" className="text-xl font-semibold text-ink">Property Groups</h2>
-          <GroupList groups={visibleGroups} byGroup={byGroup} mode={viewMode}
-            renderMembershipActions={membership.groupMenu}
-            reorderable={groupOrder === "custom" && !query && filterStatus === "all"}
-            onAction={(group, kind) => setDialog({ kind, group })} />
-        </section>
-      )}
-      {visibleProperties.length > 0 && (
-        <section aria-label={groups.length ? "Ungrouped Properties" : "Properties"} className="space-y-3">
-          {groups.length > 0 && <h2 className="text-xl font-semibold text-ink">Ungrouped Properties</h2>}
-          <PropertyList properties={visibleProperties} mode={viewMode} renderMembershipActions={membership.propertyMenu} />
-        </section>
-      )}
+      <EagerCoverContext.Provider value={eagerCover}>
+        {visibleGroups.length > 0 && (
+          <section aria-labelledby="group-heading" className="space-y-3">
+            <h2 id="group-heading" className="text-xl font-semibold text-ink">Property Groups</h2>
+            <GroupList groups={visibleGroups} byGroup={byGroup} mode={viewMode}
+              renderMembershipActions={membership.groupMenu}
+              reorderable={groupOrder === "custom" && !query && filterStatus === "all"}
+              onAction={(group, kind) => setDialog({ kind, group })} />
+          </section>
+        )}
+        {visibleProperties.length > 0 && (
+          <section aria-label={groups.length ? "Ungrouped Properties" : "Properties"} className="space-y-3">
+            {groups.length > 0 && <h2 className="text-xl font-semibold text-ink">Ungrouped Properties</h2>}
+            <PropertyList properties={visibleProperties} mode={viewMode} renderMembershipActions={membership.propertyMenu} />
+          </section>
+        )}
+      </EagerCoverContext.Provider>
       {properties.length === 0 && (
         <div className="space-y-3 border border-dashed border-line bg-white px-4 py-10 text-center">
           <Building2 aria-hidden="true" className="mx-auto size-8 text-faint" />
