@@ -147,6 +147,12 @@ export interface PropertyGroup {
   coverImage?: string;
 }
 
+export interface PropertyMembershipChange {
+  propertyIds: readonly string[];
+  fromGroupId: PropertyGroup["id"] | null;
+  toGroupId: PropertyGroup["id"] | null;
+}
+
 export interface LandlordPropertyItem {
   id: string;
   name: string;

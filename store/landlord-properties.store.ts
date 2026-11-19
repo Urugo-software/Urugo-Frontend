@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { mockLandlordProperties, mockLandlordPropertyGroups } from "@/data/landlord-data";
-import type { LandlordPropertyItem, PropertyGroup } from "@/types/landlord";
+import type { LandlordPropertyItem, PropertyGroup, PropertyMembershipChange } from "@/types/landlord";
+import { applyMembershipChange } from "@/utils/property-groups";
 
 type GroupDetails = Omit<PropertyGroup, "id">;
 type PropertyDetails = Pick<LandlordPropertyItem, "name" | "location" | "type" | "hasUnits" | "expectedMonthlyRentRwf" | "groupId">;
@@ -12,6 +13,7 @@ interface LandlordPropertiesStore {
   updateGroup: (id: string, changes: Partial<GroupDetails>) => void;
   deleteGroup: (id: string) => void;
   moveGroup: (id: string, targetId: string) => void;
+  changeMembership: (change: PropertyMembershipChange) => { count: number } | { error: string };
   saveProperty: (details: PropertyDetails, id?: string) => LandlordPropertyItem | undefined;
 }
 
@@ -39,6 +41,13 @@ export const useLandlordProperties = create<LandlordPropertiesStore>((set, get) 
     groups.splice(to, 0, group);
     return { groups };
   }),
+  changeMembership: (change) => {
+    const { groups, properties } = get();
+    const result = applyMembershipChange(groups, properties, change);
+    if ("error" in result) return result;
+    set({ properties: result.properties });
+    return { count: result.count };
+  },
   saveProperty: (details, id) => {
     const { groups, properties } = get();
     if (details.groupId && !groups.some((group) => group.id === details.groupId)) return;

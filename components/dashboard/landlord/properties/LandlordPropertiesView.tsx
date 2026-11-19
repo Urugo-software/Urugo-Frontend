@@ -11,9 +11,11 @@ import type { ViewMode } from "./PortfolioCard";
 import { AddPropertyLink, PropertiesHeader } from "./PropertiesHeader";
 import { PropertiesToolbar } from "./PropertiesToolbar";
 import { PropertyList } from "./PropertyList";
+import { useMembershipControls } from "./membership/useMembershipControls";
 
 export function LandlordPropertiesView() {
   const { properties, groups } = useLandlordProperties();
+  const membership = useMembershipControls();
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
@@ -50,6 +52,7 @@ export function LandlordPropertiesView() {
         <section aria-labelledby="group-heading" className="space-y-3">
           <h2 id="group-heading" className="text-xl font-semibold text-ink">Property Groups</h2>
           <GroupList groups={visibleGroups} byGroup={byGroup} mode={viewMode}
+            renderMembershipActions={membership.groupMenu}
             reorderable={groupOrder === "custom" && !query && filterStatus === "all"}
             onAction={(group, kind) => setDialog({ kind, group })} />
         </section>
@@ -57,7 +60,7 @@ export function LandlordPropertiesView() {
       {visibleProperties.length > 0 && (
         <section aria-label={groups.length ? "Ungrouped Properties" : "Properties"} className="space-y-3">
           {groups.length > 0 && <h2 className="text-xl font-semibold text-ink">Ungrouped Properties</h2>}
-          <PropertyList properties={visibleProperties} mode={viewMode} />
+          <PropertyList properties={visibleProperties} mode={viewMode} renderMembershipActions={membership.propertyMenu} />
         </section>
       )}
       {properties.length === 0 && (
@@ -76,6 +79,7 @@ export function LandlordPropertiesView() {
       )}
       {dialog && <GroupDialog request={dialog} onClose={() => setDialog(null)} onCreated={clearFilters}
         returnFocusId={dialog.kind === "create" ? "create-property-group" : `group-menu-${dialog.group.id}`} />}
+      {membership.dialog}
     </div>
   );
 }

@@ -21,7 +21,7 @@ export function PropertyCard({ property, viewMode = "grid", membershipActions }:
   const editHref = `/landlord/properties/${encodeURIComponent(id)}/edit`;
   const showOccupancy = hasUnits && occupiedUnits !== undefined && totalUnits !== undefined && totalUnits > 0;
   return (
-    <PortfolioCard name={name} location={location} cover={image} mode={viewMode}
+    <PortfolioCard name={name} location={location} cover={image} mode={viewMode} menuId={`property-menu-${id}`}
       action={
         <Link href={`/landlord/tenancies?property=${encodeURIComponent(id)}`} className="inline-flex items-center gap-2 text-sm font-semibold text-brand hover:underline">
           <Layers className="size-4" /> {hasUnits ? "View Units & Leases" : "View Lease"}
