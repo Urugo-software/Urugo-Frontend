@@ -27,7 +27,7 @@ export function PortfolioCard({ name, location, cover, folder, mode, tools, acti
   return (
     <Card className={cn("h-full min-w-0 gap-0 rounded-none border border-line bg-white py-0 shadow-2xs ring-0", mode === "list" && "sm:flex-row")}>
       <div className={cn("relative", mode === "list" && "sm:w-48 sm:shrink-0")}>
-        <PropertyCover src={cover} folder={folder} className={mode === "list" ? "sm:h-full sm:min-h-36" : undefined} />
+        <PropertyCover key={cover} src={cover} folder={folder} className={mode === "list" ? "sm:h-full sm:min-h-36" : undefined} />
         {tools && <div className="absolute left-3 top-3">{tools}</div>}
       </div>
       <div className="flex min-w-0 flex-1 flex-col">
