@@ -106,7 +106,6 @@ function PropertyListing({ showFilter, onToggleFilter }: PropertyListingProps) {
           </div>
         </div>
 
-        {/* Mobile Dropdown Filter (Visible only on screens < xl) */}
         <AnimatePresence>
           {showFilter && (
             <motion.div
@@ -123,7 +122,6 @@ function PropertyListing({ showFilter, onToggleFilter }: PropertyListingProps) {
         </AnimatePresence>
       </div>
 
-      {/* list properties with page transition */}
       <AnimatePresence mode="wait">
         <motion.div
           key={currentPage}
@@ -156,7 +154,6 @@ function PropertyListing({ showFilter, onToggleFilter }: PropertyListingProps) {
         </motion.div>
       </AnimatePresence>
 
-      {/* Property Pagination Controls */}
       <PropertyPagination
         currentPage={currentPage}
         totalPages={totalPages}
