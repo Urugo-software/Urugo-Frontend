@@ -2,7 +2,7 @@ import Link from "next/link";
 import { FolderPlus, Plus } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 
-export function AddPropertyLink() {
+export function   AddPropertyLink() {
   return (
     <Link href="/landlord/properties/new" className={buttonVariants({ size: "lg" })}>
       <Plus aria-hidden="true" /> Add Property
