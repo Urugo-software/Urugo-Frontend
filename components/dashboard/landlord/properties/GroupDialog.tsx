@@ -8,15 +8,25 @@ import { useLandlordProperties } from "@/store/landlord-properties.store";
 import type { PropertyGroup } from "@/types/landlord";
 import type { GroupAction } from "./GroupCard";
 
-export type GroupDialogRequest = { kind: "create" } | { kind: GroupAction; group: PropertyGroup };
+export type GroupDialogRequest =
+  | { kind: "create" }
+  | { kind: GroupAction; group: PropertyGroup }
+  | { kind: "edit"; group: PropertyGroup };
 
 interface GroupFields {
   name: string;
   location: string;
+  description?: string;
   cover: FileList;
 }
 
-const titles = { create: "Create Group", rename: "Rename group", cover: "Change cover image", delete: "Delete group?" };
+const titles = {
+  create: "Create Group",
+  rename: "Rename group",
+  edit: "Edit Group",
+  cover: "Change cover image",
+  delete: "Delete group?",
+};
 
 function readCover(file: File) {
   return new Promise<string>((resolve, reject) => {
@@ -36,7 +46,11 @@ export function GroupDialog({ request, onClose, onCreated, returnFocusId }: {
   const { createGroup, updateGroup, deleteGroup } = useLandlordProperties();
   const group = request.kind === "create" ? undefined : request.group;
   const { register, handleSubmit, setError, formState: { errors, isSubmitting } } = useForm<GroupFields>({
-    defaultValues: { name: group?.name ?? "", location: group?.location ?? "" },
+    defaultValues: {
+      name: group?.name ?? "",
+      location: group?.location ?? "",
+      description: group?.description ?? "",
+    },
   });
   const { kind } = request;
   const Modal = kind === "delete" ? AlertDialog : Dialog;
@@ -52,10 +66,22 @@ export function GroupDialog({ request, onClose, onCreated, returnFocusId }: {
       }
     }
     if (request.kind === "create") {
-      const created = createGroup({ name: fields.name.trim(), location: fields.location.trim() || undefined, coverImage });
+      const created = createGroup({
+        name: fields.name.trim(),
+        location: fields.location.trim() || undefined,
+        description: fields.description?.trim() || undefined,
+        coverImage,
+      });
       onCreated?.(created);
     } else if (request.kind === "rename") {
       updateGroup(request.group.id, { name: fields.name.trim() });
+    } else if (request.kind === "edit") {
+      updateGroup(request.group.id, {
+        name: fields.name.trim(),
+        location: fields.location.trim() || undefined,
+        description: fields.description?.trim() || undefined,
+        ...(coverImage !== undefined ? { coverImage } : {}),
+      });
     } else if (request.kind === "cover") {
       updateGroup(request.group.id, { coverImage });
     }
@@ -85,19 +111,27 @@ export function GroupDialog({ request, onClose, onCreated, returnFocusId }: {
                   {...register("name", { validate: (value) => !!value.trim() || "Enter a group name." })} />
                 <FieldError id="group-name-error">{errors.name?.message}</FieldError>
               </Field>}
-              {kind === "create" && <Field>
-                <FieldLabel htmlFor="group-location">Location (optional)</FieldLabel>
-                <Input id="group-location" {...register("location")} />
-              </Field>}
+              {(kind === "create" || kind === "edit") && (
+                <>
+                  <Field>
+                    <FieldLabel htmlFor="group-location">Location (optional)</FieldLabel>
+                    <Input id="group-location" {...register("location")} />
+                  </Field>
+                  <Field>
+                    <FieldLabel htmlFor="group-description">Description (optional)</FieldLabel>
+                    <Input id="group-description" {...register("description")} />
+                  </Field>
+                </>
+              )}
               {kind !== "rename" && <Field>
-                <FieldLabel htmlFor="group-cover">Cover image{kind === "create" && " (optional)"}</FieldLabel>
+                <FieldLabel htmlFor="group-cover">Cover image{(kind === "create" || kind === "edit") && " (optional)"}</FieldLabel>
                 <Input id="group-cover" type="file" accept="image/*" aria-invalid={!!errors.cover} aria-describedby={errors.cover && "group-cover-error"}
                   {...register("cover", { validate: (files) => {
-                    if (!files?.length) return kind === "create" || "Choose a cover image.";
+                    if (!files?.length) return (kind === "create" || kind === "edit") || "Choose a cover image.";
                     return files[0].type.startsWith("image/") || "Choose an image file.";
                   } })} />
                 <FieldError id="group-cover-error">{errors.cover?.message}</FieldError>
-                {kind === "cover" && group?.coverImage && <Button type="button" variant="link" className="w-fit px-0" disabled={isSubmitting}
+                {(kind === "cover" || kind === "edit") && group?.coverImage && <Button type="button" variant="link" className="w-fit px-0" disabled={isSubmitting}
                   onClick={() => { updateGroup(group.id, { coverImage: undefined }); onClose(); }}>Remove current cover</Button>}
               </Field>}
               <div className="flex justify-end gap-2">

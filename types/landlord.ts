@@ -145,6 +145,7 @@ export interface PropertyGroup {
   name: string;
   location?: string;
   coverImage?: string;
+  description?: string;
 }
 
 export interface PropertyMembershipChange {

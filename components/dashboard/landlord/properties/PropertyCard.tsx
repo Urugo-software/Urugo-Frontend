@@ -12,23 +12,32 @@ const statusStyles = {
   Vacant: "bg-amber-50 text-amber-700",
 };
 
-export function PropertyCard({ property, viewMode = "grid", membershipActions }: {
+export function PropertyCard({ property, viewMode = "grid", membershipActions, action }: {
   property: LandlordPropertyItem;
   viewMode?: ViewMode;
   membershipActions?: ReactNode;
+  action?: ReactNode;
 }) {
   const { id, name, type, location, image, status, hasUnits, occupiedUnits, totalUnits, monthlyRevenueRwf } = property;
   const editHref = `/landlord/properties/${encodeURIComponent(id)}/edit`;
+  const tenancyHref = `/landlord/tenancies?property=${encodeURIComponent(id)}`;
   const showOccupancy = hasUnits && occupiedUnits !== undefined && totalUnits !== undefined && totalUnits > 0;
   return (
     <PortfolioCard name={name} location={location} cover={image} mode={viewMode} menuId={`property-menu-${id}`}
       action={
-        <Link href={`/landlord/tenancies?property=${encodeURIComponent(id)}`} className="inline-flex items-center gap-2 text-sm font-semibold text-brand hover:underline">
-          <Layers className="size-4" /> {hasUnits ? "View Units & Leases" : "View Lease"}
-        </Link>
+        action ?? (
+          <Link href={tenancyHref} className="inline-flex items-center gap-2 text-sm font-semibold text-brand hover:underline">
+            <Layers className="size-4" /> {hasUnits ? "View Units & Leases" : "View Lease"}
+          </Link>
+        )
       }
       menu={<>
         <DropdownMenuItem render={<Link href={editHref} />}><Pencil /> Edit Property</DropdownMenuItem>
+        {action && (
+          <DropdownMenuItem render={<Link href={tenancyHref} />}>
+            <Layers /> {hasUnits ? "View Units & Leases" : "View Lease"}
+          </DropdownMenuItem>
+        )}
         {membershipActions ?? (!property.groupId && (
           <DropdownMenuItem render={<Link href={`${editHref}#property-group`} />}>
             <FolderInput /> Add to Group

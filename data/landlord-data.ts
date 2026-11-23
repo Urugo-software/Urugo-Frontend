@@ -228,7 +228,13 @@ export const mockRentalIssues: RentalIssue[] = [
 ];
 
 export const mockLandlordPropertyGroups: PropertyGroup[] = [
-  { id: "group-gasabo", name: "Gasabo portfolio", location: "Gasabo, Kigali", coverImage: "/assets/home/prop1.jpg" },
+  {
+    id: "group-gasabo",
+    name: "Gasabo portfolio",
+    location: "Gasabo, Kigali",
+    coverImage: "/assets/home/prop1.jpg",
+    description: "Portfolio of residential apartment complexes and multi-family homes located across the Gasabo district.",
+  },
   { id: "group-kicukiro", name: "Kicukiro homes", location: "Kicukiro, Kigali" },
 ];
 
