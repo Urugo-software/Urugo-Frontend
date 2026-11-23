@@ -4,3 +4,4 @@ export default async function PropertyGroupPage({ params }: { params: Promise<{ 
   const { id } = await params;
   return <GroupDetails id={id} />;
 }
+
