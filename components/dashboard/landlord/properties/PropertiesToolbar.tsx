@@ -37,8 +37,12 @@ function FilterMenu({
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <Button variant="outline" aria-label={`${label}: ${options[value]}`}>
-            {options[value]}
+          <Button
+            variant="outline"
+            className={"rounded-none max-sm:flex-1 min-w-0"}
+            aria-label={`${label}: ${options[value]}`}
+          >
+            <span className="truncate"> {options[value]} </span>
             <ChevronDown />
           </Button>
         }
@@ -70,29 +74,31 @@ export function PropertiesToolbar(props: ToolbarProps) {
           className="pl-9 py-5 rounded-none"
         />
       </label>
-      <FilterMenu
-        label="Property status"
-        value={props.filterStatus}
-        onChange={props.onFilterChange}
-        options={{
-          all: "All statuses",
-          Occupied: "Fully occupied",
-          Partial: "Partially occupied",
-          Vacant: "Vacant",
-        }}
-      />
-      {props.showGroupOrder && (
+      <div className="flex gap-2 flex-1 md:justify-end">
         <FilterMenu
-          label="Group order"
-          value={props.groupOrder}
-          onChange={props.onOrderChange}
-          options={{ custom: "Group order", name: "Group name A–Z" }}
+          label="Property status"
+          value={props.filterStatus}
+          onChange={props.onFilterChange}
+          options={{
+            all: "All statuses",
+            Occupied: "Fully occupied",
+            Partial: "Partially occupied",
+            Vacant: "Vacant",
+          }}
         />
-      )}
+        {props.showGroupOrder && (
+          <FilterMenu
+            label="Group order"
+            value={props.groupOrder}
+            onChange={props.onOrderChange}
+            options={{ custom: "Group order", name: "Group name A–Z" }}
+          />
+        )}
+      </div>
       <div
         role="group"
         aria-label="Property display"
-        className="ml-auto flex gap-1"
+        className="hidden md:flex ml-auto  gap-1"
       >
         {(["grid", "list"] as const).map((mode) => {
           const Icon = mode === "grid" ? LayoutGrid : List;
