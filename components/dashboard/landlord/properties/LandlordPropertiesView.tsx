@@ -10,6 +10,7 @@ import { GroupList } from "./GroupList";
 import type { ViewMode } from "./PortfolioCard";
 import { AddPropertyLink, PropertiesHeader } from "./PropertiesHeader";
 import { PropertiesToolbar } from "./PropertiesToolbar";
+import { EagerCoverContext } from "./PropertyCover";
 import { PropertyList } from "./PropertyList";
 import { useMembershipControls } from "./membership/useMembershipControls";
 
