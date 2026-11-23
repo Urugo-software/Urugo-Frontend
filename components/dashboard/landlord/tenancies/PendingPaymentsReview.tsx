@@ -1,7 +1,6 @@
 "use client";
 
 import { TenancyPayment } from "@/types/landlord";
-import { Button } from "@/components/ui/button";
 import CustomButton from "@/components/shared/CustomButton";
 
 interface PendingPaymentsReviewProps {

@@ -37,7 +37,12 @@ function readCover(file: File) {
   });
 }
 
-export function GroupDialog({ request, onClose, onCreated, returnFocusId }: {
+export function GroupDialog({
+  request,
+  onClose,
+  onCreated,
+  returnFocusId,
+}: {
   request: GroupDialogRequest;
   onClose: () => void;
   onCreated?: (group: PropertyGroup) => void;
@@ -61,7 +66,9 @@ export function GroupDialog({ request, onClose, onCreated, returnFocusId }: {
       try {
         coverImage = await readCover(fields.cover[0]);
       } catch {
-        setError("cover", { message: "This image could not be read. Choose it again." });
+        setError("cover", {
+          message: "This image could not be read. Choose it again.",
+        });
         return;
       }
     }
@@ -89,7 +96,12 @@ export function GroupDialog({ request, onClose, onCreated, returnFocusId }: {
   }
 
   return (
-    <Modal.Root open onOpenChange={(open) => { if (!open && !isSubmitting) onClose(); }}>
+    <Modal.Root
+      open
+      onOpenChange={(open) => {
+        if (!open && !isSubmitting) onClose();
+      }}
+    >
       <Modal.Portal>
         <Modal.Backdrop className="fixed inset-0 z-50 bg-black/40" />
         <Modal.Popup finalFocus={() => (returnFocusId && document.getElementById(returnFocusId)) || document.getElementById("portfolio-title") || true}
@@ -135,8 +147,110 @@ export function GroupDialog({ request, onClose, onCreated, returnFocusId }: {
                   onClick={() => { updateGroup(group.id, { coverImage: undefined }); onClose(); }}>Remove current cover</Button>}
               </Field>}
               <div className="flex justify-end gap-2">
-                <Button type="button" variant="outline" onClick={onClose} disabled={isSubmitting}>Cancel</Button>
-                <Button type="submit" disabled={isSubmitting}>{kind === "create" ? "Create Group" : "Apply changes"}</Button>
+                <Button variant="outline" onClick={onClose}>
+                  Cancel
+                </Button>
+                <Button
+                  variant="destructive"
+                  onClick={() => {
+                    deleteGroup(request.group.id);
+                    onClose();
+                  }}
+                >
+                  Delete Group
+                </Button>
+              </div>
+            </>
+          ) : (
+            <form
+              noValidate
+              onSubmit={handleSubmit(submit)}
+              className="space-y-4"
+            >
+              {kind !== "cover" && (
+                <Field>
+                  <FieldLabel htmlFor="group-name">Group name</FieldLabel>
+                  <Input
+                    id="group-name"
+                    aria-required
+                    aria-invalid={!!errors.name}
+                    aria-describedby={errors.name && "group-name-error"}
+                    {...register("name", {
+                      validate: (value) =>
+                        !!value.trim() || "Enter a group name.",
+                    })}
+                  />
+                  <FieldError id="group-name-error">
+                    {errors.name?.message}
+                  </FieldError>
+                </Field>
+              )}
+              {kind === "create" && (
+                <Field>
+                  <FieldLabel htmlFor="group-location">
+                    Location (optional)
+                  </FieldLabel>
+                  <Input id="group-location" {...register("location")} />
+                </Field>
+              )}
+              {kind !== "rename" && (
+                <Field>
+                  <FieldLabel htmlFor="group-cover">
+                    Cover image{kind === "create" && " (optional)"}
+                  </FieldLabel>
+                  <Input
+                    id="group-cover"
+                    type="file"
+                    accept="image/*"
+                    aria-invalid={!!errors.cover}
+                    aria-describedby={errors.cover && "group-cover-error"}
+                    {...register("cover", {
+                      validate: (files) => {
+                        if (!files?.length)
+                          return kind === "create" || "Choose a cover image.";
+                        return (
+                          files[0].type.startsWith("image/") ||
+                          "Choose an image file."
+                        );
+                      },
+                    })}
+                  />
+                  <FieldError id="group-cover-error">
+                    {errors.cover?.message}
+                  </FieldError>
+                  {kind === "cover" && group?.coverImage && (
+                    <Button
+                      type="button"
+                      variant="link"
+                      className="w-fit px-0"
+                      disabled={isSubmitting}
+                      onClick={() => {
+                        updateGroup(group.id, { coverImage: undefined });
+                        onClose();
+                      }}
+                    >
+                      Remove current cover
+                    </Button>
+                  )}
+                </Field>
+              )}
+              <div className="flex justify-end gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="rounded-none "
+                  onClick={onClose}
+                  disabled={isSubmitting}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  className="rounded-none "
+                  disabled={isSubmitting}
+                >
+                  {kind === "create" ? "Create Group" : "Apply changes"}
+                </Button>
               </div>
             </form>
           )}
