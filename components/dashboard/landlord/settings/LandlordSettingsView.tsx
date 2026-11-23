@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CheckCircle2, Settings2 } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import { SETTINGS_TABS } from "./settings-config";
 
 export function LandlordSettingsView() {
