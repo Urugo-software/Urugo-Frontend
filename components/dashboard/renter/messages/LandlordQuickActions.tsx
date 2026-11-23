@@ -1,5 +1,5 @@
 import CustomButton from "@/components/shared/CustomButton";
-import { Phone, ShieldAlert } from "lucide-react";
+import { Phone } from "lucide-react";
 import Link from "next/link";
 
 export function LandlordQuickActions({ phone }: { phone: string }) {

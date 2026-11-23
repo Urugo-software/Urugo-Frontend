@@ -9,7 +9,6 @@ export default function PropertyHeader({
   title,
   address,
   status,
-  verified,
 }: PropertyHeaderProps) {
   return (
     <>

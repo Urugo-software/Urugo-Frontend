@@ -28,15 +28,10 @@ export function PropertyCard({
     image,
     status,
     hasUnits,
-    occupiedUnits,
-    totalUnits,
+    
     monthlyRevenueRwf,
   } = property;
-  const showOccupancy =
-    hasUnits &&
-    occupiedUnits !== undefined &&
-    totalUnits !== undefined &&
-    totalUnits > 0;
+  
   return (
     <PortfolioCard
       name={name}

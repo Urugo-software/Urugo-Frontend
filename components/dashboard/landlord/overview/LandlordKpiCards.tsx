@@ -1,4 +1,3 @@
-import { Users, Clock } from "lucide-react";
 import { LandlordMetric } from "@/types/landlord";
 
 interface LandlordKpiCardsProps {
