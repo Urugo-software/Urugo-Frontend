@@ -1,8 +1,7 @@
 interface PropertyHeaderProps {
   title: string;
   address: string;
-  status: "available" | "unavailable";
-  verified: boolean;
+  status: "available" | "unavailable"
 }
 
 export default function PropertyHeader({

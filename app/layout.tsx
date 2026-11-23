@@ -23,6 +23,7 @@ export default function RootLayout({
         "antialiased",
         ibm.variable,
         merriweather.variable,
+        epilogue.variable,
         epilogue.className,
         "font-sans",
       )}

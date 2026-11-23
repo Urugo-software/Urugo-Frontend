@@ -11,9 +11,11 @@ import type { ViewMode } from "./PortfolioCard";
 import { AddPropertyLink, PropertiesHeader } from "./PropertiesHeader";
 import { PropertiesToolbar } from "./PropertiesToolbar";
 import { PropertyList } from "./PropertyList";
+import { useMembershipControls } from "./membership/useMembershipControls";
 
 export function LandlordPropertiesView() {
   const { properties, groups } = useLandlordProperties();
+  const membership = useMembershipControls();
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
@@ -86,6 +88,7 @@ export function LandlordPropertiesView() {
               groupOrder === "custom" && !query && filterStatus === "all"
             }
             onAction={(group, kind) => setDialog({ kind, group })}
+            renderMembershipActions={membership.groupMenu}
           />
         </section>
       )}
@@ -99,7 +102,11 @@ export function LandlordPropertiesView() {
               Ungrouped Properties
             </h2>
           )}
-          <PropertyList properties={visibleProperties} mode={viewMode} />
+          <PropertyList
+            properties={visibleProperties}
+            mode={viewMode}
+            renderMembershipActions={membership.propertyMenu}
+          />
         </section>
       )}
       {properties.length === 0 && (
@@ -134,6 +141,7 @@ export function LandlordPropertiesView() {
           }
         />
       )}
+      {membership.dialog}
     </div>
   );
 }

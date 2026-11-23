@@ -37,7 +37,6 @@ export default function PropertyDetails({ property }: PropertyDetailsProps) {
             title={property.headline}
             address={property.location}
             status={property.availabilityStatus}
-            verified={property.isVerified}
           />
 
           <div className="h-px bg-line my-7" />
