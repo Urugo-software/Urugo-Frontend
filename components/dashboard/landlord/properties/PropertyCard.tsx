@@ -1,125 +1,51 @@
+import type { ReactNode } from "react";
 import Link from "next/link";
-import { MapPin, ChevronRight, Layers } from "lucide-react";
-import CustomButton from "@/components/shared/CustomButton";
-import { LandlordPropertyItem } from "@/types/landlord";
-import Image from "next/image";
+import { FolderInput, Layers, Pencil } from "lucide-react";
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import type { LandlordPropertyItem } from "@/types/landlord";
+import { formatCurrencyRwf } from "@/utils/agreement-utils";
+import { PortfolioCard, type ViewMode } from "./PortfolioCard";
 
-const statusStyles: Record<string, string> = {
-  Occupied: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  Partial: "bg-blue-50 text-blue-700 border-blue-200",
-  Vacant: "bg-amber-50 text-amber-700 border-amber-200",
+const statusStyles = {
+  Occupied: "bg-emerald-50 text-emerald-700",
+  Partial: "bg-blue-50 text-blue-700",
+  Vacant: "bg-amber-50 text-amber-700",
 };
 
-interface PropertyCardProps {
+export function PropertyCard({ property, viewMode = "grid", membershipActions }: {
   property: LandlordPropertyItem;
-}
-
-export function PropertyCard({ property: prop }: PropertyCardProps) {
-  const occupancyPct =
-    prop.hasUnits &&
-    typeof prop.occupiedUnits === "number" &&
-    typeof prop.totalUnits === "number" &&
-    prop.totalUnits > 0
-      ? Math.round((prop.occupiedUnits / prop.totalUnits) * 100)
-      : undefined;
-
+  viewMode?: ViewMode;
+  membershipActions?: ReactNode;
+}) {
+  const { id, name, type, location, image, status, hasUnits, occupiedUnits, totalUnits, monthlyRevenueRwf } = property;
+  const editHref = `/landlord/properties/${encodeURIComponent(id)}/edit`;
+  const showOccupancy = hasUnits && occupiedUnits !== undefined && totalUnits !== undefined && totalUnits > 0;
   return (
-    <div className="border border-line bg-white shadow-2xs flex flex-col justify-between hover:border-brand/40 transition-colors rounded-none">
-      <div>
-        {/* Header Image / Badge Banner */}
-        <div className="relative h-44 bg-surface/80 border-b border-line overflow-hidden">
-          {prop.image ? (
-            <Image
-              src={prop.image}
-              alt={prop.name}
-              fill
-              className=" object-cover"
-            />
-          ) : (
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent z-10" />
-          )}
-          <div className="absolute top-3 right-3 z-20">
-            <span
-              className={`px-3 py-1 text-xs font-semibold border ${statusStyles[prop.status] ?? statusStyles.Vacant}`}
-            >
-              {prop.status}
-            </span>
-          </div>
-
-          <div className="absolute bottom-3 left-4 right-4 z-20">
-            <span className="text-xs font-medium text-white/80 uppercase tracking-wider block">
-              {prop.type}
-            </span>
-            <h3 className="text-lg font-bold text-white truncate mt-0.5">
-              {prop.name}
-            </h3>
-          </div>
-        </div>
-
-        {/* Content Body */}
-        <div className="p-5 space-y-4">
-          <div className="flex items-start gap-2 text-[13px] text-body">
-            <MapPin className="h-4 w-4 text-faint shrink-0 mt-0.5" />
-            <span className="truncate">{prop.location}</span>
-          </div>
-
-          {/* Metrics Row */}
-          <div className="grid grid-cols-2 gap-3 pt-3 border-t border-line/60">
-            {typeof occupancyPct === "number" && (
-              <div className="p-3 border border-line/60 bg-surface/30">
-                <span className="text-[11px] font-semibold text-faint uppercase block">
-                  Units Occupied
-                </span>
-                <span className="text-base font-bold text-ink block mt-0.5">
-                  {prop.occupiedUnits} / {prop.totalUnits}{" "}
-                  <span className="text-xs font-normal text-faint">
-                    ({occupancyPct}%)
-                  </span>
-                </span>
-              </div>
-            )}
-
-            <div className="p-3 border border-line/60 bg-surface/30 ">
-              <span className="text-[11px] font-semibold text-faint uppercase block">
-                Monthly Revenue
-              </span>
-              <span className="text-base font-bold text-ink block mt-0.5">
-                {prop.monthlyRevenueRwf.toLocaleString()}{" "}
-                <span className="text-[11px] text-faint">RWF</span>
-              </span>
-            </div>
-          </div>
-        </div>
+    <PortfolioCard name={name} location={location} cover={image} mode={viewMode} menuId={`property-menu-${id}`}
+      action={
+        <Link href={`/landlord/tenancies?property=${encodeURIComponent(id)}`} className="inline-flex items-center gap-2 text-sm font-semibold text-brand hover:underline">
+          <Layers className="size-4" /> {hasUnits ? "View Units & Leases" : "View Lease"}
+        </Link>
+      }
+      menu={<>
+        <DropdownMenuItem render={<Link href={editHref} />}><Pencil /> Edit Property</DropdownMenuItem>
+        {membershipActions ?? (!property.groupId && (
+          <DropdownMenuItem render={<Link href={`${editHref}#property-group`} />}>
+            <FolderInput /> Add to Group
+          </DropdownMenuItem>
+        ))}
+      </>}
+    >
+      <div className="flex flex-wrap items-center gap-2 text-xs font-semibold">
+        <span className="tracking-wide text-body">{type}</span>
+        {status && <span className={`rounded px-2 py-1 ${statusStyles[status]}`}>{status}</span>}
       </div>
-
-      {/* Action Footer */}
-      <div className="p-4 bg-surface/40 border-t border-line flex items-center justify-between gap-3">
-        {prop.hasUnits ? (
-          <Link
-            href={`/landlord/tenancies?property=${prop.id}`}
-            className="text-[13.5px] font-semibold text-brand hover:underline flex items-center gap-1"
-          >
-            <Layers className="h-3.5 w-3.5" />
-            View Units & Leases
-          </Link>
-        ) : (
-          <Link
-            href={`/landlord/tenancies?property=${prop.id}`}
-            className="text-[13.5px] font-semibold text-brand hover:underline flex items-center gap-1"
-          >
-            <Layers className="h-3.5 w-3.5" />
-            View Lease
-          </Link>
-        )}
-
-        <CustomButton
-          title="Manage"
-          variant="light"
-          className="h-8 text-xs rounded-none"
-        >
-          <ChevronRight className="h-3.5 w-3.5" />
-        </CustomButton>
-      </div>
-    </div>
+      <dl className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
+        {showOccupancy && <div><dt className="text-body">Units occupied</dt><dd className="font-semibold">{occupiedUnits} / {totalUnits} ({Math.round(occupiedUnits / totalUnits * 100)}%)</dd></div>}
+        {monthlyRevenueRwf !== undefined && <div><dt className="text-body">Monthly revenue</dt><dd className="font-semibold">{formatCurrencyRwf(monthlyRevenueRwf)}</dd></div>}
+        {property.expectedMonthlyRentRwf !== undefined && <div><dt className="text-body">Expected monthly rent</dt><dd className="font-semibold">{formatCurrencyRwf(property.expectedMonthlyRentRwf)}</dd></div>}
+        {property.collectedRentThisMonthRwf !== undefined && <div><dt className="text-body">Rent collected this month</dt><dd className="font-semibold">{formatCurrencyRwf(property.collectedRentThisMonthRwf)}</dd></div>}
+      </dl>
+    </PortfolioCard>
   );
 }

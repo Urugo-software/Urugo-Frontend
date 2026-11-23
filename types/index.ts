@@ -2,9 +2,11 @@ import { LucideIcon } from "lucide-react";
 import { IconType } from "react-icons/lib";
 import { StaticImageData } from "next/image";
 
-// Central Export for Property Domain Types
+// Central Export for Domain Types
 export * from "./properties";
 export * from "./landlord";
+export * from "./agreement.types";
+export * from "./additional-agreements.types";
 
 
 // Home & Auth UI Types

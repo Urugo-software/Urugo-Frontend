@@ -81,7 +81,7 @@ export default function PaymentCostBreakdown({
                        : "text-faint"
                    }
                  
-                 bg-brand/8 rounded-full w-18 px-2 py-1  text-[12px] font-semibold flex justify-center items-center gap-1.5`}
+                 bg-brand/8 rounded-full w-20 px-2 py-1 text-[12.5px] font-semibold flex justify-center items-center gap-1.5`}
                 >
                   {cost.payer === "TENANT" ? "Tenant" : "Landlord"}
                 </span>

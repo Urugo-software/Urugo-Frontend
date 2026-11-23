@@ -175,17 +175,16 @@ export const userTypes: HomeUiRolesDataProps[] = [
 export const signUpSteps = [
   {
     key: 1,
-    label: "Account details",
+    label: "Your details",
     title: "Create your account",
-    description:
-      "Tell us who you are and where we can reach you to start the signup flow.",
+    description: "Tell us a little about yourself and how we can reach you.",
     fields: [
       {
         id: "fullName",
         label: "Full name",
         type: "text",
         autoComplete: "name",
-        placeholder: "Leon Sterlling",
+        placeholder: "Enter your full name",
         required: true,
       },
       {
@@ -193,34 +192,39 @@ export const signUpSteps = [
         label: "Email",
         type: "email",
         autoComplete: "email",
-        placeholder: "jane@example.com",
+        placeholder: "you@example.com",
         required: true,
       },
     ],
   },
   {
     key: 2,
-    label: "Security",
-    title: "Secure your account",
-    description:
-      "Choose a strong password and confirm it to finish creating your profile.",
+    label: "Identification",
+    title: "Your identification",
+    description: "Add your telephone number and national ID to complete your details.",
     fields: [
       {
-        id: "password",
-        label: "Password",
-        type: "password",
-        autoComplete: "new-password",
-        placeholder: "Create a strong password",
+        id: "telephone",
+        label: "Telephone number",
+        type: "tel",
+        autoComplete: "tel",
+        placeholder: "+250 7XX XXX XXX",
         required: true,
       },
+
       {
-        id: "confirmPassword",
-        label: "Confirm password",
-        type: "password",
-        autoComplete: "new-password",
-        placeholder: "Repeat your password",
+        id: "nationalId",
+        label: "National ID",
+        type: "text",
+        placeholder: "Enter your national ID number",
         required: true,
       },
     ],
+  },
+  {
+    key: 3,
+    label: "Photo",
+    title: "Add a photo",
+    description: "Personalize your profile with a photo. You can skip this step.",
   },
 ] as const;

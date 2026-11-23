@@ -66,7 +66,7 @@ export function PropertyMatches({ items = defaultProperties, onSelectProperty }:
                 className="object-cover transition-transform duration-300 group-hover:scale-105"
               />
               {prop.badge && (
-                <span className="absolute top-2.5 left-2.5 inline-flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-bold text-brand shadow-sm backdrop-blur">
+                <span className="absolute top-2.5 left-2.5 inline-flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-[12.5px] font-bold text-brand shadow-sm backdrop-blur">
                   <ShieldCheck className="size-3 text-brand" />
                   {prop.badge}
                 </span>
@@ -84,12 +84,12 @@ export function PropertyMatches({ items = defaultProperties, onSelectProperty }:
                     {prop.location}
                   </p>
                 )}
-                <p className="mt-1 text-[12px] text-body">{prop.details}</p>
+                <p className="mt-1 text-[12.5px] text-body">{prop.details}</p>
               </div>
 
               <div className="mt-3 flex items-center justify-between border-t border-line/60 pt-2.5">
                 <div>
-                  <span className="text-[10px] font-medium text-faint uppercase tracking-wider block">Monthly rent</span>
+                  <span className="text-[12.5px] font-medium text-faint uppercase tracking-wider block">Monthly rent</span>
                   <span className="font-mono text-sm font-bold text-brand">{prop.price}</span>
                 </div>
 

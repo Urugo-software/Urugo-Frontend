@@ -20,7 +20,7 @@ function BrandLogo() {
       >
         Rental Platform
       </p>
-      <p className="max-w-sm text-[12px] uppercase text-center mt-4 leading-7 text-gray-400 ">
+      <p className="max-w-sm text-[12.5px] uppercase text-center mt-4 leading-7 text-gray-400 ">
         {`  Rwanda's verified rental platform for landlords, renters, and guests.`}
       </p>
     </div>

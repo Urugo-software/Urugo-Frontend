@@ -66,7 +66,7 @@ function RoleCard({
           <li key={index} className="flex items-start gap-3">
             {/* Number pill */}
             <span
-              className={`flex-shrink-0 w-5 h-5 rounded-md flex items-center justify-center text-[10px] font-bold leading-none ${
+              className={`flex-shrink-0 min-w-6 h-6 px-1 rounded-md flex items-center justify-center text-[12.5px] font-bold leading-none ${
                 isHighlighted
                   ? "bg-white/20 text-white"
                   : "bg-brand-tint text-brand"
@@ -88,7 +88,7 @@ function RoleCard({
       {/* Onboarding badge */}
       <div className="mt-auto">
         <span
-          className={`text-[11px] font-semibold px-3 py-1.5 rounded-full inline-block ${
+          className={`text-[12.5px] font-semibold px-3 py-1.5 rounded-full inline-block ${
             isHighlighted
               ? "bg-white/15 text-white border border-white/25"
               : "bg-surface text-faint border border-line"

@@ -43,7 +43,7 @@ function PropertyCard({
           }`}
         />
 
-        <span className="absolute left-4 top-4 flex items-center gap-2 rounded-full bg-white px-3 py-1 text-[11px] font-semibold text-brand shadow-sm">
+        <span className="absolute left-4 top-4 flex items-center gap-2 rounded-full bg-white px-3 py-1 text-[12.5px] font-semibold text-brand shadow-sm">
           <span className="h-2 w-2 rounded-full bg-brand" />
           Available
         </span>
@@ -67,7 +67,7 @@ function PropertyCard({
             <div className="font-ibm text-[14px] font-bold text-brand">
               {monthlyRent}
             </div>
-            <div className="text-[11px] text-body">{currency}</div>
+            <div className="text-[12.5px] text-body">{currency}</div>
           </div>
         </div>
 

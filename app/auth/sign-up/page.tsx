@@ -2,7 +2,7 @@ import { SignUpWizard } from "@/components/platform/auth/sign-up/SignUpWizard";
 
 function page() {
   return (
-    <div className="flex w-full justify-center">
+    <div className="flex w-full items-center justify-center self-stretch">
       <SignUpWizard />
     </div>
   );

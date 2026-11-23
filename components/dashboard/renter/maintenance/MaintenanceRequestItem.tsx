@@ -27,7 +27,7 @@ export function MaintenanceRequestItem({ item }: { item: RenterMaintenance }) {
           </div>
         </div>
         <span
-          className={`rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${getStatusBadge(item.status)}`}
+          className={`rounded-full px-2.5 py-0.5 text-[12.5px] font-semibold ${getStatusBadge(item.status)}`}
         >
           {item.status}
         </span>
@@ -35,7 +35,7 @@ export function MaintenanceRequestItem({ item }: { item: RenterMaintenance }) {
       <p className=" my-3 text-[14px] text-body leading-relaxed">
         {item.description}
       </p>
-      <div className="flex items-center gap-1 text-[12px] text-faint">
+      <div className="flex items-center gap-1 text-[12.5px] text-faint">
         <Calendar className="size-3.5" />
         <span>Submitted: {item.createdAt}</span>
       </div>

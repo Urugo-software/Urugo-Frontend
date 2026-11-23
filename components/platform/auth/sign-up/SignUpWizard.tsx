@@ -1,59 +1,95 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { signUpSteps } from "@/data/home-data";
-import { FieldGroup } from "@/components/ui/field";
-import { cn } from "@/lib/utils";
+import { Camera, IdCard, UserRound } from "lucide-react";
+import Link from "next/link";
+import { useState, type FormEvent } from "react";
 
-import SignUpFormHeader from "./SignUpFormHeader";
+import { FieldDescription, FieldGroup } from "@/components/ui/field";
+import { signUpSteps } from "@/data/home-data";
+
 import FirstStep from "./FirstStep";
 import SecondStep from "./SecondStep";
+import SignUpFormHeader from "./SignUpFormHeader";
+import { SignUpProgress } from "./SignUpProgress";
+import type { SignUpValues } from "./SignUpWizardField";
+import ThirdStep from "./ThirdStep";
+
+const progressSteps = signUpSteps.map((step, index) => ({
+  ...step,
+  icon: [UserRound, IdCard, Camera][index],
+}));
 
 export function SignUpWizard() {
-  const formRef = useRef<HTMLFormElement>(null);
   const [currentStep, setCurrentStep] = useState(1);
+  const [values, setValues] = useState<SignUpValues>({
+    fullName: "",
+    email: "",
+    telephone: "",
+    nationalId: "",
+  });
+  const [photo, setPhoto] = useState<File | null>(null);
+  const [submissionNotice, setSubmissionNotice] = useState(false);
   const step = signUpSteps[currentStep - 1];
-  const fields = step.fields;
-  const next = () => formRef.current?.reportValidity() && setCurrentStep(2);
+
+  const updateValue = (id: keyof SignUpValues, value: string) => {
+    setValues((previous) => ({ ...previous, [id]: value }));
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (currentStep < signUpSteps.length) {
+      setCurrentStep((previous) => previous + 1);
+      return;
+    }
+    // Registration has no API contract in this project yet.
+    setSubmissionNotice(true);
+  };
+
+  const goBack = () => {
+    setSubmissionNotice(false);
+    setCurrentStep((previous) => previous - 1);
+  };
 
   return (
     <form
-      ref={formRef}
+      onSubmit={handleSubmit}
       className="w-full max-w-sm rounded-2xl border border-brand/10 bg-background p-5 shadow-sm sm:max-w-md sm:p-8"
     >
       <div className="flex flex-col gap-6 sm:gap-8">
-        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
-          {signUpSteps.map((item) => (
-            <div
-              key={item.key}
-              className={cn(
-                "flex items-center gap-2 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors sm:px-3 sm:text-xs",
-                currentStep >= item.key
-                  ? "border-brand/20 bg-brand-tint text-brand-deep"
-                  : "border-line bg-surface text-faint",
-              )}
-            >
-              <span className="flex size-5 items-center justify-center rounded-full bg-background text-[11px] font-semibold text-brand-deep shadow-sm">
-                {item.key}
-              </span>
-              <span className="hidden sm:inline">{item.label}</span>
-            </div>
-          ))}
-        </div>
-        {/* form header */}
+        <SignUpProgress currentStep={currentStep} steps={progressSteps} />
         <SignUpFormHeader
           stepLabel={`Step ${currentStep} of ${signUpSteps.length}`}
           title={step.title}
           description={step.description}
         />
         <FieldGroup className="gap-4 sm:gap-5">
-          {currentStep === 1 ? (
-            // input fields for the first step
-            <FirstStep fields={fields} onContinue={next} />
-          ) : (
-            // input fields for the second step
-            <SecondStep fields={fields} onBack={() => setCurrentStep(1)} />
+          {currentStep === 1 && (
+            <FirstStep fields={signUpSteps[0].fields} values={values} onChange={updateValue} />
           )}
+          {currentStep === 2 && (
+            <SecondStep fields={signUpSteps[1].fields} values={values} onChange={updateValue} onBack={goBack} />
+          )}
+          {currentStep === 3 && (
+            <ThirdStep
+              photo={photo}
+              onPhotoChange={(nextPhoto) => {
+                setPhoto(nextPhoto);
+                setSubmissionNotice(false);
+              }}
+              onBack={goBack}
+            />
+          )}
+          {submissionNotice && (
+            <p role="status" className="rounded-xl bg-brand-tint p-4 text-sm leading-6 text-brand-deep">
+              Account registration is not available yet. Your details have not been submitted.
+            </p>
+          )}
+          <FieldDescription className="text-center text-sm">
+            Already have an account?{" "}
+            <Link href="/auth/sign-in" className="font-medium text-brand underline-offset-4 hover:underline">
+              Sign in
+            </Link>
+          </FieldDescription>
         </FieldGroup>
       </div>
     </form>

@@ -140,16 +140,32 @@ export interface LandlordFAQItem {
   category: string;
 }
 
+export interface PropertyGroup {
+  id: string;
+  name: string;
+  location?: string;
+  coverImage?: string;
+}
+
+export interface PropertyMembershipChange {
+  propertyIds: readonly string[];
+  fromGroupId: PropertyGroup["id"] | null;
+  toGroupId: PropertyGroup["id"] | null;
+}
+
 export interface LandlordPropertyItem {
   id: string;
   name: string;
+  groupId?: PropertyGroup["id"] | null;
   location: string;
-  image: string;
+  image?: string;
   totalUnits?: number;
   occupiedUnits?: number;
-  monthlyRevenueRwf: number;
+  monthlyRevenueRwf?: number;
+  expectedMonthlyRentRwf?: number;
+  collectedRentThisMonthRwf?: number;
   hasUnits: boolean;
-  status: "Occupied" | "Partial" | "Vacant";
+  status?: "Occupied" | "Partial" | "Vacant";
   type: "APARTMENT" | "HOUSE" | "COMMERCIAL";
 }
 

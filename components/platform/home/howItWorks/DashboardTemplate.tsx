@@ -32,56 +32,56 @@ function DashboardTemplate() {
           <h4 className="text-sm font-bold mb-4">Dashboard</h4>
           <div className="grid grid-cols-2 gap-3">
             <div className="border border-line rounded-[10px] px-3.5 py-3">
-              <div className="text-[11px] text-faint mb-1.5">
+              <div className="text-[12.5px] text-faint mb-1.5">
                 Total Properties
               </div>
               <div className="text-xl font-extrabold font-mono">156</div>
-              <div className="text-[10.5px] text-success font-semibold mt-1">
+              <div className="text-[12.5px] text-success font-semibold mt-1">
                 ↑ 4.2% vs last month
               </div>
             </div>
             <div className="border border-line rounded-[10px] px-3.5 py-3">
-              <div className="text-[11px] text-faint mb-1.5">
+              <div className="text-[12.5px] text-faint mb-1.5">
                 Active Landlords
               </div>
               <div className="text-xl font-extrabold font-mono">45</div>
-              <div className="text-[10.5px] text-success font-semibold mt-1">
+              <div className="text-[12.5px] text-success font-semibold mt-1">
                 ↑ 2.1%
               </div>
             </div>
             <div className="border border-line rounded-[10px] px-3.5 py-3">
-              <div className="text-[11px] text-faint mb-1.5">
+              <div className="text-[12.5px] text-faint mb-1.5">
                 Monthly Revenue
               </div>
               <div className="text-xl font-extrabold font-mono">RF 8.5M</div>
-              <div className="text-[10.5px] text-success font-semibold mt-1">
+              <div className="text-[12.5px] text-success font-semibold mt-1">
                 ↑ 12.9%
               </div>
             </div>
             <div className="border border-line rounded-[10px] px-3.5 py-3">
-              <div className="text-[11px] text-faint mb-1.5">
+              <div className="text-[12.5px] text-faint mb-1.5">
                 Pending Verification
               </div>
               <div className="text-xl font-extrabold font-mono">7</div>
-              <div className="text-[10.5px] text-[#DC2626] font-semibold mt-1">
+              <div className="text-[12.5px] text-[#DC2626] font-semibold mt-1">
                 ↓ 1%
               </div>
             </div>
             <div className="border border-line rounded-[10px] px-3.5 py-3">
-              <div className="text-[11px] text-faint mb-1.5">
+              <div className="text-[12.5px] text-faint mb-1.5">
                 Blacklist Reports
               </div>
               <div className="text-xl font-extrabold font-mono">4</div>
-              <div className="text-[10.5px] text-success font-semibold mt-1">
+              <div className="text-[12.5px] text-success font-semibold mt-1">
                 ↑ 0.5%
               </div>
             </div>
             <div className="border border-line rounded-[10px] px-3.5 py-3">
-              <div className="text-[11px] text-faint mb-1.5">
+              <div className="text-[12.5px] text-faint mb-1.5">
                 Properties Available
               </div>
               <div className="text-xl font-extrabold font-mono">42</div>
-              <div className="text-[10.5px] text-[#DC2626] font-semibold mt-1">
+              <div className="text-[12.5px] text-[#DC2626] font-semibold mt-1">
                 ↓ 3.1%
               </div>
             </div>

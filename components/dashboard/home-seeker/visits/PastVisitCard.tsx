@@ -27,7 +27,7 @@ export function PastVisitCard({ visit }: { visit: VisitItem }) {
           </div>
           <div className="text-[13px] text-body">{visit.location}</div>
         </div>
-        <span className="rounded-full bg-surface px-3 py-1.5 text-[11.5px] font-bold text-faint self-start sm:self-center">
+        <span className="rounded-full bg-surface px-3 py-1.5 text-[12.5px] font-bold text-faint self-start sm:self-center">
           {visit.status}
         </span>
       </div>

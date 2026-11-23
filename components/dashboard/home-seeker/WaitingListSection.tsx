@@ -36,7 +36,7 @@ export function WaitingListSection() {
             <div className="text-[12.5px] text-faint">{item.details}</div>
           </div>
         </div>
-        <span className="rounded-full bg-brand-tint px-3 py-1.5 text-[12px] font-bold text-brand">
+        <span className="rounded-full bg-brand-tint px-3 py-1.5 text-[12.5px] font-bold text-brand">
           {item.queueBadge}
         </span>
       </div>
