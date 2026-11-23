@@ -10,10 +10,13 @@ import { GroupList } from "./GroupList";
 import type { ViewMode } from "./PortfolioCard";
 import { AddPropertyLink, PropertiesHeader } from "./PropertiesHeader";
 import { PropertiesToolbar } from "./PropertiesToolbar";
+import { EagerCoverContext } from "./PropertyCover";
 import { PropertyList } from "./PropertyList";
+import { useMembershipControls } from "./membership/useMembershipControls";
 
 export function LandlordPropertiesView() {
   const { properties, groups } = useLandlordProperties();
+  const membership = useMembershipControls();
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [viewMode, setViewMode] = useState<ViewMode>("grid");

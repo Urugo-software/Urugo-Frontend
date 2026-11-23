@@ -1,16 +1,17 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { GripVertical } from "lucide-react";
 import type { LandlordPropertyItem, PropertyGroup } from "@/types/landlord";
 import { useLandlordProperties } from "@/store/landlord-properties.store";
 import { GroupCard, type GroupAction } from "./GroupCard";
 import { cardLayout, type ViewMode } from "./PortfolioCard";
 
-export function GroupList({ groups, byGroup, mode, reorderable, onAction }: {
+export function GroupList({ groups, byGroup, mode, reorderable, onAction, renderMembershipActions }: {
   groups: PropertyGroup[];
   byGroup: Map<string, LandlordPropertyItem[]>;
   mode: ViewMode;
   reorderable: boolean;
   onAction: (group: PropertyGroup, action: GroupAction) => void;
+  renderMembershipActions: (group: PropertyGroup, memberCount: number) => ReactNode;
 }) {
   const moveGroup = useLandlordProperties((state) => state.moveGroup);
   const [dragged, setDragged] = useState<string | null>(null);
@@ -34,6 +35,7 @@ export function GroupList({ groups, byGroup, mode, reorderable, onAction }: {
     <>
       <ol className={cardLayout(mode)} aria-label="Property group order">
         {groups.map((group, index) => {
+          const members = byGroup.get(group.id) ?? [];
           const isTarget = canMove && dragged !== null && dragged !== group.id && target === group.id;
           return (
             <li key={group.id} className={`relative min-w-0 ${isTarget ? "outline-2 outline-offset-2 outline-brand-blue" : ""}`}
@@ -54,7 +56,8 @@ export function GroupList({ groups, byGroup, mode, reorderable, onAction }: {
               }}
             >
               {isTarget && <span className="pointer-events-none absolute right-2 top-2 z-10 rounded bg-brand-blue px-2 py-1 text-xs font-medium text-white">Drop {from < index ? "after" : "before"}</span>}
-              <GroupCard group={group} members={byGroup.get(group.id) ?? []} mode={mode}
+              <GroupCard group={group} members={members} mode={mode}
+                membershipActions={renderMembershipActions(group, members.length)}
                 first={index === 0} last={index === groups.length - 1}
                 onAction={(action) => onAction(group, action)}
                 onMove={canMove ? (offset) => move(group, index + offset) : undefined}

@@ -8,11 +8,12 @@ import { PortfolioCard, type ViewMode } from "./PortfolioCard";
 
 export type GroupAction = "rename" | "cover" | "delete";
 
-export function GroupCard({ group, members, mode, handle, onAction, onMove, first, last }: {
+export function GroupCard({ group, members, mode, handle, membershipActions, onAction, onMove, first, last }: {
   group: PropertyGroup;
   members: LandlordPropertyItem[];
   mode: ViewMode;
   handle?: ReactNode;
+  membershipActions: ReactNode;
   onAction: (action: GroupAction) => void;
   onMove?: (offset: number) => void;
   first: boolean;
@@ -27,6 +28,7 @@ export function GroupCard({ group, members, mode, handle, onAction, onMove, firs
         </Link>
       }
       menu={<>
+        {membershipActions}
         <DropdownMenuItem onClick={() => onAction("rename")}><Pencil /> Rename</DropdownMenuItem>
         <DropdownMenuItem onClick={() => onAction("cover")}><ImagePlus /> Change Cover Image</DropdownMenuItem>
         {onMove && <>
