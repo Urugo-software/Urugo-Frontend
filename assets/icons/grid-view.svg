@@ -2,6 +2,7 @@
      viewBox="0 0 24 24"
      fill="none">
   <rect x="2.5" y="2.5" width="8.5" height="8.5" rx="2"
+<<<<<<< HEAD
         fill="#4F46E5"/>
   <rect x="13" y="2.5" width="8.5" height="8.5" rx="2"
         fill="#4F46E5"/>
@@ -11,3 +12,13 @@
         fill="#4F46E5"/>
 </svg>
 
+=======
+        fill="#94A3B8"/>
+  <rect x="13" y="2.5" width="8.5" height="8.5" rx="2"
+        fill="#94A3B8"/>
+  <rect x="2.5" y="13" width="8.5" height="8.5" rx="2"
+        fill="#94A3B8"/>
+  <rect x="13" y="13" width="8.5" height="8.5" rx="2"
+        fill="#94A3B8"/>
+</svg>
+>>>>>>> 7d71a490f10e9d31dd212d1168899cd97ae1adb7

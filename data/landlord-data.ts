@@ -9,6 +9,7 @@ import {
   TenancyOverview,
   RemainingBalance,
   LandlordPropertyItem,
+  PropertyGroup,
   LandlordNotificationItem,
   LandlordFAQItem,
 } from "@/types/landlord";
@@ -226,9 +227,15 @@ export const mockRentalIssues: RentalIssue[] = [
   },
 ];
 
+export const mockLandlordPropertyGroups: PropertyGroup[] = [
+  { id: "group-gasabo", name: "Gasabo portfolio", location: "Gasabo, Kigali", coverImage: "/assets/home/prop1.jpg" },
+  { id: "group-kicukiro", name: "Kicukiro homes", location: "Kicukiro, Kigali" },
+];
+
 export const mockLandlordProperties: LandlordPropertyItem[] = [
   {
     id: "prop-101",
+    groupId: "group-gasabo",
     name: "Kimironko Heights",
     location: "Kimironko, Gasabo, Kigali",
     image: "/assets/home/prop1.jpg",
@@ -253,6 +260,7 @@ export const mockLandlordProperties: LandlordPropertyItem[] = [
   },
   {
     id: "prop-103",
+    groupId: "group-kicukiro",
     name: "Kabeza Modern Estate",
     location: "Kabeza, Kicukiro, Kigali",
     image: "/assets/home/prop3.jpg",
