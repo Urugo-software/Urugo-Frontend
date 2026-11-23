@@ -1,9 +1,10 @@
 import { create } from "zustand";
 import { mockLandlordProperties, mockLandlordPropertyGroups } from "@/data/landlord-data";
-import type { LandlordPropertyItem, PropertyGroup } from "@/types/landlord";
+import type { LandlordPropertyItem, PropertyGroup, PropertyMembershipChange } from "@/types/landlord";
+import { applyMembershipChange } from "@/utils/property-groups";
 
 type GroupDetails = Omit<PropertyGroup, "id">;
-type PropertyDetails = Pick<LandlordPropertyItem, "name" | "location">;
+type PropertyDetails = Pick<LandlordPropertyItem, "name" | "location" | "type" | "hasUnits" | "expectedMonthlyRentRwf" | "groupId">;
 
 interface LandlordPropertiesStore {
   groups: PropertyGroup[];
@@ -12,10 +13,11 @@ interface LandlordPropertiesStore {
   updateGroup: (id: string, changes: Partial<GroupDetails>) => void;
   deleteGroup: (id: string) => void;
   moveGroup: (id: string, targetId: string) => void;
-  updateProperty: (id: string, details: PropertyDetails) => void;
+  changeMembership: (change: PropertyMembershipChange) => { count: number } | { error: string };
+  saveProperty: (details: PropertyDetails, id?: string) => LandlordPropertyItem | undefined;
 }
 
-export const useLandlordProperties = create<LandlordPropertiesStore>((set) => ({
+export const useLandlordProperties = create<LandlordPropertiesStore>((set, get) => ({
   groups: mockLandlordPropertyGroups,
   properties: mockLandlordProperties,
   createGroup: (details) => {
@@ -39,7 +41,20 @@ export const useLandlordProperties = create<LandlordPropertiesStore>((set) => ({
     groups.splice(to, 0, group);
     return { groups };
   }),
-  updateProperty: (id, details) => set(({ properties }) => ({
-    properties: properties.map((property) => property.id === id ? { ...property, ...details } : property),
-  })),
+  changeMembership: (change) => {
+    const { groups, properties } = get();
+    const result = applyMembershipChange(groups, properties, change);
+    if ("error" in result) return result;
+    set({ properties: result.properties });
+    return { count: result.count };
+  },
+  saveProperty: (details, id) => {
+    const { groups, properties } = get();
+    if (details.groupId && !groups.some((group) => group.id === details.groupId)) return;
+    const existing = id ? properties.find((property) => property.id === id) : undefined;
+    if (id && !existing) return;
+    const property = { ...existing, ...details, groupId: details.groupId || null, id: id ?? crypto.randomUUID() };
+    set({ properties: existing ? properties.map((item) => item.id === id ? property : item) : [...properties, property] });
+    return property;
+  },
 }));

@@ -25,7 +25,7 @@ export function PropertiesHeader({ onCreateGroup }: { onCreateGroup?: () => void
 
       <div className="flex flex-wrap items-center gap-2">
         {onCreateGroup && (
-          <Button id="create-property-group" variant="outline" size="lg" onClick={onCreateGroup}>
+          <Button id="create-property-group" variant="outline" size="lg" className="cursor-pointer" onClick={onCreateGroup}>
             <FolderPlus aria-hidden="true" /> Create Group
           </Button>
         )}

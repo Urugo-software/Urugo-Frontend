@@ -93,11 +93,14 @@ export function calculateInitialPayments(
   };
 }
 
-export function getDefaultPropertyRent(property: LandlordPropertyItem): number {
+export function getDefaultPropertyRent(property: LandlordPropertyItem): number | "" {
+  if (property.monthlyRevenueRwf === undefined) {
+    return property.hasUnits ? "" : (property.expectedMonthlyRentRwf ?? "");
+  }
   if (property.id === "prop-101") return 150000;
   if (property.id === "prop-102") return 160000;
   if (property.id === "prop-103") return 250000;
-  if (property.totalUnits && property.totalUnits > 0 && property.monthlyRevenueRwf !== undefined) {
+  if (property.totalUnits && property.totalUnits > 0) {
     return Math.round(property.monthlyRevenueRwf / property.totalUnits);
   }
   return property.monthlyRevenueRwf || 150000;
