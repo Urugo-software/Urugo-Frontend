@@ -147,6 +147,12 @@ export interface PropertyGroup {
   coverImage?: string;
 }
 
+export interface PropertyMembershipChange {
+  propertyIds: readonly string[];
+  fromGroupId: PropertyGroup["id"] | null;
+  toGroupId: PropertyGroup["id"] | null;
+}
+
 export interface LandlordPropertyItem {
   id: string;
   name: string;
@@ -159,7 +165,7 @@ export interface LandlordPropertyItem {
   expectedMonthlyRentRwf?: number;
   collectedRentThisMonthRwf?: number;
   hasUnits: boolean;
-  status: "Occupied" | "Partial" | "Vacant";
+  status?: "Occupied" | "Partial" | "Vacant";
   type: "APARTMENT" | "HOUSE" | "COMMERCIAL";
 }
 

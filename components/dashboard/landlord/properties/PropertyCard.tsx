@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { Layers, Pencil } from "lucide-react";
+import { FolderInput, Layers, Pencil } from "lucide-react";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import type { LandlordPropertyItem } from "@/types/landlord";
+import { formatCurrencyRwf } from "@/utils/agreement-utils";
 import { PortfolioCard, type ViewMode } from "./PortfolioCard";
 
 const statusStyles = {
