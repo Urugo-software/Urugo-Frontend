@@ -1,35 +1,129 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowLeft, MapPin } from "lucide-react";
-import { useLandlordProperties } from "@/store/landlord-properties.store";
-import { partitionProperties } from "@/utils/property-groups";
+import { useGroupDetails } from "@/hooks/useGroupDetails";
+import {
+  GroupBreadcrumb,
+  GroupEmptyState,
+  GroupHeroHeader,
+  GroupSummaryStats,
+} from "./group-details";
+import { GroupDialog } from "./GroupDialog";
+import { PropertiesToolbar } from "./PropertiesToolbar";
 import { EagerCoverContext } from "./PropertyCover";
 import { PropertyList } from "./PropertyList";
 import { useMembershipControls } from "./membership/useMembershipControls";
 
 export function GroupDetails({ id }: { id: string }) {
-  const { groups, properties } = useLandlordProperties();
+  const {
+    group,
+    allMembers,
+    filteredMembers,
+    summary,
+    searchTerm,
+    setSearchTerm,
+    filterStatus,
+    setFilterStatus,
+    viewMode,
+    setViewMode,
+    hasActiveFilters,
+    clearFilters,
+    dialogRequest,
+    setDialogRequest,
+  } = useGroupDetails(id);
+
   const membership = useMembershipControls();
-  const group = groups.find((item) => item.id === id);
-  const members = partitionProperties(groups, properties).byGroup.get(id) ?? [];
+
+  if (!group) {
+    return (
+      <main className="min-h-0 flex-1 space-y-6 overflow-y-auto bg-surface/30 p-4 pb-16 sm:p-8 md:p-10">
+        <GroupBreadcrumb currentLabel="Group not found" />
+        <GroupEmptyState variant="not-found" />
+      </main>
+    );
+  }
+
   return (
-    <main className="min-h-0 flex-1 space-y-5 overflow-y-auto bg-surface/30 p-4 sm:p-8 md:p-10">
-      <Link href="/landlord/properties" className="inline-flex items-center gap-2 text-sm font-medium hover:underline"><ArrowLeft className="size-4" /> My Properties</Link>
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 id="membership-heading" tabIndex={-1} className="text-2xl font-bold text-ink">{group?.name ?? "Group unavailable"}</h1>
-        {group && membership.addButton(group)}
-      </div>
-      {group ? <>
-        {group.location && <p className="flex items-center gap-2 text-body"><MapPin className="size-4" />{group.location}</p>}
-        {members.length ? <section aria-label="Properties in this group" className="space-y-3">
-          <h2 className="text-lg font-semibold">{members.length} {members.length === 1 ? "property" : "properties"}</h2>
-          <EagerCoverContext.Provider value={members.find((property) => property.image)?.image}>
-            <PropertyList properties={members} renderMembershipActions={membership.propertyMenu} />
+    <main className="min-h-0 flex-1 space-y-6 overflow-y-auto bg-surface/30 p-4 pb-16 sm:p-8 md:p-10">
+      <GroupBreadcrumb currentLabel={group.name} />
+
+      <GroupHeroHeader
+        group={group}
+        propertyCount={allMembers.length}
+        addPropertiesAction={membership.addButton(group)}
+        onGroupAction={(kind) => setDialogRequest({ kind, group })}
+      />
+
+      <GroupSummaryStats
+        propertyCount={allMembers.length}
+        totalUnits={summary.totalUnits}
+        occupiedUnits={summary.occupiedUnits}
+        expectedRentRwf={summary.expected}
+        collectedRentRwf={summary.collected}
+      />
+
+      <section aria-labelledby="group-properties-heading" className="space-y-4">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-2.5">
+            <h2
+              id="group-properties-heading"
+              className="text-xl font-semibold text-ink"
+            >
+              Properties in this Group
+            </h2>
+            <span className="border border-line bg-white px-2 py-0.5 font-ibm text-xs font-semibold text-body">
+              {hasActiveFilters
+                ? `${filteredMembers.length} / ${allMembers.length}`
+                : allMembers.length}
+            </span>
+          </div>
+        </div>
+
+        {allMembers.length > 0 && (
+          <PropertiesToolbar
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            filterStatus={filterStatus}
+            onFilterChange={setFilterStatus}
+            viewMode={viewMode}
+            onViewModeChange={setViewMode}
+            groupOrder="custom"
+            onOrderChange={() => {}}
+            showGroupOrder={false}
+          />
+        )}
+
+        {allMembers.length === 0 ? (
+          <GroupEmptyState
+            variant="empty-group"
+            action={membership.addButton(group)}
+          />
+        ) : filteredMembers.length === 0 ? (
+          <GroupEmptyState
+            variant="no-matches"
+            onClearFilters={clearFilters}
+          />
+        ) : (
+          <EagerCoverContext.Provider
+            value={filteredMembers.find((property) => property.image)?.image}
+          >
+            <PropertyList
+              properties={filteredMembers}
+              mode={viewMode}
+              renderMembershipActions={membership.propertyMenu}
+            />
           </EagerCoverContext.Provider>
-        </section> : <p className="border border-dashed border-line bg-white p-6 text-body">This group has no properties yet.</p>}
-      </> : <p className="text-body">This group could not be found in your current portfolio.</p>}
+        )}
+      </section>
+
       {membership.dialog}
+
+      {dialogRequest && (
+        <GroupDialog
+          request={dialogRequest}
+          onClose={() => setDialogRequest(null)}
+          returnFocusId={`group-details-menu-${group.id}`}
+        />
+      )}
     </main>
   );
 }

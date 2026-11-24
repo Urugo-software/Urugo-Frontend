@@ -51,7 +51,7 @@ export function useMembershipControls() {
   function addButton(group: PropertyGroup) {
     const id = `add-properties-${group.id}`;
     return (
-      <Button id={id} variant="outline" className="cursor-pointer" onClick={() => open({ kind: "add", toGroupId: group.id, returnFocusId: id })}>
+      <Button id={id} variant="outline" className="cursor-pointer rounded-none" onClick={() => open({ kind: "add", toGroupId: group.id, returnFocusId: id })}>
         <FolderPlus /> {membershipLabels.add}
       </Button>
     );
