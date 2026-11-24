@@ -1,0 +1,1 @@
+export { PropertyTenanciesView } from "./PropertyTenanciesView";
