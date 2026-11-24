@@ -1,16 +1,22 @@
 import type { LandlordRenter, TenancyStatus } from "@/types/landlord";
 
-const paymentStyles: Record<LandlordRenter["paymentStatus"], string> = {
-  Paid: "border-emerald-200 bg-emerald-50 text-emerald-700",
-  Pending: "border-amber-200 bg-amber-50 text-amber-700",
-  Overdue: "border-rose-200 bg-rose-50 text-rose-700",
+const tenancyTextStyles: Record<TenancyStatus, string> = {
+  Active: "text-success",
+  Ending: "text-amber-700",
+  Closed: "text-faint",
 };
 
-const occupancyStyles = {
-  Occupied: "border-emerald-200 bg-emerald-50 text-emerald-700",
-  Partial: "border-blue-200 bg-brand-tint text-brand",
-  Vacant: "border-amber-200 bg-amber-50 text-amber-700",
-  Maintenance: "border-line bg-surface text-body",
+const paymentTextStyles: Record<LandlordRenter["paymentStatus"], string> = {
+  Paid: "text-success",
+  Pending: "text-warn",
+  Overdue: "text-red-700",
+};
+
+const occupancyTextStyles = {
+  Occupied: "text-success",
+  Partial: "text-brand-blue",
+  Vacant: "text-amber-700",
+  Maintenance: "text-body",
 };
 
 export function TenancyStatusBadge({
@@ -20,13 +26,8 @@ export function TenancyStatusBadge({
   status: TenancyStatus;
   label?: string;
 }) {
-  const tone =
-    status === "Active"
-      ? "border-blue-200 bg-brand-tint text-brand"
-      : "border-amber-200 bg-amber-50 text-amber-700";
-
   return (
-    <span className={`shrink-0 border px-2.5 py-0.5 text-[12.5px] font-semibold ${tone}`}>
+    <span className={`shrink-0 text-sm font-semibold ${tenancyTextStyles[status]}`}>
       {label ?? status}
     </span>
   );
@@ -40,9 +41,7 @@ export function PaymentStatusBadge({
   prefix?: string;
 }) {
   return (
-    <span
-      className={`shrink-0 border px-2.5 py-0.5 text-[12.5px] font-semibold ${paymentStyles[status]}`}
-    >
+    <span className={`shrink-0 text-sm font-semibold ${paymentTextStyles[status]}`}>
       {prefix ? `${prefix}: ${status}` : status}
     </span>
   );
@@ -51,12 +50,10 @@ export function PaymentStatusBadge({
 export function OccupancyBadge({
   status,
 }: {
-  status: keyof typeof occupancyStyles;
+  status: keyof typeof occupancyTextStyles;
 }) {
   return (
-    <span
-      className={`shrink-0 border px-2.5 py-0.5 text-[12.5px] font-semibold ${occupancyStyles[status]}`}
-    >
+    <span className={`shrink-0 text-sm font-semibold ${occupancyTextStyles[status]}`}>
       {status}
     </span>
   );
