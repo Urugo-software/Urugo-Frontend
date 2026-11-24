@@ -39,11 +39,12 @@ export function SinglePropertyLeaseCard({
     <article className="border border-line bg-white shadow-2xs">
       <div className="flex flex-col gap-5 p-5 sm:p-6 md:flex-row md:items-center md:justify-between">
         <div className="min-w-0 space-y-2">
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2.5">
             <TenancyStatusBadge
               status={renter.tenancyStatus}
               label={`${renter.tenancyStatus} Lease`}
             />
+            <span aria-hidden="true" className="text-line">|</span>
             <PaymentStatusBadge status={renter.paymentStatus} prefix="Rent" />
           </div>
 
