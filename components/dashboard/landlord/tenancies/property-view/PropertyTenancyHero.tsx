@@ -49,12 +49,13 @@ export function PropertyTenancyHero({
 
       <div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-start sm:justify-between sm:p-6">
         <div className="min-w-0 space-y-2">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 border border-line bg-surface px-2.5 py-0.5 text-[12.5px] font-semibold uppercase tracking-wider text-body">
+          <div className="flex flex-wrap items-center gap-2.5">
+            <span className="inline-flex items-center gap-1.5 text-[12.5px] font-semibold uppercase tracking-wider text-body">
               <Building2 aria-hidden="true" className="size-3.5 text-faint" />
               {property.type}
               {property.hasUnits && totalUnits > 0 ? ` · ${totalUnits} Units` : ""}
             </span>
+            <span aria-hidden="true" className="text-line">|</span>
             <OccupancyBadge status={occupancyStatus} />
           </div>
 
