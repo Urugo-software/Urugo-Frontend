@@ -11,6 +11,10 @@ import prop1 from "@/public/assets/home/pc1.jpg";
 import prop2 from "@/public/assets/home/pc2.jpg";
 import prop3 from "@/public/assets/home/pc3.jpg";
 
+import prop5 from "@/public/assets/home/im1.webp";
+import prop6 from "@/public/assets/home/im2.webp";
+import prop7 from "@/public/assets/home/im3.webp";
+import prop8 from "@/public/assets/home/im4.webp";
 
 const filterTabs = [
   { id: "rent", label: "Rent" },
@@ -18,19 +22,18 @@ const filterTabs = [
 ];
 
 const heroSlides = [
-
   {
     id: 2,
-    image: prop2,
+    image: prop5,
     title: "Spacious Contemporary Residence",
     location: "Nyarutarama, Kigali",
     price: "300,000 RWF / mo",
     tag: "Verified",
   },
-  
+
   {
     id: 4,
-    image: prop1,
+    image: prop6,
     title: "Cozy Minimalist Studio",
     location: "Kacyiru, Kigali",
     price: "100,000 RWF / mo",
@@ -38,7 +41,15 @@ const heroSlides = [
   },
   {
     id: 5,
-    image: prop3,
+    image: prop7,
+    title: "Furnished Executive 1BR Apartment",
+    location: "Kicukiro, Kigali",
+    price: "200,000 RWF / mo",
+    tag: "Furnished",
+  },
+  {
+    id: 6,
+    image: prop8,
     title: "Furnished Executive 1BR Apartment",
     location: "Kicukiro, Kigali",
     price: "200,000 RWF / mo",
@@ -118,16 +129,16 @@ function HeroSection() {
       <div className="relative z-20 max-w-xl mx-auto -mb-6 sm:-mb-7 px-4">
         <form
           onSubmit={handleSearch}
-          className="bg-white/95 backdrop-blur-md shadow-lg shadow-black/8 border border-line/90 rounded-full p-2 pl-5 sm:pl-6 flex items-center justify-between gap-3 transition-all focus-within:ring-2 focus-within:ring-brand/20 focus-within:border-brand"
+          className="bg-white/95 backdrop-blur-md shadow-lg shadow-black/8 border border-brand/15 rounded-full p-2 pl-5 sm:pl-6 flex items-center justify-between gap-3 transition-all focus-within:ring-2 focus-within:ring-brand/10 focus-within:border-brand"
         >
-          <div className="flex items-center gap-3 flex-1 min-w-0">
-            <Search className="w-4 h-4 text-faint shrink-0 hidden sm:block" />
+          <div className="flex  items-center gap-3 flex-1 min-w-0">
+            <Search className="w-4 h-4 md:h6 md:w-6 text-faint shrink-0 hidden sm:block" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search address, city, neighborhood, or agent..."
-              className="w-full text-sm text-ink placeholder:text-faint bg-transparent focus:outline-none"
+              className="w-full py-2 text-sm text-ink placeholder:text-faint bg-transparent focus:outline-none"
             />
           </div>
           <button
@@ -217,10 +228,11 @@ function HeroSection() {
               type="button"
               onClick={() => setCurrentSlide(idx)}
               aria-label={`Go to slide ${idx + 1}`}
-              className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${currentSlide === idx
-                ? "w-5 bg-white"
-                : "w-1.5 bg-white/50 hover:bg-white/80"
-                }`}
+              className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
+                currentSlide === idx
+                  ? "w-5 bg-white"
+                  : "w-1.5 bg-white/50 hover:bg-white/80"
+              }`}
             />
           ))}
         </div>
