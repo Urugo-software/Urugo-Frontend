@@ -74,6 +74,7 @@ export interface AttentionItem {
 
 export interface LandlordRenter {
   id: string;
+  propertyId?: string;
   name: string;
   avatar?: string;
   isIdentityVerified: boolean;
@@ -86,6 +87,21 @@ export interface LandlordRenter {
   phone: string;
 }
 
+export type PropertyUnitStatus = "Occupied" | "Vacant" | "Maintenance";
+
+export interface PropertyUnit {
+  id: string;
+  propertyId: string;
+  unitNumber: string;
+  floor?: string;
+  bedrooms?: number;
+  bathrooms?: number;
+  monthlyRentRwf: number;
+  status: PropertyUnitStatus;
+  renterId?: string | null;
+  images?: string[];
+}
+
 export interface TenancyPayment {
   id: string;
   amountRwf: number;
@@ -95,12 +111,6 @@ export interface TenancyPayment {
   paymentMethod?: string;
   rejectionReason?: string;
   paidAt?: string;
-}
-
-export interface FinalChargeCheck {
-  chargeType: "Water" | "Electricity" | "Other";
-  status: "Paid" | "Not Paid" | "Not Applicable";
-  remainingAmountRwf?: number;
 }
 
 export interface RentalIssue {

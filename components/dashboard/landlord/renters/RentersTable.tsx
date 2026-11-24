@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { LandlordRenter } from "@/types/landlord";
-import { Ellipsis } from "lucide-react";
 
 interface RentersTableProps {
   renters: LandlordRenter[];
@@ -19,15 +18,15 @@ export function RentersTable({ renters }: RentersTableProps) {
   }
 
   const statusStyle = {
-    Active: " text-success ",
-    Ending: " text-amber-700 ",
-    Closed: " text-faint ",
+    Active: "text-success",
+    Ending: "text-amber-700",
+    Closed: "text-faint",
   };
 
   const paymentStyle = {
-    Paid: " text-success",
+    Paid: "text-success",
     Pending: "text-warn",
-    Overdue: "text-red-700 ",
+    Overdue: "text-red-700",
   };
 
   return (
@@ -42,7 +41,6 @@ export function RentersTable({ renters }: RentersTableProps) {
               "Tenancy Status",
               "Monthly Rent",
               "Payment Status",
-              "Actions",
               "Tenancies",
             ].map((h) => (
               <th
@@ -61,9 +59,12 @@ export function RentersTable({ renters }: RentersTableProps) {
               className="hover:bg-surface/60 transition-colors duration-150"
             >
               <td className="px-5 py-4">
-                <ul className="text-sm font-semibold text-ink block">
+                <Link
+                  href={`/landlord/renters/${renter.id}`}
+                  className="text-sm font-semibold text-ink hover:underline block"
+                >
                   {renter.name}
-                </ul>
+                </Link>
               </td>
               <td className="px-5 py-4">
                 <span className="text-sm font-medium text-faint block mt-0.5">
@@ -80,7 +81,7 @@ export function RentersTable({ renters }: RentersTableProps) {
               </td>
               <td className="px-5 py-4">
                 <span
-                  className={`inline-flex items-center px-2.5 py-1 text-sm font-semibold ${statusStyle[renter.tenancyStatus]}`}
+                  className={`inline-flex items-center text-sm font-semibold ${statusStyle[renter.tenancyStatus]}`}
                 >
                   {renter.tenancyStatus}
                 </span>
@@ -92,25 +93,15 @@ export function RentersTable({ renters }: RentersTableProps) {
               </td>
               <td className="px-5 py-4">
                 <span
-                  className={`inline-flex items-center px-2.5 py-1 text-sm font-semibold ${paymentStyle[renter.paymentStatus]}`}
+                  className={`inline-flex items-center text-sm font-semibold ${paymentStyle[renter.paymentStatus]}`}
                 >
                   {renter.paymentStatus}
                 </span>
               </td>
               <td className="px-5 py-4">
-                <div className="text-center gap-4">
-                  <Link
-                    href={`/landlord/renters/${renter.id}`}
-                    className=" hover:text-ink text-gray-400 "
-                  >
-                    <Ellipsis size={20} />
-                  </Link>
-                </div>
-              </td>
-              <td className="px-5 py-4">
                 <Link
                   href={`/landlord/tenancies/${renter.id}`}
-                  className="text-sm  font-medium text-faint hover:text-ink hover:underline"
+                  className="text-sm font-medium text-faint hover:text-ink hover:underline"
                 >
                   Tenancy
                 </Link>
