@@ -6,13 +6,13 @@ export const navItems = [
   },
   {
     id: 1,
-    title: "Features",
-    href: "/features",
+    title: "Properties",
+    href: "/properties",
   },
   {
     id: 2,
-    title: "Properties",
-    href: "/properties",
+    title: "Features",
+    href: "/features",
   },
   {
     id: 3,
