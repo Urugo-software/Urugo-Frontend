@@ -1,79 +1,124 @@
+"use client";
+
 import Link from "next/link";
 import {
-  Bell,
-  DollarSign,
   AlertTriangle,
+  ArrowRight,
+  Bell,
+  Check,
+  DollarSign,
   FileText,
+  MailOpen,
   Settings2,
-  ChevronRight,
+  X,
 } from "lucide-react";
-import CustomButton from "@/components/shared/CustomButton";
-import { LandlordNotificationItem } from "@/types/landlord";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import type { LandlordNotificationItem } from "@/types/landlord";
 
-const CATEGORY_META: Record<string, { icon: typeof Bell; label: string }> = {
-  payment: { icon: DollarSign, label: "Payment" },
-  dispute: { icon: AlertTriangle, label: "Dispute" },
-  tenancy: { icon: FileText, label: "Tenancy" },
-  system: { icon: Settings2, label: "System" },
-};
+const CATEGORY_META = {
+  payment: { icon: DollarSign, label: "Payment", tone: "text-success" },
+  dispute: { icon: AlertTriangle, label: "Dispute", tone: "text-amber-700" },
+  tenancy: { icon: FileText, label: "Tenancy", tone: "text-brand-blue" },
+  system: { icon: Settings2, label: "System", tone: "text-faint" },
+} as const;
 
-function getCategoryMeta(category: string) {
-  return CATEGORY_META[category] ?? { icon: Bell, label: "Notice" };
+interface NotificationItemCardProps {
+  notif: LandlordNotificationItem;
+  onMarkRead: (id: string) => void;
+  onToggleRead: (id: string) => void;
+  onDismiss: (id: string) => void;
 }
 
 export function NotificationItemCard({
   notif,
-}: {
-  notif: LandlordNotificationItem;
-}) {
-  const { icon: Icon, label } = getCategoryMeta(notif.category);
+  onMarkRead,
+  onToggleRead,
+  onDismiss,
+}: NotificationItemCardProps) {
+  const meta = CATEGORY_META[notif.category] ?? {
+    icon: Bell,
+    label: "Notice",
+    tone: "text-faint",
+  };
+  const Icon = meta.icon;
 
   return (
-    <div
-      className={`group flex flex-col items-start justify-between gap-4 border bg-white p-5 transition-colors sm:flex-row ${
-        notif.isUnread ? "border-line border-l-2 border-l-brand" : "border-line"
-      }`}
+    <article
+      className={cn(
+        "flex flex-col justify-between gap-4 p-5 transition-colors sm:flex-row sm:items-start",
+        notif.isUnread
+          ? "border-l-2 border-l-brand-blue bg-brand-tint/30"
+          : "bg-white hover:bg-surface/40",
+      )}
     >
       <div className="flex min-w-0 flex-1 items-start gap-4">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-line bg-surface">
-          <Icon className="h-[18px] w-[18px] text-ink" strokeWidth={1.75} />
+        <div className="flex size-10 shrink-0 items-center justify-center border border-line bg-white">
+          <Icon className={cn("size-4", meta.tone)} />
         </div>
 
         <div className="min-w-0 space-y-1.5">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[12.5px] font-semibold uppercase tracking-wide text-faint">
-              {label}
-            </span>
+          <div className="flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-[13px]">
+            <span className={cn("font-semibold", meta.tone)}>{meta.label}</span>
+            <span aria-hidden="true" className="text-line">&middot;</span>
+            <span className="text-faint">{notif.timestamp}</span>
             {notif.isUnread && (
-              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand" />
+              <>
+                <span aria-hidden="true" className="text-line">&middot;</span>
+                <span className="font-semibold text-brand-blue">Unread</span>
+              </>
             )}
           </div>
-          <h3 className="text-[15px] font-bold leading-snug tracking-[0.2px] text-ink">
+
+          <h2 className="text-[15px] font-semibold leading-snug text-ink">
             {notif.title}
-          </h3>
-          <p className="text-[13.5px] leading-relaxed text-body">
-            {notif.message}
-          </p>
-          <span className="block pt-1 text-[12.5px] text-faint">
-            {notif.timestamp}
-          </span>
+          </h2>
+
+          <p className="text-sm leading-relaxed text-body">{notif.message}</p>
+
+          {notif.actionHref && (
+            <div className="pt-1">
+              <Link
+                href={notif.actionHref}
+                onClick={() => onMarkRead(notif.id)}
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand hover:underline"
+              >
+                <span>{notif.actionLabel || "View details"}</span>
+                <ArrowRight aria-hidden="true" className="size-4" />
+              </Link>
+            </div>
+          )}
         </div>
       </div>
 
-      {notif.actionHref && (
-        <Link
-          href={notif.actionHref}
-          className="shrink-0 self-end sm:self-center"
+      <div className="flex shrink-0 items-center gap-1 self-end sm:self-start">
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          title={notif.isUnread ? "Mark as read" : "Mark as unread"}
+          aria-label={notif.isUnread ? "Mark as read" : "Mark as unread"}
+          onClick={() => onToggleRead(notif.id)}
+          className="size-8 cursor-pointer rounded-none text-faint hover:text-ink"
         >
-          <CustomButton
-            title={notif.actionLabel || "View"}
-            variant="colored"
-            className="h-8 rounded-none text-xs font-semibold"
-          >
-            <ChevronRight className="h-3.5 w-3.5" />
-          </CustomButton>
-        </Link>
-      )}
-    </div>
+          {notif.isUnread ? (
+            <Check className="size-4" />
+          ) : (
+            <MailOpen className="size-4" />
+          )}
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          title="Dismiss notification"
+          aria-label="Dismiss notification"
+          onClick={() => onDismiss(notif.id)}
+          className="size-8 cursor-pointer rounded-none text-faint hover:text-ink"
+        >
+          <X className="size-4" />
+        </Button>
+      </div>
+    </article>
   );
 }

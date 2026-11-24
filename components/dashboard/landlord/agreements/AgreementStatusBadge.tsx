@@ -13,7 +13,6 @@ export function getStatusDotClass(status: AgreementStatus): string {
       return "bg-emerald-600";
     case "Awaiting Landlord Signature":
     case "Awaiting Renter Signature":
-      return "bg-amber-500";
     case "Changes Requested":
       return "bg-amber-500";
     case "Sent":
@@ -22,16 +21,37 @@ export function getStatusDotClass(status: AgreementStatus): string {
       return "bg-sky-500";
     case "Ready for Review":
       return "bg-blue-500";
-    case "Draft":
-      return "bg-neutral-400";
     case "Declined":
       return "bg-rose-500";
+    case "Draft":
     case "Expired":
     case "Superseded":
     case "Cancelled":
-      return "bg-neutral-400";
     default:
       return "bg-neutral-400";
+  }
+}
+
+export function getStatusTextClass(status: AgreementStatus): string {
+  switch (status) {
+    case "Signed":
+      return "text-success";
+    case "Awaiting Landlord Signature":
+    case "Awaiting Renter Signature":
+    case "Changes Requested":
+      return "text-amber-700";
+    case "Sent":
+    case "Viewed":
+    case "Ready for Review":
+      return "text-brand-blue";
+    case "Declined":
+      return "text-red-700";
+    case "Draft":
+    case "Expired":
+    case "Superseded":
+    case "Cancelled":
+    default:
+      return "text-faint";
   }
 }
 
@@ -66,24 +86,21 @@ export function getStatusLabel(status: AgreementStatus): string {
   }
 }
 
-/**
- * Clean, borderless status display with an optional subtle colored dot.
- * Adheres strictly to the minimal SpotDraft / DocuSign design direction:
- * No borders, no pill containers, no rectangular backgrounds.
- */
 export function AgreementStatusBadge({
   status,
   className = "",
   showDot = true,
 }: Props) {
   const dotClass = getStatusDotClass(status);
+  const textClass = getStatusTextClass(status);
   const label = getStatusLabel(status);
 
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-2 text-sm font-medium text-ink",
-        className
+        "inline-flex items-center gap-2 text-sm font-semibold",
+        showDot ? "text-ink" : textClass,
+        className,
       )}
     >
       {showDot && (

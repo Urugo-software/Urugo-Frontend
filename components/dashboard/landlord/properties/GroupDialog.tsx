@@ -6,6 +6,7 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useLandlordProperties } from "@/store/landlord-properties.store";
 import type { PropertyGroup } from "@/types/landlord";
+import { readImageFile } from "@/utils/image-file";
 import type { GroupAction } from "./GroupCard";
 
 export type GroupDialogRequest =
@@ -24,15 +25,6 @@ const titles = {
   cover: "Change cover image",
   delete: "Delete group?",
 };
-
-function readCover(file: File) {
-  return new Promise<string>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result as string);
-    reader.onerror = () => reject(reader.error);
-    reader.readAsDataURL(file);
-  });
-}
 
 export function GroupDialog({
   request,
@@ -62,7 +54,7 @@ export function GroupDialog({
     let coverImage: string | undefined;
     if (fields.cover?.[0]) {
       try {
-        coverImage = await readCover(fields.cover[0]);
+        coverImage = await readImageFile(fields.cover[0]);
       } catch {
         setError("cover", {
           message: "This image could not be read. Choose it again.",
@@ -100,7 +92,7 @@ export function GroupDialog({
             document.getElementById("portfolio-title") ||
             true
           }
-          className="fixed left-1/2 top-1/2 z-50 max-h-[90dvh] w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 space-y-5 overflow-y-auto rounded-xl border border-line bg-white p-5 shadow-lg"
+          className="fixed left-1/2 top-1/2 z-50 max-h-[90dvh] w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 space-y-5 overflow-y-auto rounded-none border border-line bg-white p-5 shadow-lg"
         >
           <Modal.Title className="text-xl font-semibold text-ink">
             {titles[kind]}
@@ -113,11 +105,12 @@ export function GroupDialog({
                 agreements and payments will be kept.
               </Modal.Description>
               <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={onClose}>
+                <Button variant="outline" className="rounded-none" onClick={onClose}>
                   Cancel
                 </Button>
                 <Button
                   variant="destructive"
+                  className="rounded-none"
                   onClick={() => {
                     deleteGroup(request.group.id);
                     onClose();
@@ -138,6 +131,7 @@ export function GroupDialog({
                   <FieldLabel htmlFor="group-name">Group name</FieldLabel>
                   <Input
                     id="group-name"
+                    className="rounded-none"
                     aria-required
                     aria-invalid={!!errors.name}
                     aria-describedby={errors.name && "group-name-error"}
@@ -156,7 +150,7 @@ export function GroupDialog({
                   <FieldLabel htmlFor="group-location">
                     Location (optional)
                   </FieldLabel>
-                  <Input id="group-location" {...register("location")} />
+                  <Input id="group-location" className="rounded-none" {...register("location")} />
                 </Field>
               )}
               {kind !== "rename" && (
@@ -168,6 +162,7 @@ export function GroupDialog({
                     id="group-cover"
                     type="file"
                     accept="image/*"
+                    className="rounded-none"
                     aria-invalid={!!errors.cover}
                     aria-describedby={errors.cover && "group-cover-error"}
                     {...register("cover", {
