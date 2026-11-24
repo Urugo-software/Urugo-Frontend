@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Building2, Plus, Search, SearchX } from "lucide-react";
+import type { ViewMode } from "@/components/dashboard/landlord/properties/PortfolioCard";
+import { ViewModeToggle } from "@/components/shared/ViewModeToggle";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { mockLandlordRenters } from "@/data/landlord-data";
@@ -35,6 +37,7 @@ export function PropertyTenanciesView({ propertyId }: { propertyId: string }) {
   const { properties, groups, units } = useLandlordProperties();
   const [unitFilter, setUnitFilter] = useState<UnitFilter>("all");
   const [searchTerm, setSearchTerm] = useState("");
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [unitModal, setUnitModal] = useState<{ open: boolean; unit?: PropertyUnit }>({
     open: false,
   });
@@ -166,22 +169,29 @@ export function PropertyTenanciesView({ propertyId }: { propertyId: string }) {
                 />
               </label>
 
-              <div
-                role="group"
-                aria-label="Filter units by status"
-                className="flex flex-wrap items-center gap-1.5"
-              >
-                {filterOptions.map(({ key, label }) => (
-                  <Button
-                    key={key}
-                    type="button"
-                    variant={unitFilter === key ? "default" : "outline"}
-                    onClick={() => setUnitFilter(key)}
-                    className="h-9 cursor-pointer rounded-none px-3 text-sm"
-                  >
-                    {label}
-                  </Button>
-                ))}
+              <div className="flex flex-wrap items-center gap-2">
+                <div
+                  role="group"
+                  aria-label="Filter units by status"
+                  className="flex flex-wrap items-center gap-1.5"
+                >
+                  {filterOptions.map(({ key, label }) => (
+                    <Button
+                      key={key}
+                      type="button"
+                      variant={unitFilter === key ? "default" : "outline"}
+                      onClick={() => setUnitFilter(key)}
+                      className="h-9 cursor-pointer rounded-none px-3 text-sm"
+                    >
+                      {label}
+                    </Button>
+                  ))}
+                </div>
+                <ViewModeToggle
+                  value={viewMode}
+                  onChange={setViewMode}
+                  label="Units layout"
+                />
               </div>
             </div>
           )}
@@ -222,13 +232,20 @@ export function PropertyTenanciesView({ propertyId }: { propertyId: string }) {
               }
             />
           ) : (
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <div
+              className={
+                viewMode === "grid"
+                  ? "grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"
+                  : "grid grid-cols-1 gap-4"
+              }
+            >
               {filteredDoors.map((door) => (
                 <PropertyUnitCard
                   key={door.unit.id}
                   door={door}
                   propertyId={property.id}
                   onManageUnit={(unit) => setUnitModal({ open: true, unit })}
+                  viewMode={viewMode}
                 />
               ))}
             </div>
