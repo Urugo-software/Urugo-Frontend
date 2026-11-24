@@ -124,6 +124,7 @@ export const mockLandlordRenters: LandlordRenter[] = [
     id: "r-101",
     propertyId: "prop-101",
     name: "Jean Claude",
+    avatar: "/assets/people/GR.jpg",
     isIdentityVerified: true,
     propertyName: "Kimironko Heights",
     unitNumber: "A-03",
@@ -510,7 +511,7 @@ export const mockLandlordNotifications: LandlordNotificationItem[] = [
     timestamp: "2 hours ago",
     category: "dispute",
     isUnread: true,
-    actionHref: "/landlord/blacklist-check",
+    actionHref: "/landlord/renter-history",
     actionLabel: "View Dispute Details",
   },
   {
