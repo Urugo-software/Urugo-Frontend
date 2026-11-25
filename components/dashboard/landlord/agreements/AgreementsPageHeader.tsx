@@ -1,13 +1,12 @@
-import Link from "next/link";
+"use client";
+
 import { Plus } from "lucide-react";
 
 interface Props {
-  newAgreementHref?: string;
+  onNewAgreement: () => void;
 }
 
-export function AgreementsPageHeader({
-  newAgreementHref = "/landlord/agreements/agr-005/edit",
-}: Props) {
+export function AgreementsPageHeader({ onNewAgreement }: Props) {
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div>
@@ -19,13 +18,14 @@ export function AgreementsPageHeader({
         </p>
       </div>
 
-      <Link
-        href={newAgreementHref}
+      <button
+        type="button"
+        onClick={onNewAgreement}
         className="hidden h-10 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-none bg-ink px-4 text-sm font-semibold text-white transition-colors hover:bg-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink md:inline-flex"
       >
         <Plus className="size-4" />
         <span>New Agreement</span>
-      </Link>
+      </button>
     </div>
   );
 }
