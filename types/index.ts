@@ -110,6 +110,7 @@ export interface NavItemProps {
 }
 
 export interface PropertyCardImageProps {
+  propertyId?: string;
   image: string | StaticImageData;
   headline: string;
   isVerified: boolean;

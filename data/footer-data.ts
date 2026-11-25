@@ -22,10 +22,10 @@ export interface FooterContactInfo {
 export const productColumn: FooterColumn = {
   title: "Product",
   links: [
-    { title: "Features", href: "/features" },
     { title: "Properties", href: "/properties" },
+    { title: "Features", href: "/features" },
     { title: "How it works", href: "/how-it-works" },
-    { title: "Pricing", href: "/pricing" },
+    { title: "Sign in", href: "/auth/sign-in" },
   ],
 };
 

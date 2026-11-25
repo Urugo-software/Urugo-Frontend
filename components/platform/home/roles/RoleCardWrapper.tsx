@@ -12,7 +12,7 @@ function RoleCardWrapper() {
           benefits={userType.features}
           addedBy={userType.onboarding}
           Icon={userType.Icon}
-          isHighlighted={userType.title.toLocaleLowerCase() === "guests"}
+          isHighlighted={userType.title.toLowerCase() === "home seekers"}
         />
       ))}
     </div>

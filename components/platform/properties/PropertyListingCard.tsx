@@ -33,6 +33,7 @@ function PropertyListingCard({
     >
       {/* Property Image with Badges */}
       <PropertyCardImage
+        propertyId={id}
         viewMode={viewMode}
         image={image}
         headline={headline}

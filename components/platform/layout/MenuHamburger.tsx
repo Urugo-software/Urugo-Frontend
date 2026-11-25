@@ -1,4 +1,4 @@
-import { Menu } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 function MenuHamburger({
   mobileMenuOpen,
@@ -9,10 +9,19 @@ function MenuHamburger({
 }) {
   return (
     <button
-      className="md:hidden hover:bg-gray-100 p-2 rounded-md transition-all duration-300 cursor-pointer"
+      type="button"
+      data-mobile-menu-toggle="true"
+      aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+      aria-expanded={mobileMenuOpen}
+      aria-controls="public-mobile-menu"
+      className="inline-flex size-10 cursor-pointer items-center justify-center rounded-full text-ink transition-colors hover:bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand md:hidden"
       onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
     >
-      <Menu />
+      {mobileMenuOpen ? (
+        <X aria-hidden="true" className="size-5" />
+      ) : (
+        <Menu aria-hidden="true" className="size-5" />
+      )}
     </button>
   );
 }

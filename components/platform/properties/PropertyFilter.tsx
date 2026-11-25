@@ -1,104 +1,154 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { motion } from "framer-motion";
+import { useState, type ReactNode } from "react";
 import { SlidersHorizontal, X } from "lucide-react";
-import { PropertyFilterProps } from "@/types";
 import { propertyLocations } from "@/data/properties";
-
 import Dropdown from "@/components/shared/Dropdown";
+import {
+  DEFAULT_PUBLIC_FILTERS,
+  type PublicPropertyFilters,
+} from "@/utils/public-properties";
 import PriceRangeFilter from "./PriceRangeFilter";
 import FilterPills from "./FilterPills";
 import FilterActions from "./FilterActions";
 
-type FilterSectionProps = {
+const BEDROOM_OPTIONS = ["Any", "Studio", "1", "2", "3+"] as const;
+const AMENITY_OPTIONS = ["WiFi", "Parking", "Water", "Security"] as const;
+
+interface PropertyFilterProps {
+  filters: PublicPropertyFilters;
+  onApply: (next: PublicPropertyFilters) => void;
+  onReset: () => void;
+  isMobile?: boolean;
+  onClose?: () => void;
+}
+
+function FilterSection({
+  title,
+  children,
+}: {
   title: string;
   children: ReactNode;
-  htmlFor?: string;
-};
-
-function FilterSection({ title, children, htmlFor }: FilterSectionProps) {
+}) {
   return (
     <div className="mb-5">
-      <label
-        htmlFor={htmlFor}
-        className="mb-2 block text-[13px] md:text-sm text-ink tracking-wide font-bold"
-      >
+      <div className="mb-2 block text-[13px] font-bold tracking-wide text-ink md:text-sm">
         {title}
-      </label>
+      </div>
       {children}
     </div>
   );
 }
 
-function PropertyFilter({ isMobile, onClose }: PropertyFilterProps) {
+function PropertyFilter({
+  filters,
+  onApply,
+  onReset,
+  isMobile = false,
+  onClose,
+}: PropertyFilterProps) {
+  const [draft, setDraft] = useState<PublicPropertyFilters>(filters);
+
+  const toggleAmenity = (amenity: string) => {
+    setDraft((prev) => ({
+      ...prev,
+      amenities: prev.amenities.includes(amenity)
+        ? prev.amenities.filter((a) => a !== amenity)
+        : [...prev.amenities, amenity],
+    }));
+  };
+
+  const handleApply = () => {
+    onApply(draft);
+    if (isMobile) onClose?.();
+  };
+
+  const handleReset = () => {
+    setDraft({ ...DEFAULT_PUBLIC_FILTERS, search: filters.search, sort: filters.sort });
+    onReset();
+    if (isMobile) onClose?.();
+  };
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: isMobile ? -6 : 0, x: isMobile ? 0 : 15 }}
-      animate={{ opacity: 1, y: 0, x: 0 }}
-      transition={{ duration: 0.35, ease: "easeOut" }}
-      className={` border border-line/80 bg-white p-5 sm:p-6 shadow-xs ${
-        isMobile ? "w-full border-none shadow-none p-0" : "sticky top-24 w-full"
+    <div
+      className={`border border-line/80 bg-white p-5 shadow-xs sm:p-6 ${
+        isMobile ? "w-full border-none p-0 shadow-none" : "sticky top-24 w-full"
       }`}
     >
-      {/* Header */}
-      <div className="mb-5 flex items-center justify-between pb-3.5 border-b border-line/60">
+      <div className="mb-5 flex items-center justify-between border-b border-line/60 pb-3.5">
         <div className="flex items-center gap-2.5">
           <div className="flex h-8.5 w-8.5 items-center justify-center rounded-xl bg-brand-tint text-brand">
-            <SlidersHorizontal className="h-4 w-4" />
+            <SlidersHorizontal aria-hidden="true" className="h-4 w-4" />
           </div>
-          <div>
-            <h2 className="text-[15px] sm:text-base font-bold tracking-tight text-ink">
-              Filter Properties
-            </h2>
-          </div>
+          <h2 className="text-[15px] font-bold tracking-tight text-ink sm:text-base">
+            Filter Properties
+          </h2>
         </div>
 
         {onClose && (
           <button
             type="button"
             onClick={onClose}
-            className="flex h-7.5 w-7.5 items-center justify-center rounded-full text-body hover:bg-surface hover:text-ink transition-colors cursor-pointer"
+            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-body transition-colors hover:bg-surface hover:text-ink"
             aria-label="Close filters"
           >
-            <X className="h-4 w-4" />
+            <X aria-hidden="true" className="h-4 w-4" />
           </button>
         )}
       </div>
 
-      {/* Filter Sections */}
       <div
         className={
           isMobile
-            ? "grid grid-cols-1 sm:grid-cols-2 gap-x-6"
+            ? "grid grid-cols-1 gap-x-6 sm:grid-cols-2"
             : "flex flex-col gap-1"
         }
       >
-        <FilterSection title="Location" htmlFor="location">
-          <Dropdown menuList={propertyLocations} defaultMenu="All Districts" />
+        <FilterSection title="District">
+          <Dropdown
+            menuList={propertyLocations}
+            defaultMenu="All districts"
+            selectedValue={draft.district}
+            onSelectValue={(district) =>
+              setDraft((prev) => ({ ...prev, district }))
+            }
+            className="w-full"
+          />
         </FilterSection>
 
-        <FilterSection title="Price range (RWF/month)">
-          <PriceRangeFilter />
+        <FilterSection title="Price range (RWF / month)">
+          <PriceRangeFilter
+            minPrice={draft.minPrice}
+            maxPrice={draft.maxPrice}
+            onMinChange={(minPrice) =>
+              setDraft((prev) => ({ ...prev, minPrice }))
+            }
+            onMaxChange={(maxPrice) =>
+              setDraft((prev) => ({ ...prev, maxPrice }))
+            }
+          />
         </FilterSection>
 
         <FilterSection title="Bedrooms">
           <FilterPills
-            options={["Any", "Studio", "1", "2", "3+"]}
-            defaultSelected="Any"
+            options={BEDROOM_OPTIONS}
+            selected={draft.bedrooms}
+            onSelect={(bedrooms) => setDraft((prev) => ({ ...prev, bedrooms }))}
           />
         </FilterSection>
 
         <FilterSection title="Amenities">
           <FilterPills
-            options={["WiFi", "Parking", "Water incl.", "Security"]}
-            defaultSelected="WiFi"
+            options={AMENITY_OPTIONS}
+            selected={draft.amenities}
+            multiSelect
+            onSelect={toggleAmenity}
           />
         </FilterSection>
       </div>
 
-      <FilterActions />
-    </motion.div>
+      <FilterActions onApply={handleApply} onReset={handleReset} />
+    </div>
   );
 }
 

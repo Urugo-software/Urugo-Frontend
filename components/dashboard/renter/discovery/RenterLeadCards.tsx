@@ -132,7 +132,9 @@ export function RenterInquiryCard({ inquiry }: { inquiry: LandlordInquiry }) {
             >
               <div className="font-semibold">
                 {reply.sender === "landlord" ? "Landlord" : "You"} &middot;{" "}
-                <span className="font-normal text-faint">{reply.timestamp}</span>
+                <span className="font-normal text-faint">
+                  {reply.timestamp}
+                </span>
               </div>
               <p className="mt-1 text-sm">{reply.text}</p>
             </div>

@@ -1,15 +1,20 @@
 "use client";
+
+import Link from "next/link";
+import { Building2 } from "lucide-react";
 import { CarouselContent, CarouselItem } from "@/components/ui/carousel";
-import PropertyCard from "./PropertyCard";
-import { usePublicFeaturedProperties } from "@/hooks/query/properties.hooks";
-import { FeaturedProperty } from "@/types/properties";
+import { EmptyStateBox } from "@/components/shared/EmptyStateBox";
 import SectionError from "@/components/shared/SectionError";
-import SectionLoading from "@/components/shared/SectionLoading";
+import { usePublicFeaturedProperties } from "@/hooks/query/properties.hooks";
+import type { FeaturedProperty } from "@/types/properties";
+import { formatRwf } from "@/utils/format";
 import FeaturedPropertySkeleton from "./FeaturedPropertySkeleton";
+import PropertyCard from "./PropertyCard";
 
 function FeaturedPropertiesList() {
-  const { data, isLoading, error, isError } = usePublicFeaturedProperties();
-  console.log("Featured Properties Data:", data?.data);
+  const { data, isLoading, error, isError, refetch } =
+    usePublicFeaturedProperties();
+
   if (isLoading) {
     return (
       <CarouselContent>
@@ -29,23 +34,32 @@ function FeaturedPropertiesList() {
 
   if (isError) {
     return (
-      <CarouselContent>
-        <SectionError
-          message={
-            error instanceof Error
-              ? error.message
-              : "An error occurred while loading featured properties."
-          }
-        />
-      </CarouselContent>
+      <SectionError
+        message={
+          error instanceof Error
+            ? error.message
+            : "Unable to load featured homes right now."
+        }
+        onRetry={() => void refetch()}
+      />
     );
   }
 
   if (!data?.data?.length) {
     return (
-      <CarouselContent>
-        <SectionLoading message="No featured properties available." />
-      </CarouselContent>
+      <EmptyStateBox
+        icon={Building2}
+        title="No featured homes available right now"
+        description="Browse all currently listed rental properties across Rwanda."
+        action={
+          <Link
+            href="/properties"
+            className="inline-flex h-9 items-center justify-center border border-brand bg-brand px-4 text-xs font-semibold text-white transition-colors hover:bg-brand-deep"
+          >
+            Browse all properties
+          </Link>
+        }
+      />
     );
   }
 
@@ -58,14 +72,12 @@ function FeaturedPropertiesList() {
         >
           <div className="w-full p-1">
             <PropertyCard
+              id={prop.id}
               image={prop.property_photos[0]}
               title={prop.title}
-              district={prop.district.toLocaleLowerCase()}
+              district={prop.district.toLowerCase()}
               province={prop.province}
-              monthlyRent={prop.monthlyRent.toLocaleString("en-RW", {
-                style: "currency",
-                currency: "RWF",
-              })}
+              monthlyRent={formatRwf(prop.monthlyRent)}
               amenities={prop.amenities}
             />
           </div>
