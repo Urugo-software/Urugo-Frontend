@@ -1,11 +1,15 @@
+import { Suspense } from "react";
 import { SignUpWizard } from "@/components/platform/auth/sign-up/SignUpWizard";
+import SectionLoading from "@/components/shared/SectionLoading";
 
-function page() {
+function SignUpPage() {
   return (
     <div className="flex w-full items-center justify-center self-stretch">
-      <SignUpWizard />
+      <Suspense fallback={<SectionLoading message="Loading sign-up..." />}>
+        <SignUpWizard />
+      </Suspense>
     </div>
   );
 }
 
-export default page;
+export default SignUpPage;
