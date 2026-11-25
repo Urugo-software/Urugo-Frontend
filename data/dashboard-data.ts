@@ -17,15 +17,88 @@ import {
   CreditCard,
   ShieldCheck,
   Settings,
+  History,
   LucideIcon,
 } from "lucide-react";
 import { RoleType } from "@/types";
+import type { LandlordServiceMode } from "@/types/landlord";
 
 export interface NavItemConfig {
   label: string;
   href: string;
   icon: LucideIcon;
   badge?: number;
+}
+
+export interface LandlordBadgeCounts {
+  inquiries?: number;
+  viewings?: number;
+  payments?: number;
+  issues?: number;
+  notifications?: number;
+}
+
+export function getLandlordNavItems(
+  serviceMode: LandlordServiceMode,
+  badges: LandlordBadgeCounts = {},
+): NavItemConfig[] {
+  const countOrUndefined = (n?: number) => (n && n > 0 ? n : undefined);
+
+  const sharedBase: NavItemConfig[] = [
+    { label: "Dashboard", href: "/landlord", icon: LayoutDashboard },
+    { label: "My Properties", href: "/landlord/properties", icon: Building2 },
+    {
+      label: "Inquiries",
+      href: "/landlord/inquiries",
+      icon: MessageSquare,
+      badge: countOrUndefined(badges.inquiries),
+    },
+    {
+      label: "Viewings",
+      href: "/landlord/viewings",
+      icon: Calendar,
+      badge: countOrUndefined(badges.viewings),
+    },
+  ];
+
+  const managedItems: NavItemConfig[] = [
+    { label: "Renters", href: "/landlord/renters", icon: User },
+    { label: "Agreements", href: "/landlord/agreements", icon: FileText },
+    { label: "Tenancies", href: "/landlord/tenancies", icon: ScrollText },
+    {
+      label: "Payments",
+      href: "/landlord/payments",
+      icon: CreditCard,
+      badge: countOrUndefined(badges.payments),
+    },
+    {
+      label: "Renter History",
+      href: "/landlord/renter-history",
+      icon: History,
+      badge: countOrUndefined(badges.issues),
+    },
+  ];
+
+  const notificationsItem: NavItemConfig = {
+    label: "Notifications",
+    href: "/landlord/notifications",
+    icon: Bell,
+    badge: countOrUndefined(badges.notifications),
+  };
+
+  return serviceMode === "listing_only"
+    ? [...sharedBase, notificationsItem]
+    : [...sharedBase, ...managedItems, notificationsItem];
+}
+
+export function isNavItemActive(
+  pathname: string,
+  href: string,
+  rootHref: string,
+): boolean {
+  if (href === "#") return false;
+  if (href === rootHref) return pathname === rootHref;
+  return pathname === href || pathname.startsWith(`${href}/`);
 }
 
 export const roleNavItems: Record<RoleType, NavItemConfig[]> = {
