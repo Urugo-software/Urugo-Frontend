@@ -71,6 +71,20 @@ export function getDeletedStandardArticles(
   );
 }
 
+export function insertArticleAt(
+  articles: AgreementArticle[],
+  newArticle: AgreementArticle,
+  insertIndex?: number
+): AgreementArticle[] {
+  const index =
+    typeof insertIndex === "number"
+      ? Math.max(0, Math.min(articles.length, insertIndex))
+      : articles.length;
+  const copy = [...articles];
+  copy.splice(index, 0, newArticle);
+  return renumberArticles(copy);
+}
+
 export function restoreStandardArticle(
   articles: AgreementArticle[],
   standardNumber: number,
@@ -80,6 +94,10 @@ export function restoreStandardArticle(
     (item) => item.standardNumber === standardNumber
   );
   if (!def) return articles;
+
+  if (articles.some((a) => a.standardNumber === standardNumber)) {
+    return articles;
+  }
 
   const restored: AgreementArticle = {
     id: `art-std-${standardNumber}-${Date.now()}`,
@@ -91,15 +109,40 @@ export function restoreStandardArticle(
     isCustom: false,
   };
 
-  // Insert back in order of standardNumber where appropriate
-  const copy = [...articles, restored];
-  copy.sort((a, b) => {
-    const numA = a.standardNumber ?? 999;
-    const numB = b.standardNumber ?? 999;
-    return numA - numB;
-  });
+  // Preserve custom article order: insert before the first standard clause with a higher standardNumber
+  const insertAt = articles.findIndex(
+    (a) => typeof a.standardNumber === "number" && a.standardNumber > standardNumber
+  );
 
-  return renumberArticles(copy);
+  return insertArticleAt(
+    articles,
+    restored,
+    insertAt === -1 ? articles.length : insertAt
+  );
+}
+
+export function translateArticlesForDisplay(
+  articles: AgreementArticle[],
+  displayLanguage: AgreementLanguage,
+  sourceLanguage: AgreementLanguage
+): AgreementArticle[] {
+  if (displayLanguage === sourceLanguage) return articles;
+
+  return articles.map((art) => {
+    if (art.isStandard && art.standardNumber) {
+      const def = CANONICAL_18_ARTICLES.find(
+        (d) => d.standardNumber === art.standardNumber
+      );
+      if (def) {
+        return {
+          ...art,
+          title: displayLanguage === "rw" ? def.titleRw : def.titleEn,
+          content: displayLanguage === "rw" ? def.contentRw : def.contentEn,
+        };
+      }
+    }
+    return art;
+  });
 }
 
 export function resetAllToStandardArticles(
@@ -159,10 +202,12 @@ export function validateArticles(articles: AgreementArticle[]): {
 }
 
 export function formatCurrencyRwf(amount: number): string {
-  return new Intl.NumberFormat("en-RW", {
-    style: "decimal",
-    maximumFractionDigits: 0,
-  }).format(amount) + " RWF";
+  return (
+    new Intl.NumberFormat("en-US", {
+      style: "decimal",
+      maximumFractionDigits: 0,
+    }).format(amount) + " RWF"
+  );
 }
 
 export function formatDate(dateStr: string, language: AgreementLanguage = "en"): string {
@@ -185,13 +230,15 @@ export function formatDate(dateStr: string, language: AgreementLanguage = "en"):
 }
 
 export function getAgreementVariables(
-  agreement: Agreement
+  agreement: Agreement,
+  displayLanguage?: AgreementLanguage
 ): Record<string, string | number | undefined> {
+  const lang = displayLanguage ?? agreement.language;
   const dueDay = agreement.financials.paymentDueDay || 1;
   const ordinal = `${dueDay}${getOrdinalSuffix(dueDay)}`;
   const shorterMonthNote =
     dueDay >= 29
-      ? agreement.language === "rw"
+      ? lang === "rw"
         ? " (cyangwa umunsi wa nyuma w'ukwezi kugufi)"
         : " (or the final calendar day of shorter months)"
       : "";
@@ -202,13 +249,13 @@ export function getAgreementVariables(
     !agreement.firstPaymentConfirmedAt
   ) {
     commencementDisplay =
-      agreement.language === "rw"
+      lang === "rw"
         ? "itariki ubwishyu bwa mbere bwa lwayi buzaba bwemejweho"
         : "the date the first rent payment is successfully confirmed";
   } else {
     commencementDisplay = formatDate(
       agreement.firstPaymentConfirmedAt || agreement.tenancyStartDate,
-      agreement.language,
+      lang,
     );
   }
 
