@@ -1,6 +1,10 @@
 "use client";
 
+import { useMemo } from "react";
 import { AlertTriangle, ArrowLeft, FileText, Printer, Send } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
+import { CANONICAL_18_ARTICLES } from "@/data/agreement-templates";
+import type { AppLocale } from "@/i18n/config";
 import { Agreement } from "@/types/agreement.types";
 import { useAgreementEditor } from "@/hooks/useAgreementEditor";
 import { Button } from "@/components/ui/button";
@@ -34,6 +38,10 @@ export function AgreementEditor({
   onSaveAgreement,
   onBackToTenancy,
 }: Props) {
+  const t = useTranslations("landlord.agreements.editor");
+  const tLangs = useTranslations("landlord.agreements.languageNames");
+  const tCommon = useTranslations("common");
+  const locale = useLocale() as AppLocale;
   const {
     agreement,
     articles,
@@ -41,7 +49,6 @@ export function AgreementEditor({
     hasUnsavedChanges,
     expandedArticleId,
     deletedStandardDefs,
-    validation,
     showValidation,
     isAddModalOpen,
     isRestoreModalOpen,
@@ -81,11 +88,48 @@ export function AgreementEditor({
     onBack: onBackToTenancy,
   });
 
+  const localizedValidation = useMemo(() => {
+    const errors: string[] = [];
+    const warnings: string[] = [];
+
+    if (articles.length === 0) {
+      errors.push(t("validation.atLeastOneArticle"));
+    }
+
+    articles.forEach((art) => {
+      if (!art.title.trim()) {
+        errors.push(t("validation.missingTitle", { number: art.number }));
+      }
+      if (!art.content.trim()) {
+        errors.push(t("validation.emptyContent", { number: art.number }));
+      }
+    });
+
+    const presentStandardNums = new Set(
+      articles.map((a) => a.standardNumber).filter(Boolean),
+    );
+    CANONICAL_18_ARTICLES.filter((d) => d.isMandatory).forEach((def) => {
+      if (!presentStandardNums.has(def.standardNumber)) {
+        const title = locale === "rw" ? def.titleRw : def.titleEn;
+        warnings.push(
+          t("validation.recommendedClause", {
+            number: def.standardNumber,
+            title,
+          }),
+        );
+      }
+    });
+
+    return { errors, warnings };
+  }, [articles, locale, t]);
+
   const previewWorkingAgreement: Agreement = {
     ...agreement,
     articles,
     language,
   };
+
+  const pendingLangLabel = tLangs(pendingLanguage === "rw" ? "rw" : "en");
 
   if (isPreviewMode) {
     return (
@@ -101,11 +145,11 @@ export function AgreementEditor({
                   className="inline-flex h-8.5 cursor-pointer items-center gap-1.5 rounded-none border border-line bg-white px-3 text-[12.5px] font-semibold text-ink transition-colors hover:bg-surface"
                 >
                   <ArrowLeft className="size-3.5" />
-                  <span>Back to Editor</span>
+                  <span>{t("backToEditor")}</span>
                 </Button>
                 <span className="text-faint">&middot;</span>
                 <span className="text-sm font-semibold text-ink sm:text-[15px]">
-                  Agreement Preview
+                  {t("agreementPreview")}
                 </span>
                 <span className="font-mono text-xs text-faint">
                   ({agreement.referenceNumber})
@@ -145,7 +189,7 @@ export function AgreementEditor({
                   className="inline-flex h-8.5 cursor-pointer items-center gap-1.5 rounded-none border border-line bg-white px-3 text-[12.5px] font-medium text-ink hover:bg-surface"
                 >
                   <Printer className="size-3.5 text-faint" />
-                  <span>Print / PDF</span>
+                  <span>{t("printPdf")}</span>
                 </Button>
 
                 <Button
@@ -154,7 +198,7 @@ export function AgreementEditor({
                   className="inline-flex h-8.5 cursor-pointer items-center gap-1.5 rounded-none bg-ink px-4 text-[12.5px] font-semibold text-white transition-colors hover:bg-black"
                 >
                   <Send className="size-3.5" />
-                  <span>Send to Renter</span>
+                  <span>{t("sendToRenter")}</span>
                 </Button>
               </div>
             </div>
@@ -200,8 +244,8 @@ export function AgreementEditor({
             onSave={handleSaveDraft}
             backButtonLabel={
               onBackToTenancy
-                ? "Back to Language Selection"
-                : "Back to Agreement"
+                ? t("backToLanguageSelection")
+                : t("backToAgreement")
             }
           />
 
@@ -217,15 +261,19 @@ export function AgreementEditor({
                 <div className="flex items-center gap-2 font-semibold text-amber-950">
                   <AlertTriangle className="size-4 shrink-0 text-amber-700" />
                   <span>
-                    Renter requested changes on{" "}
-                    {agreement.changeRequests.length} clause(s):
+                    {t("changeRequestSummary", {
+                      count: agreement.changeRequests.length,
+                    })}
                   </span>
                 </div>
                 <ul className="space-y-1.5 pl-6 text-amber-950/90">
                   {agreement.changeRequests.map((cr) => (
                     <li key={cr.id} className="list-disc">
                       <strong>
-                        Article {cr.articleNumber} ({cr.articleTitle}):
+                        {t("articleRef", {
+                          number: cr.articleNumber,
+                          title: cr.articleTitle,
+                        })}
                       </strong>{" "}
                       {cr.requestedChange}
                     </li>
@@ -235,8 +283,8 @@ export function AgreementEditor({
             )}
 
           <EditorValidationAlert
-            errors={showValidation ? validation.errors : []}
-            warnings={validation.warnings}
+            errors={showValidation ? localizedValidation.errors : []}
+            warnings={localizedValidation.warnings}
           />
 
           <EditorToolbar
@@ -251,8 +299,8 @@ export function AgreementEditor({
           {articles.length === 0 ? (
             <EmptyStateBox
               icon={FileText}
-              title="No agreement articles yet"
-              description="Restore the standard Rwandan statutory clauses or add a custom article to continue."
+              title={t("emptyArticlesTitle")}
+              description={t("emptyArticlesDescription")}
               action={
                 <div className="flex flex-wrap justify-center gap-2">
                   <Button
@@ -260,7 +308,7 @@ export function AgreementEditor({
                     onClick={handleSelectStandard}
                     className="h-9 cursor-pointer rounded-none bg-ink px-4 text-xs font-semibold text-white hover:bg-black"
                   >
-                    Load 18 Standard Clauses
+                    {t("loadStandardClauses")}
                   </Button>
                   <Button
                     type="button"
@@ -268,7 +316,7 @@ export function AgreementEditor({
                     onClick={() => setIsAddModalOpen(true)}
                     className="h-9 cursor-pointer rounded-none border-line px-4 text-xs"
                   >
-                    Add Custom Article
+                    {t("addCustomArticle")}
                   </Button>
                 </div>
               }
@@ -329,8 +377,8 @@ export function AgreementEditor({
             onClose={cancelLanguageSwitch}
             variant="alert"
             maxWidthClassName="max-w-md"
-            title="Switch Agreement Language?"
-            description="Translating standard statutory clauses will replace any manual edits made to those standard clauses. Custom clauses remain untouched."
+            title={t("switchLanguageModal.title")}
+            description={t("switchLanguageModal.description")}
             footer={
               <>
                 <Button
@@ -339,25 +387,25 @@ export function AgreementEditor({
                   onClick={cancelLanguageSwitch}
                   className="h-8.5 cursor-pointer rounded-none border-line px-4 text-xs"
                 >
-                  Cancel
+                  {tCommon("actions.cancel")}
                 </Button>
                 <Button
                   type="button"
                   onClick={confirmLanguageSwitch}
                   className="h-8.5 cursor-pointer rounded-none bg-ink px-4 text-xs font-semibold text-white hover:bg-black"
                 >
-                  Switch to{" "}
-                  {pendingLanguage === "rw" ? "Kinyarwanda" : "English"}
+                  {t("switchLanguageModal.confirm", {
+                    language: pendingLangLabel,
+                  })}
                 </Button>
               </>
             }
           >
             <p className="text-xs leading-relaxed text-body">
-              Do you want to translate the statutory clauses into{" "}
-              <strong>
-                {pendingLanguage === "rw" ? "Kinyarwanda" : "English"}
-              </strong>
-              ?
+              {t.rich("switchLanguageModal.body", {
+                language: pendingLangLabel,
+                strong: (chunks) => <strong>{chunks}</strong>,
+              })}
             </p>
           </ModalDialog>
 
@@ -366,8 +414,8 @@ export function AgreementEditor({
             onClose={cancelNavigateAway}
             variant="alert"
             maxWidthClassName="max-w-md"
-            title="Leave with Unsaved Changes?"
-            description="You have unsaved edits in this lease agreement."
+            title={t("unsavedModal.title")}
+            description={t("unsavedModal.description")}
             footer={
               <>
                 <Button
@@ -376,20 +424,20 @@ export function AgreementEditor({
                   onClick={cancelNavigateAway}
                   className="h-8.5 cursor-pointer rounded-none border-line px-4 text-xs"
                 >
-                  Stay in Editor
+                  {t("unsavedModal.stay")}
                 </Button>
                 <Button
                   type="button"
                   onClick={confirmNavigateAway}
                   className="h-8.5 cursor-pointer rounded-none bg-red-600 px-4 text-xs font-semibold text-white hover:bg-red-700"
                 >
-                  Discard &amp; Leave
+                  {t("unsavedModal.discard")}
                 </Button>
               </>
             }
           >
             <p className="text-xs leading-relaxed text-body">
-              Save your draft first if you want to keep your clause edits.
+              {t("unsavedModal.body")}
             </p>
           </ModalDialog>
         </div>

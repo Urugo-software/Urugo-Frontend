@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import {
   adminNavItems,
   getLandlordNavItems,
@@ -19,6 +20,8 @@ export function useDashboardNavigation(
   pathname: string,
   fallbackRole: RoleType = "home_seeker",
 ) {
+  const tNav = useTranslations("common.navigation");
+  const tWorkspace = useTranslations("common.workspace");
   const serviceMode = useLandlordWorkspace((s) => s.serviceMode);
   const landlordProfile = useLandlordWorkspace((s) => s.profile);
   const inquiries = useLandlordWorkspace((s) => s.inquiries);
@@ -45,7 +48,7 @@ export function useDashboardNavigation(
     ? "/admin"
     : `/${derivedRole === "home_seeker" ? "home-seeker" : derivedRole}`;
 
-  const navList: NavItemConfig[] = useMemo(() => {
+  const rawNavList: NavItemConfig[] = useMemo(() => {
     if (isAdmin) return adminNavItems;
 
     if (isLandlord) {
@@ -115,24 +118,44 @@ export function useDashboardNavigation(
     viewings,
   ]);
 
+  const navList: NavItemConfig[] = useMemo(
+    () =>
+      rawNavList.map((item) => ({
+        ...item,
+        label: item.labelKey ? tNav(item.labelKey) : item.label,
+      })),
+    [rawNavList, tNav],
+  );
+
   const persona = isAdmin
-    ? { initials: "AD", name: "Urugo Admin", subtitle: "Platform administrator" }
+    ? {
+        initials: "AD",
+        name: "Urugo Admin",
+        subtitle: tWorkspace("adminSubtitle"),
+      }
     : isLandlord
       ? {
           initials: getInitials(landlordProfile.fullName),
           name: landlordProfile.fullName,
           subtitle:
             serviceMode === "listing_only"
-              ? "Listing-only landlord"
-              : "Managed landlord",
+              ? tWorkspace("listingOnlyLandlord")
+              : tWorkspace("managedLandlord"),
         }
       : isRenter
         ? {
             initials: getInitials(renterProfile.name),
             name: renterProfile.name,
-            subtitle: `Unit ${renterProfile.unitNumber} · ${renterProfile.propertyName}`,
+            subtitle: tWorkspace("renterUnitSubtitle", {
+              unit: renterProfile.unitNumber,
+              property: renterProfile.propertyName,
+            }),
           }
-        : { initials: "YK", name: "Yves Kamanzi", subtitle: "Home seeker" };
+        : {
+            initials: "YK",
+            name: "Yves Kamanzi",
+            subtitle: tWorkspace("visitorSubtitle"),
+          };
 
   const activeWorkspaceRole: "renter" | "landlord" | "home_seeker" | "admin" =
     isAdmin ? "admin" : derivedRole;

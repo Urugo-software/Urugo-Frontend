@@ -1,16 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { Upload } from "lucide-react";
 import { ModalDialog } from "@/components/shared/ModalDialog";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import type { AppLocale } from "@/i18n/config";
+import { formatRwfLocalized } from "@/i18n/formatting";
 import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
 import { useRenterWorkspace } from "@/store/renter-workspace.store";
 import type { RentalIssue } from "@/types/landlord";
-import { formatRwf } from "@/utils/format";
 
 interface DisputeIssueModalProps {
   issue: RentalIssue | null;
@@ -22,6 +24,10 @@ interface DisputeValues {
 }
 
 export function DisputeIssueModal({ issue, onClose }: DisputeIssueModalProps) {
+  const t = useTranslations("renter.rentalHistory.disputeModal");
+  const tWorkspace = useTranslations("renter.workspace");
+  const tActions = useTranslations("common.actions");
+  const locale = useLocale() as AppLocale;
   const submitIssueDispute = useLandlordWorkspace((s) => s.submitIssueDispute);
   const addNotification = useRenterWorkspace((s) => s.addNotification);
   const [evidenceName, setEvidenceName] = useState("");
@@ -37,18 +43,23 @@ export function DisputeIssueModal({ issue, onClose }: DisputeIssueModalProps) {
 
   if (!issue) return null;
 
+  const formattedAmount = formatRwfLocalized(issue.amountRwf, locale);
+
   const onSubmit = (vals: DisputeValues) => {
     submitIssueDispute(issue.id, vals.explanation, evidenceName || undefined);
     addNotification({
-      title: "Dispute Submitted for Review",
-      message: `Your response for "${issue.issueTitle}" (${formatRwf(issue.amountRwf)}) was logged.`,
-      date: "Just now",
+      title: t("notifTitle"),
+      message: t("notifMessage", {
+        title: issue.issueTitle,
+        amount: formattedAmount,
+      }),
+      date: tWorkspace("justNow"),
       read: false,
       category: "history",
       href: "/renter/rental-history",
-      actionLabel: "View Case",
+      actionLabel: t("notifAction"),
     });
-    toast.success("Dispute response submitted. Status updated to Disputed.");
+    toast.success(t("toastSuccess"));
     reset();
     setEvidenceName("");
     onClose();
@@ -58,8 +69,8 @@ export function DisputeIssueModal({ issue, onClose }: DisputeIssueModalProps) {
     <ModalDialog
       open
       onClose={onClose}
-      title="Submit Dispute & Payment Proof"
-      description={`${issue.issueTitle} · ${formatRwf(issue.amountRwf)}`}
+      title={t("title")}
+      description={`${issue.issueTitle} · ${formattedAmount}`}
       footer={
         <>
           <Button
@@ -68,14 +79,14 @@ export function DisputeIssueModal({ issue, onClose }: DisputeIssueModalProps) {
             onClick={onClose}
             className="cursor-pointer rounded-none"
           >
-            Cancel
+            {tActions("cancel")}
           </Button>
           <Button
             type="submit"
             form="renter-dispute-form"
             className="cursor-pointer rounded-none"
           >
-            Submit Dispute
+            {t("submitButton")}
           </Button>
         </>
       }
@@ -87,24 +98,21 @@ export function DisputeIssueModal({ issue, onClose }: DisputeIssueModalProps) {
         className="space-y-4"
       >
         <p className="border-l-2 border-amber-500 bg-amber-50/60 px-3 py-2 text-xs text-body">
-          Submitting a dispute places this notice under review. Disputed records
-          are never marked as confirmed unpaid obligations while review is
-          pending.
+          {t("infoNotice")}
         </p>
 
         <Field>
           <FieldLabel htmlFor="dispute-explanation">
-            Your explanation *
+            {t("explanationLabel")}
           </FieldLabel>
           <textarea
             id="dispute-explanation"
             rows={4}
-            placeholder="Explain why this charge is incorrect or share payment date and Mobile Money reference..."
+            placeholder={t("explanationPlaceholder")}
             className="w-full rounded-none border border-input bg-white p-3 text-sm"
             {...register("explanation", {
               validate: (v) =>
-                v.trim().length >= 12 ||
-                "Please provide at least 12 characters of explanation.",
+                v.trim().length >= 12 || t("explanationError"),
             })}
           />
           <FieldError>{errors.explanation?.message}</FieldError>
@@ -112,12 +120,12 @@ export function DisputeIssueModal({ issue, onClose }: DisputeIssueModalProps) {
 
         <div className="space-y-2">
           <span className="block text-xs font-semibold text-ink">
-            Supporting proof / receipt (optional)
+            {t("proofLabel")}
           </span>
           <label className="flex cursor-pointer items-center justify-between border border-dashed border-line bg-surface/50 px-3.5 py-3 text-xs text-body hover:bg-surface">
             <span className="inline-flex items-center gap-2 truncate">
               <Upload aria-hidden="true" className="size-4 text-brand-blue" />
-              {evidenceName || "Attach payment receipt image or PDF"}
+              {evidenceName || t("attachPrompt")}
             </span>
             <input
               type="file"

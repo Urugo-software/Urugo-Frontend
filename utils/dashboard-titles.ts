@@ -93,6 +93,93 @@ function formatSlug(segment: string): string {
     .join(" ");
 }
 
+export const DASHBOARD_EXACT_TITLE_KEYS: Record<string, string> = {
+  "/home-seeker": "homeSeekerDashboard",
+  "/home-seeker/saved-properties": "homeSeekerSaved",
+  "/home-seeker/visits": "homeSeekerVisits",
+  "/home-seeker/waiting-list": "homeSeekerWaitingList",
+  "/home-seeker/notifications": "homeSeekerNotifications",
+  "/home-seeker/profile": "homeSeekerProfile",
+  "/home-seeker/settings": "homeSeekerSettings",
+  "/home-seeker/help-center": "homeSeekerHelp",
+  "/landlord": "landlordDashboard",
+  "/landlord/properties": "landlordProperties",
+  "/landlord/properties/new": "landlordNewProperty",
+  "/landlord/inquiries": "landlordInquiries",
+  "/landlord/viewings": "landlordViewings",
+  "/landlord/payments": "landlordPayments",
+  "/landlord/renters": "landlordRenters",
+  "/landlord/renters/add": "landlordAddRenter",
+  "/landlord/agreements": "landlordAgreements",
+  "/landlord/tenancies": "landlordTenancies",
+  "/landlord/renter-history": "landlordRenterHistory",
+  "/landlord/notifications": "landlordNotifications",
+  "/landlord/settings": "landlordSettings",
+  "/landlord/help-center": "landlordHelp",
+  "/renter": "renterOverview",
+  "/renter/explore": "renterExplore",
+  "/renter/inquiries": "renterInquiries",
+  "/renter/property": "renterProperty",
+  "/renter/lease": "renterLease",
+  "/renter/payments": "renterPayments",
+  "/renter/payments/pay-rent": "renterPayRent",
+  "/renter/maintenance": "renterMaintenance",
+  "/renter/rental-history": "renterRentalHistory",
+  "/renter/messages": "renterMessages",
+  "/renter/documents": "renterDocuments",
+  "/renter/notifications": "renterNotifications",
+  "/renter/settings": "renterSettings",
+  "/renter/help-center": "renterHelp",
+  "/admin": "adminOverview",
+  "/admin/users": "adminUsers",
+  "/admin/properties": "adminProperties",
+  "/admin/property-verification": "adminVerification",
+  "/admin/leases": "adminLeases",
+  "/admin/payments": "adminPayments",
+  "/admin/complaints": "adminComplaints",
+  "/admin/renter-history": "adminRenterHistory",
+  "/admin/analytics": "adminAnalytics",
+  "/admin/notifications": "adminNotifications",
+  "/admin/moderation": "adminModeration",
+  "/admin/audit-logs": "adminAuditLogs",
+  "/admin/admin-management": "adminManagement",
+  "/admin/settings": "adminSettings",
+};
+
+const DASHBOARD_PATTERN_TITLE_KEYS: Array<{ pattern: RegExp; key: string }> = [
+  { pattern: /^\/landlord\/properties\/groups\/[^/]+$/, key: "landlordPropertyGroup" },
+  { pattern: /^\/landlord\/properties\/[^/]+\/edit$/, key: "landlordEditProperty" },
+  { pattern: /^\/landlord\/properties\/[^/]+$/, key: "landlordPropertyDetails" },
+  { pattern: /^\/landlord\/renters\/[^/]+$/, key: "landlordRenterDetails" },
+  { pattern: /^\/landlord\/agreements\/[^/]+\/edit$/, key: "landlordEditAgreement" },
+  { pattern: /^\/landlord\/agreements\/[^/]+$/, key: "landlordAgreementDetails" },
+  { pattern: /^\/landlord\/tenancies\/[^/]+$/, key: "landlordTenancyDetails" },
+  { pattern: /^\/landlord\/renter-history\/[^/]+$/, key: "landlordRenterHistoryDetails" },
+  { pattern: /^\/admin\/payments\/[^/]+$/, key: "adminPaymentDetails" },
+];
+
+export function resolveDashboardTitleKey(
+  pathname: string | null | undefined,
+): string | null {
+  if (!pathname) return null;
+
+  const normalized = normalizePathname(pathname);
+  const exactKey = DASHBOARD_EXACT_TITLE_KEYS[normalized];
+  if (exactKey) return exactKey;
+
+  for (const { pattern, key } of DASHBOARD_PATTERN_TITLE_KEYS) {
+    if (pattern.test(normalized)) return key;
+  }
+
+  const segments = normalized.split("/").filter(Boolean);
+  if (segments.length >= 2 && DASHBOARD_ROOTS.has(segments[0])) {
+    const sectionPath = `/${segments[0]}/${segments[1]}`;
+    return DASHBOARD_EXACT_TITLE_KEYS[sectionPath] ?? null;
+  }
+
+  return null;
+}
+
 export function resolveDashboardTitle(
   pathname: string | null | undefined,
   fallback = "Dashboard",

@@ -1,14 +1,16 @@
 "use client";
 
+import { useLocale, useTranslations } from "next-intl";
 import { useForm, useWatch } from "react-hook-form";
 import { ModalDialog } from "@/components/shared/ModalDialog";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import type { AppLocale } from "@/i18n/config";
+import { formatRwfLocalized } from "@/i18n/formatting";
 import type {
   PaymentRejectionCategory,
   TenancyPayment,
 } from "@/types/landlord";
-import { formatRwf } from "@/utils/format";
 import { PAYMENT_REJECTION_OPTIONS } from "@/utils/rental-debt";
 
 interface RejectFormValues {
@@ -31,6 +33,9 @@ export function RejectPaymentModal({
   onClose,
   onConfirm,
 }: RejectPaymentModalProps) {
+  const t = useTranslations("landlord.payments.rejectModal");
+  const tPayments = useTranslations("landlord.payments");
+  const locale = useLocale() as AppLocale;
   const {
     register,
     control,
@@ -63,10 +68,10 @@ export function RejectPaymentModal({
       open={Boolean(payment)}
       onClose={handleClose}
       variant="alert"
-      title="Reject payment submission"
+      title={t("title")}
       description={
         payment
-          ? `${payment.renterName ?? "Tenant"} · ${payment.period} · ${formatRwf(payment.amountRwf)}`
+          ? `${payment.renterName ?? tPayments("tenantFallback")} · ${payment.period} · ${formatRwfLocalized(payment.amountRwf, locale)}`
           : undefined
       }
       footer={
@@ -77,7 +82,7 @@ export function RejectPaymentModal({
             onClick={handleClose}
             className="cursor-pointer rounded-none"
           >
-            Cancel
+            {t("cancel")}
           </Button>
           <Button
             type="submit"
@@ -85,7 +90,7 @@ export function RejectPaymentModal({
             variant="destructive"
             className="cursor-pointer rounded-none"
           >
-            Confirm Rejection
+            {t("confirmBtn")}
           </Button>
         </>
       }
@@ -98,7 +103,7 @@ export function RejectPaymentModal({
       >
         <Field>
           <FieldLabel htmlFor="reject-category" className="text-xs font-semibold">
-            Rejection category <span className="text-rose-600">*</span>
+            {t("categoryLabel")} <span className="text-rose-600">*</span>
           </FieldLabel>
           <select
             id="reject-category"
@@ -107,7 +112,7 @@ export function RejectPaymentModal({
           >
             {PAYMENT_REJECTION_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
-                {opt.label}
+                {t(`categories.${opt.value}.label`)}
               </option>
             ))}
           </select>
@@ -119,25 +124,24 @@ export function RejectPaymentModal({
                   : "text-body"
               }`}
             >
-              {selectedMeta.helper}
+              {t(`categories.${selectedMeta.value}.helper`)}
             </p>
           )}
         </Field>
 
         <Field>
           <FieldLabel htmlFor="reject-reason" className="text-xs font-semibold">
-            Explanation for tenant <span className="text-rose-600">*</span>
+            {t("explanationLabel")} <span className="text-rose-600">*</span>
           </FieldLabel>
           <textarea
             id="reject-reason"
             rows={3}
-            placeholder="Explain clearly why this payment proof could not be accepted..."
+            placeholder={t("explanationPlaceholder")}
             aria-invalid={!!errors.reason}
             className="w-full rounded-none border border-input bg-white p-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
             {...register("reason", {
               validate: (v) =>
-                v.trim().length >= 6 ||
-                "Provide a brief explanation (at least 6 characters).",
+                v.trim().length >= 6 || t("explanationRequired"),
             })}
           />
           <FieldError>{errors.reason?.message}</FieldError>

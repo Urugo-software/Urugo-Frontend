@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { DashboardSearchInput } from "@/components/shared/DashboardSearchInput";
 import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
 import { NotificationList } from "./NotificationList";
@@ -8,6 +9,7 @@ import { NotificationsHeader } from "./NotificationsHeader";
 import { NotificationTabs } from "./NotificationTabs";
 
 export function LandlordNotificationsView() {
+  const t = useTranslations("landlord.notifications");
   const {
     serviceMode,
     notifications: allNotifications,
@@ -80,8 +82,8 @@ export function LandlordNotificationsView() {
         <DashboardSearchInput
           value={search}
           onChange={setSearch}
-          placeholder="Search notifications..."
-          label="Search notifications"
+          placeholder={t("searchPlaceholder")}
+          label={t("searchAria")}
           className="max-w-md"
         />
 

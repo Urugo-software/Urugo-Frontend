@@ -1,3 +1,7 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+
 function TotalAvailableProperties({
   total,
   hasActiveFilters = false,
@@ -5,11 +9,21 @@ function TotalAvailableProperties({
   total: number;
   hasActiveFilters?: boolean;
 }) {
-  const noun = total === 1 ? "property" : "properties";
+  const t = useTranslations("properties.counts");
+  const key = hasActiveFilters
+    ? total === 1
+      ? "matchingOne"
+      : "matchingOther"
+    : total === 1
+      ? "availableOne"
+      : "availableOther";
+
   return (
     <span className="text-[14px] tracking-wide text-body">
-      <b className="text-ink">{total}</b>{" "}
-      {hasActiveFilters ? `${noun} matching your filters` : `${noun} available`}
+      {t.rich(key, {
+        count: total,
+        bold: (chunks) => <b className="text-ink">{chunks}</b>,
+      })}
     </span>
   );
 }

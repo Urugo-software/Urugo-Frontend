@@ -1,6 +1,7 @@
 "use client";
 
 import { Bell } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { EmptyStateBox } from "@/components/dashboard/landlord/tenancies/EmptyStateBox";
 import type { LandlordNotificationItem } from "@/types/landlord";
@@ -23,15 +24,15 @@ export function NotificationList({
   onToggleRead,
   onDismiss,
 }: NotificationListProps) {
+  const t = useTranslations("landlord.notifications");
+
   if (items.length === 0) {
     return (
       <EmptyStateBox
         icon={Bell}
-        title="You're all caught up"
+        title={t("emptyTitle")}
         description={
-          hasFilters
-            ? "No notifications match your current filter."
-            : "New updates on rent payments, tenancies, and disputes will appear here."
+          hasFilters ? t("emptyFilteredDesc") : t("emptyDefaultDesc")
         }
         action={
           hasFilters ? (
@@ -41,7 +42,7 @@ export function NotificationList({
               onClick={onResetFilters}
               className="cursor-pointer rounded-none"
             >
-              Show all notifications
+              {t("showAllBtn")}
             </Button>
           ) : undefined
         }

@@ -1,6 +1,9 @@
 "use client";
 
 import { Calendar } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
+import type { AppLocale } from "@/i18n/config";
+import { formatRwfLocalized } from "@/i18n/formatting";
 
 interface Props {
   amountRwf: number;
@@ -9,11 +12,16 @@ interface Props {
 }
 
 export function PaymentAmountCard({ amountRwf, period, unitNumber }: Props) {
+  const t = useTranslations("renter.payments.payRent");
+  const locale = useLocale() as AppLocale;
+
   return (
     <div className="my-8 rounded-xl border border-line bg-surface p-4 flex flex-wrap items-center justify-between gap-3">
       <div className="flex items-center gap-3">
         <div>
-          <div className="text-[15px] font-bold text-ink">Rental Period</div>
+          <div className="text-[15px] font-bold text-ink">
+            {t("rentalPeriod")}
+          </div>
           <div className="text-xs mt-1 text-body flex items-center gap-1.5 ">
             <Calendar className="size-3.5 text-faint" />
             {period} &bull; {unitNumber}
@@ -22,10 +30,10 @@ export function PaymentAmountCard({ amountRwf, period, unitNumber }: Props) {
       </div>
       <div className="text-right">
         <span className="text-[12.5px] font-medium uppercase tracking-wider text-faint">
-          Amount Due
+          {t("amountDue")}
         </span>
         <div className="text-lg font-bold text-ink">
-          RWF {amountRwf.toLocaleString()}
+          {formatRwfLocalized(amountRwf, locale)}
         </div>
       </div>
     </div>

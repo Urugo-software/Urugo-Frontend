@@ -1,4 +1,7 @@
+"use client";
+
 import { ArrowLeft, Camera, FileImage, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 
@@ -25,39 +28,42 @@ type ThirdStepProps = {
 };
 
 function ThirdStep({ photo, onPhotoChange, onBack }: ThirdStepProps) {
-  const [error, setError] = useState("");
+  const t = useTranslations("auth.signUp.photo");
+  const tActions = useTranslations("common.actions");
+  const [hasInvalidFile, setHasInvalidFile] = useState(false);
+
   const { getRootProps, getInputProps, isDragActive, isDragReject } =
     useDropzone({
       accept: { "image/*": [] },
       multiple: false,
       onDrop: (acceptedFiles, rejectedFiles) => {
         if (rejectedFiles.length > 0) {
-          setError("Please choose a single image file (JPG, PNG, or WebP).");
+          setHasInvalidFile(true);
           return;
         }
         const file = acceptedFiles[0];
         if (file) {
-          setError("");
+          setHasInvalidFile(false);
           onPhotoChange(file);
         }
       },
     });
 
-  const describedBy = error
+  const describedBy = hasInvalidFile
     ? "photo-description photo-error"
     : "photo-description";
 
   return (
     <>
-      <Field data-invalid={Boolean(error) || undefined}>
+      <Field data-invalid={hasInvalidFile || undefined}>
         <FieldLabel htmlFor="photo" className={AUTH_LABEL_CLASS}>
-          Profile photo{" "}
-          <span className="font-normal text-faint">(optional)</span>
+          {t("label")}{" "}
+          <span className="font-normal text-faint">{t("optionalTag")}</span>
         </FieldLabel>
         <div
           {...getRootProps({
             role: "button",
-            "aria-label": "Choose a profile photo",
+            "aria-label": t("dropzoneAria"),
             "aria-describedby": describedBy,
             className: cn(
               "cursor-pointer rounded-xl border border-dashed border-line bg-surface/60 px-5 py-6 text-center transition-colors hover:border-brand/50 hover:bg-brand-tint/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:ring-offset-2",
@@ -81,20 +87,18 @@ function ThirdStep({ photo, onPhotoChange, onBack }: ThirdStepProps) {
           </div>
           <p className="text-sm font-medium text-ink">
             {isDragReject
-              ? "Unsupported file type"
+              ? t("unsupportedTitle")
               : isDragActive
-                ? "Drop your photo here"
-                : "Upload a profile photo"}
+                ? t("dropHereTitle")
+                : t("uploadTitle")}
           </p>
           <p className="mt-1 text-xs text-body">
-            {isDragReject
-              ? "Please drop an image file (JPG, PNG, or WebP)."
-              : "Drag and drop here, or click to browse files"}
+            {isDragReject ? t("unsupportedHint") : t("browseHint")}
           </p>
         </div>
 
         <FieldDescription id="photo-description" className="text-xs text-faint">
-          JPG, PNG, or WebP. You can skip this step and add a photo later.
+          {t("description")}
         </FieldDescription>
 
         {photo && (
@@ -116,11 +120,11 @@ function ThirdStep({ photo, onPhotoChange, onBack }: ThirdStepProps) {
             </div>
             <button
               type="button"
-              aria-label="Remove selected photo"
+              aria-label={t("removeAria")}
               className="flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-lg text-faint transition-colors hover:bg-line/60 hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
               onClick={() => {
                 onPhotoChange(null);
-                setError("");
+                setHasInvalidFile(false);
               }}
             >
               <X aria-hidden="true" className="size-4" />
@@ -128,9 +132,9 @@ function ThirdStep({ photo, onPhotoChange, onBack }: ThirdStepProps) {
           </div>
         )}
 
-        {error && (
+        {hasInvalidFile && (
           <FieldError id="photo-error" className="text-xs font-medium">
-            {error}
+            {t("invalidFile")}
           </FieldError>
         )}
       </Field>
@@ -141,13 +145,13 @@ function ThirdStep({ photo, onPhotoChange, onBack }: ThirdStepProps) {
             type="button"
             variant="outline"
             onClick={onBack}
-            className={`${AUTH_SECONDARY_BUTTON_CLASS} sm:w-28`}
+            className={`${AUTH_SECONDARY_BUTTON_CLASS} sm:min-w-28`}
           >
             <ArrowLeft aria-hidden="true" className="size-4" />
-            <span>Back</span>
+            <span>{tActions("back")}</span>
           </Button>
           <Button type="submit" className={AUTH_PRIMARY_BUTTON_CLASS}>
-            Create account
+            {t("createAccount")}
           </Button>
         </div>
       </Field>

@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowLeft, Save, Eye } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { AgreementLanguage } from "@/types/agreement.types";
 
@@ -25,6 +26,8 @@ export function EditorHeader({
   onSave,
   backButtonLabel,
 }: Props) {
+  const t = useTranslations("landlord.agreements.editor");
+
   return (
     <div className="flex flex-col gap-3 border-b border-line pb-4 pt-1 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex flex-wrap items-center gap-2.5">
@@ -34,18 +37,18 @@ export function EditorHeader({
           className="inline-flex cursor-pointer items-center gap-1 text-[12.5px] font-medium text-faint transition-colors hover:text-ink"
         >
           <ArrowLeft className="size-3.5" />
-          <span>{backButtonLabel || "Back to Agreement"}</span>
+          <span>{backButtonLabel || t("backToAgreement")}</span>
         </button>
         <span className="text-[12.5px] text-faint">&middot;</span>
         <h1 className="text-sm font-semibold text-ink sm:text-[15px]">
-          Edit Agreement
+          {t("editAgreement")}
         </h1>
         <span className="font-mono text-[12.5px] text-faint">
           ({referenceNumber})
         </span>
         {hasUnsavedChanges && (
           <span className="text-[12.5px] font-medium text-amber-700">
-            &middot; Unsaved changes
+            &middot; {t("unsavedChanges")}
           </span>
         )}
       </div>
@@ -82,7 +85,7 @@ export function EditorHeader({
           className="inline-flex h-8.5 cursor-pointer items-center gap-1.5 border border-line bg-white px-3 text-[12.5px] font-medium text-ink transition-colors hover:bg-surface"
         >
           <Eye className="size-3.5 text-faint" />
-          <span>Preview</span>
+          <span>{t("preview")}</span>
         </button>
 
         <Button
@@ -91,7 +94,7 @@ export function EditorHeader({
           className="inline-flex h-8.5 cursor-pointer items-center gap-1.5 rounded-none bg-ink px-3.5 text-[12.5px] font-medium text-white transition-colors hover:bg-black"
         >
           <Save className="size-3.5" />
-          <span>Save Changes</span>
+          <span>{t("saveChanges")}</span>
         </Button>
       </div>
     </div>

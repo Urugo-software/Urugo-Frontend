@@ -1,7 +1,11 @@
+"use client";
+
 import { Mail, MapPin, Phone } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { UserAvatar } from "@/components/shared/UserAvatar";
+import type { AppLocale } from "@/i18n/config";
+import { formatRwfLocalized } from "@/i18n/formatting";
 import type { RenterLease } from "@/types/renter";
-import { formatRwf } from "@/utils/format";
 import { getOrdinalSuffix } from "@/utils/rent-schedule-utils";
 
 interface Props {
@@ -9,38 +13,59 @@ interface Props {
 }
 
 export function LeaseDetailsGrid({ lease }: Props) {
+  const t = useTranslations("renter.lease");
+  const locale = useLocale() as AppLocale;
+
+  const dueDayDisplay =
+    locale === "en"
+      ? `${lease.paymentDueDay}${getOrdinalSuffix(lease.paymentDueDay)}`
+      : String(lease.paymentDueDay);
+
   const termRows = [
-    { label: "Lease Start Date", value: lease.startDate },
+    { key: "startDate", label: t("startDate"), value: lease.startDate },
     {
-      label: "Lease End Date",
-      value: lease.endDate ?? "Open-ended monthly tenancy",
+      key: "endDate",
+      label: t("endDate"),
+      value: lease.endDate ?? t("openEndedTenancy"),
     },
-    { label: "Monthly Rent", value: formatRwf(lease.monthlyRentRwf) },
     {
-      label: "Payment Due",
-      value: `${lease.paymentDueDay}${getOrdinalSuffix(lease.paymentDueDay)} of each month`,
+      key: "monthlyRent",
+      label: t("monthlyRent"),
+      value: formatRwfLocalized(lease.monthlyRentRwf, locale),
+    },
+    {
+      key: "paymentDue",
+      label: t("paymentDue"),
+      value: t("paymentDueValue", { day: dueDayDisplay }),
     },
     ...(lease.securityDepositRwf !== undefined
       ? [
           {
-            label: "Security Deposit",
-            value: formatRwf(lease.securityDepositRwf),
+            key: "securityDeposit",
+            label: t("securityDeposit"),
+            value: formatRwfLocalized(lease.securityDepositRwf, locale),
           },
         ]
       : []),
     ...(lease.noticePeriodDays !== undefined
-      ? [{ label: "Notice Period", value: `${lease.noticePeriodDays} days` }]
+      ? [
+          {
+            key: "noticePeriod",
+            label: t("noticePeriod"),
+            value: t("noticeDays", { days: lease.noticePeriodDays }),
+          },
+        ]
       : []),
   ];
 
   return (
     <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
       <div className="border border-line bg-white p-5 shadow-2xs">
-        <h3 className="mb-4 text-base font-bold text-ink">Lease Terms</h3>
+        <h3 className="mb-4 text-base font-bold text-ink">{t("termsTitle")}</h3>
         <div className="space-y-3 text-sm">
           {termRows.map((row, idx) => (
             <div
-              key={row.label}
+              key={row.key}
               className={`flex items-center justify-between gap-4${
                 idx < termRows.length - 1 ? " border-b border-line pb-2.5" : ""
               }`}
@@ -56,7 +81,7 @@ export function LeaseDetailsGrid({ lease }: Props) {
 
       <div className="border border-line bg-white p-5 shadow-2xs">
         <h3 className="mb-4 text-base font-bold text-ink">
-          Property &amp; Landlord
+          {t("propertyAndLandlord")}
         </h3>
 
         <div className="mb-4 flex items-start gap-2 text-sm text-body">

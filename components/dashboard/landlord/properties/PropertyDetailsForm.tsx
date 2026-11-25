@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import toast from "react-hot-toast";
 import { ArrowLeft, Building2, Home } from "lucide-react";
@@ -40,15 +41,15 @@ interface PropertyFields {
 }
 
 const AMENITY_OPTIONS = [
-  "Parking",
-  "WiFi",
-  "24/7 Security",
-  "Water Tank",
-  "Garden",
-  "Furnished",
-  "Solar Heater",
-  "Gated Compound",
-];
+  { value: "Parking", key: "parking" },
+  { value: "WiFi", key: "wifi" },
+  { value: "24/7 Security", key: "security247" },
+  { value: "Water Tank", key: "waterTank" },
+  { value: "Garden", key: "garden" },
+  { value: "Furnished", key: "furnished" },
+  { value: "Solar Heater", key: "solarHeater" },
+  { value: "Gated Compound", key: "gatedCompound" },
+] as const;
 
 const SELECT_STYLE =
   "h-10 w-full rounded-none border border-input bg-white px-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50";
@@ -56,19 +57,23 @@ const SELECT_STYLE =
 const STRUCTURE_OPTIONS = [
   {
     hasUnits: false,
-    title: "Standalone Property",
-    description: "One whole home or space rented to a single household.",
+    titleKey: "standaloneTitle",
+    descriptionKey: "standaloneDesc",
     icon: Home,
   },
   {
     hasUnits: true,
-    title: "Multi-Unit Building",
-    description: "One building with multiple individually rentable units.",
+    titleKey: "multiUnitTitle",
+    descriptionKey: "multiUnitDesc",
     icon: Building2,
   },
 ] as const;
 
 function PropertyForm({ property }: { property?: LandlordPropertyItem }) {
+  const t = useTranslations("landlord.properties.form");
+  const tTypes = useTranslations("landlord.properties.types");
+  const tStatuses = useTranslations("landlord.properties.statuses");
+  const tAmenities = useTranslations("landlord.properties.amenities");
   const router = useRouter();
   const serviceMode = useLandlordWorkspace((s) => s.serviceMode);
   const { groups, saveProperty } = useLandlordProperties();
@@ -149,16 +154,19 @@ function PropertyForm({ property }: { property?: LandlordPropertyItem }) {
     if (!saved) {
       setError(
         "groupId",
-        { message: "This group is no longer available. Choose another." },
+        { message: t("groupUnavailableError") },
         { shouldFocus: true },
       );
       return;
     }
 
+    const savedStatusLabel = saved.listingStatus
+      ? tStatuses(saved.listingStatus)
+      : "";
     toast.success(
       property
-        ? `"${saved.name}" updated.`
-        : `"${saved.name}" saved (${saved.listingStatus}).`,
+        ? t("toastUpdated", { name: saved.name })
+        : t("toastSaved", { name: saved.name, status: savedStatusLabel }),
     );
     router.push(`/landlord/properties/${encodeURIComponent(saved.id)}`);
   }
@@ -173,15 +181,15 @@ function PropertyForm({ property }: { property?: LandlordPropertyItem }) {
         {!property && serviceMode === "managed" && (
           <FieldSet>
             <FieldLegend className="text-xs font-semibold uppercase tracking-wider text-faint">
-              Property Structure
+              {t("structureLegend")}
             </FieldLegend>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {STRUCTURE_OPTIONS.map(
-                ({ hasUnits, title, description, icon: Icon }) => {
+                ({ hasUnits, titleKey, descriptionKey, icon: Icon }) => {
                   const selected = isMultiUnit === hasUnits;
                   return (
                     <button
-                      key={title}
+                      key={titleKey}
                       type="button"
                       aria-pressed={selected}
                       onClick={() => {
@@ -207,11 +215,11 @@ function PropertyForm({ property }: { property?: LandlordPropertyItem }) {
                           )}
                         />
                         <span className="text-sm font-bold text-ink">
-                          {title}
+                          {t(titleKey)}
                         </span>
                       </div>
                       <p className="text-xs leading-relaxed text-body">
-                        {description}
+                        {t(descriptionKey)}
                       </p>
                     </button>
                   );
@@ -223,28 +231,28 @@ function PropertyForm({ property }: { property?: LandlordPropertyItem }) {
 
         <FieldSet className="space-y-4">
           <FieldLegend className="text-xs font-semibold uppercase tracking-wider text-faint">
-            Basic Information & Listing Status
+            {t("basicInfoLegend")}
           </FieldLegend>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field className="sm:col-span-2">
               <FieldLabel htmlFor="property-name" className="text-sm">
-                {isMultiUnit ? "Building name" : "Property name"}{" "}
+                {isMultiUnit ? t("buildingNameLabel") : t("propertyNameLabel")}{" "}
                 <span className="text-rose-600">*</span>
               </FieldLabel>
               <Input
                 id="property-name"
                 placeholder={
                   isMultiUnit
-                    ? "e.g., Kimironko Heights"
-                    : "e.g., Kabeza Modern House"
+                    ? t("buildingNamePlaceholder")
+                    : t("propertyNamePlaceholder")
                 }
                 aria-required
                 aria-invalid={!!errors.name}
                 aria-describedby={errors.name && "property-name-error"}
                 className="h-10 rounded-none"
                 {...register("name", {
-                  validate: (v) => !!v.trim() || "Enter a property name.",
+                  validate: (v) => !!v.trim() || t("nameRequired"),
                 })}
               />
               <FieldError id="property-name-error">
@@ -254,49 +262,49 @@ function PropertyForm({ property }: { property?: LandlordPropertyItem }) {
 
             <Field>
               <FieldLabel htmlFor="property-type" className="text-sm">
-                Property type <span className="text-rose-600">*</span>
+                {t("propertyTypeLabel")} <span className="text-rose-600">*</span>
               </FieldLabel>
               <select
                 id="property-type"
                 className={SELECT_STYLE}
                 {...register("type")}
               >
-                <option value="HOUSE">House</option>
-                <option value="APARTMENT">Apartment</option>
-                <option value="COMMERCIAL">Commercial</option>
+                <option value="HOUSE">{tTypes("HOUSE")}</option>
+                <option value="APARTMENT">{tTypes("APARTMENT")}</option>
+                <option value="COMMERCIAL">{tTypes("COMMERCIAL")}</option>
               </select>
             </Field>
 
             <Field>
               <FieldLabel htmlFor="property-listing-status" className="text-sm">
-                Listing visibility
+                {t("listingVisibilityLabel")}
               </FieldLabel>
               <select
                 id="property-listing-status"
                 className={SELECT_STYLE}
                 {...register("listingStatus")}
               >
-                <option value="Published">Published (Visible on Urugo)</option>
-                <option value="Draft">Draft (Hidden)</option>
-                <option value="Paused">Paused (Temporarily hidden)</option>
-                <option value="Rented">Rented / Unavailable</option>
-                <option value="Archived">Archived</option>
+                <option value="Published">{t("visibilityPublished")}</option>
+                <option value="Draft">{t("visibilityDraft")}</option>
+                <option value="Paused">{t("visibilityPaused")}</option>
+                <option value="Rented">{t("visibilityRented")}</option>
+                <option value="Archived">{t("visibilityArchived")}</option>
               </select>
             </Field>
 
             <Field className="sm:col-span-2">
               <FieldLabel htmlFor="property-location" className="text-sm">
-                Location <span className="text-rose-600">*</span>
+                {t("locationLabel")} <span className="text-rose-600">*</span>
               </FieldLabel>
               <Input
                 id="property-location"
-                placeholder="e.g., Kimironko, Gasabo, Kigali"
+                placeholder={t("locationPlaceholder")}
                 aria-required
                 aria-invalid={!!errors.location}
                 aria-describedby={errors.location && "property-location-error"}
                 className="h-10 rounded-none"
                 {...register("location", {
-                  validate: (v) => !!v.trim() || "Enter a property location.",
+                  validate: (v) => !!v.trim() || t("locationRequired"),
                 })}
               />
               <FieldError id="property-location-error">
@@ -307,23 +315,23 @@ function PropertyForm({ property }: { property?: LandlordPropertyItem }) {
             {!isMultiUnit && (
               <Field>
                 <FieldLabel htmlFor="property-rent" className="text-sm">
-                  Monthly rent (RWF) <span className="text-rose-600">*</span>
+                  {t("monthlyRentLabel")} <span className="text-rose-600">*</span>
                 </FieldLabel>
                 <Input
                   id="property-rent"
                   type="number"
                   min={0}
                   step={1000}
-                  placeholder="e.g., 200000"
+                  placeholder={t("monthlyRentPlaceholder")}
                   aria-invalid={!!errors.expectedRent}
                   className="h-10 rounded-none"
                   {...register("expectedRent", {
                     validate: (v) => {
-                      if (!v.trim()) return "Enter monthly rent.";
+                      if (!v.trim()) return t("monthlyRentRequired");
                       const n = Number(v);
                       return (
                         (Number.isInteger(n) && n > 0) ||
-                        "Enter a valid positive amount in RWF."
+                        t("monthlyRentPositive")
                       );
                     },
                   })}
@@ -334,20 +342,20 @@ function PropertyForm({ property }: { property?: LandlordPropertyItem }) {
 
             <Field>
               <FieldLabel htmlFor="property-deposit" className="text-sm">
-                Security deposit (RWF)
+                {t("securityDepositLabel")}
               </FieldLabel>
               <Input
                 id="property-deposit"
                 type="number"
                 min={0}
                 step={1000}
-                placeholder="e.g., 200000"
+                placeholder={t("securityDepositPlaceholder")}
                 className="h-10 rounded-none"
                 {...register("securityDeposit", {
                   validate: (v) =>
                     !v.trim() ||
                     Number(v) >= 0 ||
-                    "Deposit cannot be negative.",
+                    t("depositNonNegative"),
                 })}
               />
               <FieldError>{errors.securityDeposit?.message}</FieldError>
@@ -355,14 +363,14 @@ function PropertyForm({ property }: { property?: LandlordPropertyItem }) {
 
             <Field>
               <FieldLabel htmlFor="property-bedrooms" className="text-sm">
-                Bedrooms
+                {t("bedroomsLabel")}
               </FieldLabel>
               <Input
                 id="property-bedrooms"
                 type="number"
                 min={0}
                 max={20}
-                placeholder="e.g., 2"
+                placeholder={t("bedroomsPlaceholder")}
                 className="h-10 rounded-none"
                 {...register("bedrooms")}
               />
@@ -370,14 +378,14 @@ function PropertyForm({ property }: { property?: LandlordPropertyItem }) {
 
             <Field>
               <FieldLabel htmlFor="property-bathrooms" className="text-sm">
-                Bathrooms
+                {t("bathroomsLabel")}
               </FieldLabel>
               <Input
                 id="property-bathrooms"
                 type="number"
                 min={0}
                 max={20}
-                placeholder="e.g., 1"
+                placeholder={t("bathroomsPlaceholder")}
                 className="h-10 rounded-none"
                 {...register("bathrooms")}
               />
@@ -385,7 +393,7 @@ function PropertyForm({ property }: { property?: LandlordPropertyItem }) {
 
             <Field>
               <FieldLabel htmlFor="property-available" className="text-sm">
-                Available from
+                {t("availableFromLabel")}
               </FieldLabel>
               <Input
                 id="property-available"
@@ -398,7 +406,7 @@ function PropertyForm({ property }: { property?: LandlordPropertyItem }) {
             {serviceMode === "managed" && (
               <Field>
                 <FieldLabel htmlFor="property-group" className="text-sm">
-                  Property group (optional)
+                  {t("propertyGroupLabel")}
                 </FieldLabel>
                 <Controller
                   control={control}
@@ -416,13 +424,13 @@ function PropertyForm({ property }: { property?: LandlordPropertyItem }) {
                         field.onChange(e.target.value);
                       }}
                     >
-                      <option value="">No Group</option>
+                      <option value="">{t("noGroupOption")}</option>
                       {groups.map((g) => (
                         <option key={g.id} value={g.id}>
                           {g.name}
                         </option>
                       ))}
-                      <option value="__new__">+ Create New Group…</option>
+                      <option value="__new__">{t("createNewGroupOption")}</option>
                     </select>
                   )}
                 />
@@ -432,12 +440,12 @@ function PropertyForm({ property }: { property?: LandlordPropertyItem }) {
 
             <Field className="sm:col-span-2">
               <FieldLabel htmlFor="property-description" className="text-sm">
-                Listing description
+                {t("descriptionLabel")}
               </FieldLabel>
               <textarea
                 id="property-description"
                 rows={3}
-                placeholder="Highlight neighborhood benefits, utilities, access roads, and house rules..."
+                placeholder={t("descriptionPlaceholder")}
                 className="w-full rounded-none border border-input bg-white p-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
                 {...register("description")}
               />
@@ -448,14 +456,14 @@ function PropertyForm({ property }: { property?: LandlordPropertyItem }) {
         {/* Amenities */}
         <FieldSet className="border-t border-line pt-5">
           <FieldLegend className="text-xs font-semibold uppercase tracking-wider text-faint">
-            Amenities
+            {t("amenitiesLegend")}
           </FieldLegend>
           <Controller
             control={control}
             name="amenities"
             render={({ field }) => (
               <div className="flex flex-wrap gap-2">
-                {AMENITY_OPTIONS.map((amenity) => {
+                {AMENITY_OPTIONS.map(({ value: amenity, key }) => {
                   const checked = field.value.includes(amenity);
                   return (
                     <button
@@ -476,7 +484,7 @@ function PropertyForm({ property }: { property?: LandlordPropertyItem }) {
                           : "border-line bg-white text-body hover:bg-surface hover:text-ink",
                       )}
                     >
-                      {amenity}
+                      {tAmenities(key)}
                     </button>
                   );
                 })}
@@ -511,7 +519,7 @@ function PropertyForm({ property }: { property?: LandlordPropertyItem }) {
               "rounded-none",
             )}
           >
-            Cancel
+            {t("cancel")}
           </Link>
           <Button
             type="submit"
@@ -519,10 +527,10 @@ function PropertyForm({ property }: { property?: LandlordPropertyItem }) {
             className="cursor-pointer rounded-none"
           >
             {isSubmitting
-              ? "Saving..."
+              ? t("saving")
               : property
-                ? "Save Changes"
-                : "Save Property"}
+                ? t("saveChanges")
+                : t("saveProperty")}
           </Button>
         </div>
       </form>
@@ -545,6 +553,7 @@ function PropertyForm({ property }: { property?: LandlordPropertyItem }) {
 }
 
 export function PropertyDetailsForm({ propertyId }: { propertyId?: string }) {
+  const t = useTranslations("landlord.properties.form");
   const property = useLandlordProperties((state) =>
     state.properties.find((item) => item.id === propertyId),
   );
@@ -562,14 +571,18 @@ export function PropertyDetailsForm({ propertyId }: { propertyId?: string }) {
           className="inline-flex items-center gap-1.5 text-sm font-medium text-body hover:text-ink hover:underline"
         >
           <ArrowLeft aria-hidden="true" className="size-4" />
-          <span>{property ? `Back to ${property.name}` : "My Properties"}</span>
+          <span>
+            {property
+              ? t("backToProperty", { name: property.name })
+              : t("backToProperties")}
+          </span>
         </Link>
         <h2 className="text-2xl font-bold tracking-tight text-ink">
           {missing
-            ? "Property unavailable"
+            ? t("unavailableTitle")
             : property
-              ? "Edit Property"
-              : "Add Property"}
+              ? t("editTitle")
+              : t("addTitle")}
         </h2>
       </div>
 
@@ -578,7 +591,7 @@ export function PropertyDetailsForm({ propertyId }: { propertyId?: string }) {
           href="/landlord/properties"
           className={cn(buttonVariants({ variant: "outline" }), "rounded-none")}
         >
-          Back to My Properties
+          {t("backToPropertiesBtn")}
         </Link>
       ) : (
         <PropertyForm key={propertyId ?? "new"} property={property} />

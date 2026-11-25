@@ -3,10 +3,14 @@
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { CheckCircle2 } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { LanguageSwitcher } from "@/components/shared/LanguageSwitcher";
 import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
 import { SETTINGS_TABS } from "./settings-config";
 
 export function LandlordSettingsView() {
+  const t = useTranslations("landlord.settings");
+  const tCommon = useTranslations("common");
   const searchParams = useSearchParams();
   const serviceMode = useLandlordWorkspace((s) => s.serviceMode);
   const visibleTabs =
@@ -43,7 +47,7 @@ export function LandlordSettingsView() {
   };
 
   const activeTab =
-    visibleTabs.find((t) => t.id === activeTabId) || visibleTabs[0];
+    visibleTabs.find((tab) => tab.id === activeTabId) || visibleTabs[0];
   const ActiveComponent = activeTab.component;
 
   return (
@@ -52,12 +56,9 @@ export function LandlordSettingsView() {
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
           <div>
             <h2 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">
-              Settings
+              {t("title")}
             </h2>
-            <p className="mt-1 text-sm text-body">
-              Manage your landlord service plan, profile, contact visibility,
-              notifications, and security.
-            </p>
+            <p className="mt-1 text-sm text-body">{t("subtitle")}</p>
           </div>
 
           {isSaved && (
@@ -67,18 +68,34 @@ export function LandlordSettingsView() {
               className="flex items-center gap-1.5 text-xs font-semibold text-success"
             >
               <CheckCircle2 aria-hidden="true" className="size-4" />
-              <span>Changes saved</span>
+              <span>{t("changesSaved")}</span>
             </div>
           )}
         </div>
 
+        <section
+          aria-labelledby="landlord-language-heading"
+          className="flex flex-col justify-between gap-4 border border-line bg-white p-5 shadow-2xs sm:flex-row sm:items-center sm:p-6"
+        >
+          <div className="space-y-1">
+            <h3
+              id="landlord-language-heading"
+              className="text-sm font-bold text-ink"
+            >
+              {t("languageSection.title")}
+            </h3>
+            <p className="text-xs text-body">{tCommon("language.savedNote")}</p>
+          </div>
+          <LanguageSwitcher variant="full" shape="square" />
+        </section>
+
         <div className="grid min-h-[520px] grid-cols-1 overflow-hidden border border-line bg-white shadow-2xs md:grid-cols-[240px_minmax(0,1fr)]">
           <div
             role="tablist"
-            aria-label="Settings sections"
+            aria-label={t("sectionsAria")}
             className="flex gap-1.5 overflow-x-auto border-b border-line bg-surface/40 p-3 md:flex-col md:overflow-visible md:border-b-0 md:border-r md:p-4"
           >
-            {visibleTabs.map(({ id, label, icon: Icon }) => {
+            {visibleTabs.map(({ id, icon: Icon }) => {
               const selected = activeTab.id === id;
               return (
                 <button
@@ -94,7 +111,7 @@ export function LandlordSettingsView() {
                   }`}
                 >
                   <Icon aria-hidden="true" className="size-4 shrink-0" />
-                  <span>{label}</span>
+                  <span>{t(`tabs.${id}`)}</span>
                 </button>
               );
             })}

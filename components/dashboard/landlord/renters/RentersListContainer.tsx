@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Pagination } from "@/components/shared/Pagination";
 import { Button } from "@/components/ui/button";
 import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
@@ -13,6 +14,8 @@ import { RentersTable } from "./RentersTable";
 const ITEMS_PER_PAGE = 6;
 
 export function RentersListContainer() {
+  const t = useTranslations("landlord.renters.list");
+  const tStatuses = useTranslations("common.statuses");
   const containerRef = useRef<HTMLDivElement>(null);
   const renters = useLandlordWorkspace((s) => s.renters);
   const [searchQuery, setSearchQuery] = useState("");
@@ -61,12 +64,9 @@ export function RentersListContainer() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">
-            Managed Renters
+            {t("title")}
           </h2>
-          <p className="mt-1 text-sm text-body">
-            View active tenants connected to your properties and inspect their
-            tenancy and payment status.
-          </p>
+          <p className="mt-1 text-sm text-body">{t("subtitle")}</p>
         </div>
         <AddRenterAction />
       </div>
@@ -85,7 +85,7 @@ export function RentersListContainer() {
 
         <div className="flex flex-wrap items-center gap-2">
           <select
-            aria-label="Filter by tenancy status"
+            aria-label={t("filterTenancyAria")}
             value={tenancyFilter}
             onChange={(e) => {
               setTenancyFilter(e.target.value as "all" | TenancyStatus);
@@ -93,14 +93,14 @@ export function RentersListContainer() {
             }}
             className="h-10 rounded-none border border-line bg-white px-3 text-xs font-semibold text-ink max-sm:flex-1"
           >
-            <option value="all">All tenancies</option>
-            <option value="Active">Active</option>
-            <option value="Ending">Ending</option>
-            <option value="Closed">Closed</option>
+            <option value="all">{t("allTenancies")}</option>
+            <option value="Active">{t("tenancyActive")}</option>
+            <option value="Ending">{t("tenancyEnding")}</option>
+            <option value="Closed">{t("tenancyClosed")}</option>
           </select>
 
           <select
-            aria-label="Filter by payment status"
+            aria-label={t("filterPaymentAria")}
             value={paymentFilter}
             onChange={(e) => {
               setPaymentFilter(
@@ -110,10 +110,10 @@ export function RentersListContainer() {
             }}
             className="h-10 rounded-none border border-line bg-white px-3 text-xs font-semibold text-ink max-sm:flex-1"
           >
-            <option value="all">All payments</option>
-            <option value="Paid">Paid</option>
-            <option value="Pending">Pending</option>
-            <option value="Overdue">Overdue</option>
+            <option value="all">{t("allPayments")}</option>
+            <option value="Paid">{tStatuses("paid")}</option>
+            <option value="Pending">{tStatuses("pending")}</option>
+            <option value="Overdue">{tStatuses("overdue")}</option>
           </select>
         </div>
       </div>
@@ -133,7 +133,7 @@ export function RentersListContainer() {
                 setCurrentPage(1);
               }}
             >
-              Clear filters
+              {t("clearFilters")}
             </Button>
           ) : undefined
         }
@@ -144,7 +144,7 @@ export function RentersListContainer() {
         totalPages={totalPages}
         totalItems={totalItems}
         itemsPerPage={ITEMS_PER_PAGE}
-        itemLabel="renters"
+        itemLabel={t("paginationLabel")}
         onPageChange={(nextPage) => {
           setCurrentPage(nextPage);
           containerRef.current?.scrollTo({ top: 0, behavior: "smooth" });

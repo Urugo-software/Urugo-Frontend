@@ -7,6 +7,7 @@ import {
   ChevronDown,
   RotateCcw,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { AgreementArticle } from "@/types/agreement.types";
 import { CANONICAL_18_ARTICLES } from "@/data/agreement-templates";
 
@@ -35,6 +36,7 @@ export function ArticleEditorCard({
   onDelete,
   language,
 }: Props) {
+  const t = useTranslations("landlord.agreements.editor.articleCard");
   const isFirst = index === 0;
   const isLast = index === totalArticles - 1;
 
@@ -84,18 +86,18 @@ export function ArticleEditorCard({
           </span>
 
           <span className="truncate text-[13px] font-medium text-ink sm:text-sm">
-            {article.title || `Article ${article.number}`}
+            {article.title || t("articleFallback", { number: article.number })}
           </span>
 
           {article.isCustom && (
             <span className="shrink-0 text-[12.5px] font-normal lowercase text-faint">
-              (custom)
+              {t("customBadge")}
             </span>
           )}
 
           {isModifiedFromDefault && (
             <span className="shrink-0 text-[12.5px] font-normal text-amber-700">
-              (edited)
+              {t("editedBadge")}
             </span>
           )}
         </button>
@@ -105,9 +107,9 @@ export function ArticleEditorCard({
             type="button"
             disabled={isFirst}
             onClick={() => onMoveUp(index)}
-            aria-label={`Move article ${article.number} up`}
+            aria-label={t("moveUpAria", { number: article.number })}
             className="cursor-pointer p-1.5 text-faint hover:text-ink disabled:cursor-not-allowed disabled:opacity-20"
-            title="Move up"
+            title={t("moveUpTitle")}
           >
             <ArrowUp className="size-3.5" />
           </button>
@@ -115,18 +117,18 @@ export function ArticleEditorCard({
             type="button"
             disabled={isLast}
             onClick={() => onMoveDown(index)}
-            aria-label={`Move article ${article.number} down`}
+            aria-label={t("moveDownAria", { number: article.number })}
             className="cursor-pointer p-1.5 text-faint hover:text-ink disabled:cursor-not-allowed disabled:opacity-20"
-            title="Move down"
+            title={t("moveDownTitle")}
           >
             <ArrowDown className="size-3.5" />
           </button>
           <button
             type="button"
             onClick={() => onDelete(article.id)}
-            aria-label={`Delete article ${article.number}`}
+            aria-label={t("deleteAria", { number: article.number })}
             className="ml-0.5 cursor-pointer p-1.5 text-faint hover:text-red-600"
-            title="Delete article"
+            title={t("deleteTitle")}
           >
             <Trash2 className="size-3.5" />
           </button>
@@ -135,8 +137,8 @@ export function ArticleEditorCard({
             aria-expanded={isExpanded}
             aria-label={
               isExpanded
-                ? `Collapse article ${article.number}`
-                : `Expand article ${article.number}`
+                ? t("collapseAria", { number: article.number })
+                : t("expandAria", { number: article.number })
             }
             onClick={onToggleExpand}
             className="ml-1 cursor-pointer p-1 text-faint hover:text-ink"
@@ -157,14 +159,14 @@ export function ArticleEditorCard({
               htmlFor={`article-title-${article.id}`}
               className="mb-1.5 block text-[12.5px] font-medium text-faint"
             >
-              Heading
+              {t("headingLabel")}
             </label>
             <input
               id={`article-title-${article.id}`}
               type="text"
               value={article.title}
               onChange={(e) => onUpdate(article.id, { title: e.target.value })}
-              placeholder="Article heading..."
+              placeholder={t("headingPlaceholder")}
               className="w-full border border-line bg-white px-3 py-2 text-[13px] font-medium text-ink placeholder:text-faint focus:border-ink focus:outline-none sm:text-sm"
             />
           </div>
@@ -175,17 +177,17 @@ export function ArticleEditorCard({
                 htmlFor={`article-content-${article.id}`}
                 className="block text-[12.5px] font-medium text-faint"
               >
-                Content
+                {t("contentLabel")}
               </label>
               {isModifiedFromDefault && (
                 <button
                   type="button"
                   onClick={handleResetToStandardDefault}
                   className="inline-flex cursor-pointer items-center gap-1 text-[12.5px] text-faint hover:text-ink"
-                  title="Reset to canonical Rwandan standard text"
+                  title={t("resetWordingTitle")}
                 >
                   <RotateCcw className="size-3" />
-                  <span>Reset to standard wording</span>
+                  <span>{t("resetWording")}</span>
                 </button>
               )}
             </div>
@@ -196,7 +198,7 @@ export function ArticleEditorCard({
               onChange={(e) =>
                 onUpdate(article.id, { content: e.target.value })
               }
-              placeholder="Enter agreement terms for this clause..."
+              placeholder={t("contentPlaceholder")}
               className="w-full border border-line bg-white p-3 font-sans text-[13px] leading-relaxed text-ink placeholder:text-faint focus:border-ink focus:outline-none sm:text-sm"
             />
           </div>

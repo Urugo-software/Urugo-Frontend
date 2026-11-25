@@ -12,6 +12,7 @@ import {
   XCircle,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -37,6 +38,7 @@ const CANCELLABLE_STATUSES = new Set([
 ]);
 
 export function AgreementRowActions({ agreement }: AgreementRowActionsProps) {
+  const t = useTranslations("landlord.agreements.list");
   const router = useRouter();
   const [copied, setCopied] = useState(false);
   const updateAgreementStatus = useLandlordWorkspace(
@@ -47,20 +49,22 @@ export function AgreementRowActions({ agreement }: AgreementRowActionsProps) {
   const editable = isAgreementEditable(agreement.status);
   const cancellable = CANCELLABLE_STATUSES.has(agreement.status);
   const editLabel =
-    agreement.status === "Changes Requested" ? "Revise clauses" : "Edit clauses";
+    agreement.status === "Changes Requested"
+      ? t("actions.reviseClauses")
+      : t("actions.editClauses");
 
   async function handleCopyReference() {
     if (!navigator?.clipboard) {
-      toast.error("Clipboard unavailable in this browser.");
+      toast.error(t("toasts.clipboardUnavailable"));
       return;
     }
     try {
       await navigator.clipboard.writeText(agreement.referenceNumber);
       setCopied(true);
-      toast.success(`Copied ${agreement.referenceNumber}`);
+      toast.success(t("toasts.copiedRef", { ref: agreement.referenceNumber }));
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      toast.error("Could not copy reference number.");
+      toast.error(t("toasts.copyFailed"));
     }
   }
 
@@ -81,13 +85,13 @@ export function AgreementRowActions({ agreement }: AgreementRowActionsProps) {
       supersedes: agreement.id,
       tenancyStartDate: agreement.tenancyEndDate || now.slice(0, 10),
     });
-    toast.success("Renewal draft created.");
+    toast.success(t("toasts.renewalCreated"));
     router.push(`/landlord/agreements/${newId}/edit`);
   }
 
   function handleCancel() {
     updateAgreementStatus(agreement.id, "Cancelled");
-    toast.success(`Agreement ${agreement.referenceNumber} cancelled.`);
+    toast.success(t("toasts.cancelled", { ref: agreement.referenceNumber }));
   }
 
   return (
@@ -96,7 +100,7 @@ export function AgreementRowActions({ agreement }: AgreementRowActionsProps) {
         href={`/landlord/agreements/${agreement.id}`}
         className="text-[14.5px] font-semibold text-brand hover:underline"
       >
-        View
+        {t("actions.view")}
       </Link>
 
       <DropdownMenu>
@@ -106,7 +110,9 @@ export function AgreementRowActions({ agreement }: AgreementRowActionsProps) {
               type="button"
               variant="outline"
               size="icon"
-              aria-label={`More actions for ${agreement.referenceNumber}`}
+              aria-label={t("actions.moreActionsAria", {
+                ref: agreement.referenceNumber,
+              })}
               className="size-9 cursor-pointer rounded-none border-line bg-white text-body hover:bg-surface hover:text-ink"
             >
               <MoreHorizontal className="size-4" />
@@ -131,7 +137,7 @@ export function AgreementRowActions({ agreement }: AgreementRowActionsProps) {
               onClick={handleRenewAgreement}
             >
               <RefreshCw className="size-4 text-faint" />
-              <span>Create renewal draft</span>
+              <span>{t("actions.createRenewalDraft")}</span>
             </DropdownMenuItem>
           )}
           <DropdownMenuItem
@@ -141,12 +147,12 @@ export function AgreementRowActions({ agreement }: AgreementRowActionsProps) {
             {copied ? (
               <>
                 <Check className="size-4 text-success" />
-                <span>Copied reference</span>
+                <span>{t("actions.copiedReference")}</span>
               </>
             ) : (
               <>
                 <Copy className="size-4 text-faint" />
-                <span>Copy reference</span>
+                <span>{t("actions.copyReference")}</span>
               </>
             )}
           </DropdownMenuItem>
@@ -156,7 +162,7 @@ export function AgreementRowActions({ agreement }: AgreementRowActionsProps) {
               onClick={handleCancel}
             >
               <XCircle className="size-4 text-red-600" />
-              <span>Cancel agreement</span>
+              <span>{t("actions.cancelAgreement")}</span>
             </DropdownMenuItem>
           )}
         </DropdownMenuContent>

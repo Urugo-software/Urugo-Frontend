@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { ModalDialog } from "@/components/shared/ModalDialog";
@@ -29,6 +30,9 @@ export function RenterViewingModal({
   propertyId,
   propertyTitle,
 }: RenterViewingModalProps) {
+  const t = useTranslations("renter.discovery.viewingModal");
+  const tWorkspace = useTranslations("renter.workspace");
+  const tActions = useTranslations("common.actions");
   const profile = useRenterWorkspace((s) => s.profile);
   const addNotification = useRenterWorkspace((s) => s.addNotification);
   const addViewingRequest = useLandlordWorkspace((s) => s.addViewingRequest);
@@ -59,15 +63,19 @@ export function RenterViewingModal({
       note: vals.note.trim() || undefined,
     });
     addNotification({
-      title: "Viewing Request Submitted",
-      message: `Requested a viewing for ${propertyTitle} on ${vals.preferredDate} at ${vals.preferredTime}.`,
-      date: "Just now",
+      title: t("notifTitle"),
+      message: t("notifMessage", {
+        property: propertyTitle,
+        date: vals.preferredDate,
+        time: vals.preferredTime,
+      }),
+      date: tWorkspace("justNow"),
       read: false,
       category: "inquiry",
       href: "/renter/inquiries",
-      actionLabel: "Track Visit",
+      actionLabel: t("notifAction"),
     });
-    toast.success("Viewing request sent to the landlord.");
+    toast.success(t("toastSuccess"));
     reset({
       preferredDate: "",
       preferredTime: "10:00",
@@ -81,8 +89,8 @@ export function RenterViewingModal({
     <ModalDialog
       open={open}
       onClose={onClose}
-      title="Request a Property Viewing"
-      description={`Pick a convenient date and time to visit ${propertyTitle}.`}
+      title={t("title")}
+      description={t("description", { property: propertyTitle })}
       footer={
         <>
           <Button
@@ -91,14 +99,14 @@ export function RenterViewingModal({
             onClick={onClose}
             className="cursor-pointer rounded-none"
           >
-            Cancel
+            {tActions("cancel")}
           </Button>
           <Button
             type="submit"
             form="renter-viewing-form"
             className="cursor-pointer rounded-none"
           >
-            Submit Request
+            {t("submitButton")}
           </Button>
         </>
       }
@@ -111,47 +119,46 @@ export function RenterViewingModal({
       >
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <Field>
-            <FieldLabel htmlFor="rv-date">Preferred date *</FieldLabel>
+            <FieldLabel htmlFor="rv-date">{t("dateLabel")}</FieldLabel>
             <Input
               id="rv-date"
               type="date"
               className="h-10 rounded-none"
-              {...register("preferredDate", { required: "Select a date." })}
+              {...register("preferredDate", { required: t("dateError") })}
             />
             <FieldError>{errors.preferredDate?.message}</FieldError>
           </Field>
 
           <Field>
-            <FieldLabel htmlFor="rv-time">Preferred time *</FieldLabel>
+            <FieldLabel htmlFor="rv-time">{t("timeLabel")}</FieldLabel>
             <Input
               id="rv-time"
               type="time"
               className="h-10 rounded-none"
-              {...register("preferredTime", { required: "Select a time." })}
+              {...register("preferredTime", { required: t("timeError") })}
             />
             <FieldError>{errors.preferredTime?.message}</FieldError>
           </Field>
         </div>
 
         <Field>
-          <FieldLabel htmlFor="rv-phone">Contact phone *</FieldLabel>
+          <FieldLabel htmlFor="rv-phone">{t("phoneLabel")}</FieldLabel>
           <Input
             id="rv-phone"
             className="h-10 rounded-none"
             {...register("phone", {
-              validate: (v) =>
-                v.trim().length >= 9 || "Enter a valid phone number.",
+              validate: (v) => v.trim().length >= 9 || t("phoneError"),
             })}
           />
           <FieldError>{errors.phone?.message}</FieldError>
         </Field>
 
         <Field>
-          <FieldLabel htmlFor="rv-note">Note for landlord (optional)</FieldLabel>
+          <FieldLabel htmlFor="rv-note">{t("noteLabel")}</FieldLabel>
           <textarea
             id="rv-note"
             rows={3}
-            placeholder="Any questions or preferred arrival instructions..."
+            placeholder={t("notePlaceholder")}
             className="w-full rounded-none border border-input bg-white p-3 text-sm"
             {...register("note")}
           />

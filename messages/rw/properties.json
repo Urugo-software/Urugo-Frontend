@@ -1,0 +1,213 @@
+{
+  "meta": {
+    "title": "Inzu zikodeshwa",
+    "description": "Shakisha inzu zikodeshwa ziboneka mu Rwanda ukurikije akarere, ubukode bw'ukwezi, ibyumba, n'ibikorwa remezo.",
+    "notFoundTitle": "Inzu ntibonetse",
+    "notFoundDescription": "Inzu ikodeshwa ushakisha ntiyabonetse kuri Urugo."
+  },
+  "loading": "Birimo gufungura inzu ziboneka...",
+  "paginationLabel": "inzu",
+  "search": {
+    "formAria": "Shakisha inzu zikodeshwa",
+    "label": "Shakisha agace, akarere, cyangwa izina ry'inzu",
+    "placeholder": "Shakisha agace, akarere, cyangwa ubwoko bw'inzu (urugero: Kimironko)..."
+  },
+  "counts": {
+    "matchingOne": "Inzu <bold>{count}</bold> ihuye n'ibyo washyizemo",
+    "matchingOther": "Inzu <bold>{count}</bold> zihuye n'ibyo washyizemo",
+    "availableOne": "Inzu <bold>{count}</bold> iraboneka",
+    "availableOther": "Inzu <bold>{count}</bold> ziraboneka"
+  },
+  "sort": {
+    "label": "Tondekanya inzu",
+    "default": "Uko bisanzwe",
+    "priceAsc": "Igiciro: Gito → Kinini",
+    "priceDesc": "Igiciro: Kinini → Gito"
+  },
+  "viewLayoutLabel": "Uburyo bwo kureba inzu",
+  "filters": {
+    "toggleShow": "Muyunguruzi",
+    "toggleHide": "Hisha",
+    "clearFilters": "Siba",
+    "title": "Yungurura inzu",
+    "closeAria": "Funga muyunguruzi",
+    "district": "Akarere",
+    "allDistricts": "Uturere twose",
+    "priceRange": "Ubukode bw'ukwezi (RWF / ukwezi)",
+    "minRentAria": "Ubukode bw'ukwezi buto cyane",
+    "maxRentAria": "Ubukode bw'ukwezi bunini cyane",
+    "anyMin": "Byose",
+    "anyMax": "Byose",
+    "bedrooms": "Ibyumba",
+    "bedroomOptions": {
+      "1": "1",
+      "2": "2",
+      "any": "Byose",
+      "studio": "Situdiyo",
+      "3plus": "3+"
+    },
+    "amenities": "Ibikorwa remezo",
+    "amenityOptions": {
+      "wifi": "WiFi",
+      "parking": "Parikingi",
+      "water": "Amazi",
+      "security": "Umutekano"
+    },
+    "pillsMultiAria": "Hitamo igisubizo kimwe cyangwa byinshi",
+    "pillsSingleAria": "Hitamo igisubizo kimwe",
+    "apply": "Emeza",
+    "reset": "Subiramo"
+  },
+  "empty": {
+    "title": "Nta nzu zihuye n'ibyo ushakisha",
+    "description": "Gerageza gukuraho muyunguruzi imwe, guhitamo akandi karere, cyangwa kwagura ingengo yawe y'ukwezi.",
+    "resetAll": "Subiramo"
+  },
+  "sidebarPromo": {
+    "asideAria": "Ibikorwa bifasha",
+    "landlordTitle": "Ufite inzu yo gukodesha?",
+    "landlordDescription": "Tangaza inzu yawe mu buryo bwa Kwamamaza gusa wakire ubusabe bwo gusura inzu, cyangwa ucunge amasezerano y'ubukode n'ubwishyu kuri Urugo.",
+    "zoeTitle": "Ntuzi neza ikijyanye n'ingengo yawe?",
+    "zoeDescription": "Baza Zoe mu mvugo isanzwe inama ku duce twa Kigali n'ikiguzi cyo kwimuka.",
+    "askZoe": "Baza Zoe"
+  },
+  "card": {
+    "byOwner": "Ya {owner}",
+    "viewDetailsAria": "Reba amakuru arambuye ya {headline}",
+    "beds": "{count, plural, one {Icyumba #} other {Ibyumba #}}",
+    "baths": "{count, plural, one {Ubwiherero #} other {Ubwiherero #}}",
+    "parking": "Parikingi",
+    "viewDetails": "Reba birambuye"
+  },
+  "periods": {
+    "month": "ukwezi",
+    "perMonth": "ku kwezi"
+  },
+  "availability": {
+    "availableNow": "Iraboneka ubu",
+    "currentlyOccupied": "Iratuwe ubu",
+    "verifiedListing": "Inzu yemejwe",
+    "immediately": "Ako kanya",
+    "nextMonth": "Ukwezi gutaha"
+  },
+  "amenityLabels": {
+    "waterIncluded": "Amazi arimo",
+    "wifiIncluded": "WiFi irimo",
+    "security247": "Umutekano 24/7",
+    "laundryArea": "Aho kumesera",
+    "privateParking": "Parikingi yihariye",
+    "spaciousLivingRoom": "Uruganiriro runini",
+    "furnishedLivingRoom": "Uruganiriro rurimo ibikoresho"
+  },
+  "costLabels": {
+    "firstMonthRent": "Ubukode bw'ukwezi kwa mbere",
+    "rentUpfront2Months": "Ubukode bw'amezi 2 y'ibanze",
+    "securityDeposit1Month": "Ingwate (ukwezi 1)",
+    "monthlyRent": "Ubukode bw'ukwezi",
+    "water": "Amazi",
+    "wifi": "WiFi",
+    "waterAndWifi": "Amazi na WiFi",
+    "compoundSecurity": "Umutekano w'igipangu",
+    "wasteCollection": "Gutwara imyanda",
+    "homeInternet": "Interineti yo mu rugo"
+  },
+  "details": {
+    "backToProperties": "Inzu zose",
+    "aboutHeading": "Ibyerekeye iyi nzu",
+    "whatsIncluded": "Ibikubiyemo",
+    "moreHomes": "Izindi nzu wareba",
+    "viewAllProperties": "Reba inzu zose",
+    "bedroomsLong": "{count, plural, one {Icyumba #} other {Ibyumba #}}",
+    "bathroomsLong": "{count, plural, one {Ubwiherero #} other {Ubwiherero #}}",
+    "parking": "Parikingi",
+    "gallery": {
+      "noPhotos": "Nta mafoto y'inzu araboneka ubu",
+      "openPhotoAria": "Fungura ifoto ya {current} kuri {total}",
+      "prevPhotoAria": "Ifoto ibanziriza",
+      "nextPhotoAria": "Ifoto ikurikira",
+      "allPhotos": "Amafoto yose ({total})",
+      "viewPhotoAria": "Reba ifoto ya {current} kuri {total}: {alt}",
+      "openExtraAria": "Fungura urebe {count, plural, one {indi foto #} other {andi mafoto #}}",
+      "morePhotosLabel": "{count, plural, one {indi foto} other {andi mafoto}}",
+      "viewAllPhotos": "Reba amafoto yose {total}"
+    },
+    "lightbox": {
+      "dialogAria": "Amafoto y'inzu",
+      "photoCounter": "Ifoto ya {current} kuri {total}",
+      "closeAria": "Funga amafoto",
+      "prevAria": "Ifoto ibanziriza",
+      "nextAria": "Ifoto ikurikira",
+      "imageUnavailable": "Ifoto ntiboneka",
+      "thumbAria": "Reba ifoto ya {index}: {alt}"
+    },
+    "costs": {
+      "heading": "Ubwishyu n'ikiguzi",
+      "beforeMovingIn": "Mbere yo kwimuka",
+      "moveInHeading": "Ibikubiye mu kiguzi cyo kwimuka",
+      "estimatedMoveInTotal": "Igiteranyo giteganyijwe cyo kwimuka",
+      "totalToMoveIn": "Igiteranyo cyo kwimuka",
+      "monthlyCosts": "Ikiguzi cy'ukwezi",
+      "included": "Birimo",
+      "estimatedTag": "(Ikigereranyo)",
+      "paidByRenter": "Yishyurwa n'umupangayi",
+      "paidByLandlord": "Yishyurwa na nyir'inzu",
+      "estimatedMonthlyTotal": "Igiteranyo giteganyijwe cy'umupangayi ku kwezi",
+      "disclaimer": "Ikigereranyo cy'ukwezi gishobora guhinduka bitewe n'imikoreshereze y'urugo n'amasezerano y'ubukode mwumvikanyeho na nyir'inzu."
+    },
+    "landlord": {
+      "verifiedLandlord": "Nyir'inzu wemejwe",
+      "propertyOwner": "Nyir'inzu"
+    },
+    "sidebar": {
+      "asideAria": "Igiciro n'uburyo bwo kuvugana na nyir'inzu",
+      "perPeriod": "ku {period}",
+      "bedrooms": "Ibyumba",
+      "bathrooms": "Ubwiherero",
+      "parking": "Parikingi",
+      "included": "Irahari",
+      "notIncluded": "Ntihari",
+      "availableFrom": "Igihe ibonekera",
+      "askZoeTitle": "Baza Zoe",
+      "askZoeDescription": "Ukeneye ubufasha mu kugereranya ikiguzi cyo kwimuka cyangwa uduce?",
+      "askAboutHome": "Baza Zoe",
+      "askAboutPrompt": "Sobanura ikiguzi cyo kwimuka kuri {headline} i {location} ({price}/ukwezi)."
+    },
+    "leads": {
+      "requestVisit": "Saba gusura inzu",
+      "sendInquiry": "Ohereza ikibazo",
+      "whatsappLink": "Cyangwa andikira nyir'inzu kuri WhatsApp",
+      "whatsappMessage": "Muraho, nashishikajwe na {propertyTitle} kuri Urugo.",
+      "visitModal": {
+        "title": "Saba gusura inzu",
+        "description": "Tegura umunsi wo gusura {propertyTitle}.",
+        "submit": "Ohereza ubusabe",
+        "successToast": "Ubusabe bwo gusura inzu bwoherejwe kuri nyir'inzu.",
+        "fullName": "Amazina yose *",
+        "phone": "Telefoni *",
+        "email": "Imeyili *",
+        "preferredDate": "Itariki wifuza *",
+        "preferredTime": "Isaha wifuza *",
+        "note": "Ubutumwa bw'inyongera (si itegeko)",
+        "nameRequired": "Andika amazina yawe.",
+        "phoneRequired": "Andika nomero ya telefoni yawe.",
+        "emailRequired": "Andika imeyili yawe.",
+        "dateRequired": "Hitamo itariki.",
+        "timeRequired": "Hitamo isaha."
+      },
+      "inquiryModal": {
+        "title": "Ohereza ikibazo ku nzu",
+        "description": "Baza nyir'inzu ikibazo kuri {propertyTitle}.",
+        "submit": "Ohereza ikibazo",
+        "successToast": "Ikibazo cyawe cyagejejwe kuri nyir'inzu.",
+        "fullName": "Amazina yose *",
+        "phone": "Telefoni *",
+        "email": "Imeyili *",
+        "message": "Ubutumwa *",
+        "nameRequired": "Andika amazina yawe.",
+        "phoneRequired": "Andika nomero ya telefoni yawe.",
+        "emailRequired": "Andika imeyili yawe.",
+        "messageRequired": "Andika ikibazo cyawe."
+      }
+    }
+  }
+}

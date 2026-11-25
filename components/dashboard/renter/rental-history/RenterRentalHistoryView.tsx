@@ -2,12 +2,14 @@
 
 import { useMemo, useState } from "react";
 import { ShieldCheck } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { EmptyStateBox } from "@/components/shared/EmptyStateBox";
+import type { AppLocale } from "@/i18n/config";
+import { formatRwfLocalized } from "@/i18n/formatting";
 import { cn } from "@/lib/utils";
 import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
 import { useRenterWorkspace } from "@/store/renter-workspace.store";
 import type { RentalIssue } from "@/types/landlord";
-import { formatRwf } from "@/utils/format";
 import { getIssueStatusMeta, isIssueActionable } from "@/utils/rental-debt";
 import { DisputeIssueModal } from "./DisputeIssueModal";
 import { RenterIssueCard } from "./RenterIssueCard";
@@ -16,6 +18,8 @@ import { SettleIssueModal } from "./SettleIssueModal";
 type HistoryFilter = "all" | "actionable" | "confirmed" | "resolved";
 
 export function RenterRentalHistoryView() {
+  const t = useTranslations("renter.rentalHistory");
+  const locale = useLocale() as AppLocale;
   const [filter, setFilter] = useState<HistoryFilter>("all");
   const [disputeTarget, setDisputeTarget] = useState<RentalIssue | null>(null);
   const [settleTarget, setSettleTarget] = useState<RentalIssue | null>(null);
@@ -52,71 +56,66 @@ export function RenterRentalHistoryView() {
     return true;
   });
 
+  const tabs: Array<{ id: HistoryFilter; label: string }> = [
+    { id: "all", label: t("tabs.all") },
+    { id: "actionable", label: t("tabs.actionable") },
+    { id: "confirmed", label: t("tabs.confirmed") },
+    { id: "resolved", label: t("tabs.resolved") },
+  ];
+
   return (
     <div className="min-h-0 flex-1 space-y-6 overflow-y-auto bg-surface/30 p-4 pb-16 sm:p-8 sm:pb-20 md:p-10 md:pb-24">
       <div>
         <h2 className="text-xl font-bold tracking-tight text-ink sm:text-2xl">
-          Rental History &amp; Obligations
+          {t("title")}
         </h2>
-        <p className="mt-1 text-sm text-body">
-          Review your verified rental standing, respond to notices within the
-          3-day window, or submit payment proof.
-        </p>
+        <p className="mt-1 text-sm text-body">{t("subtitle")}</p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="border border-line bg-white p-4 shadow-2xs">
           <span className="text-xs font-semibold uppercase tracking-wider text-faint">
-            Confirmed Unpaid Balance
+            {t("stats.confirmedDebt")}
           </span>
           <p
             className={`mt-2 font-ibm text-xl font-bold ${
               confirmedDebtRwf > 0 ? "text-rose-700" : "text-success"
             }`}
           >
-            {formatRwf(confirmedDebtRwf)}
+            {formatRwfLocalized(confirmedDebtRwf, locale)}
           </p>
-          <p className="mt-1 text-xs text-body">
-            Excludes disputed and notice-period items
-          </p>
+          <p className="mt-1 text-xs text-body">{t("stats.confirmedDebtHint")}</p>
         </div>
 
         <div className="border border-line bg-white p-4 shadow-2xs">
           <span className="text-xs font-semibold uppercase tracking-wider text-faint">
-            Open Notices / Disputes
+            {t("stats.openNotices")}
           </span>
           <p className="mt-2 font-ibm text-xl font-bold text-amber-700">
             {openNoticeCount}
           </p>
-          <p className="mt-1 text-xs text-body">
-            Eligible for dispute proof or settlement
-          </p>
+          <p className="mt-1 text-xs text-body">{t("stats.openNoticesHint")}</p>
         </div>
 
         <div className="border border-line bg-white p-4 shadow-2xs">
           <span className="text-xs font-semibold uppercase tracking-wider text-faint">
-            Resolved Records
+            {t("stats.resolvedRecords")}
           </span>
           <p className="mt-2 font-ibm text-xl font-bold text-ink">
             {resolvedCount}
           </p>
-          <p className="mt-1 text-xs text-body">Closed with zero balance</p>
+          <p className="mt-1 text-xs text-body">
+            {t("stats.resolvedRecordsHint")}
+          </p>
         </div>
       </div>
 
       <div
         role="tablist"
-        aria-label="Filter rental history"
+        aria-label={t("tabs.ariaLabel")}
         className="flex items-center gap-6 overflow-x-auto border-b border-line"
       >
-        {(
-          [
-            { id: "all", label: "All Records" },
-            { id: "actionable", label: "Needs Response" },
-            { id: "confirmed", label: "Confirmed" },
-            { id: "resolved", label: "Resolved" },
-          ] as const
-        ).map((tab) => (
+        {tabs.map((tab) => (
           <button
             key={tab.id}
             type="button"
@@ -138,8 +137,8 @@ export function RenterRentalHistoryView() {
       {filtered.length === 0 ? (
         <EmptyStateBox
           icon={ShieldCheck}
-          title="No records in this view"
-          description="Your rental history is clear for the selected filter."
+          title={t("emptyTitle")}
+          description={t("emptyDescription")}
         />
       ) : (
         <div className="space-y-4">

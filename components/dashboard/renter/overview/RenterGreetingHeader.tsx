@@ -1,9 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import { Compass, CreditCard } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { UserAvatar } from "@/components/shared/UserAvatar";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { getGreetingByHour } from "@/utils/renter-helpers";
 
 interface RenterGreetingHeaderProps {
   name: string;
@@ -20,7 +22,12 @@ export function RenterGreetingHeader({
   propertyName,
   hasPendingRent,
 }: RenterGreetingHeaderProps) {
+  const t = useTranslations("renter.overview");
+  const tWorkspace = useTranslations("renter.workspace");
   const firstName = name.trim().split(/\s+/)[0] || name;
+  const hour = new Date().getHours();
+  const greetingKey =
+    hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening";
 
   return (
     <div className="mb-6 flex flex-col justify-between gap-4 border border-line bg-white p-5 shadow-2xs sm:flex-row sm:items-center sm:p-6">
@@ -28,11 +35,13 @@ export function RenterGreetingHeader({
         <UserAvatar src={avatar} name={name} className="size-14 sm:size-16" />
         <div className="min-w-0">
           <h2 className="truncate text-xl font-bold tracking-tight text-ink sm:text-2xl">
-            {getGreetingByHour()}, {firstName}
+            {t(`greeting.${greetingKey}`, { name: firstName })}
           </h2>
           <p className="mt-0.5 truncate text-sm text-body">
             {propertyName} &middot;{" "}
-            <span className="font-semibold text-ink">Unit {unitNumber}</span>
+            <span className="font-semibold text-ink">
+              {tWorkspace("unitLabel", { unit: unitNumber })}
+            </span>
           </p>
         </div>
       </div>
@@ -47,7 +56,7 @@ export function RenterGreetingHeader({
             )}
           >
             <CreditCard aria-hidden="true" className="size-4" />
-            Pay Rent Now
+            {t("payRentNow")}
           </Link>
         )}
         <Link
@@ -58,7 +67,7 @@ export function RenterGreetingHeader({
           )}
         >
           <Compass aria-hidden="true" className="size-4" />
-          Explore Homes
+          {t("exploreHomes")}
         </Link>
       </div>
     </div>

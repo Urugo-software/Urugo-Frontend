@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { ModalDialog } from "@/components/shared/ModalDialog";
 import { Button } from "@/components/ui/button";
@@ -16,6 +17,10 @@ interface FormInputs {
 }
 
 export function CreateMaintenanceModal({ onClose }: { onClose: () => void }) {
+  const t = useTranslations("renter.maintenance");
+  const tActions = useTranslations("common.actions");
+  const tStatuses = useTranslations("common.statuses");
+
   const {
     register,
     handleSubmit,
@@ -38,8 +43,8 @@ export function CreateMaintenanceModal({ onClose }: { onClose: () => void }) {
     <ModalDialog
       open
       onClose={onClose}
-      title="Report Maintenance Issue"
-      description="Describe the problem in your unit so your landlord can schedule repairs."
+      title={t("createModal.title")}
+      description={t("createModal.description")}
       footer={
         <>
           <Button
@@ -48,7 +53,7 @@ export function CreateMaintenanceModal({ onClose }: { onClose: () => void }) {
             onClick={onClose}
             className="cursor-pointer rounded-none"
           >
-            Cancel
+            {tActions("cancel")}
           </Button>
           <Button
             type="submit"
@@ -56,7 +61,9 @@ export function CreateMaintenanceModal({ onClose }: { onClose: () => void }) {
             disabled={createMutation.isPending}
             className="cursor-pointer rounded-none"
           >
-            {createMutation.isPending ? "Submitting..." : "Submit Request"}
+            {createMutation.isPending
+              ? t("createModal.submitting")
+              : t("createModal.submitRequest")}
           </Button>
         </>
       }
@@ -68,14 +75,16 @@ export function CreateMaintenanceModal({ onClose }: { onClose: () => void }) {
         className="space-y-4"
       >
         <Field>
-          <FieldLabel htmlFor="maint-title">Issue Title *</FieldLabel>
+          <FieldLabel htmlFor="maint-title">
+            {t("createModal.issueTitleLabel")}
+          </FieldLabel>
           <Input
             id="maint-title"
-            placeholder="e.g. Water leak under kitchen sink"
+            placeholder={t("createModal.issueTitlePlaceholder")}
             className="h-10 rounded-none"
             {...register("title", {
               validate: (v) =>
-                v.trim().length >= 4 || "Enter a short descriptive title.",
+                v.trim().length >= 4 || t("createModal.issueTitleError"),
             })}
           />
           <FieldError>{errors.title?.message}</FieldError>
@@ -83,45 +92,50 @@ export function CreateMaintenanceModal({ onClose }: { onClose: () => void }) {
 
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <Field>
-            <FieldLabel htmlFor="maint-category">Category</FieldLabel>
+            <FieldLabel htmlFor="maint-category">
+              {t("createModal.categoryLabel")}
+            </FieldLabel>
             <select
               id="maint-category"
               className="h-10 w-full rounded-none border border-input bg-white px-3 text-sm"
               {...register("category")}
             >
-              <option value="Plumbing">Plumbing</option>
-              <option value="Electrical">Electrical</option>
-              <option value="Structural">Structural</option>
-              <option value="Appliance">Appliance</option>
-              <option value="Other">Other</option>
+              <option value="Plumbing">{t("categories.plumbing")}</option>
+              <option value="Electrical">{t("categories.electrical")}</option>
+              <option value="Structural">{t("categories.structural")}</option>
+              <option value="Appliance">{t("categories.appliance")}</option>
+              <option value="Other">{t("categories.other")}</option>
             </select>
           </Field>
 
           <Field>
-            <FieldLabel htmlFor="maint-priority">Priority</FieldLabel>
+            <FieldLabel htmlFor="maint-priority">
+              {t("createModal.priorityLabel")}
+            </FieldLabel>
             <select
               id="maint-priority"
               className="h-10 w-full rounded-none border border-input bg-white px-3 text-sm"
               {...register("priority")}
             >
-              <option value="Low">Low</option>
-              <option value="Medium">Medium</option>
-              <option value="High">High</option>
+              <option value="Low">{tStatuses("low")}</option>
+              <option value="Medium">{tStatuses("medium")}</option>
+              <option value="High">{tStatuses("high")}</option>
             </select>
           </Field>
         </div>
 
         <Field>
-          <FieldLabel htmlFor="maint-desc">Description *</FieldLabel>
+          <FieldLabel htmlFor="maint-desc">
+            {t("createModal.descriptionLabel")}
+          </FieldLabel>
           <textarea
             id="maint-desc"
             rows={4}
-            placeholder="Describe where the issue is located and when it started..."
+            placeholder={t("createModal.descriptionPlaceholder")}
             className="w-full rounded-none border border-input bg-white p-3 text-sm"
             {...register("description", {
               validate: (v) =>
-                v.trim().length >= 10 ||
-                "Please add at least 10 characters of details.",
+                v.trim().length >= 10 || t("createModal.descriptionError"),
             })}
           />
           <FieldError>{errors.description?.message}</FieldError>

@@ -1,4 +1,7 @@
+"use client";
+
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 interface AssistantLauncherProps {
   onOpen: () => void;
@@ -6,11 +9,13 @@ interface AssistantLauncherProps {
 }
 
 export function AssistantLauncher({ onOpen, visual }: AssistantLauncherProps) {
+  const t = useTranslations("public.zoe");
+
   return (
     <motion.button
       type="button"
-      aria-label="Open Zoe"
-      title="Ask Zoe"
+      aria-label={t("openAria")}
+      title={t("askTitle")}
       className="fixed bottom-4 right-4 z-40 size-16 cursor-pointer overflow-hidden rounded-full border border-brand/25 bg-white shadow-xl transition-shadow hover:shadow-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 sm:bottom-6 sm:right-6 sm:size-20"
       initial={{ opacity: 0, scale: 0.85 }}
       animate={{ opacity: 1, scale: 1 }}

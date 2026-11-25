@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import { AgreementStatus } from "@/types/agreement.types";
 import { cn } from "@/lib/utils";
 
@@ -6,6 +9,35 @@ interface Props {
   className?: string;
   showDot?: boolean;
 }
+
+export type AgreementStatusKey =
+  | "draft"
+  | "readyForReview"
+  | "sent"
+  | "viewed"
+  | "changesRequested"
+  | "awaitingRenterSignature"
+  | "awaitingLandlordSignature"
+  | "signed"
+  | "declined"
+  | "expired"
+  | "superseded"
+  | "cancelled";
+
+export const AGREEMENT_STATUS_KEYS: Record<AgreementStatus, AgreementStatusKey> = {
+  Draft: "draft",
+  "Ready for Review": "readyForReview",
+  Sent: "sent",
+  Viewed: "viewed",
+  "Changes Requested": "changesRequested",
+  "Awaiting Renter Signature": "awaitingRenterSignature",
+  "Awaiting Landlord Signature": "awaitingLandlordSignature",
+  Signed: "signed",
+  Declined: "declined",
+  Expired: "expired",
+  Superseded: "superseded",
+  Cancelled: "cancelled",
+};
 
 export function getStatusDotClass(status: AgreementStatus): string {
   switch (status) {
@@ -91,9 +123,11 @@ export function AgreementStatusBadge({
   className = "",
   showDot = true,
 }: Props) {
+  const t = useTranslations("landlord.agreements.statuses");
   const dotClass = getStatusDotClass(status);
   const textClass = getStatusTextClass(status);
-  const label = getStatusLabel(status);
+  const statusKey = AGREEMENT_STATUS_KEYS[status];
+  const label = statusKey ? t(statusKey) : getStatusLabel(status);
 
   return (
     <span

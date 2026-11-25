@@ -1,6 +1,8 @@
 "use client";
 
 import { LayoutGrid, List } from "lucide-react";
+import { useTranslations } from "next-intl";
+
 import { Button } from "@/components/ui/button";
 import type { ViewMode } from "@/components/dashboard/landlord/properties/PortfolioCard";
 
@@ -13,20 +15,22 @@ interface ViewModeToggleProps {
 export function ViewModeToggle({
   value,
   onChange,
-  label = "Switch layout view",
+  label,
 }: ViewModeToggleProps) {
+  const t = useTranslations("common.viewMode");
+
   return (
     <div
       role="group"
-      aria-label={label}
+      aria-label={label ?? t("switchLayout")}
       className="hidden items-center border border-line bg-white p-0.5 md:flex"
     >
       {(
         [
-          { mode: "grid", label: "Grid view", Icon: LayoutGrid },
-          { mode: "list", label: "List view", Icon: List },
+          { mode: "grid", itemLabel: t("grid"), Icon: LayoutGrid },
+          { mode: "list", itemLabel: t("list"), Icon: List },
         ] as const
-      ).map(({ mode, label: itemLabel, Icon }) => {
+      ).map(({ mode, itemLabel, Icon }) => {
         const active = value === mode;
         return (
           <Button

@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import { DashboardSearchInput } from "@/components/shared/DashboardSearchInput";
 
 interface RenterSearchFilterProps {
@@ -9,12 +12,14 @@ export function RenterSearchFilter({
   searchQuery,
   onSearchChange,
 }: RenterSearchFilterProps) {
+  const t = useTranslations("landlord.renters.list");
+
   return (
     <DashboardSearchInput
       value={searchQuery}
       onChange={onSearchChange}
-      placeholder="Search by name, property, unit, or phone..."
-      label="Search renters"
+      placeholder={t("searchPlaceholder")}
+      label={t("searchAria")}
       className="w-full"
     />
   );

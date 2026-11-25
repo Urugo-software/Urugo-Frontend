@@ -1,6 +1,10 @@
+"use client";
+
 import Link from "next/link";
+import { useLocale, useTranslations } from "next-intl";
+import type { AppLocale } from "@/i18n/config";
+import { formatDateLocalized } from "@/i18n/formatting";
 import type { Agreement } from "@/types/agreement.types";
-import { formatDate } from "@/utils/agreement-utils";
 import { AgreementStatusBadge } from "../AgreementStatusBadge";
 import { AgreementRowActions } from "./AgreementRowActions";
 
@@ -9,25 +13,28 @@ interface AgreementTableProps {
 }
 
 const COLUMNS = [
-  { label: "Agreement", align: "text-left" },
-  { label: "Property", align: "text-left" },
-  { label: "Status", align: "text-left" },
-  { label: "Last Updated", align: "text-left" },
-  { label: "Actions", align: "text-right" },
+  { key: "agreement", align: "text-left" },
+  { key: "property", align: "text-left" },
+  { key: "status", align: "text-left" },
+  { key: "lastUpdated", align: "text-left" },
+  { key: "actions", align: "text-right" },
 ] as const;
 
 export function AgreementTable({ agreements }: AgreementTableProps) {
+  const t = useTranslations("landlord.agreements.list");
+  const locale = useLocale() as AppLocale;
+
   return (
     <div className="hidden overflow-x-auto border border-line bg-white shadow-2xs md:block">
       <table className="w-full text-left">
         <thead className="border-b border-line bg-surface">
           <tr>
-            {COLUMNS.map(({ label, align }) => (
+            {COLUMNS.map(({ key, align }) => (
               <th
-                key={label}
+                key={key}
                 className={`px-5 py-4 text-[13px] font-semibold uppercase tracking-wider text-faint ${align}`}
               >
-                {label}
+                {t(`columns.${key}`)}
               </th>
             ))}
           </tr>
@@ -55,8 +62,8 @@ export function AgreementTable({ agreements }: AgreementTableProps) {
                   {agreement.property.name}
                 </span>
                 <span className="mt-0.5 block text-[13.5px] text-body">
-                  Unit {agreement.property.unitNumber} &middot;{" "}
-                  {agreement.property.district}
+                  {t("unitLabel", { unit: agreement.property.unitNumber })}{" "}
+                  &middot; {agreement.property.district}
                 </span>
               </td>
 
@@ -70,7 +77,7 @@ export function AgreementTable({ agreements }: AgreementTableProps) {
 
               <td className="px-5 py-4.5">
                 <span className="block text-[14.5px] font-medium text-body">
-                  {formatDate(agreement.updatedAt)}
+                  {formatDateLocalized(agreement.updatedAt, locale)}
                 </span>
               </td>
 

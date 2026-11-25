@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { Pagination } from "@/components/shared/Pagination";
 
 interface PropertyPaginationProps {
@@ -11,5 +13,6 @@ interface PropertyPaginationProps {
 }
 
 export default function PropertyPagination(props: PropertyPaginationProps) {
-  return <Pagination {...props} itemLabel="properties" />;
+  const t = useTranslations("properties");
+  return <Pagination {...props} itemLabel={t("paginationLabel")} />;
 }

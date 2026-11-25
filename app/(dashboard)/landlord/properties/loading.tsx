@@ -1,10 +1,13 @@
+import { getTranslations } from "next-intl/server";
 import { Card } from "@/components/ui/card";
 import { cardLayout } from "@/components/dashboard/landlord/properties/PortfolioCard";
 
-export default function PropertiesLoading() {
+export default async function PropertiesLoading() {
+  const t = await getTranslations("landlord.pages");
+
   return (
     <div role="status" className="min-h-0 flex-1 space-y-6 overflow-auto p-4 sm:p-8 md:p-10">
-      <span className="sr-only">Loading properties</span>
+      <span className="sr-only">{t("loadingProperties")}</span>
       <div aria-hidden="true" className="space-y-5 motion-safe:animate-pulse">
         <div className="h-9 w-48 rounded bg-muted" />
         <div className="h-12 bg-muted" />

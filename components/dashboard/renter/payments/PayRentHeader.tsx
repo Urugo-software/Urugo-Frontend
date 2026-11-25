@@ -1,7 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export function PayRentHeader() {
+  const t = useTranslations("renter.payments.payRent");
+
   return (
     <div>
       <Link
@@ -9,12 +14,10 @@ export function PayRentHeader() {
         className="inline-flex items-center gap-2 text-xs font-semibold text-body hover:text-brand transition-colors mb-3"
       >
         <ArrowLeft className="size-4" />
-        Back to Payments
+        {t("backToPayments")}
       </Link>
-      <h2 className="text-xl font-bold text-ink sm:text-2xl">Pay Rent</h2>
-      <p className="text-sm text-body mt-1">
-        Complete your monthly rent payment and upload payment confirmation.
-      </p>
+      <h2 className="text-xl font-bold text-ink sm:text-2xl">{t("title")}</h2>
+      <p className="text-sm text-body mt-1">{t("subtitle")}</p>
     </div>
   );
 }

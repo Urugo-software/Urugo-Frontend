@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { ChevronLeft, ChevronRight, ImageOff, Images } from "lucide-react";
+
 import type { PropertyImage } from "@/types/properties";
 import { getGalleryPreviewMeta } from "@/utils/public-properties";
 import { PropertyGalleryLightbox } from "./PropertyGalleryLightbox";
@@ -12,6 +14,7 @@ interface PropertyGalleryProps {
 }
 
 export default function PropertyGallery({ images }: PropertyGalleryProps) {
+  const t = useTranslations("properties.details.gallery");
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [mobileIndex, setMobileIndex] = useState(0);
 
@@ -21,7 +24,7 @@ export default function PropertyGallery({ images }: PropertyGalleryProps) {
     return (
       <div className="mb-8 flex h-[240px] flex-col items-center justify-center gap-2 rounded-xl border border-line bg-surface text-faint md:h-[360px]">
         <ImageOff aria-hidden="true" className="size-8" />
-        <p className="text-sm font-medium">No property photos available yet</p>
+        <p className="text-sm font-medium">{t("noPhotos")}</p>
       </div>
     );
   }
@@ -38,7 +41,10 @@ export default function PropertyGallery({ images }: PropertyGalleryProps) {
         <button
           type="button"
           onClick={() => setLightboxIndex(mobileIndex)}
-          aria-label={`Open photo ${mobileIndex + 1} of ${meta.total} in gallery`}
+          aria-label={t("openPhotoAria", {
+            current: mobileIndex + 1,
+            total: meta.total,
+          })}
           className="relative block h-[270px] w-full cursor-pointer sm:h-[320px]"
         >
           <Image
@@ -58,7 +64,7 @@ export default function PropertyGallery({ images }: PropertyGalleryProps) {
               onClick={() =>
                 setMobileIndex((prev) => (prev - 1 + meta.total) % meta.total)
               }
-              aria-label="Previous property photo"
+              aria-label={t("prevPhotoAria")}
               className="absolute left-3 top-1/2 z-10 flex size-9 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-xs hover:bg-black/75"
             >
               <ChevronLeft aria-hidden="true" className="size-4" />
@@ -66,7 +72,7 @@ export default function PropertyGallery({ images }: PropertyGalleryProps) {
             <button
               type="button"
               onClick={() => setMobileIndex((prev) => (prev + 1) % meta.total)}
-              aria-label="Next property photo"
+              aria-label={t("nextPhotoAria")}
               className="absolute right-3 top-1/2 z-10 flex size-9 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-black/50 text-white backdrop-blur-xs hover:bg-black/75"
             >
               <ChevronRight aria-hidden="true" className="size-4" />
@@ -82,7 +88,7 @@ export default function PropertyGallery({ images }: PropertyGalleryProps) {
               className="absolute bottom-3 right-3 z-10 inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-white/95 px-3 py-1.5 text-xs font-semibold text-ink shadow-sm"
             >
               <Images aria-hidden="true" className="size-3.5 text-brand" />
-              <span>All {meta.total} photos</span>
+              <span>{t("allPhotos", { total: meta.total })}</span>
             </button>
           </>
         )}
@@ -101,7 +107,11 @@ export default function PropertyGallery({ images }: PropertyGalleryProps) {
         <button
           type="button"
           onClick={() => setLightboxIndex(0)}
-          aria-label={`View photo 1 of ${meta.total}: ${mainImage.alt}`}
+          aria-label={t("viewPhotoAria", {
+            current: 1,
+            total: meta.total,
+            alt: mainImage.alt,
+          })}
           className="group relative h-full w-full cursor-pointer overflow-hidden bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand"
         >
           <Image
@@ -118,7 +128,11 @@ export default function PropertyGallery({ images }: PropertyGalleryProps) {
           <button
             type="button"
             onClick={() => setLightboxIndex(1)}
-            aria-label={`View photo 2 of ${meta.total}: ${secondImage.alt}`}
+            aria-label={t("viewPhotoAria", {
+              current: 2,
+              total: meta.total,
+              alt: secondImage.alt,
+            })}
             className="group relative h-full w-full cursor-pointer overflow-hidden bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand"
           >
             <Image
@@ -137,7 +151,11 @@ export default function PropertyGallery({ images }: PropertyGalleryProps) {
               <button
                 type="button"
                 onClick={() => setLightboxIndex(1)}
-                aria-label={`View photo 2 of ${meta.total}: ${secondImage.alt}`}
+                aria-label={t("viewPhotoAria", {
+                  current: 2,
+                  total: meta.total,
+                  alt: secondImage.alt,
+                })}
                 className="group relative h-full w-full cursor-pointer overflow-hidden bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand"
               >
                 <Image
@@ -156,8 +174,12 @@ export default function PropertyGallery({ images }: PropertyGalleryProps) {
                 onClick={() => setLightboxIndex(2)}
                 aria-label={
                   meta.hasExtra
-                    ? `Open gallery to view ${meta.extraCount} more photos`
-                    : `View photo 3 of ${meta.total}: ${thirdImage.alt}`
+                    ? t("openExtraAria", { count: meta.extraCount })
+                    : t("viewPhotoAria", {
+                        current: 3,
+                        total: meta.total,
+                        alt: thirdImage.alt,
+                      })
                 }
                 className="group relative h-full w-full cursor-pointer overflow-hidden bg-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand"
               >
@@ -175,7 +197,7 @@ export default function PropertyGallery({ images }: PropertyGalleryProps) {
                       +{meta.extraCount}
                     </span>
                     <span className="mt-0.5 text-xs font-semibold">
-                      more {meta.extraCount === 1 ? "photo" : "photos"}
+                      {t("morePhotosLabel", { count: meta.extraCount })}
                     </span>
                   </div>
                 )}
@@ -191,7 +213,7 @@ export default function PropertyGallery({ images }: PropertyGalleryProps) {
             className="absolute bottom-3.5 right-3.5 z-10 inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-line bg-white/95 px-3.5 py-2 text-xs font-semibold text-ink shadow-md backdrop-blur-xs transition-colors hover:bg-white hover:text-brand"
           >
             <Images aria-hidden="true" className="size-4 text-brand" />
-            <span>View all {meta.total} photos</span>
+            <span>{t("viewAllPhotos", { total: meta.total })}</span>
           </button>
         )}
       </div>

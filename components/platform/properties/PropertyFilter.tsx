@@ -1,19 +1,36 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
+import { useTranslations } from "next-intl";
 import { SlidersHorizontal, X } from "lucide-react";
-import { propertyLocations } from "@/data/properties";
+
 import Dropdown from "@/components/shared/Dropdown";
+import { propertyLocations } from "@/data/properties";
 import {
   DEFAULT_PUBLIC_FILTERS,
   type PublicPropertyFilters,
 } from "@/utils/public-properties";
-import PriceRangeFilter from "./PriceRangeFilter";
-import FilterPills from "./FilterPills";
 import FilterActions from "./FilterActions";
+import FilterPills from "./FilterPills";
+import PriceRangeFilter from "./PriceRangeFilter";
 
 const BEDROOM_OPTIONS = ["Any", "Studio", "1", "2", "3+"] as const;
 const AMENITY_OPTIONS = ["WiFi", "Parking", "Water", "Security"] as const;
+
+const BEDROOM_KEY_MAP = {
+  Any: "any",
+  Studio: "studio",
+  "1": "1",
+  "2": "2",
+  "3+": "3plus",
+} as const;
+
+const AMENITY_KEY_MAP = {
+  WiFi: "wifi",
+  Parking: "parking",
+  Water: "water",
+  Security: "security",
+} as const;
 
 interface PropertyFilterProps {
   filters: PublicPropertyFilters;
@@ -47,7 +64,17 @@ function PropertyFilter({
   isMobile = false,
   onClose,
 }: PropertyFilterProps) {
+  const t = useTranslations("properties.filters");
   const [draft, setDraft] = useState<PublicPropertyFilters>(filters);
+  const allDistrictsLabel = t("allDistricts");
+
+  const localizedLocations = useMemo(
+    () =>
+      propertyLocations.map((loc) =>
+        loc.name === "All districts" ? { ...loc, name: allDistrictsLabel } : loc,
+      ),
+    [allDistrictsLabel],
+  );
 
   const toggleAmenity = (amenity: string) => {
     setDraft((prev) => ({
@@ -64,7 +91,11 @@ function PropertyFilter({
   };
 
   const handleReset = () => {
-    setDraft({ ...DEFAULT_PUBLIC_FILTERS, search: filters.search, sort: filters.sort });
+    setDraft({
+      ...DEFAULT_PUBLIC_FILTERS,
+      search: filters.search,
+      sort: filters.sort,
+    });
     onReset();
     if (isMobile) onClose?.();
   };
@@ -81,7 +112,7 @@ function PropertyFilter({
             <SlidersHorizontal aria-hidden="true" className="h-4 w-4" />
           </div>
           <h2 className="text-[15px] font-bold tracking-tight text-ink sm:text-base">
-            Filter Properties
+            {t("title")}
           </h2>
         </div>
 
@@ -90,7 +121,7 @@ function PropertyFilter({
             type="button"
             onClick={onClose}
             className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-body transition-colors hover:bg-surface hover:text-ink"
-            aria-label="Close filters"
+            aria-label={t("closeAria")}
           >
             <X aria-hidden="true" className="h-4 w-4" />
           </button>
@@ -104,19 +135,27 @@ function PropertyFilter({
             : "flex flex-col gap-1"
         }
       >
-        <FilterSection title="District">
+        <FilterSection title={t("district")}>
           <Dropdown
-            menuList={propertyLocations}
-            defaultMenu="All districts"
-            selectedValue={draft.district}
-            onSelectValue={(district) =>
-              setDraft((prev) => ({ ...prev, district }))
+            menuList={localizedLocations}
+            defaultMenu={allDistrictsLabel}
+            selectedValue={
+              draft.district === "All districts"
+                ? allDistrictsLabel
+                : draft.district
+            }
+            onSelectValue={(selected) =>
+              setDraft((prev) => ({
+                ...prev,
+                district:
+                  selected === allDistrictsLabel ? "All districts" : selected,
+              }))
             }
             className="w-full"
           />
         </FilterSection>
 
-        <FilterSection title="Price range (RWF / month)">
+        <FilterSection title={t("priceRange")}>
           <PriceRangeFilter
             minPrice={draft.minPrice}
             maxPrice={draft.maxPrice}
@@ -129,20 +168,30 @@ function PropertyFilter({
           />
         </FilterSection>
 
-        <FilterSection title="Bedrooms">
+        <FilterSection title={t("bedrooms")}>
           <FilterPills
             options={BEDROOM_OPTIONS}
             selected={draft.bedrooms}
             onSelect={(bedrooms) => setDraft((prev) => ({ ...prev, bedrooms }))}
+            getLabel={(opt) => {
+              const key =
+                BEDROOM_KEY_MAP[opt as keyof typeof BEDROOM_KEY_MAP];
+              return key ? t(`bedroomOptions.${key}`) : opt;
+            }}
           />
         </FilterSection>
 
-        <FilterSection title="Amenities">
+        <FilterSection title={t("amenities")}>
           <FilterPills
             options={AMENITY_OPTIONS}
             selected={draft.amenities}
             multiSelect
             onSelect={toggleAmenity}
+            getLabel={(opt) => {
+              const key =
+                AMENITY_KEY_MAP[opt as keyof typeof AMENITY_KEY_MAP];
+              return key ? t(`amenityOptions.${key}`) : opt;
+            }}
           />
         </FilterSection>
       </div>

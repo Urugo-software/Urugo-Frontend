@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import {
   Building2,
@@ -7,31 +9,34 @@ import {
   History,
   ScrollText,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 const QUICK_ACTIONS = [
-  { label: "My Property", href: "/renter/property", icon: Building2 },
-  { label: "Lease Agreement", href: "/renter/lease", icon: ScrollText },
-  { label: "Documents & Receipts", href: "/renter/documents", icon: Folder },
-  { label: "Explore Homes", href: "/renter/explore", icon: Compass },
-  { label: "Inquiries & Visits", href: "/renter/inquiries", icon: Calendar },
-  { label: "Rental History", href: "/renter/rental-history", icon: History },
-];
+  { key: "myProperty", href: "/renter/property", icon: Building2 },
+  { key: "leaseAgreement", href: "/renter/lease", icon: ScrollText },
+  { key: "documentsAndReceipts", href: "/renter/documents", icon: Folder },
+  { key: "exploreHomes", href: "/renter/explore", icon: Compass },
+  { key: "inquiriesAndVisits", href: "/renter/inquiries", icon: Calendar },
+  { key: "rentalHistory", href: "/renter/rental-history", icon: History },
+] as const;
 
 export function RenterQuickActionsCard() {
+  const t = useTranslations("renter.overview.quickActions");
+
   return (
     <section className="border border-line bg-white p-5 shadow-2xs">
       <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-faint">
-        Quick Access
+        {t("title")}
       </h3>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {QUICK_ACTIONS.map(({ label, href, icon: Icon }) => (
+        {QUICK_ACTIONS.map(({ key, href, icon: Icon }) => (
           <Link
-            key={label}
+            key={key}
             href={href}
             className="flex items-center gap-3 border border-line bg-white px-4 py-3 text-sm font-semibold text-ink transition-colors hover:border-ink/40 hover:bg-surface"
           >
             <Icon aria-hidden="true" className="size-4 shrink-0 text-brand-blue" />
-            <span className="truncate">{label}</span>
+            <span className="truncate">{t(key)}</span>
           </Link>
         ))}
       </div>

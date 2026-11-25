@@ -1,6 +1,8 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ShieldCheck } from "lucide-react";
+
 import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
 import type { Landlord } from "@/types/properties";
 
@@ -9,6 +11,7 @@ interface LandlordCardProps {
 }
 
 export default function LandlordCard({ landlord }: LandlordCardProps) {
+  const t = useTranslations("properties.details.landlord");
   const showPhone = useLandlordWorkspace((s) => s.contactVisibility.showPhone);
 
   return (
@@ -22,14 +25,14 @@ export default function LandlordCard({ landlord }: LandlordCardProps) {
           <span className="truncate">{landlord.name}</span>
           {landlord.isVerified && (
             <ShieldCheck
-              aria-label="Verified landlord"
+              aria-label={t("verifiedLandlord")}
               className="size-4 shrink-0 text-brand"
             />
           )}
         </div>
 
         <div className="text-[12.5px] text-body">
-          {landlord.isVerified ? "Verified landlord" : "Property owner"}
+          {landlord.isVerified ? t("verifiedLandlord") : t("propertyOwner")}
         </div>
 
         {showPhone && landlord.phone && (

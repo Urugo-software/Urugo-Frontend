@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import { useDropzone } from "react-dropzone";
 import { DropzoneDropArea } from "./DropzoneDropArea";
 import { DropzoneFilePreview } from "./DropzoneFilePreview";
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export function PaymentConfirmationUpload({ onFileSelect }: Props) {
+  const t = useTranslations("renter.payments.payRent");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
@@ -47,7 +49,7 @@ export function PaymentConfirmationUpload({ onFileSelect }: Props) {
   return (
     <div className="space-y-2 mt-5">
       <label className="block text-xs font-bold uppercase tracking-wider text-faint">
-        Payment Confirmation / Receipt Upload
+        {t("uploadLabel")}
       </label>
 
       {!selectedFile ? (

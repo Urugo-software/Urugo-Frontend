@@ -3,12 +3,12 @@
 import { Camera, IdCard, MailCheck, UserRound } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useForm } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import { FieldDescription, FieldGroup } from "@/components/ui/field";
-import { signUpSteps } from "@/data/home-data";
 import { useLandlordProperties } from "@/store/landlord-properties.store";
 import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
 import { useRenterWorkspace } from "@/store/renter-workspace.store";
@@ -18,13 +18,11 @@ import FirstStep from "./FirstStep";
 import SecondStep from "./SecondStep";
 import SignUpFormHeader from "./SignUpFormHeader";
 import { SignUpProgress } from "./SignUpProgress";
-import type { SignUpValues } from "./SignUpWizardField";
+import type { SignUpField, SignUpValues } from "./SignUpWizardField";
 import ThirdStep from "./ThirdStep";
 
-const progressSteps = signUpSteps.map((step, index) => ({
-  ...step,
-  icon: [UserRound, IdCard, Camera][index],
-}));
+const STEP_KEYS = ["details", "identification", "photo"] as const;
+const STEP_ICONS = [UserRound, IdCard, Camera] as const;
 
 const STEP_FIELDS: Record<1 | 2, ReadonlyArray<keyof SignUpValues>> = {
   1: ["fullName", "email"],
@@ -32,6 +30,7 @@ const STEP_FIELDS: Record<1 | 2, ReadonlyArray<keyof SignUpValues>> = {
 };
 
 export function SignUpWizard() {
+  const t = useTranslations("auth.signUp");
   const router = useRouter();
   const searchParams = useSearchParams();
   const inviteCode = searchParams.get("invite")?.trim() ?? "";
@@ -119,22 +118,69 @@ export function SignUpWizard() {
     await handleSubmit(onComplete)(event);
   };
 
-  const step = signUpSteps[currentStep - 1];
+  const progressSteps = STEP_KEYS.map((key, index) => ({
+    key: index + 1,
+    label: t(`steps.${key}.label`),
+    icon: STEP_ICONS[index],
+  }));
+
+  const stepFields: Record<1 | 2, readonly SignUpField[]> = {
+    1: [
+      {
+        id: "fullName",
+        label: t("fields.fullName.label"),
+        type: "text",
+        autoComplete: "name",
+        placeholder: t("fields.fullName.placeholder"),
+        required: true,
+      },
+      {
+        id: "email",
+        label: t("fields.email.label"),
+        type: "email",
+        autoComplete: "email",
+        placeholder: t("fields.email.placeholder"),
+        required: true,
+      },
+    ],
+    2: [
+      {
+        id: "telephone",
+        label: t("fields.telephone.label"),
+        type: "tel",
+        autoComplete: "tel",
+        placeholder: t("fields.telephone.placeholder"),
+        required: true,
+      },
+      {
+        id: "nationalId",
+        label: t("fields.nationalId.label"),
+        type: "text",
+        autoComplete: "off",
+        placeholder: t("fields.nationalId.placeholder"),
+        required: true,
+      },
+    ],
+  };
+
+  const activeStepKey = STEP_KEYS[currentStep - 1];
   const stepTitle =
-    currentStep === 1 && isRenterInvite ? "Complete your account" : step.title;
+    currentStep === 1 && isRenterInvite
+      ? t("steps.details.inviteTitle")
+      : t(`steps.${activeStepKey}.title`);
   const stepDescription =
     currentStep === 1 && isRenterInvite
-      ? "Confirm your details to join your landlord's rental workspace."
-      : step.description;
+      ? t("steps.details.inviteDescription")
+      : t(`steps.${activeStepKey}.description`);
 
   const destination = isRenterInvite
     ? {
         route: "/renter",
-        buttonLabel: "Continue to Renter Dashboard",
+        buttonLabel: t("preview.continueRenter"),
       }
     : {
         route: "/landlord",
-        buttonLabel: "Continue to Landlord Dashboard",
+        buttonLabel: t("preview.continueLandlord"),
       };
 
   return (
@@ -155,7 +201,10 @@ export function SignUpWizard() {
         />
 
         <SignUpFormHeader
-          stepLabel={`Step ${currentStep} of ${signUpSteps.length}`}
+          stepLabel={t("stepCounter", {
+            current: currentStep,
+            total: progressSteps.length,
+          })}
           title={stepTitle}
           description={stepDescription}
           headingRef={headingRef}
@@ -172,17 +221,17 @@ export function SignUpWizard() {
             />
             <div className="space-y-1">
               <p className="font-semibold text-ink">
-                Landlord invitation detected ({inviteCode})
+                {t("invite.heading", { code: inviteCode })}
               </p>
               <p className="leading-relaxed text-body">
                 {invitedProperty
-                  ? `You were invited to join ${invitedProperty.name} (${invitedProperty.location}) as a renter.`
-                  : "Complete your details below to preview your renter workspace."}
+                  ? t("invite.propertyDescription", {
+                      property: invitedProperty.name,
+                      location: invitedProperty.location,
+                    })
+                  : t("invite.fallbackDescription")}
               </p>
-              <p className="text-faint">
-                Preview invite link — full token verification will run once
-                backend onboarding is connected.
-              </p>
+              <p className="text-faint">{t("invite.previewNote")}</p>
             </div>
           </div>
         )}
@@ -190,14 +239,14 @@ export function SignUpWizard() {
         <FieldGroup className="gap-4 sm:gap-5">
           {currentStep === 1 && (
             <FirstStep
-              fields={signUpSteps[0].fields}
+              fields={stepFields[1]}
               register={register}
               errors={errors}
             />
           )}
           {currentStep === 2 && (
             <SecondStep
-              fields={signUpSteps[1].fields}
+              fields={stepFields[2]}
               register={register}
               errors={errors}
               onBack={() => navigateToStep(1)}
@@ -221,8 +270,8 @@ export function SignUpWizard() {
             >
               <p>
                 {isRenterInvite
-                  ? "Backend account registration is not connected yet. Your renter details have been saved locally for preview."
-                  : "Backend account registration is not connected yet. Your landlord details have been saved locally for preview — service selection will happen at first sign-in."}
+                  ? t("preview.renterNotice")
+                  : t("preview.landlordNotice")}
               </p>
               <Button
                 type="button"
@@ -235,12 +284,12 @@ export function SignUpWizard() {
           )}
 
           <FieldDescription className="pt-1 text-center text-sm text-body">
-            Already have an account?{" "}
+            {t("footer.haveAccount")}{" "}
             <Link
               href="/auth/sign-in"
               className="font-semibold text-brand underline-offset-4 hover:text-brand-deep hover:underline"
             >
-              Sign in
+              {t("footer.signInLink")}
             </Link>
           </FieldDescription>
         </FieldGroup>

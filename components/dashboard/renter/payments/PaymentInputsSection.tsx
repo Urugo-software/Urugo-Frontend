@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslations } from "next-intl";
 import { PaymentMethod } from "@/data/payment-methods-data";
 
 interface Props {
@@ -22,6 +23,7 @@ export function PaymentInputsSection({
   referenceNumber,
   onReferenceChange,
 }: Props) {
+  const t = useTranslations("renter.payments.payRent");
   const isMobileMoney =
     paymentMethod === "MTN Mobile Money" || paymentMethod === "AIRTEL Money";
 
@@ -29,7 +31,7 @@ export function PaymentInputsSection({
     <div className="my-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
       <div>
         <label className="mb-1.5 block text-[15px] font-bold text-ink">
-          Amount Paid (RWF)
+          {t("amountPaidLabelSimple")}
         </label>
         <div className="relative">
           <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-faint text-xs font-semibold">
@@ -39,7 +41,7 @@ export function PaymentInputsSection({
             type="number"
             value={amountRwf || ""}
             onChange={(e) => onAmountChange(Number(e.target.value))}
-            placeholder="e.g. 250000"
+            placeholder={t("amountPlaceholder")}
             className="w-full  border placeholder-gray-400  border-line bg-white pl-12 p-3 rounded-sm text-xs text-ink placeholder:text-md focus:border-brand focus:outline-hidden focus:ring-2 focus:ring-brand/20"
           />
         </div>
@@ -48,26 +50,26 @@ export function PaymentInputsSection({
       {isMobileMoney ? (
         <div>
           <label className="mb-1.5 block text-[15px] font-bold text-ink">
-            Mobile Phone Number
+            {t("phoneLabelSimple")}
           </label>
           <input
             type="text"
             value={phone}
             onChange={(e) => onPhoneChange(e.target.value)}
-            placeholder="e.g. 0788123456"
+            placeholder={t("phoneExamplePlaceholder")}
             className="w-full rounded-sm border border-line bg-white p-3 text-xs text-ink placeholder:text-faint focus:border-brand focus:outline-hidden focus:ring-2 focus:ring-brand/20"
           />
         </div>
       ) : (
         <div>
           <label className="mb-1.5 block text-[15px] font-bold text-ink">
-            Transaction Reference / Note
+            {t("refNoteLabel")}
           </label>
           <input
             type="text"
             value={referenceNumber}
             onChange={(e) => onReferenceChange(e.target.value)}
-            placeholder="e.g. TXN-984210"
+            placeholder={t("refNotePlaceholder")}
             className="w-full rounded-sm border border-line bg-white p-3 text-xs text-ink placeholder:text-faint focus:border-brand focus:outline-hidden focus:ring-2 focus:ring-brand/20"
           />
         </div>

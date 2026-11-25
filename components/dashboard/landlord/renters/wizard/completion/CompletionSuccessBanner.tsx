@@ -1,8 +1,11 @@
 "use client";
 
 import { Check } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export function CompletionSuccessBanner() {
+  const t = useTranslations("landlord.renters.wizard.completion");
+
   return (
     <div className="border border-line bg-surface/50 p-5 sm:p-6 shadow-2xs">
       <div className="flex items-start gap-4">
@@ -11,13 +14,10 @@ export function CompletionSuccessBanner() {
         </div>
         <div>
           <h3 className="mt-1.5 text-base sm:text-lg font-semibold text-ink">
-            Renter Successfully Prepared
+            {t("bannerTitle")}
           </h3>
           <p className="mt-1 text-xs sm:text-sm text-body leading-relaxed max-w-xl">
-            The renter record has been registered to your landlord workspace. In
-            the full production environment, this triggers automated National ID
-            verification, debt record cross-check, and formal tenancy contract
-            setup.
+            {t("bannerDesc")}
           </p>
         </div>
       </div>

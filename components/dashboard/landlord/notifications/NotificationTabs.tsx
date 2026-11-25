@@ -1,16 +1,17 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import type { LandlordServiceMode } from "@/types/landlord";
 
 export const NOTIFICATION_TABS = [
-  { id: "all", label: "All", managedOnly: false },
-  { id: "inquiry", label: "Inquiries", managedOnly: false },
-  { id: "viewing", label: "Viewings", managedOnly: false },
-  { id: "payment", label: "Payments", managedOnly: true },
-  { id: "tenancy", label: "Tenancies", managedOnly: true },
-  { id: "dispute", label: "Disputes", managedOnly: true },
-  { id: "system", label: "System", managedOnly: false },
+  { id: "all", managedOnly: false },
+  { id: "inquiry", managedOnly: false },
+  { id: "viewing", managedOnly: false },
+  { id: "payment", managedOnly: true },
+  { id: "tenancy", managedOnly: true },
+  { id: "dispute", managedOnly: true },
+  { id: "system", managedOnly: false },
 ] as const;
 
 interface NotificationTabsProps {
@@ -26,6 +27,7 @@ export function NotificationTabs({
   getCount,
   serviceMode = "managed",
 }: NotificationTabsProps) {
+  const t = useTranslations("landlord.notifications");
   const tabs =
     serviceMode === "listing_only"
       ? NOTIFICATION_TABS.filter((tab) => !tab.managedOnly)
@@ -34,7 +36,7 @@ export function NotificationTabs({
   return (
     <div
       role="tablist"
-      aria-label="Notification categories"
+      aria-label={t("tabsAria")}
       className="flex items-center gap-2 overflow-x-auto border-b border-line sm:gap-6"
     >
       {tabs.map((tab) => {
@@ -54,7 +56,7 @@ export function NotificationTabs({
                 : "border-transparent font-medium text-body hover:border-line hover:text-ink",
             )}
           >
-            <span>{tab.label}</span>
+            <span>{t(`tabs.${tab.id}`)}</span>
             {count > 0 && (
               <span className="font-ibm text-[13px] text-faint">{count}</span>
             )}

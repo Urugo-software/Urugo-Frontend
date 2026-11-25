@@ -1,4 +1,7 @@
+"use client";
+
 import { Wrench } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { EmptyStateBox } from "@/components/shared/EmptyStateBox";
 import type { RenterMaintenance } from "@/types/renter";
 import { MaintenanceRequestItem } from "./MaintenanceRequestItem";
@@ -14,16 +17,14 @@ export function MaintenanceRequestList({
   onSelect,
   onClearFilters,
 }: MaintenanceRequestListProps) {
+  const t = useTranslations("renter.maintenance");
+
   if (items.length === 0) {
     return (
       <EmptyStateBox
         icon={Wrench}
-        title="No maintenance requests found"
-        description={
-          onClearFilters
-            ? "No requests match your search or status filter."
-            : "Submit a request if you encounter any issue in your apartment."
-        }
+        title={t("emptyTitle")}
+        description={onClearFilters ? t("emptyFiltered") : t("emptyDefault")}
         action={
           onClearFilters ? (
             <button
@@ -31,7 +32,7 @@ export function MaintenanceRequestList({
               onClick={onClearFilters}
               className="cursor-pointer border border-line bg-white px-4 py-2 text-xs font-semibold text-ink hover:bg-surface"
             >
-              Clear filters
+              {t("clearFilters")}
             </button>
           ) : undefined
         }

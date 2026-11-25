@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { ModalDialog } from "@/components/shared/ModalDialog";
@@ -27,6 +28,9 @@ export function RenterInquiryModal({
   propertyId,
   propertyTitle,
 }: RenterInquiryModalProps) {
+  const t = useTranslations("renter.discovery.inquiryModal");
+  const tWorkspace = useTranslations("renter.workspace");
+  const tActions = useTranslations("common.actions");
   const profile = useRenterWorkspace((s) => s.profile);
   const addNotification = useRenterWorkspace((s) => s.addNotification);
   const addInquiry = useLandlordWorkspace((s) => s.addInquiry);
@@ -50,15 +54,15 @@ export function RenterInquiryModal({
       message: vals.message.trim(),
     });
     addNotification({
-      title: "Property Inquiry Sent",
-      message: `Your inquiry for ${propertyTitle} was delivered to the landlord.`,
-      date: "Just now",
+      title: t("notifTitle"),
+      message: t("notifMessage", { property: propertyTitle }),
+      date: tWorkspace("justNow"),
       read: false,
       category: "inquiry",
       href: "/renter/inquiries",
-      actionLabel: "View Inquiries",
+      actionLabel: t("notifAction"),
     });
-    toast.success("Inquiry sent to the landlord.");
+    toast.success(t("toastSuccess"));
     reset({ phone: profile.phone, message: "" });
     onClose();
   };
@@ -67,8 +71,8 @@ export function RenterInquiryModal({
     <ModalDialog
       open={open}
       onClose={onClose}
-      title="Send Property Inquiry"
-      description={`Ask the landlord about ${propertyTitle}.`}
+      title={t("title")}
+      description={t("description", { property: propertyTitle })}
       footer={
         <>
           <Button
@@ -77,14 +81,14 @@ export function RenterInquiryModal({
             onClick={onClose}
             className="cursor-pointer rounded-none"
           >
-            Cancel
+            {tActions("cancel")}
           </Button>
           <Button
             type="submit"
             form="renter-inquiry-form"
             className="cursor-pointer rounded-none"
           >
-            Send Inquiry
+            {t("submitButton")}
           </Button>
         </>
       }
@@ -96,28 +100,26 @@ export function RenterInquiryModal({
         className="space-y-4"
       >
         <Field>
-          <FieldLabel htmlFor="renter-inq-phone">Contact phone *</FieldLabel>
+          <FieldLabel htmlFor="renter-inq-phone">{t("phoneLabel")}</FieldLabel>
           <Input
             id="renter-inq-phone"
             className="h-10 rounded-none"
             {...register("phone", {
-              validate: (v) =>
-                v.trim().length >= 9 || "Enter a valid phone number.",
+              validate: (v) => v.trim().length >= 9 || t("phoneError"),
             })}
           />
           <FieldError>{errors.phone?.message}</FieldError>
         </Field>
 
         <Field>
-          <FieldLabel htmlFor="renter-inq-msg">Your question *</FieldLabel>
+          <FieldLabel htmlFor="renter-inq-msg">{t("questionLabel")}</FieldLabel>
           <textarea
             id="renter-inq-msg"
             rows={4}
-            placeholder="Ask about availability, utilities, lease terms, or move-in date..."
+            placeholder={t("questionPlaceholder")}
             className="w-full rounded-none border border-input bg-white p-3 text-sm"
             {...register("message", {
-              validate: (v) =>
-                v.trim().length >= 8 || "Enter at least 8 characters.",
+              validate: (v) => v.trim().length >= 8 || t("questionError"),
             })}
           />
           <FieldError>{errors.message?.message}</FieldError>

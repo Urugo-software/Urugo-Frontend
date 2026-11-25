@@ -1,6 +1,7 @@
 "use client";
 
 import { Plus } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { buttonVariants } from "@/components/ui/button";
 import { DashboardSearchInput } from "@/components/shared/DashboardSearchInput";
 import { cn } from "@/lib/utils";
@@ -22,34 +23,36 @@ export function AgreementListToolbar({
   onTabChange,
   onNewAgreement,
 }: AgreementListToolbarProps) {
+  const t = useTranslations("landlord.agreements");
+
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-3 sm:justify-between">
         <DashboardSearchInput
           value={searchQuery}
           onChange={onSearchChange}
-          label="Search lease agreements"
-          placeholder="Search by renter, reference, or property..."
+          label={t("list.searchLabel")}
+          placeholder={t("list.searchPlaceholder")}
           className="flex-1 sm:max-w-md"
         />
 
         <button
           type="button"
           onClick={onNewAgreement}
-          aria-label="New Agreement"
+          aria-label={t("header.newAgreement")}
           className={cn(
             buttonVariants({ variant: "outline" }),
             "h-10 shrink-0 cursor-pointer rounded-none border-line bg-white px-3.5 text-ink md:hidden",
           )}
         >
           <Plus className="size-4" />
-          <span className="text-sm font-semibold">New</span>
+          <span className="text-sm font-semibold">{t("list.newShort")}</span>
         </button>
       </div>
 
       <div
         role="tablist"
-        aria-label="Filter agreements by status"
+        aria-label={t("list.tabsAriaLabel")}
         className="flex items-center gap-2 overflow-x-auto border-b border-line sm:gap-6"
       >
         {AGREEMENT_TABS.map((tab) => {
@@ -68,7 +71,7 @@ export function AgreementListToolbar({
                   : "border-transparent font-medium text-body hover:border-line hover:text-ink",
               )}
             >
-              {tab.label}
+              {t(`list.tabs.${tab.id}`)}
             </button>
           );
         })}

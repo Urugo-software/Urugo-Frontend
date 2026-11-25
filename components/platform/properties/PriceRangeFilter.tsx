@@ -1,28 +1,19 @@
 "use client";
 
+import { useLocale, useTranslations } from "next-intl";
+import { ChevronDown } from "lucide-react";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown } from "lucide-react";
+import type { AppLocale } from "@/i18n/config";
+import { formatRwfLocalized } from "@/i18n/formatting";
 
-const MIN_OPTIONS: Array<{ label: string; value: number | null }> = [
-  { label: "Any min", value: null },
-  { label: "50,000 RWF", value: 50000 },
-  { label: "100,000 RWF", value: 100000 },
-  { label: "150,000 RWF", value: 150000 },
-  { label: "250,000 RWF", value: 250000 },
-];
-
-const MAX_OPTIONS: Array<{ label: string; value: number | null }> = [
-  { label: "Any max", value: null },
-  { label: "150,000 RWF", value: 150000 },
-  { label: "250,000 RWF", value: 250000 },
-  { label: "400,000 RWF", value: 400000 },
-  { label: "600,000 RWF", value: 600000 },
-];
+const MIN_VALUES: Array<number | null> = [null, 50000, 100000, 150000, 250000];
+const MAX_VALUES: Array<number | null> = [null, 150000, 250000, 400000, 600000];
 
 interface PriceRangeFilterProps {
   minPrice: number | null;
@@ -37,16 +28,20 @@ function PriceRangeFilter({
   onMinChange,
   onMaxChange,
 }: PriceRangeFilterProps) {
-  const minLabel =
-    MIN_OPTIONS.find((opt) => opt.value === minPrice)?.label ?? "Any min";
-  const maxLabel =
-    MAX_OPTIONS.find((opt) => opt.value === maxPrice)?.label ?? "Any max";
+  const t = useTranslations("properties.filters");
+  const locale = useLocale() as AppLocale;
+
+  const formatOption = (value: number | null, fallback: string) =>
+    value === null ? fallback : formatRwfLocalized(value, locale);
+
+  const minLabel = formatOption(minPrice, t("anyMin"));
+  const maxLabel = formatOption(maxPrice, t("anyMax"));
 
   return (
     <div className="flex gap-2">
       <DropdownMenu>
         <DropdownMenuTrigger
-          aria-label="Minimum monthly rent"
+          aria-label={t("minRentAria")}
           className="group flex flex-1 cursor-pointer items-center justify-between border border-line bg-white px-3 py-2.5 text-[13px] text-ink hover:bg-surface"
         >
           <span className="truncate">{minLabel}</span>
@@ -59,20 +54,23 @@ function PriceRangeFilter({
           align="start"
           className="w-(--anchor-width) bg-white"
         >
-          {MIN_OPTIONS.map((opt) => (
-            <DropdownMenuItem
-              key={opt.label}
-              onClick={() => onMinChange(opt.value)}
-            >
-              {opt.label}
-            </DropdownMenuItem>
-          ))}
+          {MIN_VALUES.map((value) => {
+            const label = formatOption(value, t("anyMin"));
+            return (
+              <DropdownMenuItem
+                key={String(value)}
+                onClick={() => onMinChange(value)}
+              >
+                {label}
+              </DropdownMenuItem>
+            );
+          })}
         </DropdownMenuContent>
       </DropdownMenu>
 
       <DropdownMenu>
         <DropdownMenuTrigger
-          aria-label="Maximum monthly rent"
+          aria-label={t("maxRentAria")}
           className="group flex flex-1 cursor-pointer items-center justify-between border border-line bg-white px-3 py-2.5 text-[13px] text-ink hover:bg-surface"
         >
           <span className="truncate">{maxLabel}</span>
@@ -85,14 +83,17 @@ function PriceRangeFilter({
           align="start"
           className="w-(--anchor-width) bg-white"
         >
-          {MAX_OPTIONS.map((opt) => (
-            <DropdownMenuItem
-              key={opt.label}
-              onClick={() => onMaxChange(opt.value)}
-            >
-              {opt.label}
-            </DropdownMenuItem>
-          ))}
+          {MAX_VALUES.map((value) => {
+            const label = formatOption(value, t("anyMax"));
+            return (
+              <DropdownMenuItem
+                key={String(value)}
+                onClick={() => onMaxChange(value)}
+              >
+                {label}
+              </DropdownMenuItem>
+            );
+          })}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import toast from "react-hot-toast";
 import {
   ArrowLeft,
@@ -15,11 +16,15 @@ import { EmptyStateBox } from "@/components/shared/EmptyStateBox";
 import { ModalDialog } from "@/components/shared/ModalDialog";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { Button, buttonVariants } from "@/components/ui/button";
+import type { AppLocale } from "@/i18n/config";
+import { localizeDisplayDate } from "@/i18n/display-format";
+import { formatRwfLocalized } from "@/i18n/formatting";
 import { cn } from "@/lib/utils";
 import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
 import type { RentalIssue } from "@/types/landlord";
-import { formatRwf } from "@/utils/format";
 import { getIssueStatusMeta, isIssueActionable } from "@/utils/rental-debt";
+
+const SEED_ISSUE_IDS = new Set(["iss-501", "iss-502"]);
 
 interface DisputeDetailsViewProps {
   issueId?: string;
@@ -30,6 +35,10 @@ export function DisputeDetailsView({
   issueId,
   issue: initialIssue,
 }: DisputeDetailsViewProps) {
+  const t = useTranslations("landlord.renterHistory.detail");
+  const tStatusMeta = useTranslations("landlord.renterHistory.statusMeta");
+  const tSeed = useTranslations("landlord.seed.issues");
+  const locale = useLocale() as AppLocale;
   const { issues, updateIssueStatus } = useLandlordWorkspace();
   const issue = issueId
     ? issues.find((i) => i.id === issueId)
@@ -47,14 +56,14 @@ export function DisputeDetailsView({
       <main className="min-h-0 flex-1 space-y-6 overflow-y-auto bg-surface/30 p-4 pb-16 sm:p-8 md:p-10">
         <EmptyStateBox
           icon={ShieldAlert}
-          title="Rental history record not found"
-          description="This obligation record does not exist or may have been removed."
+          title={t("notFoundTitle")}
+          description={t("notFoundDesc")}
           action={
             <Link
               href="/landlord/renter-history"
               className={cn(buttonVariants({ variant: "outline" }), "rounded-none")}
             >
-              Back to Renter History
+              {t("backToHistory")}
             </Link>
           }
         />
@@ -63,7 +72,25 @@ export function DisputeDetailsView({
   }
 
   const meta = getIssueStatusMeta(issue.status);
+  const statusLabel = tStatusMeta(`${issue.status}.label`);
+  const statusDesc = tStatusMeta(`${issue.status}.description`);
   const canAct = isIssueActionable(issue.status);
+  const isSeed = SEED_ISSUE_IDS.has(issue.id);
+  const issueTitle = isSeed ? tSeed(`${issue.id}.issueTitle`) : issue.issueTitle;
+  const landlordReport = isSeed
+    ? tSeed(`${issue.id}.landlordReport`)
+    : issue.landlordReport;
+  const renterResponse = isSeed
+    ? tSeed(`${issue.id}.renterResponse`)
+    : issue.renterResponse;
+  const evidenceTitle =
+    isSeed && issue.evidence
+      ? tSeed(`${issue.id}.evidenceTitle`)
+      : issue.evidence?.title;
+  const evidenceType =
+    isSeed && issue.evidence
+      ? tSeed(`${issue.id}.evidenceType`)
+      : issue.evidence?.type;
 
   return (
     <main className="min-h-0 flex-1 space-y-6 overflow-y-auto bg-surface/30 p-4 pb-16 sm:p-8 sm:pb-20 md:p-10 md:pb-24">
@@ -73,7 +100,7 @@ export function DisputeDetailsView({
           className="inline-flex items-center gap-2 text-sm font-semibold text-body transition-colors hover:text-ink"
         >
           <ArrowLeft aria-hidden="true" className="size-4" />
-          <span>Back to Renter History</span>
+          <span>{t("backToHistory")}</span>
         </Link>
       </div>
 
@@ -83,39 +110,48 @@ export function DisputeDetailsView({
           <div className="space-y-1.5">
             <div className="flex flex-wrap items-center gap-2">
               <h2 className="text-xl font-bold text-ink sm:text-2xl">
-                {issue.issueTitle}
+                {issueTitle}
               </h2>
               <span aria-hidden="true" className="text-line">&middot;</span>
-              <StatusBadge label={meta.label} tone={meta.tone} />
+              <StatusBadge label={statusLabel} tone={meta.tone} />
             </div>
             <p className="text-xs text-body">
               <strong className="text-ink">{issue.renterName}</strong> ·{" "}
-              {issue.propertyName} · Tenancy: {issue.tenancyPeriod}
+              {issue.propertyName} ·{" "}
+              {t("tenancyInline", {
+                period: localizeDisplayDate(issue.tenancyPeriod, locale),
+              })}
             </p>
           </div>
 
           <div className="border border-line bg-surface/50 px-4 py-2.5 text-left sm:text-right">
             <span className="text-xs font-semibold uppercase tracking-wider text-faint">
-              Reported Amount
+              {t("reportedAmountLabel")}
             </span>
             <p className="font-ibm text-lg font-bold text-ink">
-              {formatRwf(issue.amountRwf)}
+              {formatRwfLocalized(issue.amountRwf, locale)}
             </p>
           </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-4 border-t border-line pt-3 text-xs text-body">
-          <span>Reported on {issue.createdDate}</span>
+          <span>
+            {t("reportedOn", {
+              date: localizeDisplayDate(issue.createdDate, locale),
+            })}
+          </span>
           {issue.noticeDeadlineDate && (
             <span className="inline-flex items-center gap-1.5 font-medium text-ink">
               <Clock aria-hidden="true" className="size-3.5 text-amber-700" />
-              3-day notice deadline: {issue.noticeDeadlineDate}
+              {t("noticeDeadline", {
+                date: localizeDisplayDate(issue.noticeDeadlineDate, locale),
+              })}
               {issue.daysRemaining !== undefined && issue.daysRemaining > 0
-                ? ` (${issue.daysRemaining}d remaining)`
+                ? t("daysRemainingSuffix", { count: issue.daysRemaining })
                 : ""}
             </span>
           )}
-          <span className="text-faint">{meta.description}</span>
+          <span className="text-faint">{statusDesc}</span>
         </div>
       </div>
 
@@ -123,25 +159,19 @@ export function DisputeDetailsView({
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <div className="space-y-3 border border-line bg-white p-5 shadow-2xs">
           <h3 className="text-xs font-semibold uppercase tracking-wider text-faint">
-            Landlord Report
+            {t("landlordReportHeading")}
           </h3>
-          <p className="text-sm leading-relaxed text-ink">
-            {issue.landlordReport}
-          </p>
+          <p className="text-sm leading-relaxed text-ink">{landlordReport}</p>
         </div>
 
         <div className="space-y-3 border border-line bg-white p-5 shadow-2xs">
           <h3 className="text-xs font-semibold uppercase tracking-wider text-faint">
-            Renter Response & Evidence
+            {t("renterResponseHeading")}
           </h3>
-          {issue.renterResponse ? (
-            <p className="text-sm leading-relaxed text-ink">
-              {issue.renterResponse}
-            </p>
+          {renterResponse ? (
+            <p className="text-sm leading-relaxed text-ink">{renterResponse}</p>
           ) : (
-            <p className="text-xs italic text-body">
-              No renter response submitted yet within the 3-day notice window.
-            </p>
+            <p className="text-xs italic text-body">{t("noResponseYet")}</p>
           )}
 
           {issue.evidence && (
@@ -153,18 +183,18 @@ export function DisputeDetailsView({
                 />
                 <div className="min-w-0">
                   <p className="truncate text-xs font-semibold text-ink">
-                    {issue.evidence.title}
+                    {evidenceTitle}
                   </p>
                   <p className="inline-flex items-center gap-1 text-[11px] text-faint">
-                    <span>{issue.evidence.type}</span>
+                    <span>{evidenceType}</span>
                     <span>·</span>
                     {issue.evidence.verified ? (
                       <span className="inline-flex items-center gap-0.5 text-emerald-700">
                         <ShieldCheck aria-hidden="true" className="size-3" />
-                        Verified
+                        {t("verified")}
                       </span>
                     ) : (
-                      <span>Awaiting verification</span>
+                      <span>{t("awaitingVerification")}</span>
                     )}
                   </p>
                 </div>
@@ -177,7 +207,7 @@ export function DisputeDetailsView({
                 onClick={() => setReceiptOpen(true)}
                 className="h-8 cursor-pointer rounded-none text-xs"
               >
-                Inspect Receipt
+                {t("inspectReceipt")}
               </Button>
             </div>
           )}
@@ -187,7 +217,7 @@ export function DisputeDetailsView({
       {/* Resolution Actions */}
       <div className="border border-line bg-white p-5 shadow-2xs">
         <h3 className="text-xs font-semibold uppercase tracking-wider text-faint">
-          Resolution Decision
+          {t("resolutionHeading")}
         </h3>
 
         {canAct ? (
@@ -196,12 +226,12 @@ export function DisputeDetailsView({
               type="button"
               onClick={() => {
                 updateIssueStatus(issue.id, "Resolved");
-                toast.success("Case marked as Resolved.");
+                toast.success(t("toastResolved"));
               }}
               className="cursor-pointer rounded-none bg-emerald-700 text-xs text-white hover:bg-emerald-800"
             >
               <CheckCircle2 aria-hidden="true" className="size-4" />
-              Accept Proof & Mark Resolved
+              {t("acceptProofBtn")}
             </Button>
             <Button
               type="button"
@@ -209,7 +239,7 @@ export function DisputeDetailsView({
               onClick={() => setConfirmModal("confirm")}
               className="cursor-pointer rounded-none border-rose-200 text-xs text-rose-700 hover:bg-rose-50"
             >
-              Confirm Unpaid Obligation
+              {t("confirmObligationBtn")}
             </Button>
             <Button
               type="button"
@@ -217,13 +247,14 @@ export function DisputeDetailsView({
               onClick={() => setConfirmModal("reject")}
               className="cursor-pointer rounded-none text-xs"
             >
-              Dismiss Report
+              {t("dismissReportBtn")}
             </Button>
           </div>
         ) : (
           <p className="mt-3 text-xs text-body">
-            This case is finalized as <strong>{meta.label}</strong>. No further
-            status changes are pending.
+            {t("finalizedNoteBefore")}
+            <strong>{statusLabel}</strong>
+            {t("finalizedNoteAfter")}
           </p>
         )}
       </div>
@@ -232,8 +263,11 @@ export function DisputeDetailsView({
       <ModalDialog
         open={receiptOpen}
         onClose={() => setReceiptOpen(false)}
-        title={issue.evidence?.title ?? "Uploaded Receipt"}
-        description={`${issue.evidence?.type ?? "Evidence"} submitted by ${issue.renterName}`}
+        title={evidenceTitle ?? t("receiptFallbackTitle")}
+        description={t("receiptSubmittedBy", {
+          type: evidenceType ?? t("evidenceFallbackType"),
+          name: issue.renterName,
+        })}
         footer={
           <Button
             type="button"
@@ -241,27 +275,24 @@ export function DisputeDetailsView({
             onClick={() => setReceiptOpen(false)}
             className="cursor-pointer rounded-none"
           >
-            Close
+            {t("close")}
           </Button>
         }
       >
         <div className="space-y-3 border border-line bg-surface/50 p-4 text-xs text-body">
           <p>
-            <strong>Document:</strong> {issue.evidence?.title}
+            <strong>{t("docLabel")}</strong> {evidenceTitle}
           </p>
           <p>
-            <strong>Category:</strong> {issue.evidence?.type}
+            <strong>{t("categoryLabel")}</strong> {evidenceType}
           </p>
           <p>
-            <strong>Verification Status:</strong>{" "}
+            <strong>{t("verificationStatusLabel")}</strong>{" "}
             {issue.evidence?.verified
-              ? "Verified payment proof"
-              : "Pending manual verification"}
+              ? t("verifiedProof")
+              : t("pendingManualVerification")}
           </p>
-          <p className="text-faint">
-            File download/preview streams will connect once backend document
-            storage is live.
-          </p>
+          <p className="text-faint">{t("previewPendingNote")}</p>
         </div>
       </ModalDialog>
 
@@ -272,13 +303,16 @@ export function DisputeDetailsView({
         variant="alert"
         title={
           confirmModal === "confirm"
-            ? "Confirm unpaid obligation?"
-            : "Dismiss rental report?"
+            ? t("confirmModalTitle")
+            : t("dismissModalTitle")
         }
         description={
           confirmModal === "confirm"
-            ? `Confirm ${formatRwf(issue.amountRwf)} as a verified unpaid obligation on ${issue.renterName}'s rental history?`
-            : `Close this report as dismissed without recording any debt for ${issue.renterName}?`
+            ? t("confirmModalDesc", {
+                amount: formatRwfLocalized(issue.amountRwf, locale),
+                name: issue.renterName,
+              })
+            : t("dismissModalDesc", { name: issue.renterName })
         }
         footer={
           <>
@@ -288,7 +322,7 @@ export function DisputeDetailsView({
               onClick={() => setConfirmModal(null)}
               className="cursor-pointer rounded-none"
             >
-              Cancel
+              {t("cancel")}
             </Button>
             <Button
               type="button"
@@ -296,26 +330,26 @@ export function DisputeDetailsView({
               onClick={() => {
                 if (confirmModal === "confirm") {
                   updateIssueStatus(issue.id, "Confirmed");
-                  toast.success("Unpaid obligation confirmed.");
+                  toast.success(t("toastConfirmed"));
                 } else {
                   updateIssueStatus(issue.id, "Rejected");
-                  toast.success("Report dismissed without debt.");
+                  toast.success(t("toastDismissed"));
                 }
                 setConfirmModal(null);
               }}
               className="cursor-pointer rounded-none"
             >
               {confirmModal === "confirm"
-                ? "Confirm Obligation"
-                : "Dismiss Report"}
+                ? t("confirmObligationSubmit")
+                : t("dismissReportBtn")}
             </Button>
           </>
         }
       >
         <p className="text-xs text-body">
           {confirmModal === "confirm"
-            ? "Only confirm after reviewing any renter proof and verifying the 3-day notice window."
-            : "Dismissed reports remain closed in the audit log with zero debt impact."}
+            ? t("confirmBodyNote")
+            : t("dismissBodyNote")}
         </p>
       </ModalDialog>
     </main>

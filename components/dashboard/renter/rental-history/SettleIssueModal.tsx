@@ -1,15 +1,17 @@
 "use client";
 
+import { useLocale, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { ModalDialog } from "@/components/shared/ModalDialog";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import type { AppLocale } from "@/i18n/config";
+import { formatRwfLocalized } from "@/i18n/formatting";
 import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
 import { useRenterWorkspace } from "@/store/renter-workspace.store";
 import type { RentalIssue } from "@/types/landlord";
-import { formatRwf } from "@/utils/format";
 
 interface SettleIssueModalProps {
   issue: RentalIssue | null;
@@ -22,6 +24,11 @@ interface SettleValues {
 }
 
 export function SettleIssueModal({ issue, onClose }: SettleIssueModalProps) {
+  const t = useTranslations("renter.rentalHistory.settleModal");
+  const tMethods = useTranslations("renter.payments.payRent.methods");
+  const tWorkspace = useTranslations("renter.workspace");
+  const tActions = useTranslations("common.actions");
+  const locale = useLocale() as AppLocale;
   const updateIssueStatus = useLandlordWorkspace((s) => s.updateIssueStatus);
   const addNotification = useRenterWorkspace((s) => s.addNotification);
 
@@ -36,18 +43,31 @@ export function SettleIssueModal({ issue, onClose }: SettleIssueModalProps) {
 
   if (!issue) return null;
 
+  const formattedAmount = formatRwfLocalized(issue.amountRwf, locale);
+
   const onSubmit = (vals: SettleValues) => {
+    const methodLabel =
+      vals.method === "MTN Mobile Money"
+        ? tMethods("mtnName")
+        : vals.method === "AIRTEL Money"
+          ? tMethods("airtelName")
+          : tMethods("bankName");
+
     updateIssueStatus(issue.id, "Resolved");
     addNotification({
-      title: "Obligation Settled",
-      message: `Settlement of ${formatRwf(issue.amountRwf)} recorded via ${vals.method} (Ref: ${vals.reference.trim()}).`,
-      date: "Just now",
+      title: t("notifTitle"),
+      message: t("notifMessage", {
+        amount: formattedAmount,
+        method: methodLabel,
+        reference: vals.reference.trim(),
+      }),
+      date: tWorkspace("justNow"),
       read: false,
       category: "history",
       href: "/renter/rental-history",
-      actionLabel: "View History",
+      actionLabel: t("notifAction"),
     });
-    toast.success("Settlement recorded (preview). Case marked Resolved.");
+    toast.success(t("toastSuccess"));
     reset();
     onClose();
   };
@@ -56,8 +76,8 @@ export function SettleIssueModal({ issue, onClose }: SettleIssueModalProps) {
     <ModalDialog
       open
       onClose={onClose}
-      title="Record Obligation Settlement"
-      description={`${issue.issueTitle} · ${formatRwf(issue.amountRwf)}`}
+      title={t("title")}
+      description={`${issue.issueTitle} · ${formattedAmount}`}
       footer={
         <>
           <Button
@@ -66,14 +86,14 @@ export function SettleIssueModal({ issue, onClose }: SettleIssueModalProps) {
             onClick={onClose}
             className="cursor-pointer rounded-none"
           >
-            Cancel
+            {tActions("cancel")}
           </Button>
           <Button
             type="submit"
             form="renter-settle-form"
             className="cursor-pointer rounded-none"
           >
-            Confirm Settlement
+            {t("confirmButton")}
           </Button>
         </>
       }
@@ -85,30 +105,26 @@ export function SettleIssueModal({ issue, onClose }: SettleIssueModalProps) {
         className="space-y-4"
       >
         <Field>
-          <FieldLabel htmlFor="settle-method">Payment method</FieldLabel>
+          <FieldLabel htmlFor="settle-method">{t("methodLabel")}</FieldLabel>
           <select
             id="settle-method"
             className="h-10 w-full rounded-none border border-input bg-white px-3 text-sm"
             {...register("method")}
           >
-            <option value="MTN Mobile Money">MTN Mobile Money</option>
-            <option value="AIRTEL Money">AIRTEL Money</option>
-            <option value="Bank Transfer">Bank Transfer</option>
+            <option value="MTN Mobile Money">{tMethods("mtnName")}</option>
+            <option value="AIRTEL Money">{tMethods("airtelName")}</option>
+            <option value="Bank Transfer">{tMethods("bankName")}</option>
           </select>
         </Field>
 
         <Field>
-          <FieldLabel htmlFor="settle-ref">
-            Payment transaction reference *
-          </FieldLabel>
+          <FieldLabel htmlFor="settle-ref">{t("refLabel")}</FieldLabel>
           <Input
             id="settle-ref"
-            placeholder="e.g. TXN-782411"
+            placeholder={t("refPlaceholder")}
             className="h-10 rounded-none"
             {...register("reference", {
-              validate: (v) =>
-                v.trim().length >= 4 ||
-                "Enter the payment transaction reference.",
+              validate: (v) => v.trim().length >= 4 || t("refError"),
             })}
           />
           <FieldError>{errors.reference?.message}</FieldError>

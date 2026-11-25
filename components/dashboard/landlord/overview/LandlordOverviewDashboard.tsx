@@ -1,14 +1,16 @@
 "use client";
 
 import { useMemo } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import {
   mockMonthlyCollectionHistory,
   mockRecentActivities,
 } from "@/data/landlord-data";
+import type { AppLocale } from "@/i18n/config";
+import { formatNumberLocalized, formatRwfLocalized } from "@/i18n/formatting";
 import { useLandlordProperties } from "@/store/landlord-properties.store";
 import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
 import type { AttentionItem } from "@/types/landlord";
-import { formatRwf } from "@/utils/format";
 import {
   computeListingOnlyStats,
   computeManagedStats,
@@ -23,6 +25,8 @@ import { TenancyStatusDonutChart } from "./TenancyStatusDonutChart";
 import { UpcomingRentCollectionCard } from "./UpcomingRentCollectionCard";
 
 export function LandlordOverviewDashboard() {
+  const t = useTranslations("landlord.overview");
+  const locale = useLocale() as AppLocale;
   const { properties, units } = useLandlordProperties();
   const {
     serviceMode,
@@ -70,22 +74,34 @@ export function LandlordOverviewDashboard() {
     const items: AttentionItem[] = [];
     if (serviceMode === "managed") {
       if (managedStats.pendingPaymentsCount > 0) {
+        const count = managedStats.pendingPaymentsCount;
         items.push({
           id: "att-payments",
-          title: `${managedStats.pendingPaymentsCount} rent payment${managedStats.pendingPaymentsCount === 1 ? "" : "s"} awaiting verification`,
-          count: managedStats.pendingPaymentsCount,
-          actionText: "Review Payments",
+          title: t(
+            count === 1
+              ? "attention.pendingPaymentsSingle"
+              : "attention.pendingPaymentsPlural",
+            { count },
+          ),
+          count,
+          actionText: t("attention.reviewPayments"),
           href: "/landlord/payments",
           type: "pending_payment",
         });
       }
       const ending = renters.find((r) => r.tenancyStatus === "Ending");
       if (managedStats.endingSoonTenancies > 0 && ending) {
+        const count = managedStats.endingSoonTenancies;
         items.push({
           id: "att-ending",
-          title: `${managedStats.endingSoonTenancies} tenanc${managedStats.endingSoonTenancies === 1 ? "y" : "ies"} ending soon`,
-          count: managedStats.endingSoonTenancies,
-          actionText: "Review Tenancy",
+          title: t(
+            count === 1
+              ? "attention.endingTenanciesSingle"
+              : "attention.endingTenanciesPlural",
+            { count },
+          ),
+          count,
+          actionText: t("attention.reviewTenancy"),
           href: `/landlord/tenancies/${ending.id}`,
           type: "ending_tenancy",
         });
@@ -97,94 +113,145 @@ export function LandlordOverviewDashboard() {
           i.status === "Unresolved",
       );
       if (managedStats.openIssuesCount > 0 && openIssue) {
+        const count = managedStats.openIssuesCount;
         items.push({
           id: "att-issue",
-          title: `${managedStats.openIssuesCount} rental history item${managedStats.openIssuesCount === 1 ? "" : "s"} awaiting review`,
-          count: managedStats.openIssuesCount,
-          actionText: "Review Case",
+          title: t(
+            count === 1
+              ? "attention.openIssuesSingle"
+              : "attention.openIssuesPlural",
+            { count },
+          ),
+          count,
+          actionText: t("attention.reviewCase"),
           href: `/landlord/renter-history/${openIssue.id}`,
           type: "disputed_issue",
         });
       }
     }
     if (listingStats.pendingInquiries > 0) {
+      const count = listingStats.pendingInquiries;
       items.push({
         id: "att-inquiries",
-        title: `${listingStats.pendingInquiries} new tenant inquir${listingStats.pendingInquiries === 1 ? "y" : "ies"}`,
-        count: listingStats.pendingInquiries,
-        actionText: "Open Inquiries",
+        title: t(
+          count === 1
+            ? "attention.newInquiriesSingle"
+            : "attention.newInquiriesPlural",
+          { count },
+        ),
+        count,
+        actionText: t("attention.openInquiries"),
         href: "/landlord/inquiries",
         type: "pending_inquiry",
       });
     }
     if (listingStats.pendingViewings > 0) {
+      const count = listingStats.pendingViewings;
       items.push({
         id: "att-viewings",
-        title: `${listingStats.pendingViewings} viewing request${listingStats.pendingViewings === 1 ? "" : "s"} to confirm`,
-        count: listingStats.pendingViewings,
-        actionText: "Manage Viewings",
+        title: t(
+          count === 1
+            ? "attention.pendingViewingsSingle"
+            : "attention.pendingViewingsPlural",
+          { count },
+        ),
+        count,
+        actionText: t("attention.manageViewings"),
         href: "/landlord/viewings",
         type: "pending_viewing",
       });
     }
     return items;
-  }, [issues, listingStats, managedStats, renters, serviceMode]);
+  }, [issues, listingStats, managedStats, renters, serviceMode, t]);
 
   const kpiCards: OverviewStatCardItem[] =
     serviceMode === "listing_only"
       ? [
           {
-            label: "Active Listings",
+            label: t("kpis.activeListings"),
             value: String(listingStats.publishedListings),
-            helper: `${listingStats.totalListings} total · ${listingStats.draftListings} draft · ${listingStats.rentedListings} rented`,
+            helper: t("kpis.activeListingsHelper", {
+              total: listingStats.totalListings,
+              draft: listingStats.draftListings,
+              rented: listingStats.rentedListings,
+            }),
             href: "/landlord/properties",
           },
           {
-            label: "Listing Views (30d)",
-            value: listingStats.totalViews.toLocaleString("en-US"),
-            helper: "Across published Urugo property listings",
+            label: t("kpis.listingViews"),
+            value: formatNumberLocalized(listingStats.totalViews, locale),
+            helper: t("kpis.listingViewsHelper"),
             href: "/landlord/properties",
           },
           {
-            label: "Pending Inquiries",
+            label: t("kpis.pendingInquiries"),
             value: String(listingStats.pendingInquiries),
-            helper: `${listingStats.totalInquiries} total conversations received`,
+            helper: t("kpis.pendingInquiriesHelper", {
+              total: listingStats.totalInquiries,
+            }),
             href: "/landlord/inquiries",
             accent: listingStats.pendingInquiries > 0 ? "warning" : "default",
           },
           {
-            label: "Pending Viewings",
+            label: t("kpis.pendingViewings"),
             value: String(listingStats.pendingViewings),
-            helper: `${listingStats.confirmedViewings} upcoming confirmed visits`,
+            helper: t("kpis.pendingViewingsHelper", {
+              confirmed: listingStats.confirmedViewings,
+            }),
             href: "/landlord/viewings",
             accent: listingStats.pendingViewings > 0 ? "warning" : "default",
           },
         ]
       : [
           {
-            label: "Portfolio Occupancy",
+            label: t("kpis.portfolioOccupancy"),
             value: `${managedStats.occupiedSpaces} / ${managedStats.totalSpaces}`,
-            helper: `${managedStats.occupancyRate}% occupied · ${managedStats.totalProperties} properties · ${managedStats.vacantSpaces} vacant`,
+            helper: t("kpis.portfolioOccupancyHelper", {
+              rate: managedStats.occupancyRate,
+              properties: managedStats.totalProperties,
+              vacant: managedStats.vacantSpaces,
+            }),
             href: "/landlord/properties",
           },
           {
-            label: "Rent Collected (Sep 2026)",
-            value: formatRwf(managedStats.currentMonthCollectedRwf),
-            helper: `${managedStats.collectionRate}% of ${formatRwf(managedStats.currentMonthExpectedRwf)} expected`,
+            label: t("kpis.rentCollectedMonth"),
+            value: formatRwfLocalized(
+              managedStats.currentMonthCollectedRwf,
+              locale,
+            ),
+            helper: t("kpis.rentCollectedMonthHelper", {
+              rate: managedStats.collectionRate,
+              expected: formatRwfLocalized(
+                managedStats.currentMonthExpectedRwf,
+                locale,
+              ),
+            }),
             progressPercent: managedStats.collectionRate,
             href: "/landlord/payments",
             accent: "success",
           },
           {
-            label: "Rent Collected (YTD)",
-            value: formatRwf(managedStats.ytdRentCollectedRwf),
-            helper: "Verified landlord rent collected Jan – Sep 2026",
+            label: t("kpis.rentCollectedYtd"),
+            value: formatRwfLocalized(
+              managedStats.ytdRentCollectedRwf,
+              locale,
+            ),
+            helper: t("kpis.rentCollectedYtdHelper"),
             href: "/landlord/payments",
           },
           {
-            label: "Overdue & Pending Rent",
-            value: formatRwf(managedStats.confirmedOverdueRwf),
-            helper: `Confirmed overdue (${managedStats.overdueRentersCount}) · ${formatRwf(managedStats.pendingVerificationRwf)} pending proof review`,
+            label: t("kpis.overduePendingRent"),
+            value: formatRwfLocalized(
+              managedStats.confirmedOverdueRwf,
+              locale,
+            ),
+            helper: t("kpis.overduePendingRentHelper", {
+              overdueCount: managedStats.overdueRentersCount,
+              pendingAmount: formatRwfLocalized(
+                managedStats.pendingVerificationRwf,
+                locale,
+              ),
+            }),
             href: "/landlord/payments",
             accent:
               managedStats.confirmedOverdueRwf > 0
@@ -196,7 +263,7 @@ export function LandlordOverviewDashboard() {
         ];
 
   return (
-    <div className="min-h-0 flex-1 space-y-6 overflow-y-auto bg-surface/30 p-4 pb-16 sm:p-8 sm:pb-20 md:p-10 md:pb-24">
+    <div className="min-h-0 flex-1 space-y-7 overflow-y-auto bg-surface/30 p-4 pb-16 sm:p-8 sm:pb-20 md:p-10 md:pb-24">
       <LandlordGreetingHeader name={profile.fullName} serviceMode={serviceMode} />
 
       <OverviewStatGrid items={kpiCards} />

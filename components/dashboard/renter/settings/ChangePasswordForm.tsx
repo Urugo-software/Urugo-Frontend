@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ interface PasswordInputs {
 }
 
 export function ChangePasswordForm() {
+  const t = useTranslations("renter.settings.password");
   const {
     register,
     handleSubmit,
@@ -29,9 +31,7 @@ export function ChangePasswordForm() {
 
   const onSubmit = () => {
     // Backend authentication endpoint is not connected yet.
-    toast.success(
-      "Password validated (preview mode — backend auth required to persist).",
-    );
+    toast.success(t("toastSuccess"));
     reset();
   };
 
@@ -39,16 +39,16 @@ export function ChangePasswordForm() {
     <form noValidate onSubmit={handleSubmit(onSubmit)} className="space-y-5">
       <Field>
         <FieldLabel htmlFor="renter-current-password">
-          Current Password
+          {t("currentLabel")}
         </FieldLabel>
         <Input
           id="renter-current-password"
           type="password"
           autoComplete="current-password"
-          placeholder="Enter current password"
+          placeholder={t("currentPlaceholder")}
           className="h-10 rounded-none border-line bg-white"
           {...register("currentPassword", {
-            required: "Current password is required.",
+            required: t("currentRequired"),
           })}
         />
         <FieldError errors={[errors.currentPassword]} />
@@ -56,18 +56,18 @@ export function ChangePasswordForm() {
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <Field>
-          <FieldLabel htmlFor="renter-new-password">New Password</FieldLabel>
+          <FieldLabel htmlFor="renter-new-password">{t("newLabel")}</FieldLabel>
           <Input
             id="renter-new-password"
             type="password"
             autoComplete="new-password"
-            placeholder="Min. 8 characters"
+            placeholder={t("newPlaceholder")}
             className="h-10 rounded-none border-line bg-white"
             {...register("newPassword", {
-              required: "New password is required.",
+              required: t("newRequired"),
               minLength: {
                 value: 8,
-                message: "Password must be at least 8 characters.",
+                message: t("newMin"),
               },
             })}
           />
@@ -76,19 +76,18 @@ export function ChangePasswordForm() {
 
         <Field>
           <FieldLabel htmlFor="renter-confirm-password">
-            Confirm New Password
+            {t("confirmLabel")}
           </FieldLabel>
           <Input
             id="renter-confirm-password"
             type="password"
             autoComplete="new-password"
-            placeholder="Repeat new password"
+            placeholder={t("confirmPlaceholder")}
             className="h-10 rounded-none border-line bg-white"
             {...register("confirmPassword", {
-              required: "Please confirm your new password.",
+              required: t("confirmRequired"),
               validate: (value) =>
-                value === getValues("newPassword") ||
-                "New passwords do not match.",
+                value === getValues("newPassword") || t("confirmMismatch"),
             })}
           />
           <FieldError errors={[errors.confirmPassword]} />
@@ -96,8 +95,7 @@ export function ChangePasswordForm() {
       </div>
 
       <p className="border border-line bg-surface px-3.5 py-2.5 text-xs text-body">
-        Preview mode: password changes are validated locally until backend
-        authentication is connected.
+        {t("previewNotice")}
       </p>
 
       <div>
@@ -106,7 +104,7 @@ export function ChangePasswordForm() {
           disabled={isSubmitting}
           className="cursor-pointer rounded-none px-6"
         >
-          Update Password
+          {t("updateButton")}
         </Button>
       </div>
     </form>

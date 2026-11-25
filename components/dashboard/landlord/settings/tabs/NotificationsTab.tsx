@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
@@ -7,6 +8,7 @@ import { mockNotificationPreferences } from "@/data/landlord-data";
 import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
 
 export function NotificationsTab({ onSave }: { onSave: () => void }) {
+  const t = useTranslations("landlord.settings.notificationsTab");
   const { notificationPrefs, updateNotificationPrefs } = useLandlordWorkspace();
 
   const {
@@ -19,17 +21,15 @@ export function NotificationsTab({ onSave }: { onSave: () => void }) {
 
   const onSubmit = (vals: Record<string, boolean>) => {
     updateNotificationPrefs(vals);
-    toast.success("Notification preferences saved.");
+    toast.success(t("toastSaved"));
     onSave();
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl space-y-6">
       <div>
-        <h3 className="text-lg font-bold text-ink">Notification Preferences</h3>
-        <p className="mt-1 text-xs text-body">
-          Choose which landlord alerts you want to receive via SMS and email.
-        </p>
+        <h3 className="text-lg font-bold text-ink">{t("title")}</h3>
+        <p className="mt-1 text-xs text-body">{t("subtitle")}</p>
       </div>
 
       <div className="space-y-3">
@@ -40,9 +40,11 @@ export function NotificationsTab({ onSave }: { onSave: () => void }) {
           >
             <div>
               <span className="block text-sm font-semibold text-ink">
-                {pref.title}
+                {t(`items.${pref.id}.title`)}
               </span>
-              <span className="mt-0.5 block text-xs text-body">{pref.desc}</span>
+              <span className="mt-0.5 block text-xs text-body">
+                {t(`items.${pref.id}.desc`)}
+              </span>
             </div>
             <input
               type="checkbox"
@@ -59,7 +61,7 @@ export function NotificationsTab({ onSave }: { onSave: () => void }) {
           disabled={isSubmitting}
           className="cursor-pointer rounded-none"
         >
-          Save Preferences
+          {t("saveBtn")}
         </Button>
       </div>
     </form>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ interface PayoutValues {
 }
 
 export function PayoutsTab({ onSave }: { onSave: () => void }) {
+  const t = useTranslations("landlord.settings.payouts");
   const { profile, updateProfile } = useLandlordWorkspace();
 
   const {
@@ -31,7 +33,7 @@ export function PayoutsTab({ onSave }: { onSave: () => void }) {
       momoNumber: vals.momoNumber.trim(),
       bankAccount: vals.bankAccount.trim(),
     });
-    toast.success("Payout details saved.");
+    toast.success(t("toastSaved"));
     onSave();
   };
 
@@ -42,28 +44,23 @@ export function PayoutsTab({ onSave }: { onSave: () => void }) {
       className="max-w-2xl space-y-6"
     >
       <div>
-        <h3 className="text-lg font-bold text-ink">Payout Accounts</h3>
-        <p className="mt-1 text-xs text-body">
-          Configure where rent transfers and payment references should be
-          directed.
-        </p>
+        <h3 className="text-lg font-bold text-ink">{t("title")}</h3>
+        <p className="mt-1 text-xs text-body">{t("subtitle")}</p>
       </div>
 
       <div className="space-y-4">
         <Field>
           <FieldLabel htmlFor="momo-number">
-            MTN Mobile Money / Airtel Money Number{" "}
-            <span className="text-rose-600">*</span>
+            {t("momoLabel")} <span className="text-rose-600">*</span>
           </FieldLabel>
           <Input
             id="momo-number"
-            placeholder="e.g., 0788123456"
+            placeholder={t("momoPlaceholder")}
             aria-invalid={!!errors.momoNumber}
             className="h-10 rounded-none"
             {...register("momoNumber", {
               validate: (v) =>
-                v.replace(/\D/g, "").length >= 9 ||
-                "Enter a valid Rwandan mobile money number.",
+                v.replace(/\D/g, "").length >= 9 || t("momoInvalid"),
             })}
           />
           <FieldError>{errors.momoNumber?.message}</FieldError>
@@ -71,17 +68,15 @@ export function PayoutsTab({ onSave }: { onSave: () => void }) {
 
         <Field>
           <FieldLabel htmlFor="bank-account">
-            Bank Account (IBAN / Local Account){" "}
-            <span className="text-rose-600">*</span>
+            {t("bankLabel")} <span className="text-rose-600">*</span>
           </FieldLabel>
           <Input
             id="bank-account"
-            placeholder="e.g., BK — 00012345678"
+            placeholder={t("bankPlaceholder")}
             aria-invalid={!!errors.bankAccount}
             className="h-10 rounded-none"
             {...register("bankAccount", {
-              validate: (v) =>
-                v.trim().length >= 6 || "Enter a valid bank account reference.",
+              validate: (v) => v.trim().length >= 6 || t("bankInvalid"),
             })}
           />
           <FieldError>{errors.bankAccount?.message}</FieldError>
@@ -94,7 +89,7 @@ export function PayoutsTab({ onSave }: { onSave: () => void }) {
           disabled={isSubmitting}
           className="cursor-pointer rounded-none"
         >
-          Save Payout Accounts
+          {t("saveBtn")}
         </Button>
       </div>
     </form>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocale, useTranslations } from "next-intl";
 import { MonthlyCollectionPoint } from "@/types/landlord";
 import {
   ResponsiveContainer,
@@ -12,13 +13,23 @@ import {
   CartesianGrid,
 } from "recharts";
 
-import { formatRwf } from "@/utils/format";
+import type { AppLocale } from "@/i18n/config";
+import { localizeMonthShort } from "@/i18n/display-format";
+import { formatRwfLocalized } from "@/i18n/formatting";
 
 interface RentCollectionChartProps {
   data: MonthlyCollectionPoint[];
 }
 
 export function RentCollectionChart({ data }: RentCollectionChartProps) {
+  const t = useTranslations("landlord.overview.chart");
+  const locale = useLocale() as AppLocale;
+
+  const localizedData = data.map((point) => ({
+    ...point,
+    month: localizeMonthShort(point.month, locale),
+  }));
+
   const formatYAxis = (value: number) => {
     if (value >= 1000000) {
       return `${(value / 1000000).toFixed(1)}M`;
@@ -31,22 +42,22 @@ export function RentCollectionChart({ data }: RentCollectionChartProps) {
 
   return (
     <div className="flex h-full flex-col justify-between border border-line bg-white p-5 shadow-2xs sm:p-6">
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-        <div>
+      <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+        <div className="space-y-1.5">
           <h3 className="text-xs font-semibold uppercase tracking-wider text-faint">
-            Rent Collection History
+            {t("heading")}
           </h3>
-          <p className="mt-1 text-sm font-medium text-ink">
-            Expected vs. Collected Rent (Year-to-Date)
+          <p className="text-sm font-medium leading-relaxed text-ink">
+            {t("subtitle")}
           </p>
         </div>
-        <div className="text-xs font-medium text-faint">Values in RWF</div>
+        <div className="text-xs font-medium text-faint">{t("valuesInRwf")}</div>
       </div>
 
       <div className="h-64 w-full pt-2 sm:h-72">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
-            data={data}
+            data={localizedData}
             margin={{ top: 10, right: 10, left: -15, bottom: 0 }}
             barGap={6}
           >
@@ -65,7 +76,9 @@ export function RentCollectionChart({ data }: RentCollectionChartProps) {
             />
             <Tooltip
               formatter={(value, name) => [
-                typeof value === "number" ? formatRwf(value) : String(value ?? ""),
+                typeof value === "number"
+                  ? formatRwfLocalized(value, locale)
+                  : String(value ?? ""),
                 String(name ?? ""),
               ]}
               contentStyle={{
@@ -83,14 +96,14 @@ export function RentCollectionChart({ data }: RentCollectionChartProps) {
               iconType="square"
             />
             <Bar
-              name="Expected Rent"
+              name={t("expectedRent")}
               dataKey="expectedRwf"
               fill="#CBD5E1"
               radius={[2, 2, 0, 0]}
               maxBarSize={28}
             />
             <Bar
-              name="Collected Rent"
+              name={t("collectedRent")}
               dataKey="collectedRwf"
               fill="#10B981"
               radius={[2, 2, 0, 0]}

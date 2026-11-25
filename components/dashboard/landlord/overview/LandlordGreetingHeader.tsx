@@ -10,6 +10,7 @@ import {
   Plus,
   UserPlus,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -24,46 +25,59 @@ export function LandlordGreetingHeader({
   name,
   serviceMode,
 }: LandlordGreetingHeaderProps) {
-  const firstName = name.split(/\s+/)[0] || "Landlord";
+  const t = useTranslations("landlord.overview.greeting");
+  const firstName = name.split(/\s+/)[0] || t("fallbackName");
 
   const quickActions =
     serviceMode === "listing_only"
       ? [
           {
-            label: "Add Listing",
+            label: t("actions.addListing"),
             href: "/landlord/properties/new",
             icon: Plus,
             primary: true,
           },
           {
-            label: "Inquiries",
+            label: t("actions.inquiries"),
             href: "/landlord/inquiries",
             icon: MessageSquare,
           },
-          { label: "Viewings", href: "/landlord/viewings", icon: Calendar },
+          {
+            label: t("actions.viewings"),
+            href: "/landlord/viewings",
+            icon: Calendar,
+          },
         ]
       : [
           {
-            label: "Add Property",
+            label: t("actions.addProperty"),
             href: "/landlord/properties/new",
             icon: Building2,
             primary: true,
           },
           {
-            label: "Add Renter",
+            label: t("actions.addRenter"),
             href: "/landlord/renters/add",
             icon: UserPlus,
           },
-          { label: "Agreements", href: "/landlord/agreements", icon: FileText },
-          { label: "Payments", href: "/landlord/payments", icon: CreditCard },
+          {
+            label: t("actions.agreements"),
+            href: "/landlord/agreements",
+            icon: FileText,
+          },
+          {
+            label: t("actions.payments"),
+            href: "/landlord/payments",
+            icon: CreditCard,
+          },
         ];
 
   return (
-    <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-      <div className="space-y-1.5">
-        <div className="flex flex-wrap items-center gap-2.5">
+    <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+      <div className="space-y-2.5">
+        <div className="flex flex-wrap items-center gap-3">
           <h2 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">
-            Good morning, {firstName}
+            {t("welcome", { name: firstName })}
           </h2>
           <span aria-hidden="true" className="text-line">
             &middot;
@@ -75,28 +89,28 @@ export function LandlordGreetingHeader({
             <StatusBadge
               label={
                 serviceMode === "listing_only"
-                  ? "Listing-Only Plan"
-                  : "Managed Plan"
+                  ? t("listingOnlyPlan")
+                  : t("managedPlan")
               }
               tone={serviceMode === "listing_only" ? "info" : "success"}
             />
           </Link>
         </div>
-        <p className="text-sm text-body">
+        <p className="text-sm leading-relaxed text-body">
           {serviceMode === "listing_only"
-            ? "Track your active listings, incoming tenant inquiries, and viewing requests."
-            : "Overview of your portfolio occupancy, monthly and year-to-date rent collection, and priority tasks."}
+            ? t("listingOnlySubtitle")
+            : t("managedSubtitle")}
         </p>
       </div>
 
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex flex-wrap items-center gap-2.5">
         {quickActions.map(({ label, href, icon: Icon, primary }) => (
           <Link
             key={href}
             href={href}
             className={cn(
               buttonVariants({ variant: primary ? "default" : "outline" }),
-              "h-9 rounded-none px-3.5 text-xs font-semibold",
+              "h-10 gap-2 rounded-none px-4 text-xs font-semibold",
             )}
           >
             <Icon aria-hidden="true" className="size-3.5" />

@@ -2,6 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { Send } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSendMessage } from "@/hooks/mutate/useSendMessage";
@@ -11,6 +12,7 @@ interface Inputs {
 }
 
 export function ChatInputForm() {
+  const t = useTranslations("renter.messages");
   const { register, handleSubmit, reset } = useForm<Inputs>({
     defaultValues: { messageText: "" },
   });
@@ -31,15 +33,15 @@ export function ChatInputForm() {
     >
       <Input
         type="text"
-        aria-label="Message to landlord"
-        placeholder="Type a message to your landlord..."
+        aria-label={t("inputAria")}
+        placeholder={t("inputPlaceholder")}
         className="h-10 flex-1 rounded-none border-line bg-surface text-sm text-ink focus:bg-white"
         {...register("messageText", { required: true })}
       />
       <Button
         type="submit"
         size="icon"
-        aria-label="Send message"
+        aria-label={t("sendAria")}
         disabled={sendMutation.isPending}
         className="size-10 shrink-0 cursor-pointer rounded-none"
       >

@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { ModalDialog } from "@/components/shared/ModalDialog";
 import { Agreement } from "@/types/agreement.types";
@@ -26,6 +27,8 @@ export function LandlordSignModal({
   onClose,
   onSign,
 }: Props) {
+  const t = useTranslations("landlord.agreements.preview.signModal");
+  const tCommon = useTranslations("common");
   const {
     register,
     handleSubmit,
@@ -51,7 +54,7 @@ export function LandlordSignModal({
 
   function onSubmit(values: SignFormValues) {
     onSign(values.signerName.trim());
-    toast.success("Agreement digitally signed as Landlord.");
+    toast.success(t("signedToast"));
     onClose();
   }
 
@@ -59,8 +62,8 @@ export function LandlordSignModal({
     <ModalDialog
       open={isOpen}
       onClose={onClose}
-      title="Sign Lease Agreement"
-      description={`Ref: ${agreement.referenceNumber}`}
+      title={t("title")}
+      description={t("description", { ref: agreement.referenceNumber })}
       maxWidthClassName="max-w-lg"
     >
       <form
@@ -79,15 +82,14 @@ export function LandlordSignModal({
             htmlFor="landlord-signer-name"
             className="mb-1.5 block text-[12.5px] font-semibold uppercase tracking-wider text-faint"
           >
-            Full Legal Name
+            {t("fullLegalName")}
           </label>
           <input
             id="landlord-signer-name"
             type="text"
             {...register("signerName", {
-              required: "Please enter your legal name to endorse.",
-              validate: (v) =>
-                v.trim().length > 0 || "Please enter your legal name.",
+              required: t("nameRequired"),
+              validate: (v) => v.trim().length > 0 || t("nameNonEmpty"),
             })}
             className="h-10 w-full border border-line bg-white px-3 text-sm font-semibold text-ink focus:border-ink focus:outline-none"
           />
@@ -97,7 +99,7 @@ export function LandlordSignModal({
             </p>
           )}
           <p className="mt-1 font-mono text-[12.5px] text-faint">
-            National ID: {agreement.landlord.nationalId}
+            {t("nationalId", { id: agreement.landlord.nationalId })}
           </p>
         </div>
 
@@ -105,14 +107,12 @@ export function LandlordSignModal({
           <input
             type="checkbox"
             {...register("hasAgreed", {
-              required: "Confirm your acknowledgment to sign.",
+              required: t("ackRequired"),
             })}
             className="mt-1 rounded-none border-line text-ink focus:ring-ink"
           />
           <span className="text-[12.5px] leading-relaxed text-body">
-            I attest that the terms and covenants contained in this lease
-            agreement accurately represent the agreed terms under Rwandan
-            residential tenancy law.
+            {t("attestation")}
           </span>
         </label>
 
@@ -123,14 +123,14 @@ export function LandlordSignModal({
             onClick={onClose}
             className="h-9 cursor-pointer rounded-none border-line px-4 text-[12.5px] font-medium"
           >
-            Cancel
+            {tCommon("actions.cancel")}
           </Button>
           <Button
             type="submit"
             disabled={!canSubmit}
             className="h-9 cursor-pointer rounded-none bg-ink px-5 text-[12.5px] font-semibold text-white hover:bg-black disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Sign &amp; Finalize Agreement
+            {t("submit")}
           </Button>
         </div>
       </form>

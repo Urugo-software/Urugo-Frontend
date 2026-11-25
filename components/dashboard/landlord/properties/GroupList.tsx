@@ -1,5 +1,8 @@
+"use client";
+
 import { useState, type ReactNode } from "react";
 import { GripVertical } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { LandlordPropertyItem, PropertyGroup } from "@/types/landlord";
 import { useLandlordProperties } from "@/store/landlord-properties.store";
 import { GroupCard, type GroupAction } from "./GroupCard";
@@ -13,6 +16,7 @@ export function GroupList({ groups, byGroup, mode, reorderable, onAction, render
   onAction: (group: PropertyGroup, action: GroupAction) => void;
   renderMembershipActions: (group: PropertyGroup, memberCount: number) => ReactNode;
 }) {
+  const t = useTranslations("landlord.properties.groups");
   const moveGroup = useLandlordProperties((state) => state.moveGroup);
   const [dragged, setDragged] = useState<string | null>(null);
   const [target, setTarget] = useState<string | null>(null);
@@ -23,7 +27,13 @@ export function GroupList({ groups, byGroup, mode, reorderable, onAction, render
   function move(group: PropertyGroup, index: number) {
     if (!canMove || !groups[index]) return;
     moveGroup(group.id, groups[index].id);
-    setAnnouncement(`${group.name} moved to position ${index + 1} of ${groups.length}.`);
+    setAnnouncement(
+      t("movedAnnouncement", {
+        name: group.name,
+        position: index + 1,
+        total: groups.length,
+      }),
+    );
   }
 
   function endDrag() {
@@ -33,7 +43,7 @@ export function GroupList({ groups, byGroup, mode, reorderable, onAction, render
 
   return (
     <>
-      <ol className={cardLayout(mode)} aria-label="Property group order">
+      <ol className={cardLayout(mode)} aria-label={t("groupOrderAria")}>
         {groups.map((group, index) => {
           const members = byGroup.get(group.id) ?? [];
           const isTarget = canMove && dragged !== null && dragged !== group.id && target === group.id;
@@ -55,14 +65,14 @@ export function GroupList({ groups, byGroup, mode, reorderable, onAction, render
                 endDrag();
               }}
             >
-              {isTarget && <span className="pointer-events-none absolute right-2 top-2 z-10 rounded bg-brand-blue px-2 py-1 text-xs font-medium text-white">Drop {from < index ? "after" : "before"}</span>}
+              {isTarget && <span className="pointer-events-none absolute right-2 top-2 z-10 rounded bg-brand-blue px-2 py-1 text-xs font-medium text-white">{from < index ? t("dropAfter") : t("dropBefore")}</span>}
               <GroupCard group={group} members={members} mode={mode}
                 membershipActions={renderMembershipActions(group, members.length)}
                 first={index === 0} last={index === groups.length - 1}
                 onAction={(action) => onAction(group, action)}
                 onMove={canMove ? (offset) => move(group, index + offset) : undefined}
                 handle={canMove && (
-                  <span draggable aria-hidden="true" title="Drag to reorder, or use Move up or Move down in the group menu"
+                  <span draggable aria-hidden="true" title={t("dragHandleTitle")}
                     className="inline-flex size-8 cursor-grab items-center justify-center rounded bg-white text-body shadow active:cursor-grabbing"
                     onDragStart={(event) => {
                       event.dataTransfer.effectAllowed = "move";

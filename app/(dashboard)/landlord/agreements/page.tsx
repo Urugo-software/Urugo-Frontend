@@ -1,10 +1,13 @@
+import { getTranslations } from "next-intl/server";
 import { AgreementListContainer } from "@/components/dashboard/landlord/agreements/AgreementListContainer";
 
-export const metadata = {
-  title: "Lease Agreements | Urugo Landlord",
-  description:
-    "Prepare, customize, review, and manage standard residential lease agreements.",
-};
+export async function generateMetadata() {
+  const t = await getTranslations("landlord.pages.agreements");
+  return {
+    title: t("listTitle"),
+    description: t("listDescription"),
+  };
+}
 
 export default function LandlordAgreementsPage() {
   return (

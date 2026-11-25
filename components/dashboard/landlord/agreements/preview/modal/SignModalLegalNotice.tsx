@@ -1,6 +1,7 @@
 "use client";
 
 import { CheckCircle2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface Props {
   referenceNumber: string;
@@ -15,17 +16,22 @@ export function SignModalLegalNotice({
   propertyName,
   unitNumber,
 }: Props) {
+  const t = useTranslations("landlord.agreements.preview.signModal");
+
   return (
-    <div className="border border-line bg-surface/40 p-4 text-[13px] text-body space-y-2">
+    <div className="space-y-2 border border-line bg-surface/40 p-4 text-[13px] text-body">
       <div className="flex items-center gap-2 font-semibold text-ink">
         <CheckCircle2 className="size-4 text-ink" />
-        <span>Landlord Electronic Endorsement</span>
+        <span>{t("legalNoticeTitle")}</span>
       </div>
       <p className="leading-relaxed">
-        By confirming below, you legally execute Residential Tenancy Agreement{" "}
-        <strong className="text-ink">{referenceNumber}</strong> with{" "}
-        <strong className="text-ink">{renterName}</strong> for{" "}
-        <strong className="text-ink">{propertyName} (Unit {unitNumber})</strong>.
+        {t.rich("legalNoticeBody", {
+          ref: referenceNumber,
+          renter: renterName,
+          property: propertyName,
+          unit: unitNumber,
+          strong: (chunks) => <strong className="text-ink">{chunks}</strong>,
+        })}
       </p>
     </div>
   );

@@ -2,7 +2,9 @@
 
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { ArrowUpRight, MapPin, ShieldCheck } from "lucide-react";
+
 import { listed_properties } from "@/data/properties";
 
 export interface PropertyMatchItem {
@@ -16,18 +18,6 @@ export interface PropertyMatchItem {
   isVerified?: boolean;
 }
 
-const defaultMatchItems: PropertyMatchItem[] = listed_properties
-  .slice(0, 3)
-  .map((item) => ({
-    id: item.id,
-    image: item.image,
-    name: item.headline,
-    location: item.location,
-    details: `${item.beds} ${item.beds === 1 ? "Bed" : "Beds"} · ${item.baths} ${item.baths === 1 ? "Bath" : "Baths"}${item.parking ? " · Parking" : ""}`,
-    price: `${item.price} ${item.currency}`,
-    isVerified: item.isVerified,
-  }));
-
 interface PropertyMatchesProps {
   items?: PropertyMatchItem[];
   compact?: boolean;
@@ -36,11 +26,26 @@ interface PropertyMatchesProps {
 }
 
 export function PropertyMatches({
-  items = defaultMatchItems,
+  items,
   compact = true,
   onNavigate,
   onSelectProperty,
 }: PropertyMatchesProps) {
+  const t = useTranslations("public.zoe.matches");
+  const tStatuses = useTranslations("common.statuses");
+
+  const resolvedItems: PropertyMatchItem[] =
+    items ??
+    listed_properties.slice(0, 3).map((item) => ({
+      id: item.id,
+      image: item.image,
+      name: item.headline,
+      location: item.location,
+      details: `${t("beds", { count: item.beds })} · ${t("baths", { count: item.baths })}${item.parking ? ` · ${t("parking")}` : ""}`,
+      price: `${item.price} ${item.currency}`,
+      isVerified: item.isVerified,
+    }));
+
   return (
     <div className="mt-2 flex w-full flex-col gap-3">
       <div
@@ -50,7 +55,7 @@ export function PropertyMatches({
             : "grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
         }
       >
-        {items.map((prop) => {
+        {resolvedItems.map((prop) => {
           const href = prop.id ? `/properties/${prop.id}` : "/properties";
           const handleClick = () => {
             onSelectProperty?.(prop.name);
@@ -71,13 +76,18 @@ export function PropertyMatches({
                   src={prop.image}
                   alt={prop.name}
                   fill
-                  sizes={compact ? "360px" : "(min-width: 1024px) 280px, 100vw"}
+                  sizes={
+                    compact ? "360px" : "(min-width: 1024px) 280px, 100vw"
+                  }
                   className="object-cover transition-transform duration-300 group-hover:scale-105"
                 />
                 {(prop.isVerified || prop.badge) && (
                   <span className="absolute left-2 top-2 inline-flex items-center gap-1 rounded-full bg-white/95 px-2 py-0.5 text-[12.5px] font-semibold text-brand shadow-xs">
-                    <ShieldCheck aria-hidden="true" className="size-3 text-brand" />
-                    {prop.badge ?? "Verified"}
+                    <ShieldCheck
+                      aria-hidden="true"
+                      className="size-3 text-brand"
+                    />
+                    {prop.badge ?? tStatuses("verified")}
                   </span>
                 )}
               </Link>
@@ -93,7 +103,10 @@ export function PropertyMatches({
                   </Link>
                   {prop.location && (
                     <p className="mt-0.5 flex items-center gap-1 text-xs text-body">
-                      <MapPin aria-hidden="true" className="size-3 shrink-0 text-faint" />
+                      <MapPin
+                        aria-hidden="true"
+                        className="size-3 shrink-0 text-faint"
+                      />
                       <span className="truncate">{prop.location}</span>
                     </p>
                   )}
@@ -103,7 +116,7 @@ export function PropertyMatches({
                 <div className="mt-2.5 flex items-center justify-between border-t border-line/60 pt-2">
                   <div>
                     <span className="block text-[12.5px] text-faint">
-                      Monthly rent
+                      {t("monthlyRent")}
                     </span>
                     <span className="font-mono text-sm font-bold text-brand">
                       {prop.price}
@@ -115,7 +128,7 @@ export function PropertyMatches({
                     onClick={handleClick}
                     className="inline-flex items-center gap-1 rounded-lg bg-brand-tint px-3 py-1.5 text-xs font-bold text-brand transition-colors hover:bg-brand hover:text-white"
                   >
-                    <span>View</span>
+                    <span>{t("view")}</span>
                     <ArrowUpRight aria-hidden="true" className="size-3.5" />
                   </Link>
                 </div>

@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { Bath, BedDouble, CarFront, MapPin, ShieldCheck } from "lucide-react";
 
 interface PropertyHeaderProps {
@@ -10,7 +11,7 @@ interface PropertyHeaderProps {
   parking?: boolean;
 }
 
-export default function PropertyHeader({
+export default async function PropertyHeader({
   title,
   address,
   status,
@@ -19,6 +20,7 @@ export default function PropertyHeader({
   baths,
   parking,
 }: PropertyHeaderProps) {
+  const t = await getTranslations("properties");
   const isAvailable = status === "available";
 
   return (
@@ -44,13 +46,15 @@ export default function PropertyHeader({
             aria-hidden="true"
             className={`size-2 rounded-full ${isAvailable ? "bg-green-600" : "bg-faint"}`}
           />
-          {isAvailable ? "Available now" : "Currently occupied"}
+          {isAvailable
+            ? t("availability.availableNow")
+            : t("availability.currentlyOccupied")}
         </span>
 
         {isVerified && (
           <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-tint px-3.5 py-1.5 text-xs font-semibold text-brand">
             <ShieldCheck aria-hidden="true" className="size-3.5" />
-            Verified listing
+            {t("availability.verifiedListing")}
           </span>
         )}
       </div>
@@ -60,19 +64,19 @@ export default function PropertyHeader({
           {beds !== undefined && (
             <span className="inline-flex items-center gap-1.5">
               <BedDouble aria-hidden="true" className="size-4 text-brand" />
-              {beds} {beds === 1 ? "Bedroom" : "Bedrooms"}
+              {t("details.bedroomsLong", { count: beds })}
             </span>
           )}
           {baths !== undefined && (
             <span className="inline-flex items-center gap-1.5">
               <Bath aria-hidden="true" className="size-4 text-brand" />
-              {baths} {baths === 1 ? "Bathroom" : "Bathrooms"}
+              {t("details.bathroomsLong", { count: baths })}
             </span>
           )}
           {parking && (
             <span className="inline-flex items-center gap-1.5">
               <CarFront aria-hidden="true" className="size-4 text-brand" />
-              Parking
+              {t("details.parking")}
             </span>
           )}
         </div>

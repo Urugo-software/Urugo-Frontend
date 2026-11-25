@@ -1,8 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import { Phone, Wrench } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 
 export function LandlordQuickActions({ phone }: { phone: string }) {
+  const t = useTranslations("renter.messages");
+
   return (
     <div className="flex flex-col gap-2 pt-2">
       <a href={`tel:${phone}`} className="w-full">
@@ -11,7 +16,7 @@ export function LandlordQuickActions({ phone }: { phone: string }) {
           className="w-full cursor-pointer justify-center rounded-none"
         >
           <Phone aria-hidden="true" className="size-4" />
-          Call Landlord
+          {t("callLandlord")}
         </Button>
       </a>
 
@@ -22,7 +27,7 @@ export function LandlordQuickActions({ phone }: { phone: string }) {
           className="w-full cursor-pointer justify-center rounded-none"
         >
           <Wrench aria-hidden="true" className="size-4" />
-          Report Maintenance Issue
+          {t("reportMaintenance")}
         </Button>
       </Link>
     </div>

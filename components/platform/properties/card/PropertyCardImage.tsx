@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { ShieldCheck } from "lucide-react";
+
 import type { PropertyCardImageProps } from "@/types";
 
 function PropertyCardImage({
@@ -13,6 +15,8 @@ function PropertyCardImage({
   isVerified,
   availabilityStatus,
 }: PropertyCardImageProps & { viewMode?: "grid" | "list" }) {
+  const tCard = useTranslations("properties.card");
+  const tStatuses = useTranslations("common.statuses");
   const isAvailable = availabilityStatus.toLowerCase() === "available";
 
   const imageContent = (
@@ -34,7 +38,7 @@ function PropertyCardImage({
       {isVerified && (
         <span className="absolute right-2.5 top-2.5 z-10 inline-flex items-center gap-1 rounded-sm bg-white/95 px-2 py-1 text-[12.5px] font-semibold text-brand shadow-xs">
           <ShieldCheck aria-hidden="true" className="size-3.5" />
-          Verified
+          {tStatuses("verified")}
         </span>
       )}
 
@@ -44,7 +48,7 @@ function PropertyCardImage({
             isAvailable ? "bg-brand" : "bg-ink/80"
           }`}
         >
-          {isAvailable ? "Available" : "Occupied"}
+          {isAvailable ? tStatuses("available") : tStatuses("occupied")}
         </span>
       </div>
     </>
@@ -58,7 +62,7 @@ function PropertyCardImage({
     return (
       <Link
         href={`/properties/${propertyId}`}
-        aria-label={`View details for ${headline}`}
+        aria-label={tCard("viewDetailsAria", { headline })}
         className={containerClass}
       >
         {imageContent}

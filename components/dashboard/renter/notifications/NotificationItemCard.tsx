@@ -13,16 +13,17 @@ import {
   Wrench,
   X,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { RenterNotification } from "@/types/renter";
 
 const CATEGORY_META = {
-  rent: { icon: DollarSign, label: "Rent", tone: "text-success" },
-  maintenance: { icon: Wrench, label: "Maintenance", tone: "text-brand-blue" },
-  lease: { icon: FileText, label: "Lease", tone: "text-ink" },
-  history: { icon: History, label: "Rental History", tone: "text-amber-700" },
-  inquiry: { icon: Calendar, label: "Inquiries", tone: "text-brand-blue" },
+  rent: { icon: DollarSign, key: "rent", tone: "text-success" },
+  maintenance: { icon: Wrench, key: "maintenance", tone: "text-brand-blue" },
+  lease: { icon: FileText, key: "lease", tone: "text-ink" },
+  history: { icon: History, key: "history", tone: "text-amber-700" },
+  inquiry: { icon: Calendar, key: "inquiry", tone: "text-brand-blue" },
 } as const;
 
 interface NotificationItemCardProps {
@@ -38,12 +39,16 @@ export function NotificationItemCard({
   onToggleRead,
   onDismiss,
 }: NotificationItemCardProps) {
+  const t = useTranslations("renter.notifications");
+  const tWorkspace = useTranslations("renter.workspace");
+
   const meta = CATEGORY_META[notif.category] ?? {
     icon: Bell,
-    label: "Notice",
+    key: "notice",
     tone: "text-faint",
   };
   const Icon = meta.icon;
+  const toggleReadLabel = !notif.read ? t("markAsRead") : t("markAsUnread");
 
   return (
     <article
@@ -61,13 +66,17 @@ export function NotificationItemCard({
 
         <div className="min-w-0 space-y-1.5">
           <div className="flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-xs">
-            <span className={cn("font-semibold", meta.tone)}>{meta.label}</span>
+            <span className={cn("font-semibold", meta.tone)}>
+              {t(`categories.${meta.key}`)}
+            </span>
             <span aria-hidden="true" className="text-line">&middot;</span>
             <span className="text-faint">{notif.date}</span>
             {!notif.read && (
               <>
                 <span aria-hidden="true" className="text-line">&middot;</span>
-                <span className="font-semibold text-brand-blue">Unread</span>
+                <span className="font-semibold text-brand-blue">
+                  {tWorkspace("unread")}
+                </span>
               </>
             )}
           </div>
@@ -84,7 +93,7 @@ export function NotificationItemCard({
                 onClick={() => onMarkRead(notif.id)}
                 className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-blue hover:underline"
               >
-                <span>{notif.actionLabel || "Open"}</span>
+                <span>{notif.actionLabel || t("openAction")}</span>
                 <ArrowRight aria-hidden="true" className="size-3.5" />
               </Link>
             </div>
@@ -97,8 +106,8 @@ export function NotificationItemCard({
           type="button"
           variant="ghost"
           size="icon"
-          title={!notif.read ? "Mark as read" : "Mark as unread"}
-          aria-label={!notif.read ? "Mark as read" : "Mark as unread"}
+          title={toggleReadLabel}
+          aria-label={toggleReadLabel}
           onClick={() => onToggleRead(notif.id)}
           className="size-8 cursor-pointer rounded-none text-faint hover:text-ink"
         >
@@ -112,8 +121,8 @@ export function NotificationItemCard({
           type="button"
           variant="ghost"
           size="icon"
-          title="Dismiss notification"
-          aria-label="Dismiss notification"
+          title={t("dismissNotification")}
+          aria-label={t("dismissNotification")}
           onClick={() => onDismiss(notif.id)}
           className="size-8 cursor-pointer rounded-none text-faint hover:text-ink"
         >

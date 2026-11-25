@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
+
 import PropertyDetails from "@/components/platform/properties/propertyDescription/PropertyDetails";
 import { listed_properties, property_details } from "@/data/properties";
 
@@ -16,9 +18,10 @@ export async function generateMetadata({
   const property = property_details.find((prop) => prop.id === propertyId);
 
   if (!property) {
+    const t = await getTranslations("properties.meta");
     return {
-      title: "Property Not Found",
-      description: "The requested rental property could not be found on Urugo.",
+      title: t("notFoundTitle"),
+      description: t("notFoundDescription"),
     };
   }
 

@@ -1,3 +1,8 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+
+import { getStatusTranslationKey } from "@/i18n/status-map";
 import { cn } from "@/lib/utils";
 
 export type StatusTone = "success" | "info" | "warning" | "danger" | "neutral";
@@ -21,15 +26,19 @@ export function StatusBadge({
   tone = "neutral",
   className,
 }: StatusBadgeProps) {
+  const t = useTranslations("common.statuses");
+  const statusKey = getStatusTranslationKey(label);
+  const displayLabel = statusKey ? t(statusKey) : label;
+
   return (
     <span
       className={cn(
-        "inline-flex items-center text-xs font-semibold whitespace-nowrap",
+        "inline-flex items-center whitespace-nowrap text-xs font-semibold",
         TONE_STYLES[tone],
         className,
       )}
     >
-      {label}
+      {displayLabel}
     </span>
   );
 }

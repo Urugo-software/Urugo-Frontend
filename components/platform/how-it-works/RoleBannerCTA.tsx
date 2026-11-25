@@ -1,9 +1,11 @@
 "use client";
 
-import type { RoleFlow } from "@/types";
-import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { AnimatePresence, motion } from "framer-motion";
+import { useTranslations } from "next-intl";
+import { ArrowRight } from "lucide-react";
+
+import type { RoleFlow } from "@/types";
 
 interface RoleBannerCTAProps {
   banner: RoleFlow["banner"];
@@ -11,6 +13,8 @@ interface RoleBannerCTAProps {
 }
 
 export default function RoleBannerCTA({ banner, roleId }: RoleBannerCTAProps) {
+  const t = useTranslations("public.howItWorks");
+
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -33,7 +37,7 @@ export default function RoleBannerCTA({ banner, roleId }: RoleBannerCTAProps) {
         <div className="relative z-10 flex flex-col items-center justify-between gap-6 text-center md:flex-row md:text-left">
           <div className="max-w-xl">
             <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-white/75">
-              Next Step
+              {t("nextStep")}
             </p>
             <h3 className="mb-2 text-2xl font-extrabold tracking-tight sm:text-3xl">
               {banner.title}

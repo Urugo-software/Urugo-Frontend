@@ -1,9 +1,12 @@
 "use client";
 
 import { Menu } from "lucide-react";
+import { useTranslations } from "next-intl";
+
 import { useUiStore } from "@/store/ui.store";
 
 function MobileNavWrapper() {
+  const tNav = useTranslations("common.navigation");
   const mobileSidebarOpen = useUiStore((state) => state.mobileSidebarOpen);
   const setMobileSidebarOpen = useUiStore(
     (state) => state.setMobileSidebarOpen,
@@ -14,7 +17,7 @@ function MobileNavWrapper() {
       {!mobileSidebarOpen && (
         <button
           type="button"
-          aria-label="Open mobile navigation"
+          aria-label={tNav("openMobileNavigation")}
           onClick={() => setMobileSidebarOpen(true)}
           className="flex size-10 cursor-pointer items-center justify-center text-ink transition-colors hover:bg-surface"
         >

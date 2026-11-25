@@ -1,11 +1,10 @@
 "use client";
 
 import { Building2, User } from "lucide-react";
-import {
-  formatRwf,
-  FullRenterRegistrationSubmission,
-} from "@/types/renter-wizard.types";
-import { formatCommencementDisplay } from "@/utils/rent-schedule-utils";
+import { useLocale, useTranslations } from "next-intl";
+import type { AppLocale } from "@/i18n/config";
+import { formatRwfLocalized } from "@/i18n/formatting";
+import type { FullRenterRegistrationSubmission } from "@/types/renter-wizard.types";
 
 interface CompletionSummaryCardProps {
   submission: FullRenterRegistrationSubmission;
@@ -14,18 +13,18 @@ interface CompletionSummaryCardProps {
 export function CompletionSummaryCard({
   submission,
 }: CompletionSummaryCardProps) {
+  const t = useTranslations("landlord.renters.wizard.completion");
+  const tLang = useTranslations("common.language");
+  const locale = useLocale() as AppLocale;
   const isLinkMode = submission.mode === "link";
   const maskedNid =
     submission.identity.nationalId.length === 16
       ? `${submission.identity.nationalId.slice(0, 4)}********${submission.identity.nationalId.slice(-4)}`
-      : submission.identity.nationalId || "On file";
+      : submission.identity.nationalId || t("onFile");
 
   const commencementLabel = submission.tenancy.useFirstPaymentAsCommencement
-    ? formatCommencementDisplay({
-        commencementStatus: "pending_first_payment",
-        startDate: submission.tenancy.startDate,
-      }).display
-    : submission.tenancy.startDate || "Immediate";
+    ? t("pendingFirstPayment")
+    : submission.tenancy.startDate || t("immediate");
 
   return (
     <div className="border border-line bg-white shadow-2xs">
@@ -33,12 +32,12 @@ export function CompletionSummaryCard({
         <div>
           <h4 className="text-sm font-semibold text-ink">
             {isLinkMode
-              ? "Onboarding Invitation Link"
-              : submission.identity.fullName || "Renter Record"}
+              ? t("invitationLinkHeading")
+              : submission.identity.fullName || t("renterRecordFallback")}
           </h4>
           <p className="mt-0.5 text-xs text-body">
-            Recorded at {submission.submittedAt}
-            {submission.mode === "existing" && " · Existing Portfolio Tenant"}
+            {t("recordedAt", { time: submission.submittedAt })}
+            {submission.mode === "existing" && t("existingTenantTag")}
           </p>
         </div>
 
@@ -48,8 +47,8 @@ export function CompletionSummaryCard({
           }`}
         >
           {submission.tenancy.isConfigured
-            ? "Tenancy Configured"
-            : "Identity-Only Record"}
+            ? t("tenancyConfigured")
+            : t("identityOnlyRecord")}
         </span>
       </div>
 
@@ -58,39 +57,38 @@ export function CompletionSummaryCard({
           <div className="flex items-center gap-2">
             <User aria-hidden="true" className="size-4 text-ink" />
             <h5 className="text-xs font-semibold uppercase tracking-wider text-ink">
-              Identity & Contact
+              {t("identityContactHeading")}
             </h5>
           </div>
 
           {!isLinkMode ? (
             <div className="space-y-3 text-xs">
               <div className="flex items-center justify-between gap-2">
-                <span className="text-body">Email Address</span>
+                <span className="text-body">{t("emailAddress")}</span>
                 <span className="font-medium text-ink">
                   {submission.identity.email || "—"}
                 </span>
               </div>
               <div className="flex items-center justify-between gap-2">
-                <span className="text-body">Phone Number</span>
+                <span className="text-body">{t("phoneNumber")}</span>
                 <span className="font-medium text-ink">
                   {submission.identity.phoneNumber || "—"}
                 </span>
               </div>
               <div className="flex items-center justify-between gap-2 border-t border-line/70 pt-2.5">
-                <span className="text-body">National ID</span>
+                <span className="text-body">{t("nationalId")}</span>
                 <span className="font-medium text-ink">{maskedNid}</span>
               </div>
             </div>
           ) : (
             <div className="space-y-2.5 text-xs">
-              <span className="block text-body">Invitation Link Generated</span>
+              <span className="block text-body">
+                {t("invitationLinkGenerated")}
+              </span>
               <div className="break-all border border-line bg-surface p-2.5 text-xs text-ink">
-                {submission.simulatedLink?.url || "Generated in session"}
+                {submission.simulatedLink?.url || t("generatedInSession")}
               </div>
-              <p className="text-xs text-faint">
-                Share this link with the prospective tenant to complete
-                self-service registration.
-              </p>
+              <p className="text-xs text-faint">{t("shareLinkHint")}</p>
             </div>
           )}
         </div>
@@ -99,26 +97,29 @@ export function CompletionSummaryCard({
           <div className="flex items-center gap-2">
             <Building2 aria-hidden="true" className="size-4 text-ink" />
             <h5 className="text-xs font-semibold uppercase tracking-wider text-ink">
-              Tenancy Terms
+              {t("tenancyTermsHeading")}
             </h5>
           </div>
 
           {submission.tenancy.isConfigured ? (
             <div className="space-y-3 text-xs">
               <div className="flex items-center justify-between gap-2">
-                <span className="text-body">Assigned Property</span>
+                <span className="text-body">{t("assignedProperty")}</span>
                 <span className="text-right font-medium text-ink">
-                  {submission.propertyName || "Assigned Property"}
+                  {submission.propertyName || t("assignedProperty")}
                 </span>
               </div>
               <div className="flex items-center justify-between gap-2">
-                <span className="text-body">Monthly Rent</span>
+                <span className="text-body">{t("monthlyRent")}</span>
                 <span className="font-ibm font-medium text-ink">
-                  {formatRwf(Number(submission.tenancy.monthlyRentRwf) || 0)}
+                  {formatRwfLocalized(
+                    Number(submission.tenancy.monthlyRentRwf) || 0,
+                    locale,
+                  )}
                 </span>
               </div>
               <div className="flex items-center justify-between gap-2">
-                <span className="text-body">Commencement Date</span>
+                <span className="text-body">{t("commencementDate")}</span>
                 <span className="text-right font-medium text-ink">
                   {commencementLabel}
                 </span>
@@ -126,21 +127,24 @@ export function CompletionSummaryCard({
               {submission.paymentSummary && (
                 <div className="flex items-center justify-between gap-2 border-t border-line/70 pt-2.5">
                   <span className="font-medium text-ink">
-                    Initial Move-in Due
+                    {t("initialMoveInDue")}
                   </span>
                   <span className="font-ibm font-semibold text-ink">
-                    {formatRwf(submission.paymentSummary.totalInitialAmount)}
+                    {formatRwfLocalized(
+                      submission.paymentSummary.totalInitialAmount,
+                      locale,
+                    )}
                   </span>
                 </div>
               )}
               {submission.agreementRef && (
                 <div className="flex items-center justify-between gap-2 border-t border-line/70 pt-2.5">
-                  <span className="text-body">Lease Agreement</span>
+                  <span className="text-body">{t("leaseAgreement")}</span>
                   <span className="font-ibm font-semibold text-ink">
                     {submission.agreementRef} (
                     {submission.selectedLanguage === "rw"
-                      ? "Kinyarwanda"
-                      : "English"}
+                      ? tLang("rw")
+                      : tLang("en")}
                     )
                   </span>
                 </div>
@@ -148,8 +152,7 @@ export function CompletionSummaryCard({
             </div>
           ) : (
             <p className="py-2 text-xs leading-relaxed text-body">
-              No active property unit assigned. The renter profile is stored and
-              can be attached to a lease agreement anytime.
+              {t("noUnitAssigned")}
             </p>
           )}
         </div>

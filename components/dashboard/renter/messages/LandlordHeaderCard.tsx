@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import type { ConversationContact } from "@/types/messages";
 import { getInitials } from "@/utils/renter-helpers";
 
@@ -8,6 +9,12 @@ export function LandlordHeaderCard({
 }: {
   contact: ConversationContact;
 }) {
+  const t = useTranslations("renter.messages");
+  const roleLabel =
+    contact.role.trim().toLowerCase() === "landlord"
+      ? t("landlordRole")
+      : contact.role;
+
   return (
     <div className="border-b border-line p-6 text-center">
       <div className="relative mx-auto mb-3 inline-block">
@@ -17,13 +24,13 @@ export function LandlordHeaderCard({
         {contact.online && (
           <span
             className="absolute right-1 bottom-1 size-4 rounded-full bg-emerald-500 ring-4 ring-white"
-            title="Online now"
+            title={t("onlineNow")}
           />
         )}
       </div>
       <h3 className="text-base font-bold text-ink">{contact.name}</h3>
       <span className="mt-1 inline-block text-xs font-semibold text-brand">
-        {contact.role}
+        {roleLabel}
       </span>
     </div>
   );
