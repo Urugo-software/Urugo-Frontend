@@ -1,174 +1,126 @@
-import prop1 from "../public/assets/home/prop1.jpg";
-import prop2 from "../public/assets/home/prop2.jpg";
-import prop3 from "../public/assets/home/prop3.jpg";
-import prop4 from "../public/assets/home/prop4.jpg";
-import prop5 from "../public/assets/home/prop5.jpg";
-
-// icons
 import { PiHouseLine } from "react-icons/pi";
 import { User } from "lucide-react";
 import { IoShieldOutline } from "react-icons/io5";
-
-// types
-import { HomeUiRolesDataProps } from "@/types";
+import type { HomeUiRolesDataProps } from "@/types";
 
 export const home_stats = [
-  { id: "1", title: "2,140", paragraph: "verified properties" },
+  { id: "1", title: "2,140", paragraph: "Verified properties" },
   { id: "2", title: "430+", paragraph: "Registered Landlords" },
   { id: "3", title: "99.2%", paragraph: "Payment success rate" },
-  { id: "4", title: "24/7", paragraph: "AI assistant availability" },
+  { id: "4", title: "24/7", paragraph: "Zoe availability" },
 ];
 
-export const available_properties = [
-  {
-    id: "0001",
-    image: prop1,
-    title: "Cozy Studio Apartment",
-    location: "Kacyiru, Kigali",
-    price: "100,000",
-    amenities: ["Wifi", "Water"],
-  },
-  {
-    id: "0002",
-
-    image: prop2,
-    title: "Spacious 3BR House",
-    location: "Nyarutarama, Kigali",
-    price: "300,000",
-    amenities: ["Parking", "Garden", "Security"],
-  },
-  {
-    id: "0003",
-
-    image: prop3,
-    title: "Furnished 1BR",
-    location: "Kicukiro, Kigali",
-    price: "200,000",
-    amenities: ["Furnished", "Wifi"],
-  },
-  {
-    id: "0004",
-
-    image: prop4,
-    title: "Modern 4BR Villa",
-    location: "Gacuriro, Kigali",
-    price: "500,000",
-    amenities: ["Pool", "Parking", "Security"],
-  },
-  {
-    id: "0005",
-
-    image: prop5,
-    title: "Modern 4BR Villa",
-    location: "Gacuriro, Kigali",
-    price: "500,000",
-    amenities: ["Pool", "Parking", "Security"],
-  },
-];
 export const ListData = [
   {
     id: 1,
-    title: "Dashboard overview",
-    description: "See every property and payment status at a glance.",
+    title: "Listing-only or full management",
+    description:
+      "Start by listing properties and handling inquiries yourself, or enable full rental management anytime.",
   },
   {
     id: 2,
-    title: "Online payments",
+    title: "One clear landlord dashboard",
     description:
-      "Tenants pay via MTN or Airtel Money  you receive it in your account.",
+      "Track your properties, individual units, occupancy, and viewing requests from a single view.",
   },
   {
     id: 3,
-    title: "Blacklist check",
-    description: "Search a tenant's payment history before you sign a lease.",
+    title: "Mobile money payment tracking",
+    description:
+      "Renters submit MTN Mobile Money or Airtel Money payment records with proof for you to review.",
   },
   {
     id: 4,
-    title: "Automated reminders",
+    title: "Digital lease agreements",
     description:
-      "SMS and email reminders sent automatically before rent is due.",
+      "Prepare and keep written lease terms organized so both landlord and renter can access them anytime.",
   },
   {
     id: 5,
-    title: "Digital lease agreements",
+    title: "Renter history checks",
     description:
-      "Sign online, stored securely in the cloud, always accessible.",
+      "Review confirmed rental history records and manage disputes fairly before signing a new lease.",
   },
   {
     id: 6,
-    title: "Tax reports",
-    description: "Generate income and occupancy reports with one click.",
+    title: "Move-in to move-out records",
+    description:
+      "Keep tenancy timelines, maintenance updates, and checkout balances clear until the renter leaves.",
   },
 ];
+
 export const steps = [
   {
     number: "01",
-    title: "Guest registration",
-    description: "Collects your name, phone, and email conversationally.",
+    title: "Describe what you need",
+    description:
+      "Share your preferred area, bedroom count, and monthly budget in plain English.",
   },
   {
     number: "02",
-    title: "Natural language search",
-    description: "Describe what you want  no filters required.",
+    title: "Compare Kigali neighborhoods",
+    description:
+      "Get simple guidance on typical rent ranges and areas that fit your daily commute.",
   },
   {
     number: "03",
-    title: "Budget advisor",
-    description: "Tells you what you can really afford based on income.",
+    title: "Estimate upfront move-in costs",
+    description:
+      "See a breakdown of rent, security deposit, and monthly living expenses before visiting.",
   },
   {
     number: "04",
-    title: "Neighborhood guide",
-    description: "Explains an area's pros, cons, and typical rent range.",
+    title: "Explore matching homes",
+    description:
+      "Jump straight from Zoe's suggestions to full property details and photos.",
   },
   {
     number: "05",
-    title: "Move-in calculator",
-    description: "Total upfront cost plus real monthly cost, broken down.",
-  },
-  {
-    number: "06",
-    title: "Express interest",
-    description: "Occupied home? Get notified the moment it's free.",
+    title: "Contact landlords directly",
+    description:
+      "Send an inquiry or request an in-person viewing directly from any listing page.",
   },
 ];
+
 export const userTypes: HomeUiRolesDataProps[] = [
   {
     id: 1,
     Icon: PiHouseLine,
     title: "Landlords",
     description:
-      "Onboarded by an admin or licensed agent after document checks.",
+      "Choose Listing-Only to advertise properties on your own, or Full Rental Management to run your rentals on Urugo.",
     features: [
-      "Mobile money collection, instant receipts",
-      "Color-coded payment dashboard",
-      "Blacklist check before signing",
+      "Publish listings with photos, pricing, and availability",
+      "Receive inquiries and manage viewing requests directly",
+      "Upgrade anytime for leases, rent tracking, and renter history",
     ],
-    onboarding: "Added by Agent ",
+    onboarding: "Listing-only or managed",
   },
   {
     id: 2,
     Icon: User,
-    title: "Guests",
-    description: "Just looking? Register in seconds, no forms required.",
+    title: "Home Seekers",
+    description:
+      "Looking for your next place? Browse public listings freely and contact landlords without middlemen.",
     features: [
-      "Chat-based registration with the AI",
-      "Natural language property search",
-      "Join a waiting list for occupied homes",
+      "Search by district, budget, bedrooms, and amenities",
+      "Review transparent move-in and monthly cost estimates",
+      "Request viewings or ask Zoe for guidance",
     ],
-    onboarding: "Self-registration, instant",
+    onboarding: "Free to browse",
   },
   {
     id: 3,
     Icon: IoShieldOutline,
     title: "Renters",
-    description: "Onboarded by an admin once a lease is ready to sign.",
+    description:
+      "Already renting through a managed landlord? Keep your home details, lease, and payments organized in one account.",
     features: [
-      "5-day grace period, no surprises",
-      "Digital lease, always accessible",
-      "Payment history builds your credit score",
+      "Access your lease agreement and payment receipts anytime",
+      "Submit monthly rent records and track repair requests",
+      "Review and respond to rental history notices fairly",
     ],
-    onboarding: "Added by Landlord",
+    onboarding: "Invited by landlord or sign up",
   },
 ];
 
@@ -177,19 +129,19 @@ export const signUpSteps = [
     key: 1,
     label: "Your details",
     title: "Create your account",
-    description: "Tell us a little about yourself and how we can reach you.",
+    description: "Enter your name and email address to get started.",
     fields: [
       {
         id: "fullName",
         label: "Full name",
         type: "text",
         autoComplete: "name",
-        placeholder: "Enter your full name",
+        placeholder: "e.g. Jean Bosco Habimana",
         required: true,
       },
       {
         id: "email",
-        label: "Email",
+        label: "Email address",
         type: "email",
         autoComplete: "email",
         placeholder: "you@example.com",
@@ -200,22 +152,23 @@ export const signUpSteps = [
   {
     key: 2,
     label: "Identification",
-    title: "Your identification",
-    description: "Add your telephone number and national ID to complete your details.",
+    title: "Verify your identity",
+    description:
+      "Add your phone number and national ID to complete your details.",
     fields: [
       {
         id: "telephone",
-        label: "Telephone number",
+        label: "Phone number",
         type: "tel",
         autoComplete: "tel",
-        placeholder: "+250 7XX XXX XXX",
+        placeholder: "+250 788 000 000",
         required: true,
       },
-
       {
         id: "nationalId",
         label: "National ID",
         type: "text",
+        autoComplete: "off",
         placeholder: "Enter your national ID number",
         required: true,
       },
@@ -224,7 +177,8 @@ export const signUpSteps = [
   {
     key: 3,
     label: "Photo",
-    title: "Add a photo",
-    description: "Personalize your profile with a photo. You can skip this step.",
+    title: "Add a profile photo",
+    description:
+      "Add a photo to personalize your account, or skip this step for now.",
   },
 ] as const;

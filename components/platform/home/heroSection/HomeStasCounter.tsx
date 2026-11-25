@@ -6,9 +6,9 @@ function HomeStasCounter({
   paragraph: string;
 }) {
   return (
-    <div className="flex  flex-col items-center justify-center gap-1">
-      <h1 className="text-2xl font-extrabold font-ibm ">{title}</h1>
-      <p className="text-body text-sm tracking-wide">{paragraph}</p>
+    <div className="flex flex-col items-center justify-center gap-1">
+      <p className="font-ibm text-2xl font-extrabold text-ink">{title}</p>
+      <p className="text-sm tracking-wide text-body">{paragraph}</p>
     </div>
   );
 }

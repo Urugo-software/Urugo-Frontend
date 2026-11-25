@@ -1,11 +1,13 @@
 "use client";
+
 import OnLoadSkeleton from "@/components/shared/OnLoadSkeleton";
-import { Heart, House, MapPin } from "lucide-react";
+import { House, MapPin } from "lucide-react";
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
 interface PropertyCardProps {
+  id: string;
   image: StaticImageData | string;
   title: string;
   district: string;
@@ -15,6 +17,7 @@ interface PropertyCardProps {
 }
 
 function PropertyCard({
+  id,
   image,
   title,
   district,
@@ -22,14 +25,14 @@ function PropertyCard({
   monthlyRent,
   amenities,
 }: PropertyCardProps) {
-  // image load state
   const [isImageLoaded, setImageLoaded] = useState(false);
 
-  const currency = "Rwf";
   return (
-    <div className="flex-none rounded-sm w-full md:max-w-[400px] h-[420px] flex flex-col overflow-hidden  border cursor-pointer border-brand/20 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-brand hover:shadow-[0_18px_40px_-18px_rgba(14,17,22,.22)]">
-      {/* Image */}
-      <div className="relative h-full overflow-hidden">
+    <article className="flex h-[420px] w-full flex-none flex-col overflow-hidden rounded-sm border border-brand/20 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-brand hover:shadow-[0_18px_40px_-18px_rgba(14,17,22,.22)] md:max-w-[400px]">
+      <Link
+        href={`/properties/${id}`}
+        className="relative block h-full overflow-hidden"
+      >
         {!isImageLoaded && <OnLoadSkeleton />}
 
         <Image
@@ -38,7 +41,7 @@ function PropertyCard({
           alt={title}
           sizes="(max-width:768px) 100vw, 400px"
           onLoad={() => setImageLoaded(true)}
-          className={`object-cover w-full h-full transition-opacity duration-300 ${
+          className={`h-full w-full object-cover transition-opacity duration-300 ${
             isImageLoaded ? "opacity-100" : "opacity-0"
           }`}
         />
@@ -47,56 +50,47 @@ function PropertyCard({
           <span className="h-2 w-2 rounded-full bg-brand" />
           Available
         </span>
+      </Link>
 
-        <button className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 shadow-sm transition hover:bg-white">
-          <Heart size={16} />
-        </button>
-      </div>
-
-      {/* Content */}
-      <div className="p-4 pt-6 pb-8 ">
-        {/* Title + monthlyRent */}
-        <div className="flex items-start justify-between gap-4">
-          <Link href={`/properties/${title}`} className="group flex-1">
-            <h3 className="text-md text-nowrap max-w-[150px]  truncate font-semibold  text-ink transition-colors group-hover:text-brand tracking-tight">
+      <div className="p-4 pb-6 pt-5">
+        <div className="flex items-start justify-between gap-3">
+          <Link href={`/properties/${id}`} className="group min-w-0 flex-1">
+            <h3 className="truncate text-base font-semibold tracking-tight text-ink transition-colors group-hover:text-brand">
               {title}
             </h3>
           </Link>
 
-          <div className=" flex items-center gap-1 text-right">
-            <div className="font-ibm text-[14px] font-bold text-brand">
+          <div className="shrink-0 text-right">
+            <div className="font-ibm text-sm font-bold text-brand">
               {monthlyRent}
             </div>
-            <div className="text-[12.5px] text-body">{currency}</div>
+            <div className="text-[12.5px] text-faint">per month</div>
           </div>
         </div>
 
-        {/* Location */}
         <div className="mt-2 flex items-center gap-2 text-sm tracking-tight text-body">
-          <MapPin size={15} className="text-faint" />
-          <span className="capitalize">{district},</span>
-          <span className="capitalize">{province}</span>
+          <MapPin aria-hidden="true" size={15} className="shrink-0 text-faint" />
+          <span className="truncate capitalize">
+            {district}, {province}
+          </span>
         </div>
 
-        {/* Divider */}
         <div className="my-4 border-t border-line" />
 
-        {/* Amenities */}
-        <div className="flex items-center justify-between ">
-          <div className="flex items-center gap-2 text-sm text-ink">
-            <House size={14} className="text-faint" />
-            <span className="truncate whitespace-nowrap text-[13px] max-w-[130px]">
-              {amenities.join(", ")}
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex min-w-0 items-center gap-2 text-sm text-ink">
+            <House aria-hidden="true" size={14} className="shrink-0 text-faint" />
+            <span className="truncate text-[13px]">
+              {amenities.join(", ") || "Standard amenities"}
             </span>
           </div>
 
-          <span className="text-xs text-faint">
-            {amenities.length}{" "}
-            {amenities.length === 1 ? "amenity" : "amenities"}
+          <span className="shrink-0 text-xs text-faint">
+            {amenities.length} {amenities.length === 1 ? "amenity" : "amenities"}
           </span>
         </div>
       </div>
-    </div>
+    </article>
   );
 }
 

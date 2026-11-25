@@ -1,122 +1,143 @@
-import { Feature } from "@/types";
+import type { Feature } from "@/types";
 import {
   Bell,
+  Building2,
+  Calendar,
+  Compass,
   FileText,
   LayoutGrid,
+  MessageSquare,
   Shield,
-  Wallet,
   Smartphone,
-  CalendarClock,
-  ChartColumnIncreasing,
-  Check,
-  Clock,
+  Sparkles,
+  Wallet,
+  Wrench,
 } from "lucide-react";
 
-export const renterFeatures: Feature[] = [
-  {
-    id: 1,
-    title: "Pay from your phone",
-    description:
-      "No bank visits, no cash. Pay via mobile money and upload your receipt in seconds.",
-    Icon: Smartphone,
-  },
-  {
-    id: 2,
-    title: "Rental credit score",
-    description:
-      "Every on-time payment builds a track record that follows you to your next lease.",
-    Icon: Clock,
-  },
-  {
-    id: 3,
-    title: "Digital lease, always on hand",
-    description:
-      "Every term clearly written and downloadable  nothing verbal, nothing forgotten.",
-    Icon: FileText,
-  },
-  {
-    id: 4,
-    title: "Standard 5-day grace period",
-    description:
-      "Clear, consistent late-fee rules  no arbitrary penalties or surprise evictions.",
-    Icon: CalendarClock,
-  },
-  {
-    id: 5,
-    title: "Proof of every payment",
-    description:
-      'The platform holds your payment history  no more "I paid" disputes with a landlord.',
-    Icon: Check,
-  },
-  {
-    id: 6,
-    title: "Payment status notifications",
-    description:
-      "Know immediately when a landlord approves or rejects your submitted payment.",
-    Icon: Bell,
-  },
-];
 export const landlordFeatures: Feature[] = [
   {
     id: 1,
-    title: "Dashboard overview",
+    title: "Listing-only mode",
     description:
-      "See every property and payment status at a glance, color-coded by urgency.",
-
-    Icon: LayoutGrid,
+      "Advertise properties with photos, prices, and availability, and handle inquiries on your own.",
+    Icon: Building2,
   },
   {
     id: 2,
-    title: "Mobile money payments",
+    title: "Full rental management",
     description:
-      "Tenants pay via MTN or Airtel Money and upload proof  you approve from anywhere.",
-    Icon: Wallet,
+      "Upgrade anytime on the same account to track units, tenants, leases, and monthly rent.",
+    Icon: LayoutGrid,
   },
   {
     id: 3,
-    title: "Blacklist check",
+    title: "Viewing requests & inquiries",
     description:
-      "Search a tenant's payment history before you sign a lease  avoid repeat bad renters.",
-    Icon: Shield,
+      "Confirm, reschedule, or reply to prospective renters directly from your dashboard.",
+    Icon: Calendar,
   },
   {
     id: 4,
-    title: "Automated reminders",
+    title: "Mobile money payment tracking",
     description:
-      "SMS and email reminders sent automatically before rent is due  no manual chasing.",
-
-    Icon: Bell,
+      "Renters submit MTN Mobile Money or Airtel Money payment records with proof for you to review.",
+    Icon: Wallet,
   },
   {
     id: 5,
     title: "Digital lease agreements",
     description:
-      "Sign online, stored securely in the cloud  legal proof if disputes ever arise.",
+      "Keep written lease terms organized so both landlord and renter can view them anytime.",
     Icon: FileText,
   },
   {
     id: 6,
-    title: "Income & tax reports",
+    title: "Renter history checks",
     description:
-      "Generate occupancy and income reports across every property with one click.",
-    Icon: ChartColumnIncreasing,
+      "Review confirmed rental history records and handle unresolved notices fairly before signing.",
+    Icon: Shield,
   },
 ];
-export const featureService = [
+
+export const renterFeatures: Feature[] = [
   {
     id: 1,
-    title: "For Landlords",
+    title: "Submit rent from your phone",
+    description:
+      "Record MTN Mobile Money, Airtel Money, or bank transfer payments with your reference number.",
+    Icon: Smartphone,
   },
   {
     id: 2,
-    title: "For Renters",
+    title: "Digital lease, always on hand",
+    description:
+      "Review your lease terms, due date, and security deposit details anytime without paper hunting.",
+    Icon: FileText,
   },
   {
     id: 3,
-    title: "AI Assistant",
+    title: "Payment receipts & records",
+    description:
+      "Access your payment history and downloadable receipt copies in one organized place.",
+    Icon: Wallet,
   },
   {
     id: 4,
-    title: "Trust & Verification",
+    title: "Maintenance requests",
+    description:
+      "Report repairs in your unit and follow progress from pending to resolved.",
+    Icon: Wrench,
   },
+  {
+    id: 5,
+    title: "Fair rental history notices",
+    description:
+      "Receive a 3-day notice window to settle or dispute any reported balance with proof.",
+    Icon: Shield,
+  },
+  {
+    id: 6,
+    title: "Clear dashboard notifications",
+    description:
+      "Stay informed about rent due dates, maintenance updates, and landlord responses.",
+    Icon: Bell,
+  },
+];
+
+export const homeSeekerFeatures: Feature[] = [
+  {
+    id: 1,
+    title: "Search homes across Rwanda",
+    description:
+      "Filter rental listings by district, monthly budget, bedrooms, and key amenities.",
+    Icon: Compass,
+  },
+  {
+    id: 2,
+    title: "Clear move-in cost breakdowns",
+    description:
+      "See upfront rent, security deposit, and monthly costs upfront before booking a visit.",
+    Icon: FileText,
+  },
+  {
+    id: 3,
+    title: "Direct landlord contact",
+    description:
+      "Send questions or request an in-person viewing directly from any property page.",
+    Icon: MessageSquare,
+  },
+  {
+    id: 4,
+    title: "Zoe search guidance",
+    description:
+      "Describe what you need in plain English to get quick suggestions and cost guidance.",
+    Icon: Sparkles,
+  },
+];
+
+export const featureService = [
+  { id: 1, title: "For Landlords", href: "#landlords" },
+  { id: 2, title: "For Renters", href: "#renters" },
+  { id: 3, title: "For Home Seekers", href: "#home-seekers" },
+  { id: 4, title: "Meet Zoe", href: "#ai-assistant" },
 ];

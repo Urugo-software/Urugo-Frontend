@@ -1,4 +1,10 @@
-import { Property } from "@/types/properties";
+"use client";
+
+import { Sparkles } from "lucide-react";
+import { useUiStore } from "@/store/ui.store";
+import type { Property } from "@/types/properties";
+import { formatRwf } from "@/utils/format";
+import { parseNumericPrice } from "@/utils/public-properties";
 import LandlordCard from "./LandlordCard";
 import { PropertyLeadActions } from "./PropertyLeadActions";
 
@@ -7,61 +13,77 @@ interface PropertySidebarProps {
 }
 
 export default function PropertySidebar({ property }: PropertySidebarProps) {
-  return (
-    <div>
-      <div className="border border-line p-6.5 sticky top-6">
-        <div className="flex items-center justify-between mb-5">
-          {/* Landlord */}
-          <LandlordCard landlord={property.landlord} />
-          {/* Price */}
-          <div className="text-[20px] flex self-start items-center gap-2 font-extrabold text-brand font-mono mb-4.5">
-            {new Intl.NumberFormat("en-RW").format(parseInt(property.price))}
+  const openAssistant = useUiStore((s) => s.openAssistant);
+  const monthlyPrice = parseNumericPrice(property.price);
 
-            <span className="text-xs text-faint font-medium font-sans">
-              {property.currency} / {property.period}
-            </span>
+  const handleAskAboutProperty = () => {
+    openAssistant(
+      `Explain move-in costs for ${property.headline} in ${property.location} (${formatRwf(monthlyPrice)}/month).`,
+    );
+  };
+
+  return (
+    <aside aria-label="Property pricing and contact">
+      <div className="sticky top-24 border border-line bg-white p-5.5 sm:p-6.5">
+        <div className="mb-5 flex flex-wrap items-start justify-between gap-4 border-b border-line pb-5">
+          <LandlordCard landlord={property.landlord} />
+
+          <div className="text-right">
+            <div className="font-mono text-xl font-extrabold text-brand">
+              {formatRwf(monthlyPrice)}
+            </div>
+            <div className="text-xs font-medium text-faint">
+              per {property.period}
+            </div>
           </div>
         </div>
 
-        {/* Actions */}
         <PropertyLeadActions
           propertyId={property.id}
           propertyTitle={property.headline}
           landlordPhone={property.landlord?.phone}
         />
 
-        {/* Property information */}
-        <div className="flex justify-between text-[13.5px] py-2.5 border-b border-line mt-3">
-          <span className="text-body">Bedrooms</span>
-          <span className="font-semibold">{property.beds}</span>
-        </div>
+        <dl className="mt-4 divide-y divide-line border-t border-line text-[13.5px]">
+          <div className="flex justify-between py-2.5">
+            <dt className="text-body">Bedrooms</dt>
+            <dd className="font-semibold text-ink">{property.beds}</dd>
+          </div>
+          <div className="flex justify-between py-2.5">
+            <dt className="text-body">Bathrooms</dt>
+            <dd className="font-semibold text-ink">{property.baths}</dd>
+          </div>
+          <div className="flex justify-between py-2.5">
+            <dt className="text-body">Parking</dt>
+            <dd className="font-semibold text-ink">
+              {property.parking ? "Included" : "Not included"}
+            </dd>
+          </div>
+          <div className="flex justify-between py-2.5">
+            <dt className="text-body">Available from</dt>
+            <dd className="font-semibold text-ink">{property.availableFrom}</dd>
+          </div>
+        </dl>
 
-        <div className="flex justify-between text-[13.5px] py-2.5 border-b border-line">
-          <span className="text-body">Bathrooms</span>
-          <span className="font-semibold">{property.baths}</span>
-        </div>
+        <div className="mt-5 rounded-[14px] border border-line bg-surface p-4.5">
+          <div className="mb-1 flex items-center gap-1.5 text-[13.5px] font-bold text-ink">
+            <Sparkles aria-hidden="true" className="size-4 text-brand" />
+            <span>Ask Zoe</span>
+          </div>
 
-        <div className="flex justify-between text-[13.5px] py-2.5">
-          <span className="text-body">Available from</span>
-          <span className="font-semibold">{property.availableFrom}</span>
-        </div>
-
-        {/* AI Assistant */}
-        <div className="bg-surface rounded-[14px] p-4.5 mt-4">
-          <b className="text-[13.5px] block mb-1 ">Ask the AI Assistant</b>
-
-          <p className="text-[12.5px] text-body mb-3">
-            {'  "Can I afford this on 400k income?" get an instant breakdown.'}
+          <p className="mb-3 text-[12.5px] leading-relaxed text-body">
+            Need help estimating upfront costs or comparing neighborhoods?
           </p>
 
           <button
             type="button"
-            className="w-full hover:bg-brand-deep duration-300 cursor-pointer flex justify-center text-[13.5px] font-semibold px-4 py-2.5 rounded-lg bg-brand text-white"
+            onClick={handleAskAboutProperty}
+            className="flex w-full cursor-pointer justify-center rounded-lg bg-brand px-4 py-2.5 text-[13.5px] font-semibold text-white transition-colors hover:bg-brand-deep"
           >
-            Ask a question
+            Ask about this home
           </button>
         </div>
       </div>
-    </div>
+    </aside>
   );
 }

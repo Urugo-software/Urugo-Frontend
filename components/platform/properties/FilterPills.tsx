@@ -1,39 +1,43 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useState } from "react";
+interface FilterPillsProps {
+  options: readonly string[];
+  selected: string | string[];
+  multiSelect?: boolean;
+  onSelect: (option: string) => void;
+}
 
-import { FilterPillsProps } from "@/types";
-
-function FilterPills({ options, defaultSelected, onSelect }: FilterPillsProps) {
-  const [selected, setSelected] = useState(defaultSelected || options[0]);
-
-  const handleSelect = (option: string) => {
-    setSelected(option);
-    if (onSelect) onSelect(option);
-  };
+function FilterPills({
+  options,
+  selected,
+  multiSelect = false,
+  onSelect,
+}: FilterPillsProps) {
+  const isOptionSelected = (option: string) =>
+    Array.isArray(selected) ? selected.includes(option) : selected === option;
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div
+      role="group"
+      aria-label={multiSelect ? "Select one or more options" : "Select an option"}
+      className="flex flex-wrap gap-2"
+    >
       {options.map((option) => {
-        const isSelected = option === selected;
-
+        const active = isOptionSelected(option);
         return (
-          <motion.button
+          <button
             key={option}
             type="button"
-            onClick={() => handleSelect(option)}
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ duration: 0.15 }}
-            className={`relative rounded-full border px-3.5 py-1.5 text-[12.5px] cursor-pointer transition-colors duration-200 select-none ${
-              isSelected
-                ? "border-brand bg-brand-tint font-semibold text-brand shadow-2xs"
-                : "border-line text-body hover:border-brand/40 hover:text-ink bg-white"
+            aria-pressed={active}
+            onClick={() => onSelect(option)}
+            className={`cursor-pointer select-none rounded-full border px-3.5 py-1.5 text-[12.5px] transition-colors duration-150 ${
+              active
+                ? "border-brand bg-brand-tint font-semibold text-brand"
+                : "border-line bg-white text-body hover:border-brand/40 hover:text-ink"
             }`}
           >
             {option}
-          </motion.button>
+          </button>
         );
       })}
     </div>

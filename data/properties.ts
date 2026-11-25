@@ -1,9 +1,13 @@
-import { Property } from "@/types/properties";
+import type { Property } from "@/types/properties";
 import prop1 from "../public/assets/home/prop1.jpg";
 import prop2 from "../public/assets/home/prop2.jpg";
 import prop3 from "../public/assets/home/prop3.jpg";
 import prop4 from "../public/assets/home/prop4.jpg";
 import prop5 from "../public/assets/home/prop5.jpg";
+import im1 from "../public/assets/home/im1.webp";
+import im2 from "../public/assets/home/im2.webp";
+import im3 from "../public/assets/home/im3.webp";
+import im4 from "../public/assets/home/im4.webp";
 
 export const listed_properties = [
   {
@@ -15,9 +19,12 @@ export const listed_properties = [
     currency: "RWF",
     period: "month",
     location: "Kacyiru, Kigali",
+    district: "Gasabo",
+    sector: "Kacyiru",
     beds: 1,
     baths: 1,
     parking: false,
+    amenities: ["Water included", "WiFi included", "24/7 security", "Laundry area"],
     isVerified: true,
     availabilityStatus: "available",
   },
@@ -30,9 +37,12 @@ export const listed_properties = [
     currency: "RWF",
     period: "month",
     location: "Nyarutarama, Kigali",
+    district: "Gasabo",
+    sector: "Nyarutarama",
     beds: 3,
     baths: 2,
     parking: true,
+    amenities: ["Private parking", "Water included", "24/7 security", "WiFi included", "Spacious living room", "Laundry area"],
     isVerified: true,
     availabilityStatus: "available",
   },
@@ -45,9 +55,12 @@ export const listed_properties = [
     currency: "RWF",
     period: "month",
     location: "Kicukiro, Kigali",
+    district: "Kicukiro",
+    sector: "Kicukiro",
     beds: 1,
     baths: 1,
     parking: false,
+    amenities: ["Furnished living room", "Water included", "24/7 security", "Laundry area"],
     isVerified: true,
     availabilityStatus: "available",
   },
@@ -60,24 +73,30 @@ export const listed_properties = [
     currency: "RWF",
     period: "month",
     location: "Gacuriro, Kigali",
+    district: "Gasabo",
+    sector: "Gacuriro",
     beds: 4,
     baths: 3,
     parking: true,
+    amenities: ["Private parking", "Water included", "24/7 security", "Spacious living room", "Laundry area", "WiFi included"],
     isVerified: true,
     availabilityStatus: "available",
   },
   {
     id: "0005",
     image: prop5,
-    headline: "Modern 4BR Villa",
+    headline: "2BR Garden Apartment",
     ownerName: "Diane A.",
-    price: "500,000",
+    price: "250,000",
     currency: "RWF",
     period: "month",
-    location: "Gacuriro, Kigali",
-    beds: 4,
-    baths: 3,
+    location: "Kimironko, Kigali",
+    district: "Gasabo",
+    sector: "Kimironko",
+    beds: 2,
+    baths: 2,
     parking: true,
+    amenities: ["Private parking", "24/7 security", "Spacious living room", "Laundry area"],
     isVerified: false,
     availabilityStatus: "available",
   },
@@ -85,13 +104,9 @@ export const listed_properties = [
 
 export const propertyLocations = [
   { id: "1", name: "All districts" },
-
-  // Kigali City
   { id: "2", name: "Gasabo" },
   { id: "3", name: "Kicukiro" },
   { id: "4", name: "Nyarugenge" },
-
-  // Eastern Province
   { id: "5", name: "Bugesera" },
   { id: "6", name: "Gatsibo" },
   { id: "7", name: "Kayonza" },
@@ -99,15 +114,11 @@ export const propertyLocations = [
   { id: "9", name: "Ngoma" },
   { id: "10", name: "Nyagatare" },
   { id: "11", name: "Rwamagana" },
-
-  // Northern Province
   { id: "12", name: "Burera" },
   { id: "13", name: "Gakenke" },
   { id: "14", name: "Gicumbi" },
   { id: "15", name: "Musanze" },
   { id: "16", name: "Rulindo" },
-
-  // Southern Province
   { id: "17", name: "Gisagara" },
   { id: "18", name: "Huye" },
   { id: "19", name: "Kamonyi" },
@@ -116,8 +127,6 @@ export const propertyLocations = [
   { id: "22", name: "Nyanza" },
   { id: "23", name: "Nyaruguru" },
   { id: "24", name: "Ruhango" },
-
-  // Western Province
   { id: "25", name: "Karongi" },
   { id: "26", name: "Ngororero" },
   { id: "27", name: "Nyabihu" },
@@ -126,9 +135,11 @@ export const propertyLocations = [
   { id: "30", name: "Rusizi" },
   { id: "31", name: "Rutsiro" },
 ];
-export const sortOptions = [
-  { id: "1", name: "Recently saved " },
-  { id: "2", name: "Low to high " },
+
+export const sortOptions: Array<{ id: string; name: string }> = [
+  { id: "default", name: "Default order" },
+  { id: "price_asc", name: "Price: Low to high" },
+  { id: "price_desc", name: "Price: High to low" },
 ];
 
 export const property_details: Property[] = [
@@ -136,110 +147,42 @@ export const property_details: Property[] = [
     id: "0001",
     headline: "Cozy Studio Apartment",
     ownerName: "Eric N.",
-
     price: "100000",
     currency: "RWF",
     period: "month",
-
     location: "Kacyiru, Kigali",
     district: "Gasabo",
     sector: "Kacyiru",
-
     beds: 1,
     baths: 1,
     parking: false,
-
     isVerified: true,
     availabilityStatus: "available",
-
     description:
-      "A cozy studio apartment in Kacyiru, offering a comfortable living space in a convenient and accessible neighborhood.",
-
+      "A bright, practical studio apartment in Kacyiru close to offices, public transport, and local shops. Ideal for a single professional or student looking for a quiet, ready-to-move-in space.",
     images: [
-      {
-        id: "0001-1",
-        image: prop1,
-        alt: "Cozy studio apartment",
-      },
-      {
-        id: "0001-2",
-        image: prop1,
-        alt: "Studio apartment interior",
-      },
-      {
-        id: "0001-3",
-        image: prop1,
-        alt: "Studio apartment living area",
-      },
+      { id: "0001-1", image: prop1, alt: "Cozy studio apartment exterior view" },
+      { id: "0001-2", image: im2, alt: "Bright main living and sleeping space" },
+      { id: "0001-3", image: im3, alt: "Compact kitchenette and storage area" },
+      { id: "0001-4", image: im1, alt: "Window light and dining corner" },
+      { id: "0001-5", image: im4, alt: "Shared courtyard and building entry" },
     ],
-
     amenities: [
-      {
-        id: "amenity-1",
-        name: "Water included",
-        icon: "water",
-      },
-      {
-        id: "amenity-2",
-        name: "WiFi included",
-        icon: "wifi",
-      },
-      {
-        id: "amenity-3",
-        name: "24/7 security",
-        icon: "security",
-      },
-      {
-        id: "amenity-4",
-        name: "Laundry area",
-        icon: "laundry",
-      },
+      { id: "amenity-1", name: "Water included", icon: "water" },
+      { id: "amenity-2", name: "WiFi included", icon: "wifi" },
+      { id: "amenity-3", name: "24/7 security", icon: "security" },
+      { id: "amenity-4", name: "Laundry area", icon: "laundry" },
     ],
-
     moveInCosts: [
-      {
-        label: "Rent upfront (3 months)",
-        amount: 900000,
-      },
-      {
-        label: "Security deposit",
-        amount: 300000,
-      },
+      { label: "First month rent", amount: 100000 },
+      { label: "Security deposit (1 month)", amount: 100000 },
     ],
-
     recurringCosts: [
-      {
-        label: "Rent",
-        amount: 300000,
-        payer: "TENANT",
-        isEstimated: false,
-      },
-      {
-        label: "Electricity",
-        amount: 25000,
-        payer: "TENANT",
-        isEstimated: true,
-      },
-      {
-        label: "Water",
-        amount: 10000,
-        payer: "TENANT",
-        isEstimated: true,
-      },
-      {
-        label: "Security",
-        amount: 5000,
-        payer: "LANDLORD",
-        isEstimated: false,
-      },
-      {
-        label: "Internet",
-        amount: 15000,
-        payer: "TENANT",
-        isEstimated: false,
-      },
+      { label: "Monthly rent", amount: 100000, payer: "TENANT", isEstimated: false },
+      { label: "Water", amount: 0, payer: "LANDLORD", isEstimated: false },
+      { label: "WiFi", amount: 0, payer: "LANDLORD", isEstimated: false },
+      { label: "Compound security", amount: 5000, payer: "LANDLORD", isEstimated: false },
     ],
-
     landlord: {
       id: "landlord-0001",
       name: "Eric N.",
@@ -248,128 +191,51 @@ export const property_details: Property[] = [
       whatsapp: "+250 788 123 456",
       isVerified: true,
     },
-
     availableFrom: "Immediately",
   },
-
   {
     id: "0002",
     headline: "Spacious 3BR House",
     ownerName: "Jean Claude M.",
-
     price: "300000",
     currency: "RWF",
     period: "month",
-
     location: "Nyarutarama, Kigali",
     district: "Gasabo",
     sector: "Nyarutarama",
-
     beds: 3,
     baths: 2,
     parking: true,
-
     isVerified: true,
     availabilityStatus: "available",
-
     description:
-      "A spacious 3-bedroom house located in Nyarutarama, Kigali. The property offers a comfortable living space in a convenient and secure neighborhood.",
-
+      "A spacious 3-bedroom family house in a quiet Nyarutarama residential street with private gated parking, generous natural light, and easy access to schools and groceries.",
     images: [
-      {
-        id: "0002-1",
-        image: prop2,
-        alt: "Spacious 3BR house",
-      },
-      {
-        id: "0002-2",
-        image: prop2,
-        alt: "Spacious 3BR house interior",
-      },
-      {
-        id: "0002-3",
-        image: prop2,
-        alt: "Spacious 3BR house exterior",
-      },
+      { id: "0002-1", image: prop2, alt: "Spacious 3-bedroom house front view" },
+      { id: "0002-2", image: im1, alt: "Open-plan living and dining room" },
+      { id: "0002-3", image: im4, alt: "Master bedroom with large windows" },
+      { id: "0002-4", image: im2, alt: "Modern fitted kitchen" },
+      { id: "0002-5", image: prop4, alt: "Private gated parking and yard" },
+      { id: "0002-6", image: im3, alt: "Second bedroom interior" },
     ],
-
     amenities: [
-      {
-        id: "amenity-1",
-        name: "Private parking",
-        icon: "parking",
-      },
-      {
-        id: "amenity-2",
-        name: "Water included",
-        icon: "water",
-      },
-      {
-        id: "amenity-3",
-        name: "24/7 security",
-        icon: "security",
-      },
-      {
-        id: "amenity-4",
-        name: "WiFi included",
-        icon: "wifi",
-      },
-      {
-        id: "amenity-5",
-        name: "Spacious living room",
-        icon: "living-room",
-      },
-      {
-        id: "amenity-6",
-        name: "Laundry area",
-        icon: "laundry",
-      },
+      { id: "amenity-1", name: "Private parking", icon: "parking" },
+      { id: "amenity-2", name: "Water included", icon: "water" },
+      { id: "amenity-3", name: "24/7 security", icon: "security" },
+      { id: "amenity-4", name: "WiFi included", icon: "wifi" },
+      { id: "amenity-5", name: "Spacious living room", icon: "living-room" },
+      { id: "amenity-6", name: "Laundry area", icon: "laundry" },
     ],
-
     moveInCosts: [
-      {
-        label: "Rent upfront (3 months)",
-        amount: 900000,
-      },
-      {
-        label: "Security deposit",
-        amount: 300000,
-      },
+      { label: "Rent upfront (2 months)", amount: 600000 },
+      { label: "Security deposit (1 month)", amount: 300000 },
     ],
-
     recurringCosts: [
-      {
-        label: "Rent",
-        amount: 300000,
-        payer: "TENANT",
-        isEstimated: false,
-      },
-      {
-        label: "Electricity",
-        amount: 25000,
-        payer: "TENANT",
-        isEstimated: true,
-      },
-      {
-        label: "Water",
-        amount: 10000,
-        payer: "TENANT",
-        isEstimated: true,
-      },
-      {
-        label: "Security",
-        amount: 5000,
-        payer: "LANDLORD",
-        isEstimated: false,
-      },
-      {
-        label: "Internet",
-        amount: 15000,
-        payer: "TENANT",
-        isEstimated: false,
-      },
+      { label: "Monthly rent", amount: 300000, payer: "TENANT", isEstimated: false },
+      { label: "Waste collection", amount: 10000, payer: "TENANT", isEstimated: true },
+      { label: "Water & WiFi", amount: 0, payer: "LANDLORD", isEstimated: false },
+      { label: "Compound security", amount: 10000, payer: "LANDLORD", isEstimated: false },
     ],
-
     landlord: {
       id: "landlord-0002",
       name: "Jean Claude M.",
@@ -378,118 +244,47 @@ export const property_details: Property[] = [
       whatsapp: "+250 788 234 567",
       isVerified: true,
     },
-
     availableFrom: "Immediately",
   },
-
   {
     id: "0003",
     headline: "Furnished 1BR Apartment",
     ownerName: "Alice U.",
-
     price: "200000",
     currency: "RWF",
     period: "month",
-
     location: "Kicukiro, Kigali",
     district: "Kicukiro",
     sector: "Kicukiro",
-
     beds: 1,
     baths: 1,
     parking: false,
-
     isVerified: true,
     availabilityStatus: "available",
-
     description:
-      "A furnished one-bedroom apartment in Kicukiro with a comfortable interior and essential amenities, suitable for someone looking for a ready-to-move-in home.",
-
+      "A furnished one-bedroom apartment in Kicukiro with a comfortable living area, fitted kitchen, and water included — well suited for anyone needing a move-in-ready home.",
     images: [
-      {
-        id: "0003-1",
-        image: prop3,
-        alt: "Furnished 1BR apartment",
-      },
-      {
-        id: "0003-2",
-        image: prop3,
-        alt: "Furnished apartment interior",
-      },
-      {
-        id: "0003-3",
-        image: prop3,
-        alt: "Furnished apartment living room",
-      },
+      { id: "0003-1", image: prop3, alt: "Furnished 1-bedroom apartment building" },
+      { id: "0003-2", image: im3, alt: "Furnished living room and seating" },
+      { id: "0003-3", image: im2, alt: "Bedroom with wardrobe storage" },
+      { id: "0003-4", image: im1, alt: "Kitchen counter and appliances" },
     ],
-
     amenities: [
-      {
-        id: "amenity-1",
-        name: "Furnished living room",
-        icon: "living-room",
-      },
-      {
-        id: "amenity-2",
-        name: "Water included",
-        icon: "water",
-      },
-      {
-        id: "amenity-3",
-        name: "WiFi included",
-        icon: "wifi",
-      },
-      {
-        id: "amenity-4",
-        name: "Laundry area",
-        icon: "laundry",
-      },
+      { id: "amenity-1", name: "Furnished living room", icon: "living-room" },
+      { id: "amenity-2", name: "Water included", icon: "water" },
+      { id: "amenity-3", name: "24/7 security", icon: "security" },
+      { id: "amenity-4", name: "Laundry area", icon: "laundry" },
     ],
-
     moveInCosts: [
-      {
-        label: "Rent upfront (3 months)",
-        amount: 900000,
-      },
-      {
-        label: "Security deposit",
-        amount: 300000,
-      },
+      { label: "First month rent", amount: 200000 },
+      { label: "Security deposit (1 month)", amount: 200000 },
     ],
-
     recurringCosts: [
-      {
-        label: "Rent",
-        amount: 300000,
-        payer: "TENANT",
-        isEstimated: false,
-      },
-      {
-        label: "Electricity",
-        amount: 25000,
-        payer: "TENANT",
-        isEstimated: true,
-      },
-      {
-        label: "Water",
-        amount: 10000,
-        payer: "TENANT",
-        isEstimated: true,
-      },
-      {
-        label: "Security",
-        amount: 5000,
-        payer: "LANDLORD",
-        isEstimated: false,
-      },
-      {
-        label: "Internet",
-        amount: 15000,
-        payer: "TENANT",
-        isEstimated: false,
-      },
+      { label: "Monthly rent", amount: 200000, payer: "TENANT", isEstimated: false },
+      { label: "Home internet", amount: 15000, payer: "TENANT", isEstimated: true },
+      { label: "Water", amount: 0, payer: "LANDLORD", isEstimated: false },
+      { label: "Compound security", amount: 5000, payer: "LANDLORD", isEstimated: false },
     ],
-
     landlord: {
       id: "landlord-0003",
       name: "Alice U.",
@@ -498,136 +293,107 @@ export const property_details: Property[] = [
       whatsapp: "+250 788 345 678",
       isVerified: true,
     },
-
     availableFrom: "Immediately",
   },
-
   {
     id: "0004",
     headline: "Modern 4BR Villa",
     ownerName: "Patrick M.",
-
     price: "500000",
     currency: "RWF",
     period: "month",
-
     location: "Gacuriro, Kigali",
     district: "Gasabo",
     sector: "Gacuriro",
-
     beds: 4,
     baths: 3,
     parking: true,
-
     isVerified: true,
     availabilityStatus: "available",
-
     description:
-      "A modern four-bedroom villa in Gacuriro with spacious rooms, private parking, and a comfortable environment suitable for a family.",
-
+      "A modern four-bedroom villa in Gacuriro offering generous family space, three bathrooms, dedicated compound parking, and reliable water and fiber internet connections.",
     images: [
-      {
-        id: "0004-1",
-        image: prop4,
-        alt: "Modern 4BR villa",
-      },
-      {
-        id: "0004-2",
-        image: prop4,
-        alt: "Modern villa interior",
-      },
-      {
-        id: "0004-3",
-        image: prop4,
-        alt: "Modern villa exterior",
-      },
+      { id: "0004-1", image: prop4, alt: "Modern 4-bedroom villa exterior" },
+      { id: "0004-2", image: im1, alt: "Bright family lounge" },
+      { id: "0004-3", image: im4, alt: "Dining area and kitchen access" },
+      { id: "0004-4", image: im2, alt: "En-suite primary bedroom" },
+      { id: "0004-5", image: prop2, alt: "Private driveway and garden view" },
     ],
-
     amenities: [
-      {
-        id: "amenity-1",
-        name: "Private parking",
-        icon: "parking",
-      },
-      {
-        id: "amenity-2",
-        name: "Water included",
-        icon: "water",
-      },
-      {
-        id: "amenity-3",
-        name: "24/7 security",
-        icon: "security",
-      },
-      {
-        id: "amenity-4",
-        name: "Spacious living room",
-        icon: "living-room",
-      },
-      {
-        id: "amenity-5",
-        name: "Laundry area",
-        icon: "laundry",
-      },
-      {
-        id: "amenity-6",
-        name: "WiFi included",
-        icon: "wifi",
-      },
+      { id: "amenity-1", name: "Private parking", icon: "parking" },
+      { id: "amenity-2", name: "Water included", icon: "water" },
+      { id: "amenity-3", name: "24/7 security", icon: "security" },
+      { id: "amenity-4", name: "Spacious living room", icon: "living-room" },
+      { id: "amenity-5", name: "Laundry area", icon: "laundry" },
+      { id: "amenity-6", name: "WiFi included", icon: "wifi" },
     ],
-
     moveInCosts: [
-      {
-        label: "Rent upfront (3 months)",
-        amount: 900000,
-      },
-      {
-        label: "Security deposit",
-        amount: 300000,
-      },
+      { label: "Rent upfront (2 months)", amount: 1000000 },
+      { label: "Security deposit (1 month)", amount: 500000 },
     ],
-
     recurringCosts: [
-      {
-        label: "Rent",
-        amount: 300000,
-        payer: "TENANT",
-        isEstimated: false,
-      },
-      {
-        label: "Rent",
-        amount: 300000,
-        payer: "TENANT",
-        isEstimated: false,
-      },
-      {
-        label: "Water",
-        amount: 10000,
-        payer: "TENANT",
-        isEstimated: true,
-      },
-      {
-        label: "Security",
-        amount: 5000,
-        payer: "LANDLORD",
-        isEstimated: false,
-      },
-      {
-        label: "Internet",
-        amount: 15000,
-        payer: "TENANT",
-        isEstimated: false,
-      },
+      { label: "Monthly rent", amount: 500000, payer: "TENANT", isEstimated: false },
+      { label: "Waste collection", amount: 10000, payer: "TENANT", isEstimated: true },
+      { label: "Water & WiFi", amount: 0, payer: "LANDLORD", isEstimated: false },
+      { label: "Compound security", amount: 20000, payer: "LANDLORD", isEstimated: false },
     ],
-
     landlord: {
-      id: "landlord-0003",
-      name: "Alice U.",
-      initials: "AU",
-      phone: "+250 788 345 678",
-      whatsapp: "+250 788 345 678",
+      id: "landlord-0004",
+      name: "Patrick M.",
+      initials: "PM",
+      phone: "+250 788 456 789",
+      whatsapp: "+250 788 456 789",
       isVerified: true,
     },
     availableFrom: "Immediately",
+  },
+  {
+    id: "0005",
+    headline: "2BR Garden Apartment",
+    ownerName: "Diane A.",
+    price: "250000",
+    currency: "RWF",
+    period: "month",
+    location: "Kimironko, Kigali",
+    district: "Gasabo",
+    sector: "Kimironko",
+    beds: 2,
+    baths: 2,
+    parking: true,
+    isVerified: false,
+    availabilityStatus: "available",
+    description:
+      "A well-kept two-bedroom apartment in Kimironko with two full bathrooms, dedicated parking, and quick access to the Kimironko market and main bus routes.",
+    images: [
+      { id: "0005-1", image: prop5, alt: "2-bedroom garden apartment exterior" },
+      { id: "0005-2", image: im4, alt: "Sunlit living area" },
+      { id: "0005-3", image: im3, alt: "Main bedroom interior" },
+      { id: "0005-4", image: im2, alt: "Kitchen and dining space" },
+      { id: "0005-5", image: prop1, alt: "Gated compound and parking bay" },
+    ],
+    amenities: [
+      { id: "amenity-1", name: "Private parking", icon: "parking" },
+      { id: "amenity-2", name: "24/7 security", icon: "security" },
+      { id: "amenity-3", name: "Spacious living room", icon: "living-room" },
+      { id: "amenity-4", name: "Laundry area", icon: "laundry" },
+    ],
+    moveInCosts: [
+      { label: "First month rent", amount: 250000 },
+      { label: "Security deposit (1 month)", amount: 250000 },
+    ],
+    recurringCosts: [
+      { label: "Monthly rent", amount: 250000, payer: "TENANT", isEstimated: false },
+      { label: "Water", amount: 8000, payer: "TENANT", isEstimated: true },
+      { label: "Compound security", amount: 5000, payer: "LANDLORD", isEstimated: false },
+    ],
+    landlord: {
+      id: "landlord-0005",
+      name: "Diane A.",
+      initials: "DA",
+      phone: "+250 788 567 890",
+      whatsapp: "+250 788 567 890",
+      isVerified: false,
+    },
+    availableFrom: "Next month",
   },
 ];

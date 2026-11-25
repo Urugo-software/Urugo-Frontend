@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 interface LeftSectionHeaderProps {
   subHeader: string;
@@ -6,6 +7,7 @@ interface LeftSectionHeaderProps {
   seeMore?: string;
   href?: string;
 }
+
 function LeftSectionHeader({
   subHeader,
   header,
@@ -13,29 +15,25 @@ function LeftSectionHeader({
   href,
 }: LeftSectionHeaderProps) {
   return (
-    <div className="flex items-center justify-between mb-10 flex-wrap  ">
-      <div className="max-md:flex-1">
-        <div className="flex  items-center justify-between gap-4 mb-3 ">
-          <span className="block text-xs font-bold tracking-widest uppercase text-brand ">
-            {subHeader}
-          </span>
-          <Link
-            href={href || "#"}
-            className="md:hidden text-sm font-semibold text-brand whitespace-nowrap"
-          >
-            →
-          </Link>
-        </div>
-        <h2 className="text-3xl text-ink font-extrabold tracking-tight">
+    <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
+      <div className="max-w-2xl flex-1">
+        <span className="mb-2.5 block text-xs font-bold uppercase tracking-widest text-brand">
+          {subHeader}
+        </span>
+        <h2 className="text-2xl font-extrabold tracking-tight text-ink sm:text-3xl">
           {header}
         </h2>
       </div>
-      <Link
-        href={href || "#"}
-        className="max-md:hidden text-sm font-semibold text-brand whitespace-nowrap"
-      >
-        {seeMore} →
-      </Link>
+
+      {href && seeMore && (
+        <Link
+          href={href}
+          className="inline-flex items-center gap-1.5 whitespace-nowrap text-sm font-semibold text-brand transition-colors hover:text-brand-deep hover:underline"
+        >
+          <span>{seeMore}</span>
+          <ArrowRight aria-hidden="true" className="size-4" />
+        </Link>
+      )}
     </div>
   );
 }

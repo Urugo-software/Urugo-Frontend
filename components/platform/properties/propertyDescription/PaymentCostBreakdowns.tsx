@@ -1,4 +1,5 @@
-import { MoveInCost, RecurringCost } from "@/types/properties";
+import type { MoveInCost, RecurringCost } from "@/types/properties";
+import { formatRwf } from "@/utils/format";
 
 interface PaymentCostBreakdownProps {
   moveInCosts: MoveInCost[];
@@ -9,9 +10,6 @@ export default function PaymentCostBreakdown({
   moveInCosts,
   recurringCosts,
 }: PaymentCostBreakdownProps) {
-  const formatAmount = (amount: number) =>
-    new Intl.NumberFormat("en-RW").format(amount);
-
   const moveInTotal = moveInCosts.reduce((sum, cost) => sum + cost.amount, 0);
 
   const tenantMonthlyTotal = recurringCosts
@@ -20,94 +18,92 @@ export default function PaymentCostBreakdown({
 
   return (
     <section>
-      <h2 className="text-lg font-extrabold mb-6">Payment & Costs</h2>
+      <h2 className="mb-6 text-lg font-extrabold text-ink">
+        Payment &amp; Costs
+      </h2>
 
       {/* Before moving in */}
       <div className="mb-7">
-        <h3 className="text-sm font-bold text-gray-800 tracking-tight mb-3">
+        <h3 className="mb-3 text-sm font-bold tracking-tight text-ink">
           Before moving in
         </h3>
 
-        <div className="border border-line overflow-hidden">
+        <div className="overflow-hidden border border-line">
           {moveInCosts.map((cost, index) => (
             <div
               key={`${cost.label}-${index}`}
-              className="flex justify-between px-4.5 py-3.5 text-sm border-b border-line"
+              className="flex items-center justify-between gap-4 border-b border-line px-4.5 py-3.5 text-sm"
             >
               <span className="text-body">{cost.label}</span>
-
-              <span className="font-mono font-semibold">
-                {formatAmount(cost.amount)} RWF
+              <span className="shrink-0 font-mono font-semibold text-ink">
+                {formatRwf(cost.amount)}
               </span>
             </div>
           ))}
 
-          <div className="flex justify-between px-4.5 py-3.5 text-sm bg-surface font-bold">
-            <span className="text-ink">Estimated amount needed</span>
-
-            <span className="font-mono">{formatAmount(moveInTotal)} RWF</span>
+          <div className="flex items-center justify-between gap-4 bg-surface px-4.5 py-3.5 text-sm font-bold">
+            <span className="text-ink">Estimated total to move in</span>
+            <span className="shrink-0 font-mono text-ink">
+              {formatRwf(moveInTotal)}
+            </span>
           </div>
         </div>
       </div>
 
-      {/* Recurring costs */}
+      {/* Recurring monthly costs */}
       <div>
-        <h3 className="text-sm font-bold text-gray-800 tracking-tight mb-3">
+        <h3 className="mb-3 text-sm font-bold tracking-tight text-ink">
           Monthly costs
         </h3>
 
-        <div className="border border-line overflow-hidden">
-          {recurringCosts.map((cost, index) => (
-            <div
-              key={`${cost.label}-${index}`}
-              className="grid grid-cols-[1fr_auto_auto] items-center gap-4 px-4.5 py-3.5 text-sm border-b border-line"
-            >
-              <span className="text-body">{cost.label}</span>
+        <div className="overflow-hidden border border-line">
+          {recurringCosts.map((cost, index) => {
+            const isTenant = cost.payer === "TENANT";
+            const amountLabel =
+              cost.amount === 0 && !isTenant
+                ? "Included"
+                : formatRwf(cost.amount);
 
-              <div className="grid tracking-tight font-medium text-[13px]  grid-cols-2">
-                {cost.isEstimated ? (
-                  <span className=" font-medium mr-2  text-gray-400 px-1.5 ">
-                    Estimated
+            return (
+              <div
+                key={`${cost.label}-${index}`}
+                className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-4.5 py-3.5 text-sm"
+              >
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="font-medium text-ink">{cost.label}</span>
+                  {cost.isEstimated && (
+                    <span className="text-xs text-faint">(Estimated)</span>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <span
+                    className={`text-xs font-semibold ${
+                      isTenant ? "text-brand-deep" : "text-faint"
+                    }`}
+                  >
+                    {isTenant ? "Paid by renter" : "Paid by landlord"}
                   </span>
-                ) : (
-                  <span />
-                )}
-
-                <span
-                  className={`
-                   ${
-                     cost.payer === "TENANT"
-                       ? "text-brand-deep   ml-auto"
-                       : "text-faint"
-                   }
-                 
-                 bg-brand/8 rounded-full w-20 px-2 py-1 text-[12.5px] font-semibold flex justify-center items-center gap-1.5`}
-                >
-                  {cost.payer === "TENANT" ? "Tenant" : "Landlord"}
-                </span>
+                  <span className="min-w-24 text-right font-mono font-semibold text-ink">
+                    {amountLabel}
+                  </span>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
 
-          <div className="px-4.5 py-4 bg-surface">
-            <div className="flex justify-between items-center">
-              <div>
-                <p className="text-sm tracking font-bold text-gray-800">
-                  Estimated Monthly Tenant Payment
-                </p>
-              </div>
-
-              <span className="font-mono font-bold">
-                {formatAmount(tenantMonthlyTotal)} RWF
-              </span>
-            </div>
+          <div className="flex items-center justify-between gap-4 bg-surface px-4.5 py-4 text-sm font-bold">
+            <span className="text-ink">Estimated monthly renter total</span>
+            <span className="shrink-0 font-mono text-ink">
+              {formatRwf(tenantMonthlyTotal)}
+            </span>
           </div>
         </div>
       </div>
 
-      {/* Note */}
-      <p className="text-xs text-faint mt-3">
-        Monthly costs are estimates and may vary depending on actual usage.
+      <p className="mt-3 text-xs text-faint">
+        Monthly estimates may vary depending on household usage and final lease
+        terms agreed with the landlord.
       </p>
     </section>
   );

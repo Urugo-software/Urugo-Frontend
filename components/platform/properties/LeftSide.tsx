@@ -1,66 +1,54 @@
 "use client";
 
 import Link from "next/link";
-import { MessageSquareText } from "lucide-react";
-import { motion } from "framer-motion";
+import { Building2, MessageSquareText } from "lucide-react";
+import { useUiStore } from "@/store/ui.store";
 
 function LeftSide() {
-  return (
-    <motion.div
-      initial={{ opacity: 0, x: -15 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ duration: 0.4 }}
-      className="hidden md:flex sm:min-w-[300px] w-[300px] max-md:w-full h-full  flex-col gap-2"
-    >
-      {/* talk to an agent card */}
-      <motion.div
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35, delay: 0.1 }}
-        whileHover={{ y: -2 }}
-        className="bg-brand rounded-2xl p-6 text-white mb-4 shadow-md transition-shadow hover:shadow-lg"
-      >
-        <h4 className="text-base font-extrabold mb-1.5">List your property</h4>
-        <p className="text-[13px] text-white/80 mb-4">
-          Reach 430+ landlords already earning more with verified tenants.
-        </p>
-        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-          <Link
-            href="/ai-assistant"
-            className="w-full flex justify-center text-[13.5px] font-semibold px-4.5 py-2.5 rounded-full bg-white text-brand hover:bg-surface transition-colors"
-          >
-            Talk to an agent
-          </Link>
-        </motion.div>
-      </motion.div>
+  const openAssistant = useUiStore((s) => s.openAssistant);
 
-      {/* Ask the AI Assistant card */}
-      <motion.div
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35, delay: 0.2 }}
-        whileHover={{ y: -2 }}
-        className="bg-white border border-line rounded-2xl p-5.5 mb-4 transition-all hover:border-brand/30 hover:shadow-xs"
-      >
-        <div className="w-9.5 h-9.5 rounded-[10px] bg-brand-tint flex items-center justify-center mb-3.5">
-          <MessageSquareText size={16} className="text-brand" />
+  return (
+    <aside
+      aria-label="Helpful actions"
+      className="hidden h-full w-[300px] shrink-0 flex-col gap-4 md:flex"
+    >
+      <div className="rounded-2xl bg-brand p-6 text-white shadow-md">
+        <div className="mb-3 flex size-9 items-center justify-center rounded-lg bg-white/15">
+          <Building2 aria-hidden="true" className="size-4 text-white" />
         </div>
-        <h4 className="text-[14.5px] font-bold mb-1.5">
-          Not sure what you need?
-        </h4>
-        <p className="text-xs text-body mb-3.5">
-          {`Chat with the Urugo Assistant describe what you're looking for in plain language.`}
+        <h2 className="mb-1.5 text-base font-extrabold">Have a home to rent?</h2>
+        <p className="mb-4 text-[13px] leading-relaxed text-white/85">
+          List your property in Listing-Only mode to receive viewing requests,
+          or manage leases and rent on Urugo.
         </p>
-        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-          <Link
-            href="/ai-assistant"
-            className="w-full flex justify-center text-[13.5px] font-semibold px-4.5 py-2.5 rounded-full border border-line text-ink hover:bg-surface transition-colors"
-          >
-            Ask the AI Assistant
-          </Link>
-        </motion.div>
-      </motion.div>
-    </motion.div>
+        <Link
+          href="/auth/sign-up"
+          className="flex w-full justify-center rounded-full bg-white px-4 py-2.5 text-[13.5px] font-semibold text-brand transition-colors hover:bg-surface"
+        >
+          List your property
+        </Link>
+      </div>
+
+      <div className="rounded-2xl border border-line bg-white p-5.5 transition-all hover:border-brand/30 hover:shadow-xs">
+        <div className="mb-3.5 flex size-9 items-center justify-center rounded-[10px] bg-brand-tint">
+          <MessageSquareText aria-hidden="true" size={16} className="text-brand" />
+        </div>
+        <h2 className="mb-1.5 text-[14.5px] font-bold text-ink">
+          Not sure what fits your budget?
+        </h2>
+        <p className="mb-4 text-xs leading-relaxed text-body">
+          Ask Zoe in plain English for Kigali area guidance and move-in cost
+          estimates.
+        </p>
+        <button
+          type="button"
+          onClick={() => openAssistant()}
+          className="flex w-full cursor-pointer justify-center rounded-full border border-line px-4 py-2.5 text-[13.5px] font-semibold text-ink transition-colors hover:border-brand hover:bg-brand-tint hover:text-brand"
+        >
+          Ask Zoe
+        </button>
+      </div>
+    </aside>
   );
 }
 
