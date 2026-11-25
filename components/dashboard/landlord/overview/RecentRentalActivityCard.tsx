@@ -1,142 +1,104 @@
 import Link from "next/link";
 import {
+  AlertCircle,
   ArrowRight,
-  MoreHorizontal,
+  CalendarClock,
   CheckCircle2,
   Clock,
-  AlertTriangle,
+  MessageSquare,
 } from "lucide-react";
-import { RecentActivityItem } from "@/types/landlord";
+import { StatusBadge, type StatusTone } from "@/components/shared/StatusBadge";
+import type { RecentActivityItem } from "@/types/landlord";
 
 interface RecentRentalActivityCardProps {
   activities: RecentActivityItem[];
 }
 
+function getActivityMeta(type: RecentActivityItem["type"]): {
+  label: string;
+  tone: StatusTone;
+  Icon: typeof Clock;
+} {
+  switch (type) {
+    case "payment_pending":
+      return { label: "Pending", tone: "warning", Icon: Clock };
+    case "payment_approved":
+      return { label: "Approved", tone: "success", Icon: CheckCircle2 };
+    case "tenancy_ending":
+      return { label: "Ending Soon", tone: "warning", Icon: CalendarClock };
+    case "dispute_submitted":
+      return { label: "Disputed", tone: "warning", Icon: AlertCircle };
+    case "issue_reported":
+      return { label: "Reported", tone: "info", Icon: AlertCircle };
+    case "issue_resolved":
+      return { label: "Resolved", tone: "success", Icon: CheckCircle2 };
+    case "inquiry_received":
+      return { label: "Inquiry", tone: "info", Icon: MessageSquare };
+    case "viewing_requested":
+      return { label: "Viewing", tone: "info", Icon: CalendarClock };
+  }
+}
+
 export function RecentRentalActivityCard({
   activities,
 }: RecentRentalActivityCardProps) {
-  const getStatusBadge = (type: RecentActivityItem["type"]) => {
-    switch (type) {
-      case "payment_pending":
-        return {
-          label: "In Review",
-          style: "bg-amber-50 text-amber-700 border-amber-200",
-        };
-      case "dispute_submitted":
-      case "issue_reported":
-        return {
-          label: "Disputed",
-          style: "bg-rose-50 text-rose-700 border-rose-200",
-        };
-      case "payment_approved":
-      case "issue_resolved":
-      default:
-        return {
-          label: "Approved",
-          style: "bg-brand-tint text-brand border-blue-200",
-        };
-    }
-  };
-
-  const getActivityIcon = (type: RecentActivityItem["type"]) => {
-    switch (type) {
-      case "payment_pending":
-        return <Clock className="h-5 w-5 text-amber-600" />;
-      case "dispute_submitted":
-      case "issue_reported":
-        return <AlertTriangle className="h-5 w-5 text-rose-600" />;
-      case "payment_approved":
-      case "issue_resolved":
-      default:
-        return <CheckCircle2 className="h-5 w-5 text-brand" />;
-    }
-  };
-
   return (
-    <div className="border border-line bg-white p-6 sm:p-7 shadow-2xs space-y-5">
-      <div className="flex items-center justify-between border-b border-line pb-4">
-        <div>
-          <h2 className="text-base sm:text-lg font-bold text-ink">
-            Recent Rental Activity
-          </h2>
-          <p className="text-sm text-body mt-1">
-            Latest tenant actions, payment submissions, and dispute updates.
-          </p>
-        </div>
-      </div>
-
-      {/* Rows Container */}
-      <div className="space-y-3.5">
-        {activities.map((item) => {
-          const badge = getStatusBadge(item.type);
-
-          return (
-            <div
-              key={item.id}
-              className="border border-line bg-surface/40 hover:bg-surface p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4 transition-colors"
-            >
-              {/* Left Column: Avatar & Event Info */}
-              <div className="flex items-center gap-4 min-w-[260px] flex-1">
-                <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center bg-white border border-line shadow-2xs">
-                  {getActivityIcon(item.type)}
-                </div>
-                <div>
-                  <h4 className="text-sm sm:text-base font-bold text-ink">
-                    {item.title}
-                  </h4>
-                  <p className="text-sm text-body mt-0.5">
-                    <span className="font-semibold text-ink">
-                      {item.renterName}
-                    </span>{" "}
-                    · {item.propertyTitle}
-                  </p>
-                </div>
-              </div>
-
-              {/* Middle Column: Date */}
-              <div className="text-left sm:text-right min-w-[130px]">
-                <span className="text-xs font-semibold uppercase tracking-wider text-faint block">
-                  Date
-                </span>
-                <span className="text-sm font-semibold text-ink block mt-0.5">
-                  {item.timestamp}
-                </span>
-              </div>
-
-              {/* Status Badge */}
-              <div className="min-w-[110px] flex justify-start sm:justify-center">
-                <span
-                  className={`inline-block px-3 py-1 text-xs font-semibold border ${badge.style}`}
-                >
-                  {badge.label}
-                </span>
-              </div>
-
-              {/* Actions Button */}
-              <div className="flex items-center justify-end">
-                <Link
-                  href="/landlord/tenancies"
-                  className="p-1.5 text-faint hover:text-ink transition-colors"
-                  title="View details"
-                >
-                  <MoreHorizontal className="h-5 w-5" />
-                </Link>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Footer Link */}
-      <div className="pt-4 border-t border-line text-center">
+    <div className="space-y-4 border border-line bg-white p-5 shadow-2xs sm:p-6">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-faint">
+          Recent Activity
+        </h3>
         <Link
-          href="/landlord/tenancies"
-          className="inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-brand hover:underline"
+          href="/landlord/notifications"
+          className="inline-flex items-center gap-1 text-xs font-semibold text-brand-blue hover:underline"
         >
-          <span>View all rental activity history</span>
-          <ArrowRight className="h-3.5 w-3.5" />
+          <span>View notifications</span>
+          <ArrowRight aria-hidden="true" className="size-3.5" />
         </Link>
       </div>
+
+      {activities.length === 0 ? (
+        <p className="py-8 text-center text-xs text-body">
+          No recent rental activity yet.
+        </p>
+      ) : (
+        <div className="divide-y divide-line">
+          {activities.map((item) => {
+            const { label, tone, Icon } = getActivityMeta(item.type);
+            const href = item.href ?? "/landlord/tenancies";
+
+            return (
+              <Link
+                key={item.id}
+                href={href}
+                className="flex flex-col gap-3 py-3.5 transition-colors hover:bg-surface/40 sm:flex-row sm:items-center sm:justify-between"
+              >
+                <div className="flex min-w-0 items-start gap-3">
+                  <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center border border-line bg-surface text-body">
+                    <Icon aria-hidden="true" className="size-4" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-ink">
+                      {item.title}
+                    </p>
+                    <p className="mt-0.5 text-xs text-body">
+                      {item.description}
+                    </p>
+                    <p className="mt-1 text-xs text-faint">
+                      {item.renterName} · {item.propertyTitle}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex shrink-0 items-center justify-between gap-3 pl-11 sm:justify-end sm:pl-0">
+                  <span className="text-xs text-faint">{item.timestamp}</span>
+                  <StatusBadge label={label} tone={tone} />
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

@@ -1,65 +1,70 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { mockLandlordNotifications } from "@/data/landlord-data";
-import type { LandlordNotificationItem } from "@/types/landlord";
+import { DashboardSearchInput } from "@/components/shared/DashboardSearchInput";
+import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
+import { NotificationList } from "./NotificationList";
 import { NotificationsHeader } from "./NotificationsHeader";
 import { NotificationTabs } from "./NotificationTabs";
-import { NotificationList } from "./NotificationList";
 
 export function LandlordNotificationsView() {
-  const [notifications, setNotifications] = useState<
-    LandlordNotificationItem[]
-  >(mockLandlordNotifications);
+  const {
+    serviceMode,
+    notifications: allNotifications,
+    markAllNotificationsRead,
+    markNotificationRead,
+    toggleNotificationRead,
+    dismissNotification,
+  } = useLandlordWorkspace();
+
   const [activeTab, setActiveTab] = useState("all");
   const [unreadOnly, setUnreadOnly] = useState(false);
+  const [search, setSearch] = useState("");
+
+  const scopedNotifications = useMemo(
+    () =>
+      serviceMode === "listing_only"
+        ? allNotifications.filter(
+            (item) =>
+              item.category === "inquiry" ||
+              item.category === "viewing" ||
+              item.category === "system",
+          )
+        : allNotifications,
+    [allNotifications, serviceMode],
+  );
 
   const unreadCount = useMemo(
-    () => notifications.filter((item) => item.isUnread).length,
-    [notifications],
+    () => scopedNotifications.filter((item) => item.isUnread).length,
+    [scopedNotifications],
   );
 
-  const filteredNotifications = useMemo(
-    () =>
-      notifications.filter((item) => {
-        if (activeTab !== "all" && item.category !== activeTab) return false;
-        if (unreadOnly && !item.isUnread) return false;
-        return true;
-      }),
-    [notifications, activeTab, unreadOnly],
-  );
+  const filteredNotifications = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return scopedNotifications.filter((item) => {
+      if (activeTab !== "all" && item.category !== activeTab) return false;
+      if (unreadOnly && !item.isUnread) return false;
+      if (
+        q &&
+        !item.title.toLowerCase().includes(q) &&
+        !item.message.toLowerCase().includes(q)
+      ) {
+        return false;
+      }
+      return true;
+    });
+  }, [activeTab, scopedNotifications, search, unreadOnly]);
 
   const getTabCount = (tabId: string) =>
-    notifications.filter((item) => {
+    scopedNotifications.filter((item) => {
       if (unreadOnly && !item.isUnread) return false;
       return tabId === "all" || item.category === tabId;
     }).length;
 
-  const markAllRead = () =>
-    setNotifications((prev) =>
-      prev.map((item) => ({ ...item, isUnread: false })),
-    );
-
-  const markRead = (id: string) =>
-    setNotifications((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, isUnread: false } : item,
-      ),
-    );
-
-  const toggleRead = (id: string) =>
-    setNotifications((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, isUnread: !item.isUnread } : item,
-      ),
-    );
-
-  const dismiss = (id: string) =>
-    setNotifications((prev) => prev.filter((item) => item.id !== id));
-
   const resetFilters = () => {
     setActiveTab("all");
     setUnreadOnly(false);
+    setSearch("");
   };
 
   return (
@@ -69,22 +74,31 @@ export function LandlordNotificationsView() {
           unreadCount={unreadCount}
           unreadOnly={unreadOnly}
           onToggleUnreadOnly={() => setUnreadOnly((prev) => !prev)}
-          onMarkAllRead={markAllRead}
+          onMarkAllRead={markAllNotificationsRead}
+        />
+
+        <DashboardSearchInput
+          value={search}
+          onChange={setSearch}
+          placeholder="Search notifications..."
+          label="Search notifications"
+          className="max-w-md"
         />
 
         <NotificationTabs
           activeTab={activeTab}
           onTabChange={setActiveTab}
           getCount={getTabCount}
+          serviceMode={serviceMode}
         />
 
         <NotificationList
           items={filteredNotifications}
-          hasFilters={activeTab !== "all" || unreadOnly}
+          hasFilters={activeTab !== "all" || unreadOnly || Boolean(search)}
           onResetFilters={resetFilters}
-          onMarkRead={markRead}
-          onToggleRead={toggleRead}
-          onDismiss={dismiss}
+          onMarkRead={markNotificationRead}
+          onToggleRead={toggleNotificationRead}
+          onDismiss={dismissNotification}
         />
       </div>
     </div>

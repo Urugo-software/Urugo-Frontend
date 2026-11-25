@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import { Settings, HelpCircle } from "lucide-react";
 import { RoleType } from "@/types";
-import { adminNavItems, NavItemConfig, roleNavItems } from "@/data/dashboard-data";
+import { useDashboardNavigation } from "@/hooks/useDashboardNavigation";
 import { SidebarItem } from "./SidebarItem";
 import Logo from "../platform/layout/Logo";
 
@@ -13,17 +13,8 @@ interface DashboardSidebarProps {
 
 export function DashboardSidebar({ currentRole }: DashboardSidebarProps) {
   const pathname = usePathname();
-  const isAdmin = pathname.startsWith("/admin");
-  const derivedRole: RoleType = pathname.startsWith("/renter")
-    ? "renter"
-    : pathname.startsWith("/landlord")
-      ? "landlord"
-      : currentRole || "home_seeker";
-
-  const navList = isAdmin ? adminNavItems : roleNavItems[derivedRole] || roleNavItems.home_seeker;
-  const settingsHrefByRole = `/${
-    derivedRole === "home_seeker" ? "home-seeker" : derivedRole
-  }`;
+  const { isAdmin, rootHref, navList, persona, isActive } =
+    useDashboardNavigation(pathname, currentRole);
 
   return (
     <aside className="relative hidden md:flex h-screen w-[272px] shrink-0 flex-col overflow-hidden border-r border-line bg-white">
@@ -32,83 +23,58 @@ export function DashboardSidebar({ currentRole }: DashboardSidebarProps) {
         <Logo />
       </div>
 
-      {/* Main Nav Items based on Role */}
-      <nav className="mt-4 flex flex-col gap-1 px-4 overflow-y-auto">
-        {navList.map((item: NavItemConfig) => {
-          return (
+      {/* Main Nav Items */}
+      <nav
+        aria-label="Dashboard navigation"
+        className="mt-4 flex flex-1 flex-col gap-1 overflow-y-auto px-4 pb-4"
+      >
+        {navList.map((item) => (
+          <SidebarItem
+            key={item.href}
+            href={item.href}
+            icon={item.icon}
+            label={item.label}
+            badge={item.badge}
+            active={isActive(item.href)}
+          />
+        ))}
+
+        {!isAdmin && (
+          <>
+            <div className="px-3 pt-5 pb-1.5">
+              <span className="text-[12.5px] font-bold uppercase tracking-widest text-faint">
+                Settings
+              </span>
+            </div>
             <SidebarItem
-              key={item.label}
-              href={item.href}
-              icon={item.icon}
-              label={item.label}
-              badge={item.badge}
-              active={pathname === item.href}
+              href={`${rootHref}/settings`}
+              icon={Settings}
+              label="Settings"
+              active={isActive(`${rootHref}/settings`)}
             />
-          );
-        })}
+            <SidebarItem
+              href={`${rootHref}/help-center`}
+              icon={HelpCircle}
+              label="Help Center"
+              active={isActive(`${rootHref}/help-center`)}
+            />
+          </>
+        )}
       </nav>
 
-      {/* Settings Section */}
-      {!isAdmin && <div className="relative z-10 px-7 pt-6 pb-2">
-        <span className="text-[12.5px] font-bold uppercase tracking-widest text-faint">
-          Settings
-        </span>
-      </div>}
-      {!isAdmin && <div className="relative z-10 flex flex-col gap-1 px-4">
-        <SidebarItem
-          href={settingsHrefByRole + "/settings"}
-          icon={Settings}
-          label="Settings"
-          active={pathname === settingsHrefByRole + "/settings"}
-        />
-        <SidebarItem
-          href={settingsHrefByRole + "/help-center"}
-          icon={HelpCircle}
-          label="Help Center"
-          active={pathname === settingsHrefByRole + "/help-center"}
-        />
-      </div>}
-
-      {/* Background Graphic SVG */}
-      <div className="relative min-h-[70px] flex-1 pointer-events-none">
-        <svg
-          className="absolute bottom-0 left-0 pointer-events-none"
-          width="272"
-          height="200"
-          viewBox="0 0 272 200"
-          fill="none"
-        >
-          <path
-            d="M-20 200L140 30L180 70L60 200H-20Z"
-            fill="#1D4ED8"
-            fillOpacity="0.05"
-          />
-          <path
-            d="M40 200L200 10"
-            stroke="#1D4ED8"
-            strokeOpacity="0.18"
-            strokeWidth="1.4"
-          />
-          <path
-            d="M80 200L230 50"
-            stroke="#1D4ED8"
-            strokeOpacity="0.12"
-            strokeWidth="1.4"
-          />
-        </svg>
-      </div>
-
       {/* User Session Footer */}
-      <div className="relative border-t border-line bg-surface px-6 py-4">
+      <div className="relative shrink-0 border-t border-line bg-surface px-6 py-4">
         <div className="flex items-center gap-3">
-          <div className="grid size-10 shrink-0 place-items-center rounded-full bg-brand-tint text-sm font-bold text-brand">
-            {isAdmin ? "AD" : "YK"}
+          <div className="grid size-10 shrink-0 place-items-center rounded-full bg-brand-tint text-sm font-bold text-brand-blue">
+            {persona.initials}
           </div>
           <div className="min-w-0">
             <div className="truncate text-[13.5px] font-bold text-ink">
-              {isAdmin ? "Urugo Admin" : "Yves Kamanzi"}
+              {persona.name}
             </div>
-            <div className="truncate text-[12.5px] text-faint">{isAdmin ? "Platform administrator" : "Guest account"}</div>
+            <div className="truncate text-[12.5px] text-faint">
+              {persona.subtitle}
+            </div>
           </div>
         </div>
       </div>

@@ -1,37 +1,49 @@
 import Link from "next/link";
-import { AttentionItem } from "@/types/landlord";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
+import type { AttentionItem } from "@/types/landlord";
 
 interface LandlordAttentionCardProps {
   items: AttentionItem[];
 }
 
 export function LandlordAttentionCard({ items }: LandlordAttentionCardProps) {
-  if (!items || items.length === 0) return null;
-
   return (
-    <div className="border  border-line  p-6 sm:p-7 shadow-2xs space-y-4">
-      <h3 className="text-xs font-semibold uppercase tracking-wider text-red-700">
-        Requires Your Attention
-      </h3>
-      <div className="flex flex-col gap-3.5">
-        {items.map((item) => (
-          <div
-            key={item.id}
-            className="flex flex-wrap items-center justify-between gap-4 border border-line bg-white p-4 sm:p-5 shadow-2xs"
-          >
-            <p className="text-sm sm:text-[15px] font-semibold text-ink">
-              {item.title}
+    <div className="flex h-full flex-col justify-between space-y-4 border border-line bg-white p-5 shadow-2xs sm:p-6">
+      <div>
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-faint">
+          Requires Your Attention
+        </h3>
+
+        {items.length === 0 ? (
+          <div className="mt-6 flex flex-col items-center justify-center py-6 text-center">
+            <CheckCircle2
+              aria-hidden="true"
+              className="size-7 text-emerald-600"
+            />
+            <p className="mt-2 text-sm font-semibold text-ink">All caught up</p>
+            <p className="mt-1 text-xs text-body">
+              No pending payments, disputes, or urgent requests right now.
             </p>
-            <Link
-              href={item.href}
-              className="inline-flex items-center gap-1.5 text-sm duration-300 hover:font-semibold text-gray-400 hover:text-brand hover:underline"
-            >
-              <span>{item.actionText}</span>
-              <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
           </div>
-        ))}
+        ) : (
+          <div className="mt-4 flex flex-col gap-3">
+            {items.map((item) => (
+              <div
+                key={item.id}
+                className="flex flex-wrap items-center justify-between gap-3 border border-line bg-surface/40 p-3.5"
+              >
+                <p className="text-sm font-semibold text-ink">{item.title}</p>
+                <Link
+                  href={item.href}
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-blue hover:underline"
+                >
+                  <span>{item.actionText}</span>
+                  <ArrowRight aria-hidden="true" className="size-3.5" />
+                </Link>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

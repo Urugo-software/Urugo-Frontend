@@ -1,11 +1,13 @@
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
+import { LandlordStoreHydrator } from "@/components/dashboard/LandlordStoreHydrator";
 import MobileSidebarWrapper from "@/components/dashboard/home-seeker/mobile-nav/mobile-sidebar-wrapper";
 import { ReactNode } from "react";
 
 function layout({ children }: { children: ReactNode }) {
   return (
-    <main className="flex min-h-0 h-[100dvh] w-screen overflow-hidden font-sans text-ink antialiased print:block print:h-auto print:w-auto print:overflow-visible">
+    <div className="flex min-h-0 h-[100dvh] w-screen overflow-hidden font-sans text-ink antialiased print:block print:h-auto print:w-auto print:overflow-visible">
+      <LandlordStoreHydrator />
       <div className="print:hidden">
         <DashboardSidebar currentRole="home_seeker" />
       </div>
@@ -18,7 +20,7 @@ function layout({ children }: { children: ReactNode }) {
           {children}
         </div>
       </section>
-    </main>
+    </div>
   );
 }
 export default layout;

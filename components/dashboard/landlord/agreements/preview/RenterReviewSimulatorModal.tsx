@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { X, MessageSquarePlus, PenTool, User } from "lucide-react";
+import { MessageSquarePlus, PenTool } from "lucide-react";
+import { ModalDialog } from "@/components/shared/ModalDialog";
 import { Agreement, RenterChangeRequest } from "@/types/agreement.types";
 import { SimulatorRequestChangeTab } from "./simulator/SimulatorRequestChangeTab";
 import { SimulatorSignTab } from "./simulator/SimulatorSignTab";
@@ -21,43 +22,29 @@ export function RenterReviewSimulatorModal({
   onSubmitChangeRequest,
   onSignAgreement,
 }: Props) {
-  const [activeTab, setActiveTab] = useState<"request_change" | "sign">("request_change");
-
-  if (!isOpen) return null;
+  const [activeTab, setActiveTab] = useState<"request_change" | "sign">(
+    "request_change",
+  );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
-      <div className="w-full max-w-lg border border-line bg-white shadow-xl">
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-line px-5 py-3.5 bg-surface/50">
-          <div className="flex items-center gap-2">
-            <div className="grid size-6 place-items-center bg-ink text-white">
-              <User className="size-3.5" />
-            </div>
-            <div>
-              <h3 className="text-sm sm:text-[15px] font-bold text-ink">
-                Renter Review & Action Simulator
-              </h3>
-              <p className="text-[12.5px] text-faint">
-                Simulating actions for {agreement.renter.name}
-              </p>
-            </div>
-          </div>
+    <ModalDialog
+      open={isOpen}
+      onClose={onClose}
+      title="Renter Review Simulator (Dev)"
+      description={`Simulating actions for ${agreement.renter.name}`}
+      maxWidthClassName="max-w-lg"
+    >
+      <div className="space-y-5 text-[12.5px]">
+        <div
+          role="tablist"
+          className="grid grid-cols-2 border border-line text-[12.5px]"
+        >
           <button
             type="button"
-            onClick={onClose}
-            className="text-faint hover:text-ink cursor-pointer p-1"
-          >
-            <X className="size-4" />
-          </button>
-        </div>
-
-        {/* Action Toggle Tabs */}
-        <div className="grid grid-cols-2 border-b border-line text-[12.5px]">
-          <button
-            type="button"
+            role="tab"
+            aria-selected={activeTab === "request_change"}
             onClick={() => setActiveTab("request_change")}
-            className={`flex items-center justify-center gap-2 py-2.5 font-semibold cursor-pointer border-b-2 transition-colors ${
+            className={`flex cursor-pointer items-center justify-center gap-2 border-b-2 py-2.5 font-semibold transition-colors ${
               activeTab === "request_change"
                 ? "border-ink bg-white text-ink"
                 : "border-transparent bg-surface text-faint hover:text-ink"
@@ -68,8 +55,10 @@ export function RenterReviewSimulatorModal({
           </button>
           <button
             type="button"
+            role="tab"
+            aria-selected={activeTab === "sign"}
             onClick={() => setActiveTab("sign")}
-            className={`flex items-center justify-center gap-2 py-2.5 font-semibold cursor-pointer border-b-2 transition-colors ${
+            className={`flex cursor-pointer items-center justify-center gap-2 border-b-2 py-2.5 font-semibold transition-colors ${
               activeTab === "sign"
                 ? "border-ink bg-white text-ink"
                 : "border-transparent bg-surface text-faint hover:text-ink"
@@ -80,24 +69,21 @@ export function RenterReviewSimulatorModal({
           </button>
         </div>
 
-        {/* Tab Content */}
-        <div className="p-6 text-[12.5px]">
-          {activeTab === "request_change" ? (
-            <SimulatorRequestChangeTab
-              articles={agreement.articles}
-              onClose={onClose}
-              onSubmit={onSubmitChangeRequest}
-            />
-          ) : (
-            <SimulatorSignTab
-              referenceNumber={agreement.referenceNumber}
-              defaultSignerName={agreement.renter.name}
-              onClose={onClose}
-              onSign={onSignAgreement}
-            />
-          )}
-        </div>
+        {activeTab === "request_change" ? (
+          <SimulatorRequestChangeTab
+            articles={agreement.articles}
+            onClose={onClose}
+            onSubmit={onSubmitChangeRequest}
+          />
+        ) : (
+          <SimulatorSignTab
+            referenceNumber={agreement.referenceNumber}
+            defaultSignerName={agreement.renter.name}
+            onClose={onClose}
+            onSign={onSignAgreement}
+          />
+        )}
       </div>
-    </div>
+    </ModalDialog>
   );
 }

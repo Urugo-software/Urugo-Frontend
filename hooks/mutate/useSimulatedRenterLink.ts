@@ -16,13 +16,12 @@ function buildSimulatedLink(
     typeof window !== "undefined" && window.location.origin
       ? window.location.origin
       : "https://urugo.rw";
-  const propertyQuery = property
-    ? `?property=${encodeURIComponent(property.id)}`
-    : "";
+  const params = new URLSearchParams({ invite: `sim-${randomSegment}` });
+  if (property) params.set("property", property.id);
 
   return {
     id: `sim-inv-${randomSegment}`,
-    url: `${origin}/auth/register/invite/sim-${randomSegment}${propertyQuery}`,
+    url: `${origin}/auth/sign-up?${params.toString()}`,
     propertyId: property?.id,
     propertyName: property?.name,
     createdAt: new Date().toLocaleTimeString([], {

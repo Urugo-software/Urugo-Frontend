@@ -1,16 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import { Building2, Plus, Search, SearchX } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { Building2, Plus, SearchX } from "lucide-react";
 import type { ViewMode } from "@/components/dashboard/landlord/properties/PortfolioCard";
+import { DashboardSearchInput } from "@/components/shared/DashboardSearchInput";
+import { Pagination } from "@/components/shared/Pagination";
 import { ViewModeToggle } from "@/components/shared/ViewModeToggle";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { mockLandlordRenters } from "@/data/landlord-data";
 import { cn } from "@/lib/utils";
 import { useLandlordProperties } from "@/store/landlord-properties.store";
+import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
 import type { PropertyUnit } from "@/types/landlord";
+import { paginateItems } from "@/utils/pagination";
 import {
   getRentersForProperty,
   resolvePropertyDoors,
@@ -24,20 +27,26 @@ import { PropertyUnitCard } from "./PropertyUnitCard";
 import { SinglePropertyLeaseCard } from "./SinglePropertyLeaseCard";
 import { UnitDetailsDialog } from "./UnitDetailsDialog";
 
-type UnitFilter = "all" | "occupied" | "vacant" | "ending";
+type UnitFilter = "all" | "occupied" | "vacant" | "maintenance" | "ending";
+
+const UNITS_PER_PAGE = 6;
 
 const filterOptions: { key: UnitFilter; label: string }[] = [
   { key: "all", label: "All Units" },
   { key: "occupied", label: "Occupied" },
   { key: "vacant", label: "Vacant" },
+  { key: "maintenance", label: "Maintenance" },
   { key: "ending", label: "Ending Soon" },
 ];
 
 export function PropertyTenanciesView({ propertyId }: { propertyId: string }) {
   const { properties, groups, units } = useLandlordProperties();
+  const renters = useLandlordWorkspace((s) => s.renters);
+  const unitsSectionRef = useRef<HTMLElement>(null);
   const [unitFilter, setUnitFilter] = useState<UnitFilter>("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
+  const [currentPage, setCurrentPage] = useState(1);
   const [unitModal, setUnitModal] = useState<{ open: boolean; unit?: PropertyUnit }>({
     open: false,
   });
@@ -53,16 +62,16 @@ export function PropertyTenanciesView({ propertyId }: { propertyId: string }) {
   );
 
   const propertyRenters = useMemo(
-    () => (property ? getRentersForProperty(property, mockLandlordRenters) : []),
-    [property],
+    () => (property ? getRentersForProperty(property, renters) : []),
+    [property, renters],
   );
 
   const doors = useMemo(
     () =>
       property && property.hasUnits
-        ? resolvePropertyDoors(property, units, mockLandlordRenters)
+        ? resolvePropertyDoors(property, units, renters)
         : [],
-    [property, units],
+    [property, renters, units],
   );
 
   const summary = useMemo(
@@ -80,6 +89,7 @@ export function PropertyTenanciesView({ propertyId }: { propertyId: string }) {
           unitFilter === "all" ||
           (unitFilter === "occupied" && renter !== null) ||
           (unitFilter === "vacant" && renter === null && unit.status === "Vacant") ||
+          (unitFilter === "maintenance" && unit.status === "Maintenance") ||
           (unitFilter === "ending" && renter?.tenancyStatus === "Ending");
 
         const matchesSearch =
@@ -125,6 +135,23 @@ export function PropertyTenanciesView({ propertyId }: { propertyId: string }) {
   const canAddRenter = property.hasUnits && summary.vacantUnits > 0;
   const hasActiveFilters = unitFilter !== "all" || Boolean(query);
 
+  const {
+    items: paginatedDoors,
+    page,
+    totalPages,
+    totalItems,
+  } = paginateItems(filteredDoors, currentPage, UNITS_PER_PAGE);
+
+  const handlePageChange = (nextPage: number) => {
+    if (nextPage >= 1 && nextPage <= totalPages) {
+      setCurrentPage(nextPage);
+      unitsSectionRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  };
+
   return (
     <main className="min-h-0 flex-1 space-y-6 overflow-y-auto bg-surface/30 p-4 pb-16 sm:p-8 md:p-10">
       <PropertyTenancyBreadcrumb currentLabel={property.name} group={group} />
@@ -141,7 +168,11 @@ export function PropertyTenanciesView({ propertyId }: { propertyId: string }) {
       {property.hasUnits && <PropertyTenancyStats summary={summary} />}
 
       {property.hasUnits ? (
-        <section aria-labelledby="property-units-heading" className="space-y-4">
+        <section
+          ref={unitsSectionRef}
+          aria-labelledby="property-units-heading"
+          className="space-y-4"
+        >
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2.5">
               <h2 id="property-units-heading" className="text-xl font-semibold text-ink">
@@ -156,18 +187,17 @@ export function PropertyTenanciesView({ propertyId }: { propertyId: string }) {
           </div>
 
           {doors.length > 1 && (
-            <div className="flex flex-wrap items-center justify-between gap-3 border border-line bg-white p-3 shadow-2xs">
-              <label className="relative min-w-0 flex-1 basis-full sm:basis-64">
-                <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-faint" />
-                <span className="sr-only">Search units or tenants</span>
-                <Input
-                  type="search"
-                  placeholder="Search by unit number, floor, or tenant"
-                  value={searchTerm}
-                  onChange={(event) => setSearchTerm(event.target.value)}
-                  className="rounded-none py-5 pl-9 text-sm"
-                />
-              </label>
+            <div className="flex flex-col gap-3 border border-line bg-white p-3 shadow-2xs lg:flex-row lg:items-center lg:justify-between">
+              <DashboardSearchInput
+                value={searchTerm}
+                onChange={(val) => {
+                  setSearchTerm(val);
+                  setCurrentPage(1);
+                }}
+                placeholder="Search by unit number, floor, or tenant"
+                label="Search units or tenants"
+                className="w-full lg:max-w-md"
+              />
 
               <div className="flex flex-wrap items-center gap-2">
                 <div
@@ -179,9 +209,13 @@ export function PropertyTenanciesView({ propertyId }: { propertyId: string }) {
                     <Button
                       key={key}
                       type="button"
+                      aria-pressed={unitFilter === key}
                       variant={unitFilter === key ? "default" : "outline"}
-                      onClick={() => setUnitFilter(key)}
-                      className="h-9 cursor-pointer rounded-none px-3 text-sm"
+                      onClick={() => {
+                        setUnitFilter(key);
+                        setCurrentPage(1);
+                      }}
+                      className="h-9 cursor-pointer rounded-none px-3 text-xs font-semibold"
                     >
                       {label}
                     </Button>
@@ -225,6 +259,7 @@ export function PropertyTenanciesView({ propertyId }: { propertyId: string }) {
                   onClick={() => {
                     setSearchTerm("");
                     setUnitFilter("all");
+                    setCurrentPage(1);
                   }}
                 >
                   Clear filters
@@ -232,23 +267,41 @@ export function PropertyTenanciesView({ propertyId }: { propertyId: string }) {
               }
             />
           ) : (
-            <div
-              className={
-                viewMode === "grid"
-                  ? "grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"
-                  : "grid grid-cols-1 gap-4"
-              }
-            >
-              {filteredDoors.map((door) => (
-                <PropertyUnitCard
-                  key={door.unit.id}
-                  door={door}
-                  propertyId={property.id}
-                  onManageUnit={(unit) => setUnitModal({ open: true, unit })}
-                  viewMode={viewMode}
-                />
-              ))}
-            </div>
+            <>
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={page}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -12 }}
+                  transition={{ duration: 0.25 }}
+                  className={
+                    viewMode === "grid"
+                      ? "grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3"
+                      : "grid grid-cols-1 gap-4"
+                  }
+                >
+                  {paginatedDoors.map((door) => (
+                    <PropertyUnitCard
+                      key={door.unit.id}
+                      door={door}
+                      propertyId={property.id}
+                      onManageUnit={(unit) => setUnitModal({ open: true, unit })}
+                      viewMode={viewMode}
+                    />
+                  ))}
+                </motion.div>
+              </AnimatePresence>
+
+              <Pagination
+                currentPage={page}
+                totalPages={totalPages}
+                totalItems={totalItems}
+                itemsPerPage={UNITS_PER_PAGE}
+                itemLabel="units"
+                onPageChange={handlePageChange}
+              />
+            </>
           )}
         </section>
       ) : (

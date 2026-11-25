@@ -51,14 +51,14 @@ export function MembershipDialog({ request, onClose }: { request: MembershipRequ
         <Modal.Backdrop className="fixed inset-0 z-50 bg-black/40" />
         <Modal.Popup initialFocus={kind === "remove" && propertyId ? cancelRef : undefined}
           finalFocus={() => document.getElementById(request.returnFocusId) ?? document.getElementById("membership-heading") ?? document.getElementById("portfolio-title") ?? true}
-          className="fixed left-1/2 top-1/2 z-50 max-h-[90dvh] w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 space-y-4 overflow-y-auto rounded-xl border border-line bg-white p-5 shadow-lg">
+          className="fixed left-1/2 top-1/2 z-50 max-h-[90dvh] w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 space-y-4 overflow-y-auto rounded-none border border-line bg-white p-5 shadow-lg">
           <Modal.Title className="text-xl font-semibold text-ink">{membershipLabels[kind]}</Modal.Title>
           <Suspense fallback={<MembershipFormSkeleton request={request} />}>
             <MembershipForm request={request} form={form} formRef={setActiveForm} selectedPropertyId={selected[0]} onClose={onClose} />
           </Suspense>
           <div className="flex flex-wrap justify-end gap-2">
-            <Button ref={cancelRef} type="button" variant="outline" className="cursor-pointer" onClick={onClose}>Cancel</Button>
-            <Button type="submit" form={activeForm?.id} variant={kind === "remove" ? "destructive" : "default"} className="cursor-pointer"
+            <Button ref={cancelRef} type="button" variant="outline" className="cursor-pointer rounded-none" onClick={onClose}>Cancel</Button>
+            <Button type="submit" form={activeForm?.id} variant={kind === "remove" ? "destructive" : "default"} className="cursor-pointer rounded-none"
               disabled={!activeForm || form.formState.isSubmitting || !selected.length || (kind !== "remove" && !targetId)}>{confirmLabels[kind]}</Button>
           </div>
         </Modal.Popup>

@@ -1,5 +1,5 @@
 import { AgreementFinancials } from "@/types/agreement.types";
-import { formatCurrencyRwf } from "@/utils/agreement-utils";
+import { formatCurrencyRwf, formatDate } from "@/utils/agreement-utils";
 import {
   formatAgreedDueDayDisplay,
   formatCommencementDisplay,
@@ -8,28 +8,61 @@ import {
 interface Props {
   financials: AgreementFinancials;
   tenancyStartDate: string;
+  tenancyEndDate?: string;
   tenancyDurationMonths?: number;
+  commencementStatus?: "pending_first_payment" | "confirmed";
+  firstPaymentConfirmedAt?: string;
   isKinyarwanda: boolean;
+}
+
+interface ScheduleRow {
+  labelEn: string;
+  labelRw: string;
+  value: string;
+  isBold?: boolean;
+  isPending?: boolean;
+  note?: string;
 }
 
 export function DocumentFinancialSchedule({
   financials,
   tenancyStartDate,
+  tenancyEndDate,
   tenancyDurationMonths = 12,
+  commencementStatus,
+  firstPaymentConfirmedAt,
   isKinyarwanda,
 }: Props) {
+  const lang = isKinyarwanda ? "rw" : "en";
   const commencement = formatCommencementDisplay({
     startDate: tenancyStartDate,
-    language: isKinyarwanda ? "rw" : "en",
+    commencementStatus,
+    confirmedPaymentDate: firstPaymentConfirmedAt,
+    language: lang,
   });
 
-  const scheduleRows = [
+  const hasOtherCharges = (financials.otherChargesRwf ?? 0) > 0;
+  const computedInitialTotal =
+    financials.totalAdvanceRwf +
+    financials.securityDepositRwf +
+    (financials.otherChargesRwf ?? 0);
+
+  const scheduleRows: ScheduleRow[] = [
     {
       labelEn: "Lease Commencement Date",
       labelRw: "Itariki yo Gutangira",
       value: commencement.display,
       isPending: commencement.isPending,
     },
+    ...(tenancyEndDate
+      ? [
+          {
+            labelEn: "Scheduled Lease End Date",
+            labelRw: "Itariki yo Kurangiriraho",
+            value: formatDate(tenancyEndDate, lang),
+          },
+        ]
+      : []),
     {
       labelEn: "Lease Duration / Term",
       labelRw: "Igihe Amasezerano Azamara",
@@ -44,10 +77,7 @@ export function DocumentFinancialSchedule({
     {
       labelEn: "Rent Payment Due Date",
       labelRw: "Itariki y'Ubwishyu ya Buri Kwezi",
-      value: formatAgreedDueDayDisplay(
-        financials.paymentDueDay,
-        isKinyarwanda ? "rw" : "en",
-      ),
+      value: formatAgreedDueDayDisplay(financials.paymentDueDay, lang),
     },
     {
       labelEn: "Refundable Security Deposit",
@@ -59,48 +89,63 @@ export function DocumentFinancialSchedule({
       labelRw: "Ubukode bw'Integuza",
       value: `${financials.advanceMonths} ${isKinyarwanda ? "Ukwezi / Amezi" : "Month(s)"} (${formatCurrencyRwf(financials.totalAdvanceRwf)})`,
     },
+    ...(hasOtherCharges
+      ? [
+          {
+            labelEn: "Other Initial Charges",
+            labelRw: "Andi Mafarangay'Intangiriro",
+            value: formatCurrencyRwf(financials.otherChargesRwf ?? 0),
+          },
+        ]
+      : []),
     {
       labelEn: "Total Initial Amount Due",
       labelRw: "Amafaranga Yose yo Gutangira",
-      value: formatCurrencyRwf(financials.totalInitialAmountRwf),
+      value: formatCurrencyRwf(
+        financials.totalInitialAmountRwf || computedInitialTotal,
+      ),
       isBold: true,
-      note: isKinyarwanda
-        ? "(Ubukode bw'integuza + Ingwate y'inzu)"
-        : "(Advance rent + Security deposit)",
+      note: hasOtherCharges
+        ? isKinyarwanda
+          ? "(Ubukode bw'integuza + Ingwate y'inzu + Andi mafarangay'intangiriro)"
+          : "(Advance rent + Security deposit + Other initial charges)"
+        : isKinyarwanda
+          ? "(Ubukode bw'integuza + Ingwate y'inzu)"
+          : "(Advance rent + Security deposit)",
     },
   ];
 
   return (
     <section className="mb-8 text-[12.5px] break-inside-avoid">
-      <h2 className="text-[12.5px] font-bold uppercase tracking-wider text-ink mb-2">
+      <h2 className="mb-2 text-[12.5px] font-bold uppercase tracking-wider text-ink">
         {isKinyarwanda
           ? "Imbonerahamwe y'Iby'Ingenzi by'Ubukode n'Ubwishyu"
           : "Summary of Lease Terms & Financial Schedule"}
       </h2>
 
       <div className="border border-zinc-300">
-        <table className="w-full text-left border-collapse text-[12.5px]">
+        <table className="w-full border-collapse text-left text-[12.5px]">
           <tbody>
             {scheduleRows.map((row, idx) => (
               <tr
-                key={idx}
+                key={row.labelEn}
                 className={
                   idx !== scheduleRows.length - 1
                     ? "border-b border-zinc-200"
                     : ""
                 }
               >
-                <td className="py-2.5 px-3 text-body font-medium w-5/12 border-r border-zinc-200 bg-zinc-50/50">
+                <td className="w-5/12 border-r border-zinc-200 bg-zinc-50/50 px-3 py-2.5 font-medium text-body">
                   {isKinyarwanda ? row.labelRw : row.labelEn}
                 </td>
                 <td
-                  className={`py-2.5 px-3 text-ink ${row.isBold ? "font-bold" : "font-normal"}`}
+                  className={`px-3 py-2.5 text-ink ${row.isBold ? "font-bold" : "font-normal"}`}
                 >
                   <span className={row.isPending ? "italic text-amber-900" : ""}>
                     {row.value}
                   </span>
                   {row.note && (
-                    <span className="block text-[12.5px] text-faint font-normal mt-0.5">
+                    <span className="mt-0.5 block text-[12.5px] font-normal text-faint">
                       {row.note}
                     </span>
                   )}

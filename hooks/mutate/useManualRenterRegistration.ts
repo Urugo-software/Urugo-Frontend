@@ -2,13 +2,16 @@
 
 import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
-import { LandlordPropertyItem, LandlordRenter } from "@/types/landlord";
+import {
+  LandlordProfileSettings,
+  LandlordPropertyItem,
+  LandlordRenter,
+} from "@/types/landlord";
 import { Agreement, AgreementLanguage } from "@/types/agreement.types";
 import { generateStandardArticles } from "@/data/agreement-templates";
-import {
-  ManualRenterFormErrors,
-  ManualRenterRegistrationDraft,
-} from "@/types/renter-registration.types";
+import { useLandlordProperties } from "@/store/landlord-properties.store";
+import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
+import { createSafeId } from "@/utils/format";
 import {
   AddRenterMode,
   calculateInitialPayments,
@@ -130,6 +133,8 @@ export function buildInitialAgreement(
   identity: RenterIdentityDraft,
   property: LandlordPropertyItem | undefined,
   language: AgreementLanguage,
+  landlordProfile: LandlordProfileSettings,
+  unitNumber: string,
 ): Agreement {
   const durationMonths =
     tenancy.durationOption === "custom"
@@ -161,11 +166,15 @@ export function buildInitialAgreement(
     }
   } else {
     startDateStr = tenancy.startDate || new Date().toISOString().split("T")[0];
-    const startDateObj = new Date(startDateStr);
-    const endDateObj = new Date(startDateObj);
-    endDateObj.setMonth(endDateObj.getMonth() + durationMonths);
-    endDateObj.setDate(endDateObj.getDate() - 1);
-    endDateStr = endDateObj.toISOString().split("T")[0];
+    if (tenancy.durationOption === "open") {
+      endDateStr = undefined;
+    } else {
+      const startDateObj = new Date(startDateStr);
+      const endDateObj = new Date(startDateObj);
+      endDateObj.setMonth(endDateObj.getMonth() + durationMonths);
+      endDateObj.setDate(endDateObj.getDate() - 1);
+      endDateStr = endDateObj.toISOString().split("T")[0];
+    }
   }
 
   const monthlyRent =
@@ -192,11 +201,11 @@ export function buildInitialAgreement(
     id: agreementId,
     referenceNumber,
     landlord: {
-      name: "Paul Kagabo",
-      phone: "+250 788 111 222",
+      name: landlordProfile.fullName,
+      phone: landlordProfile.phone,
       nationalId: "1198580012345678",
-      email: "paul.kagabo@urugo.rw",
-      address: "KG 123 St, Kimihurura, Gasabo, Kigali",
+      email: landlordProfile.email,
+      address: "Kigali, Rwanda",
     },
     renter: {
       name: identity.fullName.trim() || "Prospective Tenant",
@@ -208,10 +217,10 @@ export function buildInitialAgreement(
     property: {
       id: property?.id || "prop-101",
       name: property?.name || "Residential Property",
-      unitNumber: property?.totalUnits ? "Unit A-01" : "Whole House",
+      unitNumber,
       address: property?.location || "Kigali, Rwanda",
-      district: "Gasabo",
-      propertyType: "Residential Apartment",
+      district: property?.location.split(",")[1]?.trim() || "Gasabo",
+      propertyType: property?.type || "APARTMENT",
     },
     financials: {
       monthlyRentRwf: monthlyRent,
@@ -280,11 +289,15 @@ export function refreshAgreementMetadata(
     }
   } else {
     startDateStr = tenancy.startDate || new Date().toISOString().split("T")[0];
-    const startDateObj = new Date(startDateStr);
-    const endDateObj = new Date(startDateObj);
-    endDateObj.setMonth(endDateObj.getMonth() + durationMonths);
-    endDateObj.setDate(endDateObj.getDate() - 1);
-    endDateStr = endDateObj.toISOString().split("T")[0];
+    if (tenancy.durationOption === "open") {
+      endDateStr = undefined;
+    } else {
+      const startDateObj = new Date(startDateStr);
+      const endDateObj = new Date(startDateObj);
+      endDateObj.setMonth(endDateObj.getMonth() + durationMonths);
+      endDateObj.setDate(endDateObj.getDate() - 1);
+      endDateStr = endDateObj.toISOString().split("T")[0];
+    }
   }
 
   const monthlyRent =
@@ -379,40 +392,44 @@ export function useRenterWizard(
   properties: LandlordPropertyItem[],
   initialMode: AddRenterMode = "manual",
 ) {
-  const [initialSession] = useState<WizardStoredSession | null>(() =>
-    getStoredWizardSession(),
-  );
+  const { profile, addRenter, upsertAgreement } = useLandlordWorkspace();
+  const { units, assignRenterToUnit } = useLandlordProperties();
 
-  const [step, setStep] = useState<WizardStep>(() =>
-    initialSession?.step && initialSession.step >= 1 && initialSession.step <= 4
-      ? initialSession.step
-      : 1,
-  );
+  const [step, setStep] = useState<WizardStep>(1);
   const [stepDirection, setStepDirection] = useState<1 | -1>(1);
-  const [isReviewing, setIsReviewing] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [mode, setMode] = useState<AddRenterMode>(
-    () => initialSession?.mode ?? initialMode,
-  );
-  const [selectedLanguage, setSelectedLanguage] = useState<AgreementLanguage>(
-    () => initialSession?.selectedLanguage ?? "en",
-  );
-  const [agreementDraft, setAgreementDraft] = useState<Agreement | null>(
-    () => initialSession?.agreementDraft ?? null,
-  );
+  const [mode, setMode] = useState<AddRenterMode>(initialMode);
+  const [selectedLanguage, setSelectedLanguage] =
+    useState<AgreementLanguage>("en");
+  const [agreementDraft, setAgreementDraft] = useState<Agreement | null>(null);
 
-  const [identityDraft, setIdentityDraft] = useState<RenterIdentityDraft>(
-    () => initialSession?.identityDraft ?? INITIAL_IDENTITY_DRAFT,
-  );
+  const [identityDraft, setIdentityDraft] =
+    useState<RenterIdentityDraft>(INITIAL_IDENTITY_DRAFT);
   const [identityErrors, setIdentityErrors] = useState<RenterIdentityErrors>({});
 
-  const [tenancyDraft, setTenancyDraft] = useState<TenancyConfigDraft>(
-    () => initialSession?.tenancyDraft ?? INITIAL_TENANCY_DRAFT,
-  );
+  const [tenancyDraft, setTenancyDraft] =
+    useState<TenancyConfigDraft>(INITIAL_TENANCY_DRAFT);
   const [tenancyErrors, setTenancyErrors] = useState<TenancyConfigErrors>({});
 
   const [submission, setSubmission] =
     useState<FullRenterRegistrationSubmission | null>(null);
+
+  // Hydrate saved wizard session safely on client only (prevents SSR mismatch)
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      const stored = getStoredWizardSession();
+      if (!stored) return;
+      if (stored.step && stored.step >= 1 && stored.step <= 4) {
+        setStep(stored.step);
+      }
+      if (stored.mode) setMode(stored.mode);
+      if (stored.selectedLanguage) setSelectedLanguage(stored.selectedLanguage);
+      if (stored.identityDraft) setIdentityDraft(stored.identityDraft);
+      if (stored.tenancyDraft) setTenancyDraft(stored.tenancyDraft);
+      if (stored.agreementDraft) setAgreementDraft(stored.agreementDraft);
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   // Save wizard draft whenever session inputs change
   useEffect(() => {
@@ -499,18 +516,14 @@ export function useRenterWizard(
 
   const selectProperty = (propertyId: string) => {
     const selectedProp = properties.find((p) => p.id === propertyId);
-    setTenancyDraft((prev) => {
-      const nextRent =
-        selectedProp && prev.monthlyRentRwf === ""
-          ? getDefaultPropertyRent(selectedProp)
-          : prev.monthlyRentRwf;
-
-      return {
-        ...prev,
-        propertyId,
-        monthlyRentRwf: nextRent,
-      };
-    });
+    linkState.setSelectedPropertyId(propertyId);
+    setTenancyDraft((prev) => ({
+      ...prev,
+      propertyId,
+      monthlyRentRwf: selectedProp
+        ? getDefaultPropertyRent(selectedProp)
+        : prev.monthlyRentRwf,
+    }));
 
     if ("propertyId" in tenancyErrors) {
       setTenancyErrors((prev) => ({ ...prev, propertyId: undefined }));
@@ -527,14 +540,12 @@ export function useRenterWizard(
     }
     setStepDirection(1);
     setStep(2);
-    setIsReviewing(false);
   };
 
   // Step 2 -> Step 1
   const goToStep1 = () => {
     setStepDirection(-1);
     setStep(1);
-    setIsReviewing(false);
   };
 
   // Step 2 -> Step 3
@@ -551,10 +562,14 @@ export function useRenterWizard(
         toast.error("Please select an existing renter from your portfolio.");
         return;
       }
+    } else if (mode === "link") {
+      if (!linkState.generatedLink) {
+        toast.error("Generate an invitation link before continuing.");
+        return;
+      }
     }
     setStepDirection(1);
     setStep(3);
-    setIsReviewing(false);
   };
 
   // Step 3 -> Step 4 (Populate Agreement & Launch Editor directly in session)
@@ -567,6 +582,14 @@ export function useRenterWizard(
     const selectedProp = properties.find(
       (p) => p.id === tenancyDraft.propertyId,
     );
+    const vacantUnit = selectedProp?.hasUnits
+      ? units.find(
+          (u) => u.propertyId === selectedProp.id && u.status === "Vacant",
+        )
+      : undefined;
+    const assignedUnitNumber = selectedProp?.hasUnits
+      ? (vacantUnit?.unitNumber ?? "Unit A-01")
+      : "Whole House";
 
     if (!agreementDraft) {
       const initialAgreement = buildInitialAgreement(
@@ -574,6 +597,8 @@ export function useRenterWizard(
         identityDraft,
         selectedProp,
         selectedLanguage,
+        profile,
+        assignedUnitNumber,
       );
       setAgreementDraft(initialAgreement);
     } else {
@@ -584,6 +609,8 @@ export function useRenterWizard(
             identityDraft,
             selectedProp,
             selectedLanguage,
+            profile,
+            assignedUnitNumber,
           );
         }
         return refreshAgreementMetadata(
@@ -598,17 +625,57 @@ export function useRenterWizard(
 
     setStepDirection(1);
     setStep(4);
-    setIsReviewing(false);
   };
 
   const handleAgreementSaved = (saved: Agreement) => {
     setAgreementDraft(saved);
+    upsertAgreement(saved);
   };
 
   const handleAgreementConfirmed = (finalAgreement: Agreement) => {
     const selectedProp = properties.find(
       (p) => p.id === tenancyDraft.propertyId,
     );
+
+    upsertAgreement(finalAgreement);
+
+    if (mode !== "existing") {
+      const newRenterId = createSafeId("r");
+      addRenter({
+        id: newRenterId,
+        propertyId: selectedProp?.id,
+        name:
+          identityDraft.fullName.trim() ||
+          finalAgreement.renter.name ||
+          "Invited Renter",
+        email: identityDraft.email.trim().toLowerCase() || undefined,
+        isIdentityVerified: mode === "manual",
+        propertyName: selectedProp?.name || finalAgreement.property.name,
+        unitNumber: finalAgreement.property.unitNumber || "Whole House",
+        tenancyStatus: "Active",
+        monthlyRentRwf: finalAgreement.financials.monthlyRentRwf,
+        securityDepositRwf: finalAgreement.financials.securityDepositRwf,
+        paymentStatus: "Pending",
+        startDate:
+          finalAgreement.tenancyStartDate ||
+          new Date().toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          }),
+        endDate: finalAgreement.tenancyEndDate,
+        phone: identityDraft.phoneNumber.trim() || "+250 788 000 000",
+        agreementId: finalAgreement.id,
+      });
+
+      if (selectedProp) {
+        assignRenterToUnit(
+          selectedProp.id,
+          finalAgreement.property.unitNumber || "Whole House",
+          newRenterId,
+        );
+      }
+    }
 
     const snapshot: FullRenterRegistrationSubmission = {
       mode,
@@ -638,66 +705,6 @@ export function useRenterWizard(
     setSubmission(snapshot);
     setIsSubmitted(true);
     setStep(5);
-    toast.success("Tenancy agreement finalized and sent for digital review!");
-  };
-
-  const goToReview = (skipTenancy = false) => {
-    if (skipTenancy) {
-      setTenancyDraft((prev) => ({ ...prev, isConfigured: false }));
-      setTenancyErrors({});
-      setIsReviewing(true);
-      return;
-    }
-
-    if (tenancyDraft.isConfigured) {
-      const errors = validateTenancyConfig(tenancyDraft);
-      if (Object.keys(errors).length > 0) {
-        setTenancyErrors(errors);
-        toast.error("Please complete the required tenancy settings or skip.");
-        return;
-      }
-    }
-
-    setIsReviewing(true);
-  };
-
-  const backFromReview = (targetStep?: WizardStep) => {
-    setIsReviewing(false);
-    if (targetStep) {
-      setStep(targetStep);
-      setStepDirection(-1);
-    }
-  };
-
-  const confirmSubmission = () => {
-    const selectedProp = properties.find(
-      (p) => p.id === tenancyDraft.propertyId,
-    );
-
-    const snapshot: FullRenterRegistrationSubmission = {
-      mode,
-      identity: {
-        fullName: identityDraft.fullName.trim(),
-        email: identityDraft.email.trim().toLowerCase(),
-        phoneNumber: identityDraft.phoneNumber.trim(),
-        nationalId: identityDraft.nationalId.replace(/\s+/g, ""),
-        isExistingRenter: identityDraft.isExistingRenter,
-        existingRenterId: identityDraft.existingRenterId,
-      },
-      simulatedLink: linkState.generatedLink || undefined,
-      tenancy: { ...tenancyDraft },
-      propertyName: selectedProp?.name,
-      propertyLocation: selectedProp?.location,
-      paymentSummary: tenancyDraft.isConfigured ? paymentSummary : undefined,
-      submittedAt: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-    };
-
-    setSubmission(snapshot);
-    setIsSubmitted(true);
-    toast.success("Renter registration prepared in local preview state.");
   };
 
   const resetWizard = () => {
@@ -710,7 +717,6 @@ export function useRenterWizard(
     }
     setStep(1);
     setStepDirection(1);
-    setIsReviewing(false);
     setIsSubmitted(false);
     setIdentityDraft(INITIAL_IDENTITY_DRAFT);
     setIdentityErrors({});
@@ -724,7 +730,6 @@ export function useRenterWizard(
   return {
     step,
     stepDirection,
-    isReviewing,
     isSubmitted,
     mode,
     setMode,
@@ -749,75 +754,7 @@ export function useRenterWizard(
     goToStep4,
     handleAgreementSaved,
     handleAgreementConfirmed,
-    goToReview,
-    backFromReview,
-    confirmSubmission,
     resetWizard,
-  };
-}
-
-// Retain compatibility with any direct callers
-export function useManualRenterRegistration() {
-  const [draft, setDraft] = useState<ManualRenterRegistrationDraft>({
-    fullName: "",
-    email: "",
-    phoneNumber: "",
-    nationalId: "",
-    propertyId: "",
-  });
-  const [errors, setErrors] = useState<ManualRenterFormErrors>({});
-  const [submittedDraft, setSubmittedDraft] =
-    useState<ManualRenterRegistrationDraft | null>(null);
-
-  const updateField = (
-    field: keyof ManualRenterRegistrationDraft,
-    value: string,
-  ) => {
-    setDraft((prev) => ({ ...prev, [field]: value }));
-    if (field in errors) {
-      setErrors((prev) => ({ ...prev, [field]: undefined }));
-    }
-  };
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const validationErrors = validateRenterIdentity(draft);
-
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      toast.error("Please fix the highlighted fields before continuing.");
-      return;
-    }
-
-    setSubmittedDraft({
-      fullName: draft.fullName.trim(),
-      email: draft.email.trim().toLowerCase(),
-      phoneNumber: draft.phoneNumber.trim(),
-      nationalId: draft.nationalId.replace(/\s+/g, ""),
-      propertyId: draft.propertyId,
-    });
-    toast.success("Renter details captured in local preview state.");
-  };
-
-  const resetForm = () => {
-    setDraft({
-      fullName: "",
-      email: "",
-      phoneNumber: "",
-      nationalId: "",
-      propertyId: "",
-    });
-    setErrors({});
-    setSubmittedDraft(null);
-  };
-
-  return {
-    draft,
-    errors,
-    submittedDraft,
-    updateField,
-    handleSubmit,
-    resetForm,
   };
 }
 

@@ -1,5 +1,3 @@
-
-
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Agreement, AgreementLanguage } from "@/types/agreement.types";
@@ -11,6 +9,9 @@ interface Props {
   activeLanguage: AgreementLanguage;
   onLanguageChange: (lang: AgreementLanguage) => void;
   onOpenLandlordSign?: () => void;
+  onSendDraft?: () => void;
+  onCancelAgreement?: () => void;
+  onCreateRenewalDraft?: () => void;
   onOpenRenterSimulator?: () => void;
 }
 
@@ -19,26 +20,27 @@ export function AgreementPreviewHeader({
   activeLanguage,
   onLanguageChange,
   onOpenLandlordSign,
+  onSendDraft,
+  onCancelAgreement,
+  onCreateRenewalDraft,
   onOpenRenterSimulator,
 }: Props) {
   return (
     <header className="space-y-4 print:hidden">
-      {/* Top back navigation */}
       <div>
         <Link
           href="/landlord/agreements"
-          className="inline-flex items-center gap-1.5 text-[12.5px] font-medium text-faint hover:text-ink transition-colors"
+          className="inline-flex items-center gap-1.5 text-[12.5px] font-medium text-faint transition-colors hover:text-ink"
         >
           <ArrowLeft className="size-3.5" />
           <span>Back to Agreements</span>
         </Link>
       </div>
 
-      {/* Main Title, Status & Actions Bar */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-4 border-b border-line">
+      <div className="flex flex-col gap-4 border-b border-line pb-4 md:flex-row md:items-center md:justify-between">
         <div>
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-ink font-heading">
+            <h1 className="font-heading text-xl font-bold tracking-tight text-ink sm:text-2xl">
               {agreement.renter.name}
             </h1>
             <span className="text-faint">&middot;</span>
@@ -46,18 +48,27 @@ export function AgreementPreviewHeader({
           </div>
 
           <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-body">
-            <span className="font-mono text-faint text-[12.5px]">
-              Ref: <strong className="text-ink font-semibold">{agreement.referenceNumber}</strong>
+            <span className="font-mono text-[12.5px] text-faint">
+              Ref:{" "}
+              <strong className="font-semibold text-ink">
+                {agreement.referenceNumber}
+              </strong>
             </span>
             <span>&middot;</span>
-            <span>Unit {agreement.property.unitNumber}, {agreement.property.name}</span>
+            <span>
+              Unit {agreement.property.unitNumber}, {agreement.property.name}
+            </span>
             <span>&middot;</span>
-            <span className="font-mono text-[12.5px]">v{agreement.version}.0</span>
+            <span className="font-mono text-[12.5px]">
+              v{agreement.version}.0
+            </span>
             <span>&middot;</span>
             <button
               type="button"
-              onClick={() => onLanguageChange(activeLanguage === "en" ? "rw" : "en")}
-              className="inline-flex items-center gap-1 font-medium text-ink hover:underline cursor-pointer text-[12.5px]"
+              onClick={() =>
+                onLanguageChange(activeLanguage === "en" ? "rw" : "en")
+              }
+              className="inline-flex cursor-pointer items-center gap-1 text-[12.5px] font-medium text-ink hover:underline"
               title="Click to switch document language"
             >
               <span>{activeLanguage === "rw" ? "Kinyarwanda" : "English"}</span>
@@ -65,11 +76,13 @@ export function AgreementPreviewHeader({
           </div>
         </div>
 
-        {/* Action Controls */}
         <PreviewActionButtons
           agreementId={agreement.id}
           status={agreement.status}
           onOpenLandlordSign={onOpenLandlordSign}
+          onSendDraft={onSendDraft}
+          onCancelAgreement={onCancelAgreement}
+          onCreateRenewalDraft={onCreateRenewalDraft}
           onOpenRenterSimulator={onOpenRenterSimulator}
         />
       </div>
