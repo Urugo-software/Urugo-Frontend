@@ -12,6 +12,8 @@ import {
   CartesianGrid,
 } from "recharts";
 
+import { formatRwf } from "@/utils/format";
+
 interface RentCollectionChartProps {
   data: MonthlyCollectionPoint[];
 }
@@ -27,27 +29,21 @@ export function RentCollectionChart({ data }: RentCollectionChartProps) {
     return value.toString();
   };
 
-  const formatTooltipValue = (value: number) => {
-    return `${value.toLocaleString()} RWF`;
-  };
-
   return (
-    <div className="border border-line bg-white p-6 shadow-xs flex flex-col justify-between">
-      <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+    <div className="flex h-full flex-col justify-between border border-line bg-white p-5 shadow-2xs sm:p-6">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
         <div>
           <h3 className="text-xs font-semibold uppercase tracking-wider text-faint">
             Rent Collection History
           </h3>
-          <p className="text-sm font-medium text-ink mt-1">
-            Expected vs. Collected Rent (Past 6 Months)
+          <p className="mt-1 text-sm font-medium text-ink">
+            Expected vs. Collected Rent (Year-to-Date)
           </p>
         </div>
-        <div className="text-xs text-faint font-medium">
-          Values in RWF
-        </div>
+        <div className="text-xs font-medium text-faint">Values in RWF</div>
       </div>
 
-      <div className="h-64 sm:h-72 w-full pt-2">
+      <div className="h-64 w-full pt-2 sm:h-72">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={data}
@@ -68,9 +64,9 @@ export function RentCollectionChart({ data }: RentCollectionChartProps) {
               tick={{ fontSize: 12, fill: "#64748B" }}
             />
             <Tooltip
-              formatter={(value) => [
-                typeof value === "number" ? formatTooltipValue(value) : value ?? "",
-                "",
+              formatter={(value, name) => [
+                typeof value === "number" ? formatRwf(value) : String(value ?? ""),
+                String(name ?? ""),
               ]}
               contentStyle={{
                 backgroundColor: "#FFFFFF",
