@@ -1,44 +1,54 @@
 import { Calendar } from "lucide-react";
-import { RenterMaintenance } from "@/types/renter";
+import { StatusBadge, type StatusTone } from "@/components/shared/StatusBadge";
+import type { MaintenanceStatus, RenterMaintenance } from "@/types/renter";
 
-export function MaintenanceRequestItem({ item }: { item: RenterMaintenance }) {
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "Pending":
-        return "bg-amber-100 text-amber-800";
-      case "In Progress":
-        return "bg-blue-100 text-blue-800";
-      case "Resolved":
-        return "bg-emerald-100 text-emerald-800";
-      default:
-        return "bg-red-100 text-red-800";
-    }
-  };
+const TONE: Record<MaintenanceStatus, StatusTone> = {
+  Pending: "warning",
+  "In Progress": "info",
+  Resolved: "success",
+  Rejected: "danger",
+};
 
+interface MaintenanceRequestItemProps {
+  item: RenterMaintenance;
+  onSelect: (item: RenterMaintenance) => void;
+}
+
+export function MaintenanceRequestItem({
+  item,
+  onSelect,
+}: MaintenanceRequestItemProps) {
   return (
-    <div className=" border border-line bg-white p-5 shadow-xs transition hover:border-brand/40">
-      <div className="flex flex-wrap items-start justify-between gap-2 border-b border-line pb-3">
-        <div className="flex items-center gap-2">
-          <div>
-            <h4 className="text-lg font-bold text-ink">{item.title}</h4>
-            <span className="text-[15px] text-faint">
-              {item.category} · Priority: {item.priority}
+    <article className="flex flex-col justify-between border border-line bg-white p-5 shadow-2xs transition-colors hover:border-ink/40">
+      <div>
+        <div className="flex flex-wrap items-start justify-between gap-2 border-b border-line pb-3">
+          <div className="min-w-0">
+            <h3 className="text-base font-bold text-ink">{item.title}</h3>
+            <span className="text-xs text-faint">
+              {item.category} &middot; Priority: {item.priority}
             </span>
           </div>
+          <StatusBadge label={item.status} tone={TONE[item.status]} />
         </div>
-        <span
-          className={`rounded-full px-2.5 py-0.5 text-[12.5px] font-semibold ${getStatusBadge(item.status)}`}
-        >
-          {item.status}
+
+        <p className="my-3 line-clamp-2 text-sm leading-relaxed text-body">
+          {item.description}
+        </p>
+      </div>
+
+      <div className="flex items-center justify-between border-t border-line pt-3 text-xs">
+        <span className="inline-flex items-center gap-1.5 text-faint">
+          <Calendar aria-hidden="true" className="size-3.5" />
+          Submitted {item.createdAt}
         </span>
+        <button
+          type="button"
+          onClick={() => onSelect(item)}
+          className="cursor-pointer font-semibold text-brand-blue hover:underline"
+        >
+          View Details
+        </button>
       </div>
-      <p className=" my-3 text-[14px] text-body leading-relaxed">
-        {item.description}
-      </p>
-      <div className="flex items-center gap-1 text-[12.5px] text-faint">
-        <Calendar className="size-3.5" />
-        <span>Submitted: {item.createdAt}</span>
-      </div>
-    </div>
+    </article>
   );
 }

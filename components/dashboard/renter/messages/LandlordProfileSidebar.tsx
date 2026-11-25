@@ -1,5 +1,5 @@
-import { Phone, Mail } from "lucide-react";
-import { ConversationContact } from "@/types/messages";
+import { Mail, Phone } from "lucide-react";
+import type { ConversationContact } from "@/types/messages";
 import { landlordExtraDetails } from "@/data/landlord-profile-data";
 import { LandlordHeaderCard } from "./LandlordHeaderCard";
 import { LandlordContactItem } from "./LandlordContactItem";
@@ -10,13 +10,15 @@ export function LandlordProfileSidebar({
 }: {
   contact: ConversationContact;
 }) {
+  const email = contact.email || landlordExtraDetails.email;
+
   return (
-    <aside className="w-130 pt-18 shrink-0 border-l border-line bg-white flex flex-col h-full overflow-y-auto max-lg:hidden">
+    <aside className="flex h-full w-80 shrink-0 flex-col overflow-y-auto border-l border-line bg-white pt-6 max-lg:hidden">
       <LandlordHeaderCard contact={contact} />
 
-      <div className="p-6 space-y-6 flex-1">
+      <div className="flex-1 space-y-6 p-6">
         <div className="space-y-3">
-          <div className="text-[12.5px] font-bold uppercase tracking-wider text-faint">
+          <div className="text-xs font-bold uppercase tracking-wider text-faint">
             Direct Contact
           </div>
           <LandlordContactItem
@@ -27,8 +29,8 @@ export function LandlordProfileSidebar({
           />
           <LandlordContactItem
             label="Email"
-            value={landlordExtraDetails.email}
-            href={`mailto:${landlordExtraDetails.email}`}
+            value={email}
+            href={`mailto:${email}`}
             icon={Mail}
           />
         </div>

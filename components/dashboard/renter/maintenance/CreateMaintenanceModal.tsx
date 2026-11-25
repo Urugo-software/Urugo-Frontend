@@ -1,21 +1,32 @@
 "use client";
 
-import React from "react";
 import { useForm } from "react-hook-form";
-import { X, Wrench } from "lucide-react";
+import { ModalDialog } from "@/components/shared/ModalDialog";
+import { Button } from "@/components/ui/button";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 import { useCreateMaintenanceRequest } from "@/hooks/mutate/useRenterMutations";
-import CustomButton from "@/components/shared/CustomButton";
+import type { RenterMaintenance } from "@/types/renter";
 
 interface FormInputs {
   title: string;
   category: string;
-  priority: string;
+  priority: RenterMaintenance["priority"];
   description: string;
 }
 
 export function CreateMaintenanceModal({ onClose }: { onClose: () => void }) {
-  const { register, handleSubmit } = useForm<FormInputs>({
-    defaultValues: { category: "Plumbing", priority: "Medium" },
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormInputs>({
+    defaultValues: {
+      title: "",
+      category: "Plumbing",
+      priority: "Medium",
+      description: "",
+    },
   });
   const createMutation = useCreateMaintenanceRequest();
 
@@ -24,69 +35,98 @@ export function CreateMaintenanceModal({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 backdrop-blur-xs p-4">
-      <div className="w-full max-w-lg rounded-2xl border border-line bg-white p-6 shadow-xl">
-        <div className="flex items-center justify-between border-b border-line pb-3">
-          <h3 className="text-base font-bold text-ink flex items-center gap-2">
-            <Wrench className="size-5 text-brand" /> Report Maintenance Issue
-          </h3>
-          <button onClick={onClose} className="p-1 text-faint hover:text-ink">
-            <X className="size-5" />
-          </button>
+    <ModalDialog
+      open
+      onClose={onClose}
+      title="Report Maintenance Issue"
+      description="Describe the problem in your unit so your landlord can schedule repairs."
+      footer={
+        <>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onClose}
+            className="cursor-pointer rounded-none"
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            form="create-maintenance-form"
+            disabled={createMutation.isPending}
+            className="cursor-pointer rounded-none"
+          >
+            {createMutation.isPending ? "Submitting..." : "Submit Request"}
+          </Button>
+        </>
+      }
+    >
+      <form
+        id="create-maintenance-form"
+        noValidate
+        onSubmit={handleSubmit(onSubmit)}
+        className="space-y-4"
+      >
+        <Field>
+          <FieldLabel htmlFor="maint-title">Issue Title *</FieldLabel>
+          <Input
+            id="maint-title"
+            placeholder="e.g. Water leak under kitchen sink"
+            className="h-10 rounded-none"
+            {...register("title", {
+              validate: (v) =>
+                v.trim().length >= 4 || "Enter a short descriptive title.",
+            })}
+          />
+          <FieldError>{errors.title?.message}</FieldError>
+        </Field>
+
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <Field>
+            <FieldLabel htmlFor="maint-category">Category</FieldLabel>
+            <select
+              id="maint-category"
+              className="h-10 w-full rounded-none border border-input bg-white px-3 text-sm"
+              {...register("category")}
+            >
+              <option value="Plumbing">Plumbing</option>
+              <option value="Electrical">Electrical</option>
+              <option value="Structural">Structural</option>
+              <option value="Appliance">Appliance</option>
+              <option value="Other">Other</option>
+            </select>
+          </Field>
+
+          <Field>
+            <FieldLabel htmlFor="maint-priority">Priority</FieldLabel>
+            <select
+              id="maint-priority"
+              className="h-10 w-full rounded-none border border-input bg-white px-3 text-sm"
+              {...register("priority")}
+            >
+              <option value="Low">Low</option>
+              <option value="Medium">Medium</option>
+              <option value="High">High</option>
+            </select>
+          </Field>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="mt-4 space-y-3.5 text-xs">
-          <div>
-            <label className="mb-1 block font-semibold text-ink">Issue Title</label>
-            <input
-              type="text"
-              {...register("title", { required: true })}
-              placeholder="e.g. Water leak in kitchen"
-              className="w-full rounded-lg border border-line p-2.5 text-xs text-ink focus:outline-brand"
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="mb-1 block font-semibold text-ink">Category</label>
-              <select {...register("category")} className="w-full rounded-lg border border-line p-2.5 text-xs bg-white focus:outline-brand">
-                <option value="Plumbing">Plumbing</option>
-                <option value="Electrical">Electrical</option>
-                <option value="Structural">Structural</option>
-                <option value="Appliance">Appliance</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-            <div>
-              <label className="mb-1 block font-semibold text-ink">Priority</label>
-              <select {...register("priority")} className="w-full rounded-lg border border-line p-2.5 text-xs bg-white focus:outline-brand">
-                <option value="Low">Low</option>
-                <option value="Medium">Medium</option>
-                <option value="High">High</option>
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <label className="mb-1 block font-semibold text-ink">Description</label>
-            <textarea
-              rows={3}
-              {...register("description", { required: true })}
-              placeholder="Describe the issue details clearly..."
-              className="w-full rounded-lg border border-line p-2.5 text-xs text-ink focus:outline-brand"
-            />
-          </div>
-
-          <div className="flex justify-end gap-2 pt-2">
-            <button type="button" onClick={onClose} className="rounded-lg border border-line px-4 py-2 font-semibold text-body hover:bg-surface">
-              Cancel
-            </button>
-            <CustomButton type="submit" disabled={createMutation.isPending} className="px-5 py-2">
-              {createMutation.isPending ? "Submitting..." : "Submit Request"}
-            </CustomButton>
-          </div>
-        </form>
-      </div>
-    </div>
+        <Field>
+          <FieldLabel htmlFor="maint-desc">Description *</FieldLabel>
+          <textarea
+            id="maint-desc"
+            rows={4}
+            placeholder="Describe where the issue is located and when it started..."
+            className="w-full rounded-none border border-input bg-white p-3 text-sm"
+            {...register("description", {
+              validate: (v) =>
+                v.trim().length >= 10 ||
+                "Please add at least 10 characters of details.",
+            })}
+          />
+          <FieldError>{errors.description?.message}</FieldError>
+        </Field>
+      </form>
+    </ModalDialog>
   );
 }
