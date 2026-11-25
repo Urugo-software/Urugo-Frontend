@@ -22,12 +22,12 @@ const ACCENT_VALUE: Record<
 
 export function OverviewStatGrid({ items }: { items: OverviewStatCardItem[] }) {
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
       {items.map((item) => {
         const content = (
-          <div className="flex h-full flex-col justify-between border border-line bg-white p-5 shadow-2xs transition-colors hover:border-ink/25">
-            <div className="flex items-start justify-between gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wider text-faint">
+          <div className="flex h-full flex-col justify-between border border-line bg-white p-5.5 shadow-2xs transition-colors hover:border-ink/25 sm:p-6">
+            <div className="flex items-start justify-between gap-3">
+              <span className="text-xs font-semibold uppercase leading-snug tracking-wider text-faint">
                 {item.label}
               </span>
               {item.href && (
@@ -38,7 +38,7 @@ export function OverviewStatGrid({ items }: { items: OverviewStatCardItem[] }) {
               )}
             </div>
 
-            <div className="mt-3">
+            <div className="mt-4">
               <p
                 className={`text-2xl font-bold tracking-tight ${
                   ACCENT_VALUE[item.accent ?? "default"]
@@ -48,7 +48,7 @@ export function OverviewStatGrid({ items }: { items: OverviewStatCardItem[] }) {
               </p>
 
               {typeof item.progressPercent === "number" && (
-                <div className="mt-2.5 h-1.5 w-full overflow-hidden bg-surface">
+                <div className="mt-3.5 h-1.5 w-full overflow-hidden bg-surface">
                   <div
                     className="h-full bg-emerald-600 transition-all"
                     style={{
@@ -58,7 +58,7 @@ export function OverviewStatGrid({ items }: { items: OverviewStatCardItem[] }) {
                 </div>
               )}
 
-              <p className="mt-2 text-[12.5px] md:text-[14px] bgp.leading-relaxed text-body">
+              <p className="mt-3 text-[13px] leading-relaxed text-body">
                 {item.helper}
               </p>
             </div>

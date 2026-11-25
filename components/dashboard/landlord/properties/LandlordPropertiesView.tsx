@@ -2,6 +2,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import { Building2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { EmptyStateBox } from "@/components/shared/EmptyStateBox";
 import { Pagination } from "@/components/shared/Pagination";
 import { Button } from "@/components/ui/button";
@@ -50,6 +51,7 @@ function matchesPropertyStatus(
 }
 
 export function LandlordPropertiesView() {
+  const t = useTranslations("landlord.properties");
   const mainRef = useRef<HTMLDivElement>(null);
   const { properties, groups } = useLandlordProperties();
   const serviceMode = useLandlordWorkspace((s) => s.serviceMode);
@@ -122,21 +124,21 @@ export function LandlordPropertiesView() {
   const filterOptions: Record<string, string> =
     serviceMode === "listing_only"
       ? {
-          all: "All statuses",
-          Published: "Published",
-          Draft: "Draft",
-          Paused: "Paused",
-          Rented: "Rented",
-          Archived: "Archived",
+          all: t("statuses.all"),
+          Published: t("statuses.Published"),
+          Draft: t("statuses.Draft"),
+          Paused: t("statuses.Paused"),
+          Rented: t("statuses.Rented"),
+          Archived: t("statuses.Archived"),
         }
       : {
-          all: "All statuses",
-          Published: "Published",
-          Draft: "Draft",
-          Paused: "Paused",
-          Occupied: "Fully occupied",
-          Partial: "Partially occupied",
-          Vacant: "Vacant",
+          all: t("statuses.all"),
+          Published: t("statuses.Published"),
+          Draft: t("statuses.Draft"),
+          Paused: t("statuses.Paused"),
+          Occupied: t("statuses.Occupied"),
+          Partial: t("statuses.Partial"),
+          Vacant: t("statuses.Vacant"),
         };
 
   function clearFilters() {
@@ -173,8 +175,8 @@ export function LandlordPropertiesView() {
             }}
             searchLabel={
               serviceMode === "listing_only"
-                ? "Search listings"
-                : "Search groups and properties"
+                ? t("searchListingsLabel")
+                : t("searchGroupsAndPropertiesLabel")
             }
             filterStatus={filterStatus}
             onFilterChange={(val) => {
@@ -198,15 +200,15 @@ export function LandlordPropertiesView() {
         {properties.length === 0 ? (
           <EmptyStateBox
             icon={Building2}
-            title="No properties yet"
-            description="Add your first property to start advertising on Urugo or managing units and leases."
+            title={t("emptyNoPropertiesTitle")}
+            description={t("emptyNoPropertiesDesc")}
             action={<AddPropertyLink />}
           />
         ) : nothingVisible ? (
           <EmptyStateBox
             icon={Building2}
-            title="No matching properties"
-            description="No properties or groups match your current search or status filter."
+            title={t("emptyNoMatchesTitle")}
+            description={t("emptyNoMatchesDesc")}
             action={
               hasFilters ? (
                 <Button
@@ -215,7 +217,7 @@ export function LandlordPropertiesView() {
                   className="cursor-pointer rounded-none"
                   onClick={clearFilters}
                 >
-                  Clear filters
+                  {t("clearFilters")}
                 </Button>
               ) : undefined
             }
@@ -232,7 +234,7 @@ export function LandlordPropertiesView() {
                     id="property-groups-heading"
                     className="text-lg font-bold text-ink"
                   >
-                    Property Groups
+                    {t("propertyGroupsHeading")}
                   </h3>
                   <span className="border border-line bg-white px-2.5 py-0.5 font-ibm text-xs font-semibold text-body">
                     {visibleGroups.length}
@@ -260,10 +262,10 @@ export function LandlordPropertiesView() {
                     className="text-lg font-bold text-ink"
                   >
                     {serviceMode === "listing_only"
-                      ? "Your Listings"
+                      ? t("yourListingsHeading")
                       : visibleGroups.length > 0
-                        ? "Ungrouped Properties"
-                        : "Properties"}
+                        ? t("ungroupedPropertiesHeading")
+                        : t("propertiesHeading")}
                   </h3>
                   <span className="border border-line bg-white px-2.5 py-0.5 font-ibm text-xs font-semibold text-body">
                     {visibleProperties.length}
@@ -285,7 +287,7 @@ export function LandlordPropertiesView() {
                   totalPages={totalPages}
                   totalItems={totalItems}
                   itemsPerPage={PROPERTIES_PER_PAGE}
-                  itemLabel="properties"
+                  itemLabel={t("paginationLabel")}
                   onPageChange={(nextPage) => {
                     setCurrentPage(nextPage);
                     mainRef.current?.scrollTo({ top: 0, behavior: "smooth" });

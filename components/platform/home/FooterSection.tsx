@@ -2,17 +2,22 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { CheckCircle2, Mail, Phone } from "lucide-react";
+
+import { contactInfo, legalLinks, productColumn } from "@/data/footer-data";
 import SectionContainer from "./SectionContainer";
-import { productColumn, contactInfo, legalLinks } from "@/data/footer-data";
 
 interface NewsletterValues {
   email: string;
 }
 
 function FooterSection() {
+  const t = useTranslations("public.footer");
+  const tNav = useTranslations("public.nav");
+  const tActions = useTranslations("common.actions");
   const [subscribed, setSubscribed] = useState(false);
   const {
     register,
@@ -27,7 +32,28 @@ function FooterSection() {
     // Preview mode — backend newsletter subscription endpoint is not connected yet.
     setSubscribed(true);
     reset();
-    toast.success("Email recorded (preview mode).");
+    toast.success(t("subscribedToast"));
+  };
+
+  const resolveProductLinkLabel = (href: string, fallback: string) => {
+    switch (href) {
+      case "/properties":
+        return tNav("properties");
+      case "/features":
+        return tNav("features");
+      case "/how-it-works":
+        return tNav("howItWorks");
+      case "/auth/sign-in":
+        return tActions("signIn");
+      default:
+        return fallback;
+    }
+  };
+
+  const resolveLegalLinkLabel = (href: string, fallback: string) => {
+    if (href === "/privacy") return t("privacyPolicy");
+    if (href === "/terms") return t("termsOfService");
+    return fallback;
   };
 
   return (
@@ -40,7 +66,7 @@ function FooterSection() {
               <Link
                 href="/"
                 className="group inline-flex items-center gap-2.5"
-                aria-label="Urugo Home"
+                aria-label={tNav("logoAria")}
               >
                 <span className="text-xl font-extrabold tracking-tight text-brand transition-colors group-hover:text-brand-deep">
                   URUGO
@@ -48,14 +74,12 @@ function FooterSection() {
               </Link>
 
               <p className="mt-4 max-w-sm text-sm leading-relaxed text-body">
-                Urugo helps people find rental homes across Rwanda and helps
-                landlords list properties or manage leases, rent payments, and
-                tenants from move-in to move-out.
+                {t("description")}
               </p>
 
               <div className="mt-6">
                 <h3 className="mb-3 text-sm font-semibold tracking-tight text-ink sm:text-base">
-                  Contact Us
+                  {t("contactUs")}
                 </h3>
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
                   <a
@@ -89,16 +113,16 @@ function FooterSection() {
           {/* Product Links */}
           <div className="flex flex-col lg:col-span-3">
             <h3 className="mb-4 text-sm font-semibold tracking-tight text-ink sm:text-base">
-              {productColumn.title}
+              {t("productTitle")}
             </h3>
             <ul className="space-y-3">
               {productColumn.links.map((link) => (
-                <li key={link.title}>
+                <li key={link.href}>
                   <Link
                     href={link.href}
                     className="inline-block text-sm text-body transition-colors duration-150 hover:text-ink hover:underline"
                   >
-                    {link.title}
+                    {resolveProductLinkLabel(link.href, link.title)}
                   </Link>
                 </li>
               ))}
@@ -108,11 +132,10 @@ function FooterSection() {
           {/* Newsletter (React Hook Form) */}
           <div className="flex flex-col lg:col-span-4">
             <h3 className="mb-2 text-sm font-semibold tracking-tight text-ink sm:text-base">
-              Stay updated
+              {t("stayUpdated")}
             </h3>
             <p className="mb-4 text-sm leading-relaxed text-body">
-              Receive occasional product updates and new rental listings in
-              Rwanda.
+              {t("newsletterDescription")}
             </p>
 
             {subscribed ? (
@@ -126,18 +149,17 @@ function FooterSection() {
                 />
                 <div>
                   <p className="text-sm font-medium text-success">
-                    Preview saved
+                    {t("previewSavedTitle")}
                   </p>
                   <p className="mt-0.5 text-xs text-body">
-                    Email delivery is not connected yet. Your address was
-                    validated locally in preview mode.
+                    {t("previewSavedBody")}
                   </p>
                   <button
                     type="button"
                     onClick={() => setSubscribed(false)}
                     className="mt-2 inline-block cursor-pointer text-xs font-medium text-brand hover:underline"
                   >
-                    Enter another email
+                    {t("enterAnotherEmail")}
                   </button>
                 </div>
               </div>
@@ -150,7 +172,7 @@ function FooterSection() {
                 <div className="flex flex-col gap-2 sm:flex-row">
                   <div className="relative flex-1">
                     <label htmlFor="footer-newsletter-email" className="sr-only">
-                      Email address
+                      {t("emailLabel")}
                     </label>
                     <Mail
                       aria-hidden="true"
@@ -160,14 +182,14 @@ function FooterSection() {
                       id="footer-newsletter-email"
                       type="email"
                       autoComplete="email"
-                      placeholder="Enter your email"
+                      placeholder={t("emailPlaceholder")}
                       aria-invalid={Boolean(errors.email)}
                       className="w-full rounded-lg border border-line bg-surface py-2.5 pl-10 pr-3.5 text-sm text-ink placeholder:text-faint transition-all focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
                       {...register("email", {
-                        required: "Please enter your email address.",
+                        required: t("emailRequired"),
                         pattern: {
                           value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                          message: "Please enter a valid email address.",
+                          message: t("emailInvalid"),
                         },
                       })}
                     />
@@ -177,7 +199,7 @@ function FooterSection() {
                     disabled={isSubmitting}
                     className="inline-flex shrink-0 cursor-pointer items-center justify-center rounded-lg bg-brand px-5 py-2.5 text-sm font-medium text-white shadow-xs transition-colors hover:bg-brand-deep disabled:opacity-60"
                   >
-                    Subscribe
+                    {t("subscribe")}
                   </button>
                 </div>
 
@@ -196,18 +218,18 @@ function FooterSection() {
         <div className="grid grid-cols-1 items-center gap-4 py-8 text-sm lg:grid-cols-12">
           <div className="lg:col-span-9">
             <p className="text-sm text-body">
-              &copy; {new Date().getFullYear()} Urugo. All rights reserved.
+              {t("copyright", { year: new Date().getFullYear() })}
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-5 sm:gap-6 lg:col-span-3 lg:justify-end">
             {legalLinks.map((item) => (
               <Link
-                key={item.title}
+                key={item.href}
                 href={item.href}
                 className="whitespace-nowrap text-sm text-body underline decoration-line underline-offset-4 transition-colors hover:text-ink hover:decoration-ink"
               >
-                {item.title}
+                {resolveLegalLinkLabel(item.href, item.title)}
               </Link>
             ))}
           </div>

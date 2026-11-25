@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { Mail, MessageSquare, Phone } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { UserAvatar } from "@/components/shared/UserAvatar";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -12,10 +15,12 @@ interface Props {
 }
 
 export function LandlordContactCard({ name, phone, email }: Props) {
+  const t = useTranslations("renter.property.landlordCard");
+
   return (
     <div className="flex flex-col justify-between border border-line bg-white p-5 shadow-2xs">
       <div>
-        <CardHeader title="Landlord Contact" />
+        <CardHeader title={t("title")} />
         <div className="flex items-start gap-4">
           <UserAvatar name={name} className="size-12 text-sm" />
           <div className="min-w-0 space-y-2">
@@ -47,7 +52,7 @@ export function LandlordContactCard({ name, phone, email }: Props) {
           )}
         >
           <MessageSquare aria-hidden="true" className="size-4" />
-          Message Landlord
+          {t("messageLandlord")}
         </Link>
       </div>
     </div>

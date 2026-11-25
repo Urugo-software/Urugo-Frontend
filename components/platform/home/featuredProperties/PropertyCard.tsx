@@ -1,10 +1,12 @@
 "use client";
 
-import OnLoadSkeleton from "@/components/shared/OnLoadSkeleton";
-import { House, MapPin } from "lucide-react";
+import { useState } from "react";
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useTranslations } from "next-intl";
+import { House, MapPin } from "lucide-react";
+
+import OnLoadSkeleton from "@/components/shared/OnLoadSkeleton";
 
 interface PropertyCardProps {
   id: string;
@@ -16,6 +18,16 @@ interface PropertyCardProps {
   amenities: string[];
 }
 
+const AMENITY_LABEL_KEYS = {
+  "water included": "waterIncluded",
+  "wifi included": "wifiIncluded",
+  "24/7 security": "security247",
+  "laundry area": "laundryArea",
+  "private parking": "privateParking",
+  "spacious living room": "spaciousLivingRoom",
+  "furnished living room": "furnishedLivingRoom",
+} as const;
+
 function PropertyCard({
   id,
   image,
@@ -25,7 +37,18 @@ function PropertyCard({
   monthlyRent,
   amenities,
 }: PropertyCardProps) {
+  const t = useTranslations("public.home.featured");
+  const tStatuses = useTranslations("common.statuses");
+  const tAmenities = useTranslations("properties.amenityLabels");
   const [isImageLoaded, setImageLoaded] = useState(false);
+
+  const translatedAmenities = amenities.map((name) => {
+    const key =
+      AMENITY_LABEL_KEYS[
+        name.trim().toLowerCase() as keyof typeof AMENITY_LABEL_KEYS
+      ];
+    return key ? tAmenities(key) : name;
+  });
 
   return (
     <article className="flex h-[420px] w-full flex-none flex-col overflow-hidden rounded-sm border border-brand/20 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-brand hover:shadow-[0_18px_40px_-18px_rgba(14,17,22,.22)] md:max-w-[400px]">
@@ -48,7 +71,7 @@ function PropertyCard({
 
         <span className="absolute left-4 top-4 flex items-center gap-2 rounded-full bg-white px-3 py-1 text-[12.5px] font-semibold text-brand shadow-sm">
           <span className="h-2 w-2 rounded-full bg-brand" />
-          Available
+          {tStatuses("available")}
         </span>
       </Link>
 
@@ -64,12 +87,16 @@ function PropertyCard({
             <div className="font-ibm text-sm font-bold text-brand">
               {monthlyRent}
             </div>
-            <div className="text-[12.5px] text-faint">per month</div>
+            <div className="text-[12.5px] text-faint">{t("perMonth")}</div>
           </div>
         </div>
 
         <div className="mt-2 flex items-center gap-2 text-sm tracking-tight text-body">
-          <MapPin aria-hidden="true" size={15} className="shrink-0 text-faint" />
+          <MapPin
+            aria-hidden="true"
+            size={15}
+            className="shrink-0 text-faint"
+          />
           <span className="truncate capitalize">
             {district}, {province}
           </span>
@@ -79,14 +106,18 @@ function PropertyCard({
 
         <div className="flex items-center justify-between gap-2">
           <div className="flex min-w-0 items-center gap-2 text-sm text-ink">
-            <House aria-hidden="true" size={14} className="shrink-0 text-faint" />
+            <House
+              aria-hidden="true"
+              size={14}
+              className="shrink-0 text-faint"
+            />
             <span className="truncate text-[13px]">
-              {amenities.join(", ") || "Standard amenities"}
+              {translatedAmenities.join(", ") || t("standardAmenities")}
             </span>
           </div>
 
           <span className="shrink-0 text-xs text-faint">
-            {amenities.length} {amenities.length === 1 ? "amenity" : "amenities"}
+            {t("amenityCount", { count: amenities.length })}
           </span>
         </div>
       </div>

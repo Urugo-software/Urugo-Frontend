@@ -1,10 +1,13 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 interface FilterPillsProps {
   options: readonly string[];
   selected: string | string[];
   multiSelect?: boolean;
   onSelect: (option: string) => void;
+  getLabel?: (option: string) => string;
 }
 
 function FilterPills({
@@ -12,14 +15,17 @@ function FilterPills({
   selected,
   multiSelect = false,
   onSelect,
+  getLabel,
 }: FilterPillsProps) {
+  const t = useTranslations("properties.filters");
+
   const isOptionSelected = (option: string) =>
     Array.isArray(selected) ? selected.includes(option) : selected === option;
 
   return (
     <div
       role="group"
-      aria-label={multiSelect ? "Select one or more options" : "Select an option"}
+      aria-label={multiSelect ? t("pillsMultiAria") : t("pillsSingleAria")}
       className="flex flex-wrap gap-2"
     >
       {options.map((option) => {
@@ -36,7 +42,7 @@ function FilterPills({
                 : "border-line bg-white text-body hover:border-brand/40 hover:text-ink"
             }`}
           >
-            {option}
+            {getLabel ? getLabel(option) : option}
           </button>
         );
       })}

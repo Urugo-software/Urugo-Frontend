@@ -2,6 +2,7 @@
 
 import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useForm } from "react-hook-form";
 
@@ -33,6 +34,12 @@ type ForgotPasswordFormProps = {
 
 type Step = "email" | "code" | "password" | "success";
 
+type ServerErrorKey =
+  | "unavailable"
+  | "requestFailed"
+  | "verifyFailed"
+  | "resetFailed";
+
 interface ForgotPasswordValues {
   email: string;
   code: string;
@@ -40,46 +47,23 @@ interface ForgotPasswordValues {
   confirmation: string;
 }
 
-const stepContent: Record<
-  Step,
-  { eyebrow?: string; title: string; description: string }
-> = {
-  email: {
-    title: "Forgot password?",
-    description:
-      "Enter your email address and we'll send a verification code to reset your password.",
-  },
-  code: {
-    eyebrow: "Step 2 of 3",
-    title: "Check your email",
-    description:
-      "If an account exists for this email, we've sent a verification code. Enter it below to continue.",
-  },
-  password: {
-    eyebrow: "Step 3 of 3",
-    title: "Create a new password",
-    description: "Choose a strong new password and confirm it below.",
-  },
-  success: {
-    title: "Password updated",
-    description:
-      "Your password has been reset. You can now sign in with your new password.",
-  },
-};
-
 export function ForgotPasswordForm({
   requestCode,
   verifyCode,
   resetPassword,
 }: ForgotPasswordFormProps) {
+  const t = useTranslations("auth.forgotPassword");
+
   const [step, setStep] = useState<Step>("email");
   const [verifiedEmail, setVerifiedEmail] = useState("");
   const [proof, setProof] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [pending, setPending] = useState(false);
-  const [serverError, setServerError] = useState("");
-  const [notice, setNotice] = useState("");
+  const [serverErrorKey, setServerErrorKey] = useState<ServerErrorKey | null>(
+    null,
+  );
+  const [showResendNotice, setShowResendNotice] = useState(false);
 
   const headingRef = useRef<HTMLHeadingElement>(null);
   const hasChangedStepRef = useRef(false);
@@ -119,8 +103,8 @@ export function ForgotPasswordForm({
     resetField("confirmation");
     clearErrors();
     setProof("");
-    setServerError("");
-    setNotice("");
+    setServerErrorKey(null);
+    setShowResendNotice(false);
     moveToStep("email");
   };
 
@@ -128,8 +112,8 @@ export function ForgotPasswordForm({
     event.preventDefault();
     if (pending) return;
 
-    setServerError("");
-    setNotice("");
+    setServerErrorKey(null);
+    setShowResendNotice(false);
 
     if (step === "email") {
       const valid = await trigger("email", { shouldFocus: true });
@@ -144,10 +128,10 @@ export function ForgotPasswordForm({
         resetField("code");
         moveToStep("code");
       } catch (caught) {
-        setServerError(
+        setServerErrorKey(
           caught instanceof PasswordResetUnavailableError
-            ? caught.message
-            : "We couldn't process your request. Please try again.",
+            ? "unavailable"
+            : "requestFailed",
         );
       } finally {
         setPending(false);
@@ -168,10 +152,10 @@ export function ForgotPasswordForm({
         resetField("code");
         moveToStep("password");
       } catch (caught) {
-        setServerError(
+        setServerErrorKey(
           caught instanceof PasswordResetUnavailableError
-            ? caught.message
-            : "We couldn't verify that code. Check it and try again, or request a new one.",
+            ? "unavailable"
+            : "verifyFailed",
         );
       } finally {
         setPending(false);
@@ -194,10 +178,10 @@ export function ForgotPasswordForm({
         setProof("");
         moveToStep("success");
       } catch (caught) {
-        setServerError(
+        setServerErrorKey(
           caught instanceof PasswordResetUnavailableError
-            ? caught.message
-            : "We couldn't reset your password. Please try again or start over.",
+            ? "unavailable"
+            : "resetFailed",
         );
       } finally {
         setPending(false);
@@ -207,35 +191,46 @@ export function ForgotPasswordForm({
 
   const handleResend = async () => {
     if (pending || !verifiedEmail) return;
-    setServerError("");
-    setNotice("");
+    setServerErrorKey(null);
+    setShowResendNotice(false);
     setPending(true);
     try {
       await requestCode(verifiedEmail);
       resetField("code");
-      setNotice(
-        "If an account exists for this email, a new verification code has been sent.",
-      );
+      setShowResendNotice(true);
     } catch (caught) {
-      setServerError(
+      setServerErrorKey(
         caught instanceof PasswordResetUnavailableError
-          ? caught.message
-          : "We couldn't process your request. Please try again.",
+          ? "unavailable"
+          : "requestFailed",
       );
     } finally {
       setPending(false);
     }
   };
 
-  const content = stepContent[step];
+  const eyebrow =
+    step === "code"
+      ? t("stepCounter", { current: 2, total: 3 })
+      : step === "password"
+        ? t("stepCounter", { current: 3, total: 3 })
+        : undefined;
+
+  const submitLabel = pending
+    ? t("actions.pleaseWait")
+    : step === "email"
+      ? t("actions.sendCode")
+      : step === "code"
+        ? t("actions.verifyCode")
+        : t("actions.resetPassword");
 
   return (
     <form noValidate onSubmit={handleSubmit} className={AUTH_CARD_CLASS}>
       <div className="flex flex-col gap-6 sm:gap-7">
         <AuthFormHeader
-          eyebrow={content.eyebrow}
-          title={content.title}
-          description={content.description}
+          eyebrow={eyebrow}
+          title={t(`steps.${step}.title`)}
+          description={t(`steps.${step}.description`)}
           headingRef={headingRef}
         />
 
@@ -243,24 +238,23 @@ export function ForgotPasswordForm({
           {step === "email" && (
             <Field data-invalid={Boolean(errors.email) || undefined}>
               <FieldLabel htmlFor="recovery-email" className={AUTH_LABEL_CLASS}>
-                Email address
+                {t("fields.emailLabel")}
               </FieldLabel>
               <Input
                 id="recovery-email"
                 type="email"
                 autoComplete="email"
                 disabled={pending}
-                placeholder="you@example.com"
+                placeholder={t("fields.emailPlaceholder")}
                 aria-invalid={Boolean(errors.email)}
                 aria-describedby={
                   errors.email ? "recovery-email-error" : undefined
                 }
                 className={AUTH_INPUT_CLASS}
                 {...register("email", {
-                  required: "Please enter your email address.",
+                  required: t("validation.emailRequired"),
                   validate: (value) =>
-                    isValidEmail(value) ||
-                    "Please enter a valid email address.",
+                    isValidEmail(value) || t("validation.emailInvalid"),
                 })}
               />
               {errors.email?.message && (
@@ -281,24 +275,23 @@ export function ForgotPasswordForm({
                   htmlFor="recovery-code"
                   className={AUTH_LABEL_CLASS}
                 >
-                  Verification code
+                  {t("fields.codeLabel")}
                 </FieldLabel>
                 <Input
                   id="recovery-code"
                   type="text"
                   autoComplete="one-time-code"
                   disabled={pending}
-                  placeholder="Enter the code from your email"
+                  placeholder={t("fields.codePlaceholder")}
                   aria-invalid={Boolean(errors.code)}
                   aria-describedby={
                     errors.code ? "recovery-code-error" : undefined
                   }
                   className={AUTH_INPUT_CLASS}
                   {...register("code", {
-                    required: "Please enter the verification code.",
+                    required: t("validation.codeRequired"),
                     validate: (value) =>
-                      value.trim().length > 0 ||
-                      "Please enter the verification code.",
+                      value.trim().length > 0 || t("validation.codeRequired"),
                   })}
                 />
                 {errors.code?.message && (
@@ -311,14 +304,14 @@ export function ForgotPasswordForm({
                 )}
               </Field>
               <p className="text-xs text-body">
-                Didn&apos;t receive a code?{" "}
+                {t("actions.didntReceiveCode")}{" "}
                 <button
                   type="button"
                   onClick={handleResend}
                   disabled={pending}
                   className="cursor-pointer font-semibold text-brand underline-offset-4 hover:text-brand-deep hover:underline disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  Resend code
+                  {t("actions.resendCode")}
                 </button>
               </p>
             </>
@@ -328,7 +321,7 @@ export function ForgotPasswordForm({
             <>
               <Field data-invalid={Boolean(errors.password) || undefined}>
                 <FieldLabel htmlFor="new-password" className={AUTH_LABEL_CLASS}>
-                  New password
+                  {t("fields.newPasswordLabel")}
                 </FieldLabel>
                 <div className="relative">
                   <Input
@@ -336,17 +329,17 @@ export function ForgotPasswordForm({
                     type={showPassword ? "text" : "password"}
                     autoComplete="new-password"
                     disabled={pending}
-                    placeholder="Enter your new password"
+                    placeholder={t("fields.newPasswordPlaceholder")}
                     aria-invalid={Boolean(errors.password)}
                     aria-describedby={
                       errors.password ? "new-password-error" : undefined
                     }
                     className={`${AUTH_INPUT_CLASS} pr-11`}
                     {...register("password", {
-                      required: "Please enter a new password.",
+                      required: t("validation.passwordRequired"),
                       minLength: {
                         value: 8,
-                        message: "Password must be at least 8 characters.",
+                        message: t("validation.passwordMin"),
                       },
                     })}
                   />
@@ -355,7 +348,9 @@ export function ForgotPasswordForm({
                     onClick={() => setShowPassword((value) => !value)}
                     disabled={pending}
                     aria-label={
-                      showPassword ? "Hide new password" : "Show new password"
+                      showPassword
+                        ? t("visibility.hideNewPassword")
+                        : t("visibility.showNewPassword")
                     }
                     aria-pressed={showPassword}
                     className="absolute inset-y-0 right-0 flex w-11 cursor-pointer items-center justify-center rounded-r-xl text-faint transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
@@ -382,7 +377,7 @@ export function ForgotPasswordForm({
                   htmlFor="confirm-new-password"
                   className={AUTH_LABEL_CLASS}
                 >
-                  Confirm new password
+                  {t("fields.confirmPasswordLabel")}
                 </FieldLabel>
                 <div className="relative">
                   <Input
@@ -390,7 +385,7 @@ export function ForgotPasswordForm({
                     type={showConfirmation ? "text" : "password"}
                     autoComplete="new-password"
                     disabled={pending}
-                    placeholder="Re-enter your new password"
+                    placeholder={t("fields.confirmPasswordPlaceholder")}
                     aria-invalid={Boolean(errors.confirmation)}
                     aria-describedby={
                       errors.confirmation
@@ -399,10 +394,10 @@ export function ForgotPasswordForm({
                     }
                     className={`${AUTH_INPUT_CLASS} pr-11`}
                     {...register("confirmation", {
-                      required: "Please confirm your new password.",
+                      required: t("validation.confirmationRequired"),
                       validate: (value) =>
                         value === getValues("password") ||
-                        "Passwords do not match. Please try again.",
+                        t("validation.passwordsMismatch"),
                     })}
                   />
                   <button
@@ -411,8 +406,8 @@ export function ForgotPasswordForm({
                     disabled={pending}
                     aria-label={
                       showConfirmation
-                        ? "Hide password confirmation"
-                        : "Show password confirmation"
+                        ? t("visibility.hideConfirmation")
+                        : t("visibility.showConfirmation")
                     }
                     aria-pressed={showConfirmation}
                     className="absolute inset-y-0 right-0 flex w-11 cursor-pointer items-center justify-center rounded-r-xl text-faint transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
@@ -436,22 +431,22 @@ export function ForgotPasswordForm({
             </>
           )}
 
-          {serverError && (
+          {serverErrorKey && (
             <p
               id="reset-error"
               role="alert"
               className="rounded-xl border border-destructive/20 bg-destructive/5 px-3.5 py-2.5 text-xs font-medium leading-relaxed text-destructive"
             >
-              {serverError}
+              {t(`errors.${serverErrorKey}`)}
             </p>
           )}
 
-          {notice && (
+          {showResendNotice && (
             <p
               role="status"
               className="rounded-xl border border-brand/20 bg-brand-tint/60 px-3.5 py-2.5 text-xs leading-relaxed text-brand-deep"
             >
-              {notice}
+              {t("notices.codeResent")}
             </p>
           )}
 
@@ -462,13 +457,7 @@ export function ForgotPasswordForm({
                 disabled={pending}
                 className={AUTH_PRIMARY_BUTTON_CLASS}
               >
-                {pending
-                  ? "Please wait..."
-                  : step === "email"
-                    ? "Send verification code"
-                    : step === "code"
-                      ? "Verify code"
-                      : "Reset password"}
+                {submitLabel}
               </Button>
             </Field>
           ) : (
@@ -477,7 +466,7 @@ export function ForgotPasswordForm({
                 href="/auth/sign-in"
                 className={`${AUTH_PRIMARY_BUTTON_CLASS} inline-flex items-center justify-center`}
               >
-                Continue to sign in
+                {t("actions.continueToSignIn")}
               </Link>
             </Field>
           )}
@@ -489,7 +478,9 @@ export function ForgotPasswordForm({
               disabled={pending}
               className="cursor-pointer text-center text-xs font-semibold text-brand underline-offset-4 hover:text-brand-deep hover:underline disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {step === "code" ? "Use a different email" : "Start over"}
+              {step === "code"
+                ? t("actions.useDifferentEmail")
+                : t("actions.startOver")}
             </button>
           )}
 
@@ -500,7 +491,7 @@ export function ForgotPasswordForm({
                 className="inline-flex items-center gap-1.5 font-semibold text-brand underline-offset-4 hover:text-brand-deep hover:underline"
               >
                 <ArrowLeft aria-hidden="true" className="size-4" />
-                <span>Back to sign in</span>
+                <span>{t("actions.backToSignIn")}</span>
               </Link>
             </FieldDescription>
           )}

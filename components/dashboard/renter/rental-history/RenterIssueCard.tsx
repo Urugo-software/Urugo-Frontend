@@ -1,9 +1,22 @@
+"use client";
+
 import { CheckCircle2, FileText, ShieldAlert } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { Button } from "@/components/ui/button";
-import type { RentalIssue } from "@/types/landlord";
-import { formatRwf } from "@/utils/format";
+import type { AppLocale } from "@/i18n/config";
+import { formatRwfLocalized } from "@/i18n/formatting";
+import type { IssueStatus, RentalIssue } from "@/types/landlord";
 import { getIssueStatusMeta, isIssueActionable } from "@/utils/rental-debt";
+
+const STATUS_META_KEYS: Record<IssueStatus, string> = {
+  Reported: "reported",
+  Unresolved: "unresolved",
+  Disputed: "disputed",
+  Confirmed: "confirmed",
+  Resolved: "resolved",
+  Rejected: "rejected",
+};
 
 interface RenterIssueCardProps {
   issue: RentalIssue;
@@ -16,8 +29,12 @@ export function RenterIssueCard({
   onDispute,
   onSettle,
 }: RenterIssueCardProps) {
+  const t = useTranslations("renter.rentalHistory");
+  const locale = useLocale() as AppLocale;
   const meta = getIssueStatusMeta(issue.status);
-  const canRespond = isIssueActionable(issue.status) || issue.status === "Confirmed";
+  const statusKey = STATUS_META_KEYS[issue.status];
+  const canRespond =
+    isIssueActionable(issue.status) || issue.status === "Confirmed";
 
   return (
     <article className="space-y-4 border border-line bg-white p-5 shadow-2xs">
@@ -25,33 +42,43 @@ export function RenterIssueCard({
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2.5">
             <h3 className="text-base font-bold text-ink">{issue.issueTitle}</h3>
-            <StatusBadge label={meta.label} tone={meta.tone} />
+            <StatusBadge
+              label={t(`statusMeta.${statusKey}.label`)}
+              tone={meta.tone}
+            />
           </div>
           <p className="mt-1 text-xs text-body">
-            {issue.propertyName} &middot; {issue.tenancyPeriod} &middot; Landlord:{" "}
-            <strong className="font-semibold text-ink">{issue.landlordName}</strong>
+            {issue.propertyName} &middot; {issue.tenancyPeriod} &middot;{" "}
+            {t("card.landlordLabel")}{" "}
+            <strong className="font-semibold text-ink">
+              {issue.landlordName}
+            </strong>
           </p>
         </div>
 
         <div className="text-left sm:text-right">
           <span className="block font-ibm text-lg font-bold text-ink">
-            {formatRwf(issue.amountRwf)}
+            {formatRwfLocalized(issue.amountRwf, locale)}
           </span>
-          {typeof issue.daysRemaining === "number" && issue.daysRemaining > 0 && (
-            <span className="text-xs font-semibold text-amber-700">
-              {issue.daysRemaining}{" "}
-              {issue.daysRemaining === 1 ? "day" : "days"} left in notice window
-            </span>
-          )}
+          {typeof issue.daysRemaining === "number" &&
+            issue.daysRemaining > 0 && (
+              <span className="text-xs font-semibold text-amber-700">
+                {issue.daysRemaining === 1
+                  ? t("card.daysLeftSingle", { days: issue.daysRemaining })
+                  : t("card.daysLeftPlural", { days: issue.daysRemaining })}
+              </span>
+            )}
         </div>
       </div>
 
-      <p className="text-xs text-body">{meta.description}</p>
+      <p className="text-xs text-body">
+        {t(`statusMeta.${statusKey}.description`)}
+      </p>
 
       <div className="space-y-2 text-sm">
         <div className="border-l-2 border-line bg-surface/50 px-3.5 py-2.5">
           <span className="block text-xs font-semibold uppercase tracking-wider text-faint">
-            Landlord Report ({issue.createdDate})
+            {t("card.landlordReport", { date: issue.createdDate })}
           </span>
           <p className="mt-1 text-ink">{issue.landlordReport}</p>
         </div>
@@ -59,7 +86,7 @@ export function RenterIssueCard({
         {issue.renterResponse && (
           <div className="border-l-2 border-brand-blue bg-brand-tint/30 px-3.5 py-2.5">
             <span className="block text-xs font-semibold uppercase tracking-wider text-brand-blue">
-              Your Response
+              {t("card.yourResponse")}
             </span>
             <p className="mt-1 text-ink">{issue.renterResponse}</p>
           </div>
@@ -70,7 +97,9 @@ export function RenterIssueCard({
             <FileText aria-hidden="true" className="size-3.5 text-brand-blue" />
             <span>{issue.evidence.title}</span>
             <StatusBadge
-              label={issue.evidence.verified ? "Verified" : "Under review"}
+              label={
+                issue.evidence.verified ? "Verified" : t("card.underReview")
+              }
               tone={issue.evidence.verified ? "success" : "warning"}
             />
           </div>
@@ -88,8 +117,8 @@ export function RenterIssueCard({
             >
               <ShieldAlert aria-hidden="true" className="size-4" />
               {issue.status === "Disputed"
-                ? "Update Dispute Proof"
-                : "Dispute / Submit Proof"}
+                ? t("card.updateDispute")
+                : t("card.disputeSubmit")}
             </Button>
           )}
           <Button
@@ -98,7 +127,7 @@ export function RenterIssueCard({
             className="h-9 cursor-pointer rounded-none text-xs font-semibold"
           >
             <CheckCircle2 aria-hidden="true" className="size-4" />
-            Record Settlement
+            {t("card.recordSettlement")}
           </Button>
         </div>
       )}

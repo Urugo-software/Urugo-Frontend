@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import type { AppLocale } from "@/i18n/config";
+import { formatDateLocalized } from "@/i18n/formatting";
 import { useLandlordProperties } from "@/store/landlord-properties.store";
 import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
 import type {
@@ -27,32 +30,12 @@ interface EndTenancyWorkflowProps {
 
 type Step = "review" | "charges" | "summary";
 
-const WORKFLOW_STEPS: StepItem<Step>[] = [
-  { key: "review", label: "1. Rent Payments" },
-  { key: "charges", label: "2. Final Charges" },
-  { key: "summary", label: "3. Final Notice" },
-];
-
-const INITIAL_CHARGES: FinalChargeItem[] = [
-  { key: "water", label: "Water bill (WASAC)", status: "paid", amountRwf: 0 },
-  {
-    key: "electricity",
-    label: "Electricity (EUCL)",
-    status: "paid",
-    amountRwf: 0,
-  },
-  {
-    key: "other",
-    label: "Other agreed charges",
-    status: "na",
-    amountRwf: 0,
-  },
-];
-
 export function EndTenancyWorkflow({
   renter,
   initialPayments,
 }: EndTenancyWorkflowProps) {
+  const t = useTranslations("landlord.tenancies.endWorkflow");
+  const locale = useLocale() as AppLocale;
   const {
     profile,
     approvePayment,
@@ -62,10 +45,32 @@ export function EndTenancyWorkflow({
   } = useLandlordWorkspace();
   const vacateUnitByRenter = useLandlordProperties((s) => s.vacateUnitByRenter);
 
+  const workflowSteps: StepItem<Step>[] = [
+    { key: "review", label: t("stepReview") },
+    { key: "charges", label: t("stepCharges") },
+    { key: "summary", label: t("stepSummary") },
+  ];
+
+  const chargeLabel = (key: FinalChargeItem["key"]) =>
+    key === "water"
+      ? t("chargeWater")
+      : key === "electricity"
+        ? t("chargeElectricity")
+        : t("chargeOther");
+
   const [step, setStep] = useState<Step>("review");
-  const [charges, setCharges] = useState<FinalChargeItem[]>(INITIAL_CHARGES);
+  const [charges, setCharges] = useState<FinalChargeItem[]>([
+    { key: "water", label: "Water bill (WASAC)", status: "paid", amountRwf: 0 },
+    { key: "electricity", label: "Electricity (EUCL)", status: "paid", amountRwf: 0 },
+    { key: "other", label: "Other agreed charges", status: "na", amountRwf: 0 },
+  ]);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [createdIssueId, setCreatedIssueId] = useState<string | undefined>();
+
+  const localizedCharges = charges.map((c) => ({
+    ...c,
+    label: chargeLabel(c.key),
+  }));
 
   const pendingCount = initialPayments.filter(
     (p) => p.status === "Pending",
@@ -90,7 +95,7 @@ export function EndTenancyWorkflow({
 
   const handleApprove = (id: string) => {
     approvePayment(id);
-    toast.success("Payment approved.");
+    toast.success(t("toastApproved"));
   };
 
   const handleReject = (
@@ -99,7 +104,7 @@ export function EndTenancyWorkflow({
     reason: string,
   ) => {
     rejectPayment(id, category, reason);
-    toast.success("Payment rejection saved.");
+    toast.success(t("toastRejected"));
   };
 
   const handleFinalize = () => {
@@ -111,8 +116,8 @@ export function EndTenancyWorkflow({
       const deadline = new Date(today);
       deadline.setDate(deadline.getDate() + 3);
       const unpaidLabels = [
-        ...(unpaidRentRwf > 0 ? ["unpaid rent"] : []),
-        ...charges
+        ...(unpaidRentRwf > 0 ? [t("unpaidRentLabel")] : []),
+        ...localizedCharges
           .filter((c) => c.status === "unpaid" && c.amountRwf > 0)
           .map((c) => c.label.toLowerCase()),
       ].join(", ");
@@ -120,31 +125,25 @@ export function EndTenancyWorkflow({
       const created = createIssue({
         renterId: renter.id,
         propertyId: renter.propertyId,
-        issueTitle: `Final Tenancy Balance (${unpaidLabels})`,
+        issueTitle: t("finalBalanceIssueTitle", { labels: unpaidLabels }),
         obligationType: unpaidRentRwf > 0 ? "rent" : "other",
         amountRwf: totalOwed,
         propertyName: `${renter.propertyName} — ${renter.unitNumber}`,
         tenancyPeriod: `${renter.startDate} - ${renter.endDate ?? "Closed"}`,
         landlordName: profile.fullName,
         renterName: renter.name,
-        createdDate: today.toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        }),
-        noticeDeadlineDate: deadline.toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-        }),
+        createdDate: formatDateLocalized(today, locale),
+        noticeDeadlineDate: formatDateLocalized(deadline, locale),
         daysRemaining: 3,
         status: "Unresolved",
-        landlordReport: `Submitted during tenancy closure for ${unpaidLabels}. Renter has 3 days to settle or submit proof.`,
+        landlordReport: t("finalBalanceLandlordReport", {
+          labels: unpaidLabels,
+        }),
       });
       setCreatedIssueId(created.id);
     }
 
-    toast.success("Tenancy closed.");
+    toast.success(t("toastClosed"));
     setIsSubmitted(true);
   };
 
@@ -159,7 +158,7 @@ export function EndTenancyWorkflow({
 
   return (
     <div className="flex flex-col gap-6">
-      <WorkflowStepIndicator steps={WORKFLOW_STEPS} currentStep={step} />
+      <WorkflowStepIndicator steps={workflowSteps} currentStep={step} />
 
       {step === "review" && (
         <div className="flex flex-col gap-5">
@@ -175,7 +174,7 @@ export function EndTenancyWorkflow({
               onClick={() => setStep("charges")}
               className="cursor-pointer rounded-none"
             >
-              Continue to Final Charges &rarr;
+              {t("continueToCharges")} &rarr;
             </Button>
           </div>
         </div>
@@ -183,12 +182,9 @@ export function EndTenancyWorkflow({
 
       {step === "charges" && (
         <div className="space-y-4">
-          <p className="text-xs text-body">
-            Confirm final utility bills and agreed checkout obligations before
-            generating the final balance notice.
-          </p>
+          <p className="text-xs text-body">{t("chargesInstruction")}</p>
           <div className="divide-y divide-line border border-line bg-white">
-            {charges.map((charge) => (
+            {localizedCharges.map((charge) => (
               <div
                 key={charge.key}
                 className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between"
@@ -199,9 +195,9 @@ export function EndTenancyWorkflow({
                 <div className="flex flex-wrap items-center gap-2">
                   {(
                     [
-                      { val: "paid", label: "Paid" },
-                      { val: "unpaid", label: "Not paid" },
-                      { val: "na", label: "N/A" },
+                      { val: "paid", label: t("chargePaid") },
+                      { val: "unpaid", label: t("chargeNotPaid") },
+                      { val: "na", label: t("chargeNa") },
                     ] as const
                   ).map(({ val, label }) => (
                     <Button
@@ -225,8 +221,8 @@ export function EndTenancyWorkflow({
                       type="number"
                       min={0}
                       step={500}
-                      aria-label={`Unpaid ${charge.label} amount in RWF`}
-                      placeholder="Amount RWF"
+                      aria-label={t("unpaidAmountAria", { label: charge.label })}
+                      placeholder={t("amountPlaceholder")}
                       value={charge.amountRwf || ""}
                       onChange={(e) =>
                         updateCharge(charge.key, {
@@ -248,14 +244,14 @@ export function EndTenancyWorkflow({
               onClick={() => setStep("review")}
               className="cursor-pointer rounded-none"
             >
-              &larr; Back to Rent Payments
+              &larr; {t("backToPayments")}
             </Button>
             <Button
               type="button"
               onClick={() => setStep("summary")}
               className="cursor-pointer rounded-none"
             >
-              Continue to Final Notice &rarr;
+              {t("continueToNotice")} &rarr;
             </Button>
           </div>
         </div>
@@ -265,7 +261,7 @@ export function EndTenancyWorkflow({
         <FinalBalanceSummary
           approvedCount={approvedCount}
           unpaidRentRwf={unpaidRentRwf}
-          charges={charges}
+          charges={localizedCharges}
           onBack={() => setStep("charges")}
           onSubmit={handleFinalize}
         />

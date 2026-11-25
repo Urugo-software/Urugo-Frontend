@@ -2,7 +2,9 @@
 
 import { usePathname } from "next/navigation";
 import { Settings, HelpCircle } from "lucide-react";
-import { RoleType } from "@/types";
+import { useTranslations } from "next-intl";
+
+import type { RoleType } from "@/types";
 import { useDashboardNavigation } from "@/hooks/useDashboardNavigation";
 import { SidebarItem } from "./SidebarItem";
 import { WorkspaceRoleSwitcher } from "./WorkspaceRoleSwitcher";
@@ -14,6 +16,7 @@ interface DashboardSidebarProps {
 
 export function DashboardSidebar({ currentRole }: DashboardSidebarProps) {
   const pathname = usePathname();
+  const tNav = useTranslations("common.navigation");
   const {
     isAdmin,
     activeWorkspaceRole,
@@ -24,15 +27,13 @@ export function DashboardSidebar({ currentRole }: DashboardSidebarProps) {
   } = useDashboardNavigation(pathname, currentRole);
 
   return (
-    <aside className="relative hidden md:flex h-screen w-[272px] shrink-0 flex-col overflow-hidden border-r border-line bg-white">
-      {/* Brand Header */}
+    <aside className="relative hidden h-screen w-[272px] shrink-0 flex-col overflow-hidden border-r border-line bg-white md:flex">
       <div className="flex items-center gap-2.5 px-6 pt-6 pb-2">
         <Logo />
       </div>
 
-      {/* Main Nav Items */}
       <nav
-        aria-label="Dashboard navigation"
+        aria-label={tNav("dashboardNavigation")}
         className="mt-4 flex flex-1 flex-col gap-1 overflow-y-auto px-4 pb-4"
       >
         {navList.map((item) => (
@@ -50,26 +51,25 @@ export function DashboardSidebar({ currentRole }: DashboardSidebarProps) {
           <>
             <div className="px-3 pt-5 pb-1.5">
               <span className="text-[12.5px] font-bold uppercase tracking-widest text-faint">
-                Settings
+                {tNav("settingsSection")}
               </span>
             </div>
             <SidebarItem
               href={`${rootHref}/settings`}
               icon={Settings}
-              label="Settings"
+              label={tNav("settings")}
               active={isActive(`${rootHref}/settings`)}
             />
             <SidebarItem
               href={`${rootHref}/help-center`}
               icon={HelpCircle}
-              label="Help Center"
+              label={tNav("helpCenter")}
               active={isActive(`${rootHref}/help-center`)}
             />
           </>
         )}
       </nav>
 
-      {/* User Session Footer */}
       <div className="relative shrink-0 border-t border-line bg-surface px-5 py-4">
         <div className="flex items-center justify-between gap-2.5">
           <div className="flex min-w-0 items-center gap-3">

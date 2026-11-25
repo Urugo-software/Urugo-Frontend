@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { ModalDialog } from "@/components/shared/ModalDialog";
 import { generateStandardArticles } from "@/data/agreement-templates";
@@ -29,6 +30,9 @@ export function CreateAgreementModal({
   open,
   onClose,
 }: CreateAgreementModalProps) {
+  const t = useTranslations("landlord.agreements.createModal");
+  const tLangs = useTranslations("landlord.agreements.languageNames");
+  const tCommon = useTranslations("common");
   const router = useRouter();
   const renters = useLandlordWorkspace((s) => s.renters);
   const profile = useLandlordWorkspace((s) => s.profile);
@@ -55,7 +59,7 @@ export function CreateAgreementModal({
   function onSubmit(values: CreateAgreementFormValues) {
     const renter = renters.find((r) => r.id === values.renterId);
     if (!renter) {
-      toast.error("Select a renter to create a lease agreement.");
+      toast.error(t("selectRenterToast"));
       return;
     }
 
@@ -119,7 +123,9 @@ export function CreateAgreementModal({
     };
 
     upsertAgreement(newAgreement);
-    toast.success(`Draft agreement ${newAgreement.referenceNumber} created.`);
+    toast.success(
+      t("draftCreatedToast", { ref: newAgreement.referenceNumber }),
+    );
     reset();
     onClose();
     router.push(`/landlord/agreements/${id}/edit`);
@@ -129,15 +135,12 @@ export function CreateAgreementModal({
     <ModalDialog
       open={open}
       onClose={onClose}
-      title="New Lease Agreement"
-      description="Create a new draft lease agreement for an existing renter using Urugo's 18 standard statutory clauses."
+      title={t("title")}
+      description={t("description")}
     >
       {activeRenters.length === 0 ? (
         <div className="space-y-4 py-2 text-sm text-body">
-          <p>
-            You don&apos;t have any active renters yet. Register a renter first
-            to prepare a lease agreement.
-          </p>
+          <p>{t("noRentersMessage")}</p>
           <div className="flex justify-end gap-2">
             <Button
               type="button"
@@ -145,13 +148,13 @@ export function CreateAgreementModal({
               onClick={onClose}
               className="rounded-none"
             >
-              Close
+              {tCommon("actions.close")}
             </Button>
             <Link
               href="/landlord/renters/add"
               className="inline-flex h-9 items-center bg-ink px-4 text-xs font-semibold text-white hover:bg-black"
             >
-              Register Renter
+              {t("registerRenter")}
             </Link>
           </div>
         </div>
@@ -162,11 +165,11 @@ export function CreateAgreementModal({
               htmlFor="agreement-renter"
               className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-faint"
             >
-              Renter &amp; Unit
+              {t("renterAndUnit")}
             </label>
             <select
               id="agreement-renter"
-              {...register("renterId", { required: "Please select a renter." })}
+              {...register("renterId", { required: t("renterRequired") })}
               className="h-10 w-full border border-line bg-white px-3 text-sm text-ink focus:border-ink focus:outline-none"
             >
               {activeRenters.map((r) => (
@@ -188,15 +191,15 @@ export function CreateAgreementModal({
                 htmlFor="agreement-language"
                 className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-faint"
               >
-                Contract Language
+                {t("contractLanguage")}
               </label>
               <select
                 id="agreement-language"
                 {...register("language")}
                 className="h-10 w-full border border-line bg-white px-3 text-sm text-ink focus:border-ink focus:outline-none"
               >
-                <option value="en">English</option>
-                <option value="rw">Kinyarwanda</option>
+                <option value="en">{tLangs("en")}</option>
+                <option value="rw">{tLangs("rw")}</option>
               </select>
             </div>
 
@@ -205,7 +208,7 @@ export function CreateAgreementModal({
                 htmlFor="agreement-duration"
                 className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-faint"
               >
-                Duration (Months)
+                {t("durationMonths")}
               </label>
               <input
                 id="agreement-duration"
@@ -226,7 +229,7 @@ export function CreateAgreementModal({
                 htmlFor="agreement-advance"
                 className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-faint"
               >
-                Advance Months
+                {t("advanceMonths")}
               </label>
               <input
                 id="agreement-advance"
@@ -247,7 +250,7 @@ export function CreateAgreementModal({
                 htmlFor="agreement-due-day"
                 className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-faint"
               >
-                Monthly Due Day (1–31)
+                {t("monthlyDueDay")}
               </label>
               <input
                 id="agreement-due-day"
@@ -270,7 +273,7 @@ export function CreateAgreementModal({
               href="/landlord/renters/add"
               className="text-xs font-medium text-brand hover:underline"
             >
-              Need a new renter? Register first
+              {t("needNewRenter")}
             </Link>
             <div className="flex items-center gap-2">
               <Button
@@ -279,13 +282,13 @@ export function CreateAgreementModal({
                 onClick={onClose}
                 className="h-9 cursor-pointer rounded-none border-line px-4 text-xs"
               >
-                Cancel
+                {tCommon("actions.cancel")}
               </Button>
               <Button
                 type="submit"
                 className="h-9 cursor-pointer rounded-none bg-ink px-4 text-xs font-semibold text-white hover:bg-black"
               >
-                Create Draft &amp; Edit
+                {t("submit")}
               </Button>
             </div>
           </div>

@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowLeft, ChevronRight, ScrollText } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { PropertyGroup } from "@/types/landlord";
 
 interface PropertyTenancyBreadcrumbProps {
@@ -11,10 +14,13 @@ export function PropertyTenancyBreadcrumb({
   currentLabel,
   group,
 }: PropertyTenancyBreadcrumbProps) {
+  const t = useTranslations("landlord.tenancies.propertyView");
+  const tBreadcrumbs = useTranslations("common.breadcrumbs");
+
   return (
     <div className="flex flex-wrap items-center justify-between gap-3">
       <nav
-        aria-label="Breadcrumb"
+        aria-label={tBreadcrumbs("ariaLabel")}
         className="flex flex-wrap items-center gap-2 text-sm text-body"
       >
         <Link
@@ -22,7 +28,7 @@ export function PropertyTenancyBreadcrumb({
           className="inline-flex items-center gap-1.5 font-medium text-body transition-colors hover:text-ink hover:underline"
         >
           <ArrowLeft aria-hidden="true" className="size-4" />
-          <span>My Properties</span>
+          <span>{t("myProperties")}</span>
         </Link>
 
         {group && (
@@ -48,7 +54,7 @@ export function PropertyTenancyBreadcrumb({
         className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand hover:underline"
       >
         <ScrollText aria-hidden="true" className="size-4" />
-        <span>All Tenancies</span>
+        <span>{t("allTenancies")}</span>
       </Link>
     </div>
   );

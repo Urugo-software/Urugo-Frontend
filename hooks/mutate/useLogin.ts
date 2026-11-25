@@ -1,8 +1,10 @@
-import { queryClient } from "@/components/provider/QueryClient";
 import { useMutation } from "@tanstack/react-query";
-import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import toast from "react-hot-toast";
+
 import { loginUserService } from "@/api/auth.api";
+import { queryClient } from "@/components/provider/QueryClient";
 import { getPostLoginRoute } from "@/utils/auth-helpers";
 
 interface LoginResponseLike {
@@ -14,6 +16,7 @@ interface LoginResponseLike {
 
 export function useLogin() {
   const router = useRouter();
+  const t = useTranslations("auth.login");
 
   const { isPending, mutate, isError, error } = useMutation({
     mutationFn: loginUserService,
@@ -21,12 +24,12 @@ export function useLogin() {
       queryClient.invalidateQueries({
         queryKey: ["me"],
       });
-      toast.success("Signed in successfully.");
+      toast.success(t("signInSuccess"));
       const role = data?.user?.role ?? data?.role;
       router.replace(getPostLoginRoute(role));
     },
     onError: (error) => {
-      toast.error(error.message);
+      toast.error(error.message || t("signInErrorFallback"));
     },
   });
   return { isPending, mutate, isError, error };

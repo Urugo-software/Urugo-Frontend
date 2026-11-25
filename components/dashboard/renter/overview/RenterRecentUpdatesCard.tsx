@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight, Bell, ShieldCheck } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import type { RenterNotification } from "@/types/renter";
 
@@ -12,7 +15,16 @@ export function RenterRecentUpdatesCard({
   notifications,
   actionableIssuesCount,
 }: RenterRecentUpdatesCardProps) {
+  const t = useTranslations("renter.overview.updatesCard");
+  const tWorkspace = useTranslations("renter.workspace");
   const recent = notifications.slice(0, 3);
+
+  const standingLabel =
+    actionableIssuesCount > 0
+      ? actionableIssuesCount === 1
+        ? t("noticePendingSingle", { count: actionableIssuesCount })
+        : t("noticePendingPlural", { count: actionableIssuesCount })
+      : t("goodStanding");
 
   return (
     <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
@@ -21,21 +33,19 @@ export function RenterRecentUpdatesCard({
           <div className="flex items-center gap-2">
             <Bell aria-hidden="true" className="size-4 text-faint" />
             <h3 className="text-xs font-semibold uppercase tracking-wider text-faint">
-              Upcoming Reminders &amp; Alerts
+              {t("title")}
             </h3>
           </div>
           <Link
             href="/renter/notifications"
             className="text-xs font-semibold text-brand-blue hover:underline"
           >
-            View all
+            {t("viewAll")}
           </Link>
         </div>
 
         {recent.length === 0 ? (
-          <p className="py-6 text-center text-xs text-faint">
-            No recent reminders right now.
-          </p>
+          <p className="py-6 text-center text-xs text-faint">{t("empty")}</p>
         ) : (
           <div className="divide-y divide-line">
             {recent.map((item) => (
@@ -50,7 +60,7 @@ export function RenterRecentUpdatesCard({
                       {item.title}
                     </span>
                     {!item.read && (
-                      <StatusBadge label="Unread" tone="info" />
+                      <StatusBadge label={tWorkspace("unread")} tone="info" />
                     )}
                   </div>
                   <p className="mt-0.5 line-clamp-1 text-xs text-body">
@@ -68,23 +78,19 @@ export function RenterRecentUpdatesCard({
         <div>
           <div className="mb-3 flex items-center justify-between gap-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-faint">
-              Rental Standing
+              {t("rentalStanding")}
             </span>
             <ShieldCheck aria-hidden="true" className="size-4 text-success" />
           </div>
           <StatusBadge
-            label={
-              actionableIssuesCount > 0
-                ? `${actionableIssuesCount} Notice Pending Review`
-                : "Good Standing"
-            }
+            label={standingLabel}
             tone={actionableIssuesCount > 0 ? "warning" : "success"}
             className="text-sm"
           />
           <p className="mt-2 text-xs leading-relaxed text-body">
             {actionableIssuesCount > 0
-              ? "Review open landlord notices or submit payment proof within the 3-day notice window."
-              : "No confirmed unpaid obligations on your rental history."}
+              ? t("standingActionDescription")
+              : t("standingClearDescription")}
           </p>
         </div>
 
@@ -92,7 +98,7 @@ export function RenterRecentUpdatesCard({
           href="/renter/rental-history"
           className="mt-4 flex items-center justify-between border-t border-line pt-3 text-xs font-semibold text-brand-blue hover:underline"
         >
-          <span>View Rental History</span>
+          <span>{t("viewRentalHistory")}</span>
           <ArrowRight aria-hidden="true" className="size-4" />
         </Link>
       </section>

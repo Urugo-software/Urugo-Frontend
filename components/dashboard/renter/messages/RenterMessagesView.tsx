@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 import { useLandlordMessages } from "@/hooks/query/messages.hooks";
 import SectionLoading from "@/components/shared/SectionLoading";
 import SectionError from "@/components/shared/SectionError";
@@ -11,6 +12,7 @@ import { ChatInputForm } from "./ChatInputForm";
 import { LandlordProfileSidebar } from "./LandlordProfileSidebar";
 
 export function RenterMessagesView() {
+  const t = useTranslations("renter.messages");
   const { data, isLoading, isError, refetch } = useLandlordMessages();
   const liveMessages = useRenterWorkspace((s) => s.messages);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -21,11 +23,11 @@ export function RenterMessagesView() {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages.length]);
 
-  if (isLoading) return <SectionLoading message="Loading conversation..." />;
+  if (isLoading) return <SectionLoading message={t("loading")} />;
   if (isError || !data) {
     return (
       <SectionError
-        message="Unable to load messages."
+        message={t("loadError")}
         onRetry={() => refetch()}
       />
     );

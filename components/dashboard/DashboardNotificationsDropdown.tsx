@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Bell, ChevronRight } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,12 +15,30 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useDashboardNotifications } from "@/hooks/query/useDashboardNotifications";
-import { DashboardNotificationsDropdownProps } from "@/types/dashboard-notifications.types";
+import type { AppLocale } from "@/i18n/config";
+import { localizeRelativeTime } from "@/i18n/display-format";
+import type { DashboardNotificationsDropdownProps } from "@/types/dashboard-notifications.types";
+
+const LANDLORD_SEED_NOTIF_IDS = new Set([
+  "notif-1",
+  "notif-2",
+  "notif-3",
+  "notif-4",
+  "notif-5",
+  "notif-6",
+]);
 
 export function DashboardNotificationsDropdown({
   pathname,
 }: DashboardNotificationsDropdownProps) {
   const router = useRouter();
+  const t = useTranslations("common.notificationsDropdown");
+  const tActions = useTranslations("common.actions");
+  const tStates = useTranslations("common.states");
+  const tLandlordSeed = useTranslations("landlord.seed.notifications");
+  const locale = useLocale() as AppLocale;
+  const isLandlordPath = pathname.startsWith("/landlord");
+
   const { items, unreadCount, hasUnread, viewAllHref, onMarkRead, onMarkAllRead } =
     useDashboardNotifications(pathname);
 
@@ -33,7 +53,7 @@ export function DashboardNotificationsDropdown({
         render={
           <button
             type="button"
-            aria-label="Open notifications menu"
+            aria-label={t("openAria")}
             className="relative flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full border border-line transition hover:bg-surface focus:outline-none max-md:border-none"
           >
             <Bell className="size-4 text-ink max-md:size-5" />
@@ -47,17 +67,17 @@ export function DashboardNotificationsDropdown({
       <DropdownMenuContent
         align="end"
         sideOffset={8}
-        className="w-[calc(100vw-2rem)] sm:w-96 rounded-none border border-line bg-white p-0 shadow-lg ring-0"
+        className="w-[calc(100vw-2rem)] rounded-none border border-line bg-white p-0 shadow-lg ring-0 sm:w-96"
       >
         <DropdownMenuGroup>
-          <div className="flex items-center justify-between border-b border-line px-4 py-3 bg-white">
+          <div className="flex items-center justify-between border-b border-line bg-white px-4 py-3">
             <div className="flex items-center gap-2">
               <DropdownMenuLabel className="p-0 text-xs font-bold uppercase tracking-wider text-ink">
-                Notifications
+                {t("title")}
               </DropdownMenuLabel>
               {unreadCount > 0 && (
                 <span className="text-[12.5px] font-semibold text-brand-blue">
-                  {unreadCount} new
+                  {t("newCount", { count: unreadCount })}
                 </span>
               )}
             </div>
@@ -68,22 +88,22 @@ export function DashboardNotificationsDropdown({
                   onClick={onMarkAllRead}
                   className="cursor-pointer text-xs font-semibold text-body hover:text-ink"
                 >
-                  Mark all read
+                  {tActions("markAllRead")}
                 </button>
               )}
               <Link
                 href={viewAllHref}
                 className="text-xs font-semibold text-brand-blue hover:underline"
               >
-                View all
+                {tActions("viewAll")}
               </Link>
             </div>
           </div>
 
-          <div className="max-h-80 overflow-y-auto divide-y divide-line">
+          <div className="max-h-80 divide-y divide-line overflow-y-auto">
             {items.length === 0 ? (
               <div className="p-6 text-center text-xs text-faint">
-                No notifications right now.
+                {tStates("emptyNotifications")}
               </div>
             ) : (
               items.map((item) => (
@@ -105,14 +125,18 @@ export function DashboardNotificationsDropdown({
                   <div className="min-w-0 flex-1 space-y-1">
                     <div className="flex items-center justify-between gap-2">
                       <span className="truncate text-xs font-semibold text-ink">
-                        {item.title}
+                        {isLandlordPath && LANDLORD_SEED_NOTIF_IDS.has(item.id)
+                          ? tLandlordSeed(`${item.id}.title`)
+                          : item.title}
                       </span>
                       <span className="shrink-0 text-[12.5px] text-faint">
-                        {item.timestamp}
+                        {localizeRelativeTime(item.timestamp, locale)}
                       </span>
                     </div>
                     <p className="line-clamp-2 text-xs leading-relaxed text-body">
-                      {item.message}
+                      {isLandlordPath && LANDLORD_SEED_NOTIF_IDS.has(item.id)
+                        ? tLandlordSeed(`${item.id}.message`)
+                        : item.message}
                     </p>
                   </div>
 
@@ -129,7 +153,7 @@ export function DashboardNotificationsDropdown({
               href={viewAllHref}
               className="block text-xs font-semibold text-brand-blue hover:underline"
             >
-              View all notifications &rarr;
+              {t("viewAllLink")}
             </Link>
           </div>
         </DropdownMenuGroup>

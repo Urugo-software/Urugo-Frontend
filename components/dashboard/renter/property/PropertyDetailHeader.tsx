@@ -1,6 +1,10 @@
+"use client";
+
 import { MapPin } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { PropertyCover } from "@/components/dashboard/landlord/properties/PropertyCover";
 import { StatusBadge } from "@/components/shared/StatusBadge";
+import { getStatusTranslationKey } from "@/i18n/status-map";
 
 interface PropertyDetailHeaderProps {
   name: string;
@@ -15,6 +19,11 @@ export function PropertyDetailHeader({
   image,
   leaseStatus,
 }: PropertyDetailHeaderProps) {
+  const t = useTranslations("renter.property");
+  const tStatuses = useTranslations("common.statuses");
+  const statusKey = getStatusTranslationKey(leaseStatus);
+  const translatedStatus = statusKey ? tStatuses(statusKey) : leaseStatus;
+
   return (
     <section className="mb-6 overflow-hidden border border-line bg-white shadow-2xs">
       <div className="h-48 w-full border-b border-line bg-surface sm:h-56">
@@ -31,7 +40,7 @@ export function PropertyDetailHeader({
           </p>
         </div>
         <StatusBadge
-          label={`${leaseStatus} Lease`}
+          label={t("leaseBadge", { status: translatedStatus })}
           tone={leaseStatus === "Active" ? "success" : "warning"}
           className="text-sm"
         />

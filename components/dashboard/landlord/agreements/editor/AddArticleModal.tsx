@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { ModalDialog } from "@/components/shared/ModalDialog";
 
@@ -24,6 +25,8 @@ export function AddArticleModal({
   onClose,
   onAdd,
 }: Props) {
+  const t = useTranslations("landlord.agreements.editor.addArticleModal");
+  const tCommon = useTranslations("common");
   const {
     register,
     handleSubmit,
@@ -57,8 +60,8 @@ export function AddArticleModal({
     <ModalDialog
       open={isOpen}
       onClose={onClose}
-      title="Add Custom Article"
-      description="Insert an additional clause into the lease agreement."
+      title={t("title")}
+      description={t("description")}
       maxWidthClassName="max-w-lg"
     >
       <form
@@ -70,17 +73,16 @@ export function AddArticleModal({
             htmlFor="custom-article-title"
             className="mb-1.5 block text-[12.5px] font-semibold text-ink"
           >
-            Article Title / Heading
+            {t("headingLabel")}
           </label>
           <input
             id="custom-article-title"
             type="text"
             {...register("title", {
-              required: "Please enter a clause heading.",
-              validate: (v) =>
-                v.trim().length > 0 || "Please enter a clause heading.",
+              required: t("headingRequired"),
+              validate: (v) => v.trim().length > 0 || t("headingRequired"),
             })}
-            placeholder="e.g. Parking Rights and Vehicle Registration"
+            placeholder={t("headingPlaceholder")}
             className="h-10 w-full border border-line bg-white px-3 text-[13px] font-medium text-ink focus:border-ink focus:outline-none sm:text-sm"
           />
           {errors.title && (
@@ -93,7 +95,7 @@ export function AddArticleModal({
             htmlFor="custom-article-position"
             className="mb-1.5 block text-[12.5px] font-semibold text-ink"
           >
-            Position in Document
+            {t("positionLabel")}
           </label>
           <select
             id="custom-article-position"
@@ -101,16 +103,16 @@ export function AddArticleModal({
             className="h-10 w-full border border-line bg-white px-3 text-[13px] text-ink focus:border-ink focus:outline-none sm:text-sm"
           >
             <option value={totalArticles}>
-              At the end (Article {totalArticles + 1})
+              {t("positionEnd", { number: totalArticles + 1 })}
             </option>
             {totalArticles > 0 && (
-              <option value={0}>At the beginning (Article 1)</option>
+              <option value={0}>{t("positionStart")}</option>
             )}
             {Array.from(
               { length: Math.max(0, totalArticles - 1) },
               (_, i) => (
                 <option key={i} value={i + 1}>
-                  After Article {i + 1}
+                  {t("positionAfter", { number: i + 1 })}
                 </option>
               ),
             )}
@@ -122,17 +124,16 @@ export function AddArticleModal({
             htmlFor="custom-article-content"
             className="mb-1.5 block text-[12.5px] font-semibold text-ink"
           >
-            Article Content &amp; Terms
+            {t("contentLabel")}
           </label>
           <textarea
             id="custom-article-content"
             rows={5}
             {...register("content", {
-              required: "Please enter the clause wording.",
-              validate: (v) =>
-                v.trim().length > 0 || "Please enter the clause wording.",
+              required: t("contentRequired"),
+              validate: (v) => v.trim().length > 0 || t("contentRequired"),
             })}
-            placeholder="Provide the complete legal provisions for this custom clause..."
+            placeholder={t("contentPlaceholder")}
             className="w-full border border-line bg-white p-3 font-sans text-[13px] leading-relaxed text-ink focus:border-ink focus:outline-none sm:text-sm"
           />
           {errors.content && (
@@ -149,13 +150,13 @@ export function AddArticleModal({
             onClick={onClose}
             className="h-9 cursor-pointer rounded-none border-line px-4 text-[12.5px] font-medium"
           >
-            Cancel
+            {tCommon("actions.cancel")}
           </Button>
           <Button
             type="submit"
             className="h-9 cursor-pointer rounded-none bg-ink px-4 text-[12.5px] font-semibold text-white hover:bg-black"
           >
-            Add Article
+            {t("submit")}
           </Button>
         </div>
       </form>

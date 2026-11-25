@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useForm, useWatch } from "react-hook-form";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -23,6 +24,8 @@ interface PayRentFormValues {
 }
 
 export function PayRentView() {
+  const t = useTranslations("renter.payments.payRent");
+  const tWorkspace = useTranslations("renter.workspace");
   const router = useRouter();
   const payRentMutation = usePayRent();
   const profile = useRenterWorkspace((s) => s.profile);
@@ -33,7 +36,7 @@ export function PayRentView() {
   const [receiptFile, setReceiptFile] = useState<File | null>(null);
 
   const defaultAmount = pendingPayment?.amountRwf ?? property.monthlyRentRwf;
-  const targetPeriod = pendingPayment?.period ?? "Current Month";
+  const targetPeriod = pendingPayment?.period ?? t("currentMonthFallback");
 
   const {
     register,
@@ -88,12 +91,14 @@ export function PayRentView() {
           <PaymentAmountCard
             amountRwf={Number(amountRwf) || 0}
             period={targetPeriod}
-            unitNumber={`Unit ${property.unitNumber}`}
+            unitNumber={tWorkspace("unitLabel", { unit: property.unitNumber })}
           />
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field>
-              <FieldLabel htmlFor="pay-amount">Amount Paid (RWF) *</FieldLabel>
+              <FieldLabel htmlFor="pay-amount">
+                {t("amountPaidLabel")}
+              </FieldLabel>
               <Input
                 id="pay-amount"
                 type="number"
@@ -103,8 +108,7 @@ export function PayRentView() {
                 {...register("amountRwf", {
                   valueAsNumber: true,
                   validate: (v) =>
-                    (Number.isFinite(v) && v >= 1000) ||
-                    "Enter a valid amount of at least 1,000 RWF.",
+                    (Number.isFinite(v) && v >= 1000) || t("amountError"),
                 })}
               />
               <FieldError>{errors.amountRwf?.message}</FieldError>
@@ -113,37 +117,35 @@ export function PayRentView() {
             {isMobileMoney ? (
               <Field>
                 <FieldLabel htmlFor="pay-phone">
-                  Mobile Money Phone Number *
+                  {t("momoPhoneLabel")}
                 </FieldLabel>
                 <Input
                   id="pay-phone"
                   type="tel"
-                  placeholder="+250 788 123 456"
+                  placeholder={t("phonePlaceholder")}
                   className="h-10 rounded-none"
                   {...register("phone", {
                     validate: (v) =>
                       !isMobileMoney ||
                       v.replace(/\s+/g, "").length >= 10 ||
-                      "Enter a valid Mobile Money phone number.",
+                      t("phoneError"),
                   })}
                 />
                 <FieldError>{errors.phone?.message}</FieldError>
               </Field>
             ) : (
               <Field>
-                <FieldLabel htmlFor="pay-ref">
-                  Bank Transfer Reference *
-                </FieldLabel>
+                <FieldLabel htmlFor="pay-ref">{t("bankRefLabel")}</FieldLabel>
                 <Input
                   id="pay-ref"
                   type="text"
-                  placeholder="e.g. BK-984210"
+                  placeholder={t("bankRefPlaceholder")}
                   className="h-10 rounded-none"
                   {...register("referenceNumber", {
                     validate: (v) =>
                       isMobileMoney ||
                       v.trim().length >= 4 ||
-                      "Enter your transaction reference.",
+                      t("bankRefError"),
                   })}
                 />
                 <FieldError>{errors.referenceNumber?.message}</FieldError>
@@ -154,12 +156,12 @@ export function PayRentView() {
           {isMobileMoney && (
             <Field>
               <FieldLabel htmlFor="pay-momo-ref">
-                Transaction Reference (optional)
+                {t("momoRefLabel")}
               </FieldLabel>
               <Input
                 id="pay-momo-ref"
                 type="text"
-                placeholder="e.g. TXN-99823"
+                placeholder={t("momoRefPlaceholder")}
                 className="h-10 rounded-none"
                 {...register("referenceNumber")}
               />
@@ -169,9 +171,7 @@ export function PayRentView() {
           <PaymentConfirmationUpload onFileSelect={setReceiptFile} />
 
           <p className="border-l-2 border-brand-blue bg-brand-tint/30 px-3 py-2 text-xs text-body">
-            Preview mode: submitting records your payment locally and generates a
-            receipt preview. Live MoMo/Airtel settlement requires backend gateway
-            integration.
+            {t("previewNotice")}
           </p>
 
           <PayRentFooterActions isPending={payRentMutation.isPending} />

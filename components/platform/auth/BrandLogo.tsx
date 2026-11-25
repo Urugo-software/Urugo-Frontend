@@ -1,4 +1,8 @@
-function BrandLogo() {
+import { getTranslations } from "next-intl/server";
+
+async function BrandLogo() {
+  const t = await getTranslations("auth.brand");
+
   return (
     <div className="hidden flex-col items-center justify-center border-r border-line/70 bg-white px-10 text-body lg:flex">
       <span
@@ -13,10 +17,10 @@ function BrandLogo() {
       </span>
 
       <p className="mt-3 text-xs font-semibold uppercase tracking-[0.25em] text-brand">
-        Rental Platform
+        {t("subtitle")}
       </p>
       <p className="mt-4 max-w-xs text-center text-sm leading-relaxed text-body">
-        Rwanda&apos;s trusted rental platform for landlords and renters.
+        {t("tagline")}
       </p>
     </div>
   );

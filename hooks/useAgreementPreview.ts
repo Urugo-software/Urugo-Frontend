@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import toast from "react-hot-toast";
 import {
   Agreement,
@@ -13,6 +14,7 @@ import { createSafeId } from "@/utils/format";
 
 export function useAgreementPreview(initialAgreement: Agreement) {
   const router = useRouter();
+  const tToast = useTranslations("landlord.hookFeedback.agreement");
   const upsertAgreement = useLandlordWorkspace((s) => s.upsertAgreement);
   const storeAgreement = useLandlordWorkspace((s) =>
     s.agreements.find((a) => a.id === initialAgreement.id),
@@ -90,8 +92,8 @@ export function useAgreementPreview(initialAgreement: Agreement) {
       version: prev.version + 1,
       updatedAt: new Date().toISOString(),
     }));
-    toast.success(`Agreement sent to ${agreement.renter.name} for review.`);
-  }, [commitUpdate, agreement.renter.name]);
+    toast.success(tToast("sentForReview", { name: agreement.renter.name }));
+  }, [commitUpdate, agreement.renter.name, tToast]);
 
   const handleCancelAgreement = useCallback(() => {
     commitUpdate((prev) => ({
@@ -100,8 +102,8 @@ export function useAgreementPreview(initialAgreement: Agreement) {
       updatedAt: new Date().toISOString(),
     }));
     setIsCancelConfirmOpen(false);
-    toast.success("Agreement cancelled.");
-  }, [commitUpdate]);
+    toast.success(tToast("cancelled"));
+  }, [commitUpdate, tToast]);
 
   const handleCreateRenewalDraft = useCallback(() => {
     const now = new Date().toISOString();
@@ -121,9 +123,9 @@ export function useAgreementPreview(initialAgreement: Agreement) {
       tenancyStartDate: agreement.tenancyEndDate || now.slice(0, 10),
     };
     upsertAgreement(renewalDraft);
-    toast.success("Renewal draft created.");
+    toast.success(tToast("renewalDraftCreated"));
     router.push(`/landlord/agreements/${newId}/edit`);
-  }, [agreement, upsertAgreement, router]);
+  }, [agreement, upsertAgreement, router, tToast]);
 
   const handleSignFromSimulator = useCallback(
     (signerName: string) => {

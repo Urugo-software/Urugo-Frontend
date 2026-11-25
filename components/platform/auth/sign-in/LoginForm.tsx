@@ -2,6 +2,7 @@
 
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -32,6 +33,7 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
+  const t = useTranslations("auth.login");
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -65,24 +67,24 @@ export function LoginForm({
         <FieldGroup className="gap-4 sm:gap-5" aria-busy={isPending}>
           <Field data-invalid={Boolean(errors.identifier) || undefined}>
             <FieldLabel htmlFor="identifier" className={AUTH_LABEL_CLASS}>
-              Email or phone number
+              {t("identifierLabel")}
             </FieldLabel>
             <Input
               id="identifier"
               type="text"
               autoComplete="username"
               disabled={isPending}
-              placeholder="you@example.com or +250 788 000 000"
+              placeholder={t("identifierPlaceholder")}
               aria-invalid={Boolean(errors.identifier)}
               aria-describedby={
                 errors.identifier ? "identifier-error" : undefined
               }
               className={AUTH_INPUT_CLASS}
               {...register("identifier", {
-                required: "Please enter your email or phone number.",
+                required: t("errors.identifierRequired"),
                 validate: (value) =>
                   (value ?? "").trim().length > 0 ||
-                  "Please enter your email or phone number.",
+                  t("errors.identifierRequired"),
               })}
             />
             {errors.identifier?.message && (
@@ -95,13 +97,13 @@ export function LoginForm({
           <Field data-invalid={Boolean(errors.password) || undefined}>
             <div className="flex flex-wrap items-center justify-between gap-2">
               <FieldLabel htmlFor="password" className={AUTH_LABEL_CLASS}>
-                Password
+                {t("passwordLabel")}
               </FieldLabel>
               <Link
                 href="/auth/forgot-password"
                 className="text-xs font-medium text-brand underline-offset-4 transition-colors hover:text-brand-deep hover:underline"
               >
-                Forgot password?
+                {t("forgotPassword")}
               </Link>
             </div>
             <div className="relative">
@@ -110,21 +112,23 @@ export function LoginForm({
                 type={showPassword ? "text" : "password"}
                 autoComplete="current-password"
                 disabled={isPending}
-                placeholder="Enter your password"
+                placeholder={t("passwordPlaceholder")}
                 aria-invalid={Boolean(errors.password)}
                 aria-describedby={
                   errors.password ? "password-error" : undefined
                 }
                 className={`${AUTH_INPUT_CLASS} pr-11`}
                 {...register("password", {
-                  required: "Please enter your password.",
+                  required: t("errors.passwordRequired"),
                 })}
               />
               <button
                 type="button"
                 disabled={isPending}
                 onClick={() => setShowPassword((prev) => !prev)}
-                aria-label={showPassword ? "Hide password" : "Show password"}
+                aria-label={
+                  showPassword ? t("hidePassword") : t("showPassword")
+                }
                 aria-pressed={showPassword}
                 className="absolute inset-y-0 right-0 flex w-11 cursor-pointer items-center justify-center rounded-r-xl text-faint transition-colors hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
               >
@@ -148,12 +152,12 @@ export function LoginForm({
               disabled={isPending}
               className={AUTH_PRIMARY_BUTTON_CLASS}
             >
-              {isPending ? "Signing in..." : "Sign in"}
+              {isPending ? t("submitting") : t("submit")}
             </Button>
           </Field>
 
           <FieldSeparator className="text-xs text-faint">
-            Or continue with
+            {t("orContinueWith")}
           </FieldSeparator>
 
           <Field>
@@ -161,21 +165,21 @@ export function LoginForm({
               variant="outline"
               type="button"
               disabled
-              title="Google sign-in will be enabled once authentication is connected."
+              title={t("googleComingSoonTooltip")}
               className="h-11 w-full cursor-not-allowed rounded-xl border-line text-sm font-medium text-faint"
             >
               <SignUpGoogleIcon />
-              <span>Google sign-in (Coming soon)</span>
+              <span>{t("googleComingSoon")}</span>
             </Button>
           </Field>
 
           <FieldDescription className="pt-1 text-center text-sm text-body">
-            Don&apos;t have an account?{" "}
+            {t("noAccount")}{" "}
             <Link
               href="/auth/sign-up"
               className="font-semibold text-brand underline-offset-4 hover:text-brand-deep hover:underline"
             >
-              Sign up
+              {t("signUpLink")}
             </Link>
           </FieldDescription>
         </FieldGroup>

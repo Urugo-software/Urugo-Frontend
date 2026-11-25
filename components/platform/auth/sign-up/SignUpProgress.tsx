@@ -1,4 +1,7 @@
+"use client";
+
 import { Check, type LucideIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { cn } from "@/lib/utils";
 
@@ -17,14 +20,17 @@ export function SignUpProgress({
   steps,
   onSelectStep,
 }: SignUpProgressProps) {
+  const t = useTranslations("auth.signUp.progress");
+
   return (
-    <nav aria-label="Registration progress" className="w-full">
+    <nav aria-label={t("ariaLabel")} className="w-full">
       <ol className="flex w-full items-start">
         {steps.map((step, index) => {
           const completed = step.key < currentStep;
           const current = step.key === currentStep;
           const Icon = completed ? Check : step.icon;
           const isInteractive = completed && Boolean(onSelectStep);
+          const stepNumber = index + 1;
 
           const circleClassName = cn(
             "flex size-8 shrink-0 items-center justify-center rounded-full transition-colors sm:size-9",
@@ -32,6 +38,12 @@ export function SignUpProgress({
             completed && "bg-brand text-white",
             !current && !completed && "bg-line text-body",
           );
+
+          const statusKey = completed
+            ? "stepCompleted"
+            : current
+              ? "stepCurrent"
+              : "stepUpcoming";
 
           return (
             <li
@@ -47,13 +59,20 @@ export function SignUpProgress({
                   <button
                     type="button"
                     onClick={() => onSelectStep?.(step.key)}
-                    aria-label={`Return to step ${index + 1}: ${step.label}`}
+                    aria-label={t("returnToStep", {
+                      step: stepNumber,
+                      label: step.label,
+                    })}
                     className={cn(
                       circleClassName,
                       "cursor-pointer hover:bg-brand-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2",
                     )}
                   >
-                    <Icon aria-hidden="true" className="size-4" strokeWidth={2} />
+                    <Icon
+                      aria-hidden="true"
+                      className="size-4"
+                      strokeWidth={2}
+                    />
                   </button>
                 ) : (
                   <span className={circleClassName}>
@@ -63,12 +82,10 @@ export function SignUpProgress({
                       strokeWidth={1.9}
                     />
                     <span className="sr-only">
-                      Step {index + 1}: {step.label},{" "}
-                      {completed
-                        ? "completed"
-                        : current
-                          ? "current step"
-                          : "upcoming"}
+                      {t(statusKey, {
+                        step: stepNumber,
+                        label: step.label,
+                      })}
                     </span>
                   </span>
                 )}

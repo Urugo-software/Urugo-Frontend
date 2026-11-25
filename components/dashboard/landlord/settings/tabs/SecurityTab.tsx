@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,7 @@ interface SecurityValues {
 }
 
 export function SecurityTab({ onSave }: { onSave: () => void }) {
+  const t = useTranslations("landlord.settings.security");
   const {
     register,
     handleSubmit,
@@ -28,7 +30,7 @@ export function SecurityTab({ onSave }: { onSave: () => void }) {
   });
 
   const onSubmit = () => {
-    toast.success("Password updated (local preview).");
+    toast.success(t("toastUpdated"));
     reset();
     onSave();
   };
@@ -40,16 +42,15 @@ export function SecurityTab({ onSave }: { onSave: () => void }) {
       className="max-w-xl space-y-6"
     >
       <div>
-        <h3 className="text-lg font-bold text-ink">Security & Passwords</h3>
-        <p className="mt-1 text-xs text-body">
-          Keep your landlord account protected with a strong password.
-        </p>
+        <h3 className="text-lg font-bold text-ink">{t("title")}</h3>
+        <p className="mt-1 text-xs text-body">{t("subtitle")}</p>
       </div>
 
       <div className="space-y-4">
         <Field>
           <FieldLabel htmlFor="current-password">
-            Current password <span className="text-rose-600">*</span>
+            {t("currentPasswordLabel")}{" "}
+            <span className="text-rose-600">*</span>
           </FieldLabel>
           <Input
             id="current-password"
@@ -58,8 +59,7 @@ export function SecurityTab({ onSave }: { onSave: () => void }) {
             aria-invalid={!!errors.currentPassword}
             className="h-10 rounded-none"
             {...register("currentPassword", {
-              validate: (v) =>
-                v.length > 0 || "Enter your current password.",
+              validate: (v) => v.length > 0 || t("currentPasswordRequired"),
             })}
           />
           <FieldError>{errors.currentPassword?.message}</FieldError>
@@ -67,7 +67,7 @@ export function SecurityTab({ onSave }: { onSave: () => void }) {
 
         <Field>
           <FieldLabel htmlFor="new-password">
-            New password <span className="text-rose-600">*</span>
+            {t("newPasswordLabel")} <span className="text-rose-600">*</span>
           </FieldLabel>
           <Input
             id="new-password"
@@ -76,9 +76,7 @@ export function SecurityTab({ onSave }: { onSave: () => void }) {
             aria-invalid={!!errors.newPassword}
             className="h-10 rounded-none"
             {...register("newPassword", {
-              validate: (v) =>
-                v.length >= 8 ||
-                "New password must be at least 8 characters long.",
+              validate: (v) => v.length >= 8 || t("newPasswordMin"),
             })}
           />
           <FieldError>{errors.newPassword?.message}</FieldError>
@@ -86,7 +84,8 @@ export function SecurityTab({ onSave }: { onSave: () => void }) {
 
         <Field>
           <FieldLabel htmlFor="confirm-password">
-            Confirm new password <span className="text-rose-600">*</span>
+            {t("confirmPasswordLabel")}{" "}
+            <span className="text-rose-600">*</span>
           </FieldLabel>
           <Input
             id="confirm-password"
@@ -96,8 +95,7 @@ export function SecurityTab({ onSave }: { onSave: () => void }) {
             className="h-10 rounded-none"
             {...register("confirmPassword", {
               validate: (v) =>
-                v === getValues("newPassword") ||
-                "Passwords do not match.",
+                v === getValues("newPassword") || t("confirmPasswordMismatch"),
             })}
           />
           <FieldError>{errors.confirmPassword?.message}</FieldError>
@@ -110,7 +108,7 @@ export function SecurityTab({ onSave }: { onSave: () => void }) {
           disabled={isSubmitting}
           className="cursor-pointer rounded-none"
         >
-          Update Password
+          {t("updateBtn")}
         </Button>
       </div>
     </form>

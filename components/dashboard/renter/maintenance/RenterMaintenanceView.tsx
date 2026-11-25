@@ -1,11 +1,13 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { DashboardSearchInput } from "@/components/shared/DashboardSearchInput";
 import SectionLoading from "@/components/shared/SectionLoading";
 import SectionError from "@/components/shared/SectionError";
 import { Button } from "@/components/ui/button";
 import { useRenterMaintenance } from "@/hooks/query/renter.hooks";
+import { getStatusTranslationKey } from "@/i18n/status-map";
 import { useRenterWorkspace } from "@/store/renter-workspace.store";
 import type { MaintenanceStatus, RenterMaintenance } from "@/types/renter";
 import { MaintenanceHeader } from "./MaintenanceHeader";
@@ -22,6 +24,8 @@ const STATUS_FILTERS: Array<"all" | MaintenanceStatus> = [
 ];
 
 export function RenterMaintenanceView() {
+  const t = useTranslations("renter.maintenance");
+  const tStatuses = useTranslations("common.statuses");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<RenterMaintenance | null>(
     null,
@@ -45,18 +49,24 @@ export function RenterMaintenanceView() {
   }, [items, search, statusFilter]);
 
   if (isLoading) {
-    return <SectionLoading message="Loading maintenance requests..." />;
+    return <SectionLoading message={t("loading")} />;
   }
   if (isError) {
     return (
       <SectionError
-        message="Unable to load maintenance records."
+        message={t("loadError")}
         onRetry={() => void refetch()}
       />
     );
   }
 
   const hasFilters = Boolean(search.trim()) || statusFilter !== "all";
+
+  const getFilterLabel = (status: "all" | MaintenanceStatus) => {
+    if (status === "all") return t("filterAll");
+    const statusKey = getStatusTranslationKey(status);
+    return statusKey ? tStatuses(statusKey) : status;
+  };
 
   return (
     <div className="min-h-0 flex-1 space-y-6 overflow-y-auto bg-surface/30 p-4 pb-16 sm:p-8 sm:pb-20 md:p-10 md:pb-24">
@@ -66,13 +76,13 @@ export function RenterMaintenanceView() {
         <DashboardSearchInput
           value={search}
           onChange={setSearch}
-          placeholder="Search requests by title or category..."
-          label="Search maintenance requests"
+          placeholder={t("searchPlaceholder")}
+          label={t("searchLabel")}
           className="min-w-0 flex-1 basis-full sm:basis-64"
         />
         <div
           role="group"
-          aria-label="Filter maintenance by status"
+          aria-label={t("filterAria")}
           className="flex flex-wrap items-center gap-1.5"
         >
           {STATUS_FILTERS.map((status) => (
@@ -84,7 +94,7 @@ export function RenterMaintenanceView() {
               onClick={() => setStatusFilter(status)}
               className="h-8 cursor-pointer rounded-none px-3 text-xs"
             >
-              {status === "all" ? "All" : status}
+              {getFilterLabel(status)}
             </Button>
           ))}
         </div>

@@ -10,11 +10,13 @@ import {
   MapPin,
   MessageSquare,
 } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import type { ViewMode } from "@/components/dashboard/landlord/properties/PortfolioCard";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { Button } from "@/components/ui/button";
+import type { AppLocale } from "@/i18n/config";
+import { formatRwfLocalized } from "@/i18n/formatting";
 import { cn } from "@/lib/utils";
-import { formatRwf } from "@/utils/format";
 import { parseListingPrice } from "@/utils/renter-helpers";
 
 export interface DiscoveryListingItem {
@@ -44,6 +46,8 @@ export function RenterDiscoveryCard({
   onInquire,
   onRequestViewing,
 }: RenterDiscoveryCardProps) {
+  const t = useTranslations("renter.discovery.card");
+  const locale = useLocale() as AppLocale;
   const isList = viewMode === "list";
   const isAvailable = item.availabilityStatus.toLowerCase() === "available";
   const numericPrice = parseListingPrice(item.price);
@@ -107,24 +111,24 @@ export function RenterDiscoveryCard({
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-body">
             <span className="inline-flex items-center gap-1">
               <BedDouble aria-hidden="true" className="size-3.5 text-faint" />
-              {item.beds} Bed
+              {t("bed", { count: item.beds })}
             </span>
             <span className="inline-flex items-center gap-1">
               <Bath aria-hidden="true" className="size-3.5 text-faint" />
-              {item.baths} Bath
+              {t("bath", { count: item.baths })}
             </span>
             {item.parking && (
               <span className="inline-flex items-center gap-1">
                 <Car aria-hidden="true" className="size-3.5 text-faint" />
-                Parking
+                {t("parking")}
               </span>
             )}
           </div>
 
           <div className="pt-1 font-ibm text-base font-bold text-ink">
-            {formatRwf(numericPrice)}{" "}
+            {formatRwfLocalized(numericPrice, locale)}{" "}
             <span className="font-sans text-xs font-normal text-faint">
-              / month
+              {t("perMonth")}
             </span>
           </div>
         </div>
@@ -137,7 +141,7 @@ export function RenterDiscoveryCard({
             className="h-8 flex-1 cursor-pointer rounded-none text-xs"
           >
             <Calendar aria-hidden="true" className="size-3.5" />
-            Request Visit
+            {t("requestVisit")}
           </Button>
           <Button
             type="button"
@@ -147,7 +151,7 @@ export function RenterDiscoveryCard({
             className="h-8 flex-1 cursor-pointer rounded-none text-xs"
           >
             <MessageSquare aria-hidden="true" className="size-3.5" />
-            Inquire
+            {t("inquire")}
           </Button>
         </div>
       </div>

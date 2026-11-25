@@ -1,10 +1,16 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+
 import { AuthFormHeader } from "../AuthFormHeader";
 
 function LoginFormHeader() {
+  const t = useTranslations("auth.login");
+
   return (
     <AuthFormHeader
-      title="Sign in"
-      description="Welcome back. Enter your details to access your account."
+      title={t("title")}
+      description={t("description")}
     />
   );
 }

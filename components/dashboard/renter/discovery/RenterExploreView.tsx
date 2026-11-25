@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Compass } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { ViewMode } from "@/components/dashboard/landlord/properties/PortfolioCard";
 import { EmptyStateBox } from "@/components/shared/EmptyStateBox";
 import { Pagination } from "@/components/shared/Pagination";
@@ -23,6 +24,7 @@ import { RenterViewingModal } from "./RenterViewingModal";
 const ITEMS_PER_PAGE = 6;
 
 export function RenterExploreView() {
+  const t = useTranslations("renter.discovery.explore");
   const [search, setSearch] = useState("");
   const [location, setLocation] = useState("all");
   const [beds, setBeds] = useState("all");
@@ -83,12 +85,9 @@ export function RenterExploreView() {
     <div className="min-h-0 flex-1 space-y-6 overflow-y-auto bg-surface/30 p-4 pb-16 sm:p-8 sm:pb-20 md:p-10 md:pb-24">
       <div>
         <h2 className="text-xl font-bold tracking-tight text-ink sm:text-2xl">
-          Explore Homes
+          {t("title")}
         </h2>
-        <p className="mt-1 text-sm text-body">
-          Discover verified rentals across Kigali, send inquiries, and book
-          viewings.
-        </p>
+        <p className="mt-1 text-sm text-body">{t("subtitle")}</p>
       </div>
 
       <DiscoveryFiltersBar
@@ -122,8 +121,8 @@ export function RenterExploreView() {
       {paginated.items.length === 0 ? (
         <EmptyStateBox
           icon={Compass}
-          title="No matching properties"
-          description="Try broadening your search, location, bedroom count, or monthly budget."
+          title={t("emptyTitle")}
+          description={t("emptyDescription")}
           action={
             <Button
               type="button"
@@ -131,7 +130,7 @@ export function RenterExploreView() {
               onClick={resetFilters}
               className="cursor-pointer rounded-none"
             >
-              Reset Filters
+              {t("resetFilters")}
             </Button>
           }
         />
@@ -161,7 +160,7 @@ export function RenterExploreView() {
             onPageChange={setPage}
             totalItems={paginated.totalItems}
             itemsPerPage={ITEMS_PER_PAGE}
-            itemLabel="properties"
+            itemLabel={t("paginationLabel")}
           />
         </>
       )}

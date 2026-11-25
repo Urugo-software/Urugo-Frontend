@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { Search, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
@@ -28,6 +29,7 @@ export function DashboardSearchInput({
   onSubmitSearch,
   preventFormEnter = false,
 }: DashboardSearchInputProps) {
+  const t = useTranslations("common.actions");
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = (event: React.FormEvent) => {
@@ -74,7 +76,7 @@ export function DashboardSearchInput({
             onChange("");
             inputRef.current?.focus();
           }}
-          aria-label="Clear search"
+          aria-label={t("clearSearch")}
           className="absolute right-1.5 top-1/2 flex size-8 -translate-y-1/2 cursor-pointer items-center justify-center text-faint transition-colors hover:text-ink"
         >
           <X aria-hidden="true" className="size-4" />
@@ -97,11 +99,11 @@ export function DashboardSearchInput({
       {showSubmitButton && (
         <button
           type="submit"
-          aria-label="Run search"
+          aria-label={t("runSearch")}
           className="flex h-10 shrink-0 cursor-pointer items-center gap-1.5 border border-line bg-ink px-3.5 text-xs font-semibold text-white transition-colors hover:bg-ink/90"
         >
           <Search aria-hidden="true" className="size-3.5" />
-          <span>Search</span>
+          <span>{t("search")}</span>
         </button>
       )}
     </form>

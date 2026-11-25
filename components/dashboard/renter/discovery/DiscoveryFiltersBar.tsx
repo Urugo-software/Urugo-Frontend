@@ -1,8 +1,11 @@
 "use client";
 
+import { useLocale, useTranslations } from "next-intl";
 import type { ViewMode } from "@/components/dashboard/landlord/properties/PortfolioCard";
 import { DashboardSearchInput } from "@/components/shared/DashboardSearchInput";
 import { ViewModeToggle } from "@/components/shared/ViewModeToggle";
+import type { AppLocale } from "@/i18n/config";
+import { formatRwfLocalized } from "@/i18n/formatting";
 
 export type DiscoverySort = "default" | "price_asc" | "price_desc";
 
@@ -40,32 +43,35 @@ export function DiscoveryFiltersBar({
   viewMode,
   onViewModeChange,
 }: DiscoveryFiltersBarProps) {
+  const t = useTranslations("renter.discovery.filters");
+  const locale = useLocale() as AppLocale;
+
   return (
     <div className="space-y-3 border border-line bg-white p-4 shadow-2xs">
       <div className="flex flex-wrap items-center gap-3">
         <DashboardSearchInput
           value={search}
           onChange={onSearchChange}
-          placeholder="Search by neighborhood, apartment name, or landlord..."
-          label="Search available properties"
+          placeholder={t("searchPlaceholder")}
+          label={t("searchLabel")}
           showSubmitButton
           className="min-w-0 flex-1"
         />
         <ViewModeToggle
           value={viewMode}
           onChange={onViewModeChange}
-          label="Switch property listing layout"
+          label={t("switchLayoutAria")}
         />
       </div>
 
       <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-4">
         <select
-          aria-label="Filter by location"
+          aria-label={t("locationAria")}
           value={location}
           onChange={(e) => onLocationChange(e.target.value)}
           className={SELECT_CLS}
         >
-          <option value="all">All locations</option>
+          <option value="all">{t("allLocations")}</option>
           {locations.map((loc) => (
             <option key={loc} value={loc}>
               {loc}
@@ -74,38 +80,44 @@ export function DiscoveryFiltersBar({
         </select>
 
         <select
-          aria-label="Filter by bedrooms"
+          aria-label={t("bedsAria")}
           value={beds}
           onChange={(e) => onBedsChange(e.target.value)}
           className={SELECT_CLS}
         >
-          <option value="all">Any bedrooms</option>
-          <option value="1">1+ Bedroom</option>
-          <option value="2">2+ Bedrooms</option>
-          <option value="3">3+ Bedrooms</option>
+          <option value="all">{t("anyBedrooms")}</option>
+          <option value="1">{t("beds1")}</option>
+          <option value="2">{t("beds2")}</option>
+          <option value="3">{t("beds3")}</option>
         </select>
 
         <select
-          aria-label="Filter by max monthly rent"
+          aria-label={t("budgetAria")}
           value={maxPrice}
           onChange={(e) => onMaxPriceChange(e.target.value)}
           className={SELECT_CLS}
         >
-          <option value="all">Any budget</option>
-          <option value="150000">Up to 150,000 RWF</option>
-          <option value="250000">Up to 250,000 RWF</option>
-          <option value="400000">Up to 400,000 RWF</option>
+          <option value="all">{t("anyBudget")}</option>
+          <option value="150000">
+            {t("upTo", { amount: formatRwfLocalized(150000, locale) })}
+          </option>
+          <option value="250000">
+            {t("upTo", { amount: formatRwfLocalized(250000, locale) })}
+          </option>
+          <option value="400000">
+            {t("upTo", { amount: formatRwfLocalized(400000, locale) })}
+          </option>
         </select>
 
         <select
-          aria-label="Sort listings"
+          aria-label={t("sortAria")}
           value={sort}
           onChange={(e) => onSortChange(e.target.value as DiscoverySort)}
           className={SELECT_CLS}
         >
-          <option value="default">Recommended</option>
-          <option value="price_asc">Rent: Low to High</option>
-          <option value="price_desc">Rent: High to Low</option>
+          <option value="default">{t("sortDefault")}</option>
+          <option value="price_asc">{t("sortAsc")}</option>
+          <option value="price_desc">{t("sortDesc")}</option>
         </select>
       </div>
     </div>

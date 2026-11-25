@@ -10,6 +10,7 @@ import {
   UserCheck,
   XCircle,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { AgreementStatus } from "@/types/agreement.types";
 
@@ -32,6 +33,9 @@ export function PreviewActionButtons({
   onCreateRenewalDraft,
   onOpenRenterSimulator,
 }: Props) {
+  const t = useTranslations("landlord.agreements.preview.actions");
+  const tEditor = useTranslations("landlord.agreements.editor");
+  const tCommon = useTranslations("common");
   const isDraft = status === "Draft" || status === "Ready for Review";
   const isEditable = isDraft || status === "Changes Requested";
   const isAwaitingLandlord = status === "Awaiting Landlord Signature";
@@ -47,7 +51,7 @@ export function PreviewActionButtons({
         className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-none border-line bg-white px-3 text-[12.5px] font-medium text-ink transition-colors hover:bg-surface"
       >
         <Printer className="size-3.5 text-faint" />
-        <span>Print / PDF</span>
+        <span>{tEditor("printPdf")}</span>
       </Button>
 
       {isAwaitingLandlord && onOpenLandlordSign && (
@@ -57,7 +61,7 @@ export function PreviewActionButtons({
           className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-none bg-ink px-4 text-[12.5px] font-semibold text-white transition-colors hover:bg-black"
         >
           <PenTool className="size-3.5" />
-          <span>Sign Agreement</span>
+          <span>{t("signAgreement")}</span>
         </Button>
       )}
 
@@ -69,7 +73,7 @@ export function PreviewActionButtons({
           className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-none border-line bg-white px-3 text-[12.5px] font-semibold text-ink transition-colors hover:bg-surface"
         >
           <Send className="size-3.5 text-faint" />
-          <span>Send to Renter</span>
+          <span>{tEditor("sendToRenter")}</span>
         </Button>
       )}
 
@@ -80,7 +84,9 @@ export function PreviewActionButtons({
         >
           <FileEdit className="size-3.5" />
           <span>
-            {status === "Changes Requested" ? "Revise Clauses" : "Edit Clauses"}
+            {status === "Changes Requested"
+              ? t("reviseClauses")
+              : t("editClauses")}
           </span>
         </Link>
       )}
@@ -93,7 +99,7 @@ export function PreviewActionButtons({
           className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-none border-line bg-white px-3 text-[12.5px] font-semibold text-ink transition-colors hover:bg-surface"
         >
           <RefreshCw className="size-3.5 text-faint" />
-          <span>Renew Agreement</span>
+          <span>{t("renewAgreement")}</span>
         </Button>
       )}
 
@@ -105,7 +111,7 @@ export function PreviewActionButtons({
           className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-none border-line bg-white px-3 text-[12.5px] font-medium text-red-700 transition-colors hover:border-red-300 hover:bg-red-50"
         >
           <XCircle className="size-3.5" />
-          <span>Cancel</span>
+          <span>{tCommon("actions.cancel")}</span>
         </Button>
       )}
 
@@ -115,10 +121,10 @@ export function PreviewActionButtons({
           variant="outline"
           onClick={onOpenRenterSimulator}
           className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-none border-dashed border-line bg-surface/50 px-3 text-[12.5px] font-medium text-faint transition-colors hover:bg-surface hover:text-ink"
-          title="Development only: test renter review or signing"
+          title={t("simulateRenterTitle")}
         >
           <UserCheck className="size-3.5" />
-          <span>Simulate Renter</span>
+          <span>{t("simulateRenter")}</span>
         </Button>
       )}
     </div>

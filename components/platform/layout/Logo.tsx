@@ -1,11 +1,16 @@
+"use client";
+
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 function Logo() {
+  const t = useTranslations("public.nav");
+
   return (
     <Link
       href="/"
-      aria-label="Urugo Home"
-      className="inline-flex items-center font-extrabold tracking-tight text-xl text-brand transition-colors hover:text-brand-deep"
+      aria-label={t("logoAria")}
+      className="inline-flex items-center text-xl font-extrabold tracking-tight text-brand transition-colors hover:text-brand-deep"
     >
       URUGO
     </Link>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Download, Eye, FileText, Printer } from "lucide-react";
+import { useTranslations } from "next-intl";
 import toast from "react-hot-toast";
 import { ModalDialog } from "@/components/shared/ModalDialog";
 import { Button } from "@/components/ui/button";
@@ -12,12 +13,20 @@ import {
   downloadTextFile,
 } from "@/utils/renter-helpers";
 
+const CATEGORY_KEYS: Record<RenterDocument["category"], string> = {
+  "Lease Agreement": "leaseAgreement",
+  "Payment Receipt": "paymentReceipt",
+  Notice: "notice",
+};
+
 export function DocumentItemCard({ doc }: { doc: RenterDocument }) {
+  const t = useTranslations("renter.documents");
   const [previewOpen, setPreviewOpen] = useState(false);
   const profile = useRenterWorkspace((s) => s.profile);
   const property = useRenterWorkspace((s) => s.property);
 
   const content = buildDocumentDownloadContent(doc, property, profile.name);
+  const categoryLabel = t(`categories.${CATEGORY_KEYS[doc.category]}`);
 
   const handleDownload = () => {
     const slug = doc.title
@@ -25,7 +34,7 @@ export function DocumentItemCard({ doc }: { doc: RenterDocument }) {
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/(^-|-$)/g, "");
     downloadTextFile(`${slug || doc.id}.txt`, content);
-    toast.success(`Downloaded ${doc.title} (preview copy).`);
+    toast.success(t("downloadSuccess", { title: doc.title }));
   };
 
   return (
@@ -40,7 +49,7 @@ export function DocumentItemCard({ doc }: { doc: RenterDocument }) {
               {doc.title}
             </h4>
             <span className="text-xs text-faint">
-              {doc.category} &middot; {doc.size} &middot; {doc.date}
+              {categoryLabel} &middot; {doc.size} &middot; {doc.date}
             </span>
           </div>
         </div>
@@ -54,7 +63,7 @@ export function DocumentItemCard({ doc }: { doc: RenterDocument }) {
             className="h-8 cursor-pointer rounded-none text-xs"
           >
             <Eye aria-hidden="true" className="size-3.5" />
-            Preview
+            {t("preview")}
           </Button>
           <Button
             type="button"
@@ -64,7 +73,7 @@ export function DocumentItemCard({ doc }: { doc: RenterDocument }) {
             className="h-8 cursor-pointer rounded-none text-xs"
           >
             <Download aria-hidden="true" className="size-3.5" />
-            Download
+            {t("download")}
           </Button>
         </div>
       </div>
@@ -73,7 +82,7 @@ export function DocumentItemCard({ doc }: { doc: RenterDocument }) {
         open={previewOpen}
         onClose={() => setPreviewOpen(false)}
         title={doc.title}
-        description={`${doc.category} · ${doc.date}`}
+        description={`${categoryLabel} · ${doc.date}`}
         footer={
           <>
             <Button
@@ -83,7 +92,7 @@ export function DocumentItemCard({ doc }: { doc: RenterDocument }) {
               className="cursor-pointer rounded-none"
             >
               <Printer aria-hidden="true" className="size-4" />
-              Print
+              {t("print")}
             </Button>
             <Button
               type="button"
@@ -91,7 +100,7 @@ export function DocumentItemCard({ doc }: { doc: RenterDocument }) {
               className="cursor-pointer rounded-none"
             >
               <Download aria-hidden="true" className="size-4" />
-              Download Copy
+              {t("downloadCopy")}
             </Button>
           </>
         }

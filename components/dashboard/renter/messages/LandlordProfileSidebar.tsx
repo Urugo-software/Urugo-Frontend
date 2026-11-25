@@ -1,4 +1,7 @@
+"use client";
+
 import { Mail, Phone } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { ConversationContact } from "@/types/messages";
 import { landlordExtraDetails } from "@/data/landlord-profile-data";
 import { LandlordHeaderCard } from "./LandlordHeaderCard";
@@ -10,6 +13,7 @@ export function LandlordProfileSidebar({
 }: {
   contact: ConversationContact;
 }) {
+  const t = useTranslations("renter.messages");
   const email = contact.email || landlordExtraDetails.email;
 
   return (
@@ -19,16 +23,16 @@ export function LandlordProfileSidebar({
       <div className="flex-1 space-y-6 p-6">
         <div className="space-y-3">
           <div className="text-xs font-bold uppercase tracking-wider text-faint">
-            Direct Contact
+            {t("directContact")}
           </div>
           <LandlordContactItem
-            label="Phone"
+            label={t("phoneLabel")}
             value={contact.phone}
             href={`tel:${contact.phone}`}
             icon={Phone}
           />
           <LandlordContactItem
-            label="Email"
+            label={t("emailLabel")}
             value={email}
             href={`mailto:${email}`}
             icon={Mail}

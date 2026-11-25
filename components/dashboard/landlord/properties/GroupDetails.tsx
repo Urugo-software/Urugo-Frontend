@@ -2,6 +2,7 @@
 
 import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Pagination } from "@/components/shared/Pagination";
 import { useGroupDetails } from "@/hooks/useGroupDetails";
 import { formatPropertyRent } from "@/utils/format";
@@ -24,6 +25,7 @@ import { useMembershipControls } from "./membership/useMembershipControls";
 const ITEMS_PER_PAGE = 6;
 
 export function GroupDetails({ id }: { id: string }) {
+  const t = useTranslations("landlord.properties");
   const router = useRouter();
   const mainRef = useRef<HTMLElement>(null);
   const [sortBy, setSortBy] = useState<PropertySortOrder>("default");
@@ -68,7 +70,7 @@ export function GroupDetails({ id }: { id: string }) {
   if (!group) {
     return (
       <main className="min-h-0 flex-1 space-y-6 overflow-y-auto bg-surface/30 p-4 pb-16 sm:p-8 md:p-10">
-        <GroupBreadcrumb currentLabel="Group not found" />
+        <GroupBreadcrumb currentLabel={t("groupNotFoundBreadcrumb")} />
         <GroupEmptyState variant="not-found" />
       </main>
     );
@@ -103,7 +105,7 @@ export function GroupDetails({ id }: { id: string }) {
               id="group-properties-heading"
               className="text-xl font-semibold text-ink"
             >
-              Properties in this Group
+              {t("propertiesInGroupHeading")}
             </h2>
             <span className="border border-line bg-white px-2 py-0.5 font-ibm text-xs font-semibold text-body">
               {hasActiveFilters
@@ -120,7 +122,7 @@ export function GroupDetails({ id }: { id: string }) {
               setSearchTerm(val);
               setCurrentPage(1);
             }}
-            searchLabel="Search properties in this group"
+            searchLabel={t("searchGroupPropertiesLabel")}
             filterStatus={filterStatus}
             onFilterChange={(val) => {
               setFilterStatus(val);
@@ -165,7 +167,7 @@ export function GroupDetails({ id }: { id: string }) {
               totalPages={totalPages}
               totalItems={totalItems}
               itemsPerPage={ITEMS_PER_PAGE}
-              itemLabel="properties"
+              itemLabel={t("paginationLabel")}
               onPageChange={(nextPage) => {
                 setCurrentPage(nextPage);
                 mainRef.current?.scrollTo({ top: 0, behavior: "smooth" });

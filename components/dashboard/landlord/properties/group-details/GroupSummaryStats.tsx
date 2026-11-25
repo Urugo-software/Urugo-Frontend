@@ -1,5 +1,9 @@
+"use client";
+
 import { Building2, CheckCircle2, DoorOpen, Wallet } from "lucide-react";
-import { formatCurrencyRwf } from "@/utils/agreement-utils";
+import { useLocale, useTranslations } from "next-intl";
+import type { AppLocale } from "@/i18n/config";
+import { formatRwfLocalized } from "@/i18n/formatting";
 
 interface GroupSummaryStatsProps {
   propertyCount: number;
@@ -70,6 +74,8 @@ export function GroupSummaryStats({
   expectedRentRwf,
   collectedRentRwf,
 }: GroupSummaryStatsProps) {
+  const t = useTranslations("landlord.properties.groupStats");
+  const locale = useLocale() as AppLocale;
   const hasUnits =
     totalUnits !== undefined && occupiedUnits !== undefined && totalUnits > 0;
   const occupancyPercent = hasUnits
@@ -85,21 +91,23 @@ export function GroupSummaryStats({
 
   return (
     <section
-      aria-label="Group summary metrics"
+      aria-label={t("sectionAria")}
       className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 sm:gap-4"
     >
       <StatCard
-        label="Properties"
+        label={t("properties")}
         value={String(propertyCount)}
-        helper={propertyCount === 1 ? "Property in group" : "Properties in group"}
+        helper={
+          propertyCount === 1 ? t("propertyInGroup") : t("propertiesInGroup")
+        }
         icon={Building2}
       />
 
-      {hasUnits && (
+      {hasUnits && occupancyPercent !== undefined && (
         <StatCard
-          label="Units Occupied"
+          label={t("unitsOccupied")}
           value={`${occupiedUnits} / ${totalUnits}`}
-          helper={`${occupancyPercent}% occupancy rate`}
+          helper={t("occupancyRate", { percent: occupancyPercent })}
           icon={DoorOpen}
           progressPercent={occupancyPercent}
         />
@@ -107,21 +115,21 @@ export function GroupSummaryStats({
 
       {expectedRentRwf !== undefined && (
         <StatCard
-          label="Expected Rent"
-          value={formatCurrencyRwf(expectedRentRwf)}
-          helper="Monthly projected"
+          label={t("expectedRent")}
+          value={formatRwfLocalized(expectedRentRwf, locale)}
+          helper={t("monthlyProjected")}
           icon={Wallet}
         />
       )}
 
       {collectedRentRwf !== undefined && (
         <StatCard
-          label="Rent Collected"
-          value={formatCurrencyRwf(collectedRentRwf)}
+          label={t("rentCollected")}
+          value={formatRwfLocalized(collectedRentRwf, locale)}
           helper={
             collectionPercent !== undefined
-              ? `${collectionPercent}% collected this month`
-              : "Collected this month"
+              ? t("collectedPercentMonth", { percent: collectionPercent })
+              : t("collectedThisMonth")
           }
           icon={CheckCircle2}
           accent="success"

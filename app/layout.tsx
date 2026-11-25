@@ -1,27 +1,36 @@
-import { ibm, epilogue, merriweather } from "@/lib/fonts";
 import type { Metadata } from "next";
-import "./globals.css";
-import { cn } from "@/lib/utils";
-import { QueryProvider } from "@/components/provider/QueryClient";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages, getTranslations } from "next-intl/server";
 import { Toaster } from "react-hot-toast";
 
-export const metadata: Metadata = {
-  title: {
-    default: "Urugo",
-    template: "%s | Urugo",
-  },
-  description:
-    "Browse rental homes across Rwanda, request property viewings, or list and manage leases, rent payments, and tenants in one place.",
-};
+import { QueryProvider } from "@/components/provider/QueryClient";
+import { TIME_ZONE } from "@/i18n/config";
+import { epilogue, ibm, merriweather } from "@/lib/fonts";
+import { cn } from "@/lib/utils";
+import "./globals.css";
 
-export default function RootLayout({
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("common.meta");
+
+  return {
+    title: {
+      default: t("siteName"),
+      template: `%s | ${t("siteName")}`,
+    },
+    description: t("defaultDescription"),
+  };
+}
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [locale, messages] = await Promise.all([getLocale(), getMessages()]);
+
   return (
     <html
-      lang="en"
+      lang={locale}
       className={cn(
         "h-full",
         "antialiased",
@@ -33,8 +42,14 @@ export default function RootLayout({
       )}
     >
       <body className="flex min-h-full flex-col">
-        <Toaster position="top-center" />
-        <QueryProvider>{children}</QueryProvider>
+        <NextIntlClientProvider
+          locale={locale}
+          messages={messages}
+          timeZone={TIME_ZONE}
+        >
+          <Toaster position="top-center" />
+          <QueryProvider>{children}</QueryProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

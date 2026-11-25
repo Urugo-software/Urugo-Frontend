@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { AgreementParty, AgreementProperty } from "@/types/agreement.types";
 
 interface Props {
@@ -13,40 +14,49 @@ export function SidebarPremisesCard({
   renter,
   landlord,
 }: Props) {
+  const t = useTranslations("landlord.agreements.preview.sidebar");
+  const tMeta = useTranslations("landlord.agreements.editor.metadata");
+
   return (
-    <div className="border border-line bg-white p-5 space-y-3.5 text-[12.5px]">
-      <h3 className="font-semibold uppercase tracking-wider text-faint border-b border-line pb-2.5">
-        Premises & Parties
+    <div className="space-y-3.5 border border-line bg-white p-5 text-[12.5px]">
+      <h3 className="border-b border-line pb-2.5 font-semibold uppercase tracking-wider text-faint">
+        {t("premisesAndParties")}
       </h3>
 
       <div className="space-y-3 text-[13px]">
         <div>
-          <span className="text-[12.5px] text-faint block">Property & Unit</span>
-          <span className="font-semibold text-ink block">
-            {property.name} &middot; Unit {property.unitNumber}
+          <span className="block text-[12.5px] text-faint">
+            {tMeta("propertyAndUnit")}
           </span>
-          <span className="text-body text-[12.5px]">
+          <span className="block font-semibold text-ink">
+            {tMeta("premisesUnit", {
+              property: property.name,
+              unit: property.unitNumber,
+            })}
+          </span>
+          <span className="text-[12.5px] text-body">
             {property.address}, {property.district}
           </span>
         </div>
 
-        <div className="pt-2 border-t border-line/60">
-          <span className="text-[12.5px] text-faint block">Renter</span>
-          <span className="font-semibold text-ink block">
-            {renter.name}
+        <div className="border-t border-line/60 pt-2">
+          <span className="block text-[12.5px] text-faint">
+            {tMeta("renter")}
           </span>
-          <span className="text-[12.5px] text-body block font-mono">
-            {renter.phone} &middot; ID: {renter.nationalId}
+          <span className="block font-semibold text-ink">{renter.name}</span>
+          <span className="block font-mono text-[12.5px] text-body">
+            {renter.phone} &middot; {tMeta("idPrefix", { id: renter.nationalId })}
           </span>
         </div>
 
-        <div className="pt-2 border-t border-line/60">
-          <span className="text-[12.5px] text-faint block">Landlord</span>
-          <span className="font-semibold text-ink block">
-            {landlord.name}
+        <div className="border-t border-line/60 pt-2">
+          <span className="block text-[12.5px] text-faint">
+            {tMeta("landlord")}
           </span>
-          <span className="text-[12.5px] text-body block font-mono">
-            {landlord.phone} &middot; ID: {landlord.nationalId}
+          <span className="block font-semibold text-ink">{landlord.name}</span>
+          <span className="block font-mono text-[12.5px] text-body">
+            {landlord.phone} &middot;{" "}
+            {tMeta("idPrefix", { id: landlord.nationalId })}
           </span>
         </div>
       </div>

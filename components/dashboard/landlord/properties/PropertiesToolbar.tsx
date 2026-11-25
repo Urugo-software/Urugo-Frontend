@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronDown } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { DashboardSearchInput } from "@/components/shared/DashboardSearchInput";
 import { ViewModeToggle } from "@/components/shared/ViewModeToggle";
 import { Button } from "@/components/ui/button";
@@ -70,66 +71,72 @@ function FilterMenu({
   );
 }
 
-const DEFAULT_FILTER_OPTIONS: Record<string, string> = {
-  all: "All statuses",
-  Published: "Published",
-  Draft: "Draft",
-  Paused: "Paused",
-  Rented: "Rented",
-  Archived: "Archived",
-  Occupied: "Fully occupied",
-  Partial: "Partially occupied",
-  Vacant: "Vacant",
-};
-
-const SORT_OPTIONS: Record<PropertySortOrder, string> = {
-  default: "Sort: Default",
-  name: "Name: A–Z",
-  "rent-desc": "Rent: High to Low",
-  "rent-asc": "Rent: Low to High",
-};
-
 export function PropertiesToolbar(props: ToolbarProps) {
+  const t = useTranslations("landlord.properties.toolbar");
+  const tStatuses = useTranslations("landlord.properties.statuses");
+
+  const defaultFilterOptions: Record<string, string> = {
+    all: tStatuses("all"),
+    Published: tStatuses("Published"),
+    Draft: tStatuses("Draft"),
+    Paused: tStatuses("Paused"),
+    Rented: tStatuses("Rented"),
+    Archived: tStatuses("Archived"),
+    Occupied: tStatuses("Occupied"),
+    Partial: tStatuses("Partial"),
+    Vacant: tStatuses("Vacant"),
+  };
+
+  const sortOptions: Record<PropertySortOrder, string> = {
+    default: t("sortDefault"),
+    name: t("sortName"),
+    "rent-desc": t("sortRentDesc"),
+    "rent-asc": t("sortRentAsc"),
+  };
+
   return (
     <div className="flex flex-col gap-2.5 border border-line bg-white p-3 shadow-2xs lg:flex-row lg:items-center">
       <DashboardSearchInput
         value={props.searchTerm}
         onChange={props.onSearchChange}
-        placeholder="Search by name or location"
-        label={props.searchLabel ?? "Search properties"}
+        placeholder={t("searchPlaceholder")}
+        label={props.searchLabel ?? t("defaultSearchLabel")}
         className="w-full lg:flex-1"
       />
 
       <div className="flex flex-wrap items-center gap-2">
         <FilterMenu
-          label="Property status"
+          label={t("propertyStatusLabel")}
           value={props.filterStatus}
           onChange={props.onFilterChange}
-          options={props.filterOptions ?? DEFAULT_FILTER_OPTIONS}
+          options={props.filterOptions ?? defaultFilterOptions}
         />
 
         {props.sortBy && props.onSortChange && (
           <FilterMenu
-            label="Sort properties"
+            label={t("sortLabel")}
             value={props.sortBy}
             onChange={(val) => props.onSortChange?.(val as PropertySortOrder)}
-            options={SORT_OPTIONS}
+            options={sortOptions}
           />
         )}
 
         {props.showGroupOrder && (
           <FilterMenu
-            label="Group order"
+            label={t("groupOrderLabel")}
             value={props.groupOrder}
             onChange={props.onOrderChange}
-            options={{ custom: "Group order", name: "Group name A–Z" }}
+            options={{
+              custom: t("groupOrderCustom"),
+              name: t("groupOrderName"),
+            }}
           />
         )}
 
         <ViewModeToggle
           value={props.viewMode}
           onChange={props.onViewModeChange}
-          label="Property display"
+          label={t("displayLabel")}
         />
       </div>
     </div>

@@ -2,13 +2,30 @@
 
 import toast from "react-hot-toast";
 import { CheckCircle2, Download, Printer } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { ModalDialog } from "@/components/shared/ModalDialog";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { Button } from "@/components/ui/button";
+import type { AppLocale } from "@/i18n/config";
+import { formatRwfLocalized } from "@/i18n/formatting";
 import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
-import type { Agreement } from "@/types/agreement.types";
-import { formatRwf } from "@/utils/format";
+import type { Agreement, AgreementStatus } from "@/types/agreement.types";
 import { downloadTextFile } from "@/utils/renter-helpers";
+
+const AGREEMENT_STATUS_KEYS: Record<AgreementStatus, string> = {
+  Draft: "draft",
+  "Ready for Review": "readyForReview",
+  Sent: "sent",
+  Viewed: "viewed",
+  "Changes Requested": "changesRequested",
+  "Awaiting Renter Signature": "awaitingRenterSignature",
+  "Awaiting Landlord Signature": "awaitingLandlordSignature",
+  Signed: "signed",
+  Declined: "declined",
+  Expired: "expired",
+  Superseded: "superseded",
+  Cancelled: "cancelled",
+};
 
 interface LeaseAgreementViewerModalProps {
   open: boolean;
@@ -21,6 +38,9 @@ export function LeaseAgreementViewerModal({
   onClose,
   agreement,
 }: LeaseAgreementViewerModalProps) {
+  const t = useTranslations("renter.lease.viewerModal");
+  const tStatuses = useTranslations("renter.lease.agreementStatuses");
+  const locale = useLocale() as AppLocale;
   const updateAgreementStatus = useLandlordWorkspace(
     (s) => s.updateAgreementStatus,
   );
@@ -38,8 +58,8 @@ export function LeaseAgreementViewerModal({
       `Address: ${agreement.property.address}`,
       `Landlord: ${agreement.landlord.name} (${agreement.landlord.phone})`,
       `Renter: ${agreement.renter.name} (${agreement.renter.phone})`,
-      `Monthly Rent: ${formatRwf(agreement.financials.monthlyRentRwf)}`,
-      `Security Deposit: ${formatRwf(agreement.financials.securityDepositRwf)}`,
+      `Monthly Rent: ${formatRwfLocalized(agreement.financials.monthlyRentRwf, locale)}`,
+      `Security Deposit: ${formatRwfLocalized(agreement.financials.securityDepositRwf, locale)}`,
       "",
       ...agreement.articles.map(
         (art) => `Article ${art.number}: ${art.title}\n${art.content}\n`,
@@ -47,20 +67,23 @@ export function LeaseAgreementViewerModal({
     ].join("\n");
 
     downloadTextFile(`${agreement.referenceNumber}.txt`, content);
-    toast.success("Agreement text copy downloaded (preview).");
+    toast.success(t("downloadSuccess"));
   };
 
   const handleSign = () => {
     updateAgreementStatus(agreement.id, "Awaiting Landlord Signature");
-    toast.success("Agreement signed electronically (preview).");
+    toast.success(t("signSuccess"));
   };
 
   return (
     <ModalDialog
       open={open}
       onClose={onClose}
-      title={`Lease Agreement · ${agreement.referenceNumber}`}
-      description={`${agreement.property.name} — Unit ${agreement.property.unitNumber}`}
+      title={t("title", { reference: agreement.referenceNumber })}
+      description={t("description", {
+        property: agreement.property.name,
+        unit: agreement.property.unitNumber,
+      })}
       maxWidthClassName="max-w-3xl"
       footer={
         <>
@@ -71,7 +94,7 @@ export function LeaseAgreementViewerModal({
             className="cursor-pointer rounded-none"
           >
             <Printer aria-hidden="true" className="size-4" />
-            Print
+            {t("print")}
           </Button>
           <Button
             type="button"
@@ -80,7 +103,7 @@ export function LeaseAgreementViewerModal({
             className="cursor-pointer rounded-none"
           >
             <Download aria-hidden="true" className="size-4" />
-            Download Copy
+            {t("downloadCopy")}
           </Button>
           {canRenterSign && (
             <Button
@@ -89,7 +112,7 @@ export function LeaseAgreementViewerModal({
               className="cursor-pointer rounded-none"
             >
               <CheckCircle2 aria-hidden="true" className="size-4" />
-              Sign Agreement
+              {t("signAgreement")}
             </Button>
           )}
         </>
@@ -98,18 +121,21 @@ export function LeaseAgreementViewerModal({
       <div className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2 border border-line bg-surface/50 p-3.5 text-xs">
           <div>
-            <span className="text-faint">Monthly Rent:</span>{" "}
+            <span className="text-faint">{t("monthlyRentLabel")}</span>{" "}
             <strong className="font-ibm text-ink">
-              {formatRwf(agreement.financials.monthlyRentRwf)}
+              {formatRwfLocalized(agreement.financials.monthlyRentRwf, locale)}
             </strong>{" "}
             &middot;{" "}
-            <span className="text-faint">Deposit:</span>{" "}
+            <span className="text-faint">{t("depositLabel")}</span>{" "}
             <strong className="font-ibm text-ink">
-              {formatRwf(agreement.financials.securityDepositRwf)}
+              {formatRwfLocalized(
+                agreement.financials.securityDepositRwf,
+                locale,
+              )}
             </strong>
           </div>
           <StatusBadge
-            label={agreement.status}
+            label={tStatuses(AGREEMENT_STATUS_KEYS[agreement.status])}
             tone={agreement.status === "Signed" ? "success" : "info"}
           />
         </div>
@@ -118,7 +144,10 @@ export function LeaseAgreementViewerModal({
           {agreement.articles.map((article) => (
             <div key={article.id} className="border-b border-line pb-3 last:border-b-0">
               <h4 className="font-sans text-xs font-bold uppercase tracking-wider text-ink">
-                Article {article.number}. {article.title}
+                {t("articleHeading", {
+                  number: article.number,
+                  title: article.title,
+                })}
               </h4>
               <p className="mt-1.5 whitespace-pre-line text-body">
                 {article.content}

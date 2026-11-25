@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { AlertDialog } from "@base-ui/react/alert-dialog";
 import { Dialog } from "@base-ui/react/dialog";
 import { X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 interface ModalDialogProps {
@@ -29,6 +30,7 @@ export function ModalDialog({
   maxWidthClassName = "max-w-lg",
   disableClose = false,
 }: ModalDialogProps) {
+  const t = useTranslations("common.actions");
   const Root = variant === "alert" ? AlertDialog.Root : Dialog.Root;
   const Portal = variant === "alert" ? AlertDialog.Portal : Dialog.Portal;
   const Backdrop = variant === "alert" ? AlertDialog.Backdrop : Dialog.Backdrop;
@@ -65,7 +67,7 @@ export function ModalDialog({
               <button
                 type="button"
                 onClick={onClose}
-                aria-label="Close dialog"
+                aria-label={t("closeDialog")}
                 className="flex size-8 shrink-0 cursor-pointer items-center justify-center text-faint transition-colors hover:bg-surface hover:text-ink"
               >
                 <X aria-hidden="true" className="size-4" />

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { FolderPlus, Plus } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
@@ -11,8 +12,10 @@ export function AddPropertyLink({
 }: {
   compactOnMobile?: boolean;
 }) {
+  const t = useTranslations("landlord.properties");
   const serviceMode = useLandlordWorkspace((s) => s.serviceMode);
-  const label = serviceMode === "listing_only" ? "Add Listing" : "Add Property";
+  const label =
+    serviceMode === "listing_only" ? t("addListing") : t("addProperty");
 
   return (
     <Link
@@ -37,6 +40,7 @@ export function PropertiesHeader({
 }: {
   onCreateGroup?: () => void;
 }) {
+  const t = useTranslations("landlord.properties");
   const serviceMode = useLandlordWorkspace((s) => s.serviceMode);
 
   return (
@@ -46,7 +50,7 @@ export function PropertiesHeader({
         tabIndex={-1}
         className="text-2xl font-bold tracking-tight text-ink sm:text-3xl"
       >
-        My Properties
+        {t("title")}
       </h2>
 
       <div className="flex shrink-0 items-center gap-2 sm:row-span-2 sm:self-center">
@@ -56,12 +60,12 @@ export function PropertiesHeader({
             type="button"
             variant="outline"
             size="lg"
-            title="Create Group"
+            title={t("createGroup")}
             className="size-10 cursor-pointer rounded-none px-0 sm:w-auto sm:px-3.5"
             onClick={onCreateGroup}
           >
             <FolderPlus aria-hidden="true" className="size-4" />
-            <span className="sr-only sm:not-sr-only">Create Group</span>
+            <span className="sr-only sm:not-sr-only">{t("createGroup")}</span>
           </Button>
         )}
         <AddPropertyLink compactOnMobile />
@@ -69,8 +73,8 @@ export function PropertiesHeader({
 
       <p className="col-span-2 text-sm text-body sm:col-span-1">
         {serviceMode === "listing_only"
-          ? "Publish, pause, update, and organize your advertised rental listings."
-          : "Manage your real estate portfolio, listing visibility, unit occupancy, and rent."}
+          ? t("listingOnlySubtitle")
+          : t("managedSubtitle")}
       </p>
     </div>
   );

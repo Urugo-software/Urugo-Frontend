@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import toast from "react-hot-toast";
 import { Check, CreditCard, Eye, X } from "lucide-react";
 import { DashboardSearchInput } from "@/components/shared/DashboardSearchInput";
@@ -11,10 +12,15 @@ import { Pagination } from "@/components/shared/Pagination";
 import { StatusBadge, type StatusTone } from "@/components/shared/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { mockMonthlyCollectionHistory } from "@/data/landlord-data";
+import type { AppLocale } from "@/i18n/config";
+import {
+  localizeDisplayDate,
+  localizePaymentMethod,
+} from "@/i18n/display-format";
+import { formatRwfLocalized } from "@/i18n/formatting";
 import { useLandlordProperties } from "@/store/landlord-properties.store";
 import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
 import type { PaymentStatus, TenancyPayment } from "@/types/landlord";
-import { formatRwf } from "@/utils/format";
 import { computeManagedStats } from "@/utils/landlord-metrics";
 import { paginateItems } from "@/utils/pagination";
 import { OverviewStatGrid } from "../overview/OverviewStatGrid";
@@ -37,6 +43,9 @@ const PAYMENT_TONE: Record<PaymentStatus, StatusTone> = {
 };
 
 export function LandlordPaymentsView() {
+  const t = useTranslations("landlord.payments");
+  const tStatuses = useTranslations("common.statuses");
+  const locale = useLocale() as AppLocale;
   const containerRef = useRef<HTMLDivElement>(null);
   const { properties, units } = useLandlordProperties();
   const {
@@ -90,29 +99,50 @@ export function LandlordPaymentsView() {
     totalItems,
   } = paginateItems(filtered, currentPage, ITEMS_PER_PAGE);
 
+  const tabLabel = (tab: "All" | PaymentStatus) => {
+    if (tab === "All") return t("tabAll");
+    if (tab === "Pending") return tStatuses("pending");
+    if (tab === "Approved") return tStatuses("approved");
+    if (tab === "Rejected") return tStatuses("rejected");
+    return tStatuses("disputed");
+  };
+
   const summaryCards = [
     {
-      label: "Collected (Sep 2026)",
-      value: formatRwf(stats.currentMonthCollectedRwf),
-      helper: `${stats.collectionRate}% of ${formatRwf(stats.currentMonthExpectedRwf)} expected`,
+      label: t("kpis.collectedMonth"),
+      value: formatRwfLocalized(stats.currentMonthCollectedRwf, locale),
+      helper: t("kpis.collectedMonthHelper", {
+        rate: stats.collectionRate,
+        expected: formatRwfLocalized(stats.currentMonthExpectedRwf, locale),
+      }),
       progressPercent: stats.collectionRate,
       accent: "success" as const,
     },
     {
-      label: "Collected (YTD)",
-      value: formatRwf(stats.ytdRentCollectedRwf),
-      helper: "Verified landlord rent collected Jan – Sep 2026",
+      label: t("kpis.collectedYtd"),
+      value: formatRwfLocalized(stats.ytdRentCollectedRwf, locale),
+      helper: t("kpis.collectedYtdHelper"),
     },
     {
-      label: "Pending Verification",
-      value: formatRwf(stats.pendingVerificationRwf),
-      helper: `${stats.pendingPaymentsCount} submitted proof${stats.pendingPaymentsCount === 1 ? "" : "s"} awaiting review`,
+      label: t("kpis.pendingVerification"),
+      value: formatRwfLocalized(stats.pendingVerificationRwf, locale),
+      helper: t(
+        stats.pendingPaymentsCount === 1
+          ? "kpis.pendingSingle"
+          : "kpis.pendingPlural",
+        { count: stats.pendingPaymentsCount },
+      ),
       accent: stats.pendingPaymentsCount > 0 ? ("warning" as const) : ("default" as const),
     },
     {
-      label: "Confirmed Overdue",
-      value: formatRwf(stats.confirmedOverdueRwf),
-      helper: `${stats.overdueRentersCount} past-due unpaid obligation${stats.overdueRentersCount === 1 ? "" : "s"}`,
+      label: t("kpis.confirmedOverdue"),
+      value: formatRwfLocalized(stats.confirmedOverdueRwf, locale),
+      helper: t(
+        stats.overdueRentersCount === 1
+          ? "kpis.overdueSingle"
+          : "kpis.overduePlural",
+        { count: stats.overdueRentersCount },
+      ),
       accent: stats.confirmedOverdueRwf > 0 ? ("danger" as const) : ("default" as const),
     },
   ];
@@ -124,12 +154,9 @@ export function LandlordPaymentsView() {
     >
       <div>
         <h2 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">
-          Rental Payments & Ledger
+          {t("title")}
         </h2>
-        <p className="mt-1 text-sm text-body">
-          Verify tenant payment receipts, review monthly and year-to-date rent
-          collected, and track overdue obligations accurately.
-        </p>
+        <p className="mt-1 text-sm text-body">{t("subtitle")}</p>
       </div>
 
       <OverviewStatGrid items={summaryCards} />
@@ -142,14 +169,14 @@ export function LandlordPaymentsView() {
             setSearch(val);
             setCurrentPage(1);
           }}
-          placeholder="Search tenant, property, period, or reference"
-          label="Search payments"
+          placeholder={t("searchPlaceholder")}
+          label={t("searchAria")}
           className="w-full lg:max-w-md"
         />
 
         <div
           role="tablist"
-          aria-label="Filter payments by status"
+          aria-label={t("filterAria")}
           className="flex flex-wrap items-center gap-1.5"
         >
           {STATUS_TABS.map((tab) => {
@@ -170,7 +197,7 @@ export function LandlordPaymentsView() {
                     : "border-line bg-white text-body hover:bg-surface hover:text-ink"
                 }`}
               >
-                {tab}
+                {tabLabel(tab)}
               </button>
             );
           })}
@@ -180,8 +207,8 @@ export function LandlordPaymentsView() {
       {paginated.length === 0 ? (
         <EmptyStateBox
           icon={CreditCard}
-          title="No matching payment records"
-          description="Try clearing your search or selecting another payment status."
+          title={t("emptyTitle")}
+          description={t("emptyDesc")}
           action={
             search || statusFilter !== "All" ? (
               <Button
@@ -194,7 +221,7 @@ export function LandlordPaymentsView() {
                   setCurrentPage(1);
                 }}
               >
-                Reset filters
+                {t("resetFilters")}
               </Button>
             ) : undefined
           }
@@ -206,12 +233,12 @@ export function LandlordPaymentsView() {
             <table className="w-full border-collapse text-left text-sm">
               <thead>
                 <tr className="border-b border-line bg-surface/60 text-xs font-semibold uppercase tracking-wider text-faint">
-                  <th scope="col" className="px-4 py-3.5">Tenant & Property</th>
-                  <th scope="col" className="px-4 py-3.5">Period</th>
-                  <th scope="col" className="px-4 py-3.5">Amount</th>
-                  <th scope="col" className="px-4 py-3.5">Method / Ref</th>
-                  <th scope="col" className="px-4 py-3.5">Status</th>
-                  <th scope="col" className="px-4 py-3.5 text-right">Actions</th>
+                  <th scope="col" className="px-4 py-3.5">{t("colTenantProperty")}</th>
+                  <th scope="col" className="px-4 py-3.5">{t("colPeriod")}</th>
+                  <th scope="col" className="px-4 py-3.5">{t("colAmount")}</th>
+                  <th scope="col" className="px-4 py-3.5">{t("colMethodRef")}</th>
+                  <th scope="col" className="px-4 py-3.5">{t("colStatus")}</th>
+                  <th scope="col" className="px-4 py-3.5 text-right">{t("colActions")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-line">
@@ -223,29 +250,39 @@ export function LandlordPaymentsView() {
                           href={`/landlord/tenancies/${payment.renterId}`}
                           className="font-semibold text-ink hover:text-brand-blue hover:underline"
                         >
-                          {payment.renterName ?? "Tenant"}
+                          {payment.renterName ?? t("tenantFallback")}
                         </Link>
                       ) : (
                         <span className="font-semibold text-ink">
-                          {payment.renterName ?? "Tenant"}
+                          {payment.renterName ?? t("tenantFallback")}
                         </span>
                       )}
                       <p className="text-xs text-faint">
-                        {payment.propertyName ?? "Property"}
+                        {payment.propertyName ?? t("propertyFallback")}
                         {payment.unitNumber ? ` · ${payment.unitNumber}` : ""}
                       </p>
                     </td>
                     <td className="px-4 py-3.5 text-xs text-body">
-                      <p className="font-medium text-ink">{payment.period}</p>
-                      <p className="text-faint">Due {payment.dueDate}</p>
+                      <p className="font-medium text-ink">
+                        {localizeDisplayDate(payment.period, locale)}
+                      </p>
+                      <p className="text-faint">
+                        {t("duePrefix", {
+                          date: localizeDisplayDate(payment.dueDate, locale),
+                        })}
+                      </p>
                     </td>
                     <td className="px-4 py-3.5 font-ibm font-bold text-ink">
-                      {formatRwf(payment.amountRwf)}
+                      {formatRwfLocalized(payment.amountRwf, locale)}
                     </td>
                     <td className="px-4 py-3.5 text-xs text-body">
-                      <p>{payment.paymentMethod ?? "—"}</p>
+                      <p>
+                        {localizePaymentMethod(payment.paymentMethod, locale)}
+                      </p>
                       {payment.reference && (
-                        <p className="font-ibm text-faint">Ref: {payment.reference}</p>
+                        <p className="font-ibm text-faint">
+                          {t("refPrefix", { reference: payment.reference })}
+                        </p>
                       )}
                     </td>
                     <td className="px-4 py-3.5">
@@ -264,13 +301,20 @@ export function LandlordPaymentsView() {
                               onClick={() => {
                                 approvePayment(payment.id);
                                 toast.success(
-                                  `Approved ${formatRwf(payment.amountRwf)} from ${payment.renterName ?? "tenant"}.`,
+                                  t("toastApprovedNamed", {
+                                    amount: formatRwfLocalized(
+                                      payment.amountRwf,
+                                      locale,
+                                    ),
+                                    name:
+                                      payment.renterName ?? t("tenantFallback"),
+                                  }),
                                 );
                               }}
                               className="h-8 cursor-pointer rounded-none bg-emerald-700 px-2.5 text-xs text-white hover:bg-emerald-800"
                             >
                               <Check aria-hidden="true" className="size-3.5" />
-                              Approve
+                              {t("approve")}
                             </Button>
                             <Button
                               type="button"
@@ -280,7 +324,7 @@ export function LandlordPaymentsView() {
                               className="h-8 cursor-pointer rounded-none border-rose-200 px-2.5 text-xs text-rose-700 hover:bg-rose-50"
                             >
                               <X aria-hidden="true" className="size-3.5" />
-                              Reject
+                              {t("reject")}
                             </Button>
                           </>
                         )}
@@ -288,7 +332,7 @@ export function LandlordPaymentsView() {
                           type="button"
                           size="sm"
                           variant="ghost"
-                          aria-label={`Inspect payment ${payment.id}`}
+                          aria-label={t("inspectAria", { id: payment.id })}
                           onClick={() => setDetailTarget(payment)}
                           className="h-8 cursor-pointer rounded-none px-2 text-xs text-body hover:text-ink"
                         >
@@ -312,7 +356,7 @@ export function LandlordPaymentsView() {
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
                     <p className="truncate text-sm font-bold text-ink">
-                      {payment.renterName ?? "Tenant"}
+                      {payment.renterName ?? t("tenantFallback")}
                     </p>
                     <p className="truncate text-xs text-faint">
                       {payment.propertyName} · {payment.unitNumber}
@@ -324,9 +368,11 @@ export function LandlordPaymentsView() {
                   />
                 </div>
                 <div className="flex items-center justify-between text-xs">
-                  <span className="text-body">{payment.period}</span>
+                  <span className="text-body">
+                    {localizeDisplayDate(payment.period, locale)}
+                  </span>
                   <span className="font-ibm font-bold text-ink">
-                    {formatRwf(payment.amountRwf)}
+                    {formatRwfLocalized(payment.amountRwf, locale)}
                   </span>
                 </div>
                 <div className="flex flex-wrap gap-2 border-t border-line pt-3">
@@ -337,11 +383,11 @@ export function LandlordPaymentsView() {
                         size="sm"
                         onClick={() => {
                           approvePayment(payment.id);
-                          toast.success("Payment approved.");
+                          toast.success(t("toastApproved"));
                         }}
                         className="flex-1 cursor-pointer rounded-none bg-emerald-700 text-xs text-white"
                       >
-                        Approve
+                        {t("approve")}
                       </Button>
                       <Button
                         type="button"
@@ -350,7 +396,7 @@ export function LandlordPaymentsView() {
                         onClick={() => setRejectTarget(payment)}
                         className="flex-1 cursor-pointer rounded-none border-rose-200 text-xs text-rose-700"
                       >
-                        Reject
+                        {t("reject")}
                       </Button>
                     </>
                   )}
@@ -361,7 +407,7 @@ export function LandlordPaymentsView() {
                     onClick={() => setDetailTarget(payment)}
                     className="cursor-pointer rounded-none text-xs"
                   >
-                    Details
+                    {t("details")}
                   </Button>
                 </div>
               </div>
@@ -373,7 +419,7 @@ export function LandlordPaymentsView() {
             totalPages={totalPages}
             totalItems={totalItems}
             itemsPerPage={ITEMS_PER_PAGE}
-            itemLabel="payments"
+            itemLabel={t("paginationLabel")}
             onPageChange={(nextPage) => {
               setCurrentPage(nextPage);
               containerRef.current?.scrollTo({ top: 0, behavior: "smooth" });
@@ -387,17 +433,17 @@ export function LandlordPaymentsView() {
         onClose={() => setRejectTarget(null)}
         onConfirm={(id, category, reason) => {
           rejectPayment(id, category, reason);
-          toast.success("Payment rejection recorded.");
+          toast.success(t("toastRejectionRecorded"));
         }}
       />
 
       <ModalDialog
         open={Boolean(detailTarget)}
         onClose={() => setDetailTarget(null)}
-        title="Payment Record Details"
+        title={t("detailModal.title")}
         description={
           detailTarget
-            ? `${detailTarget.period} · ${detailTarget.renterName ?? "Tenant"}`
+            ? `${localizeDisplayDate(detailTarget.period, locale)} · ${detailTarget.renterName ?? t("tenantFallback")}`
             : undefined
         }
         footer={
@@ -407,26 +453,48 @@ export function LandlordPaymentsView() {
             onClick={() => setDetailTarget(null)}
             className="cursor-pointer rounded-none"
           >
-            Close
+            {t("detailModal.close")}
           </Button>
         }
       >
         {detailTarget && (
           <dl className="divide-y divide-line text-sm">
             {[
-              ["Amount", formatRwf(detailTarget.amountRwf)],
-              ["Status", detailTarget.status],
-              ["Property", `${detailTarget.propertyName ?? "—"} ${detailTarget.unitNumber ? `(${detailTarget.unitNumber})` : ""}`],
-              ["Due Date", detailTarget.dueDate],
-              ["Method", detailTarget.paymentMethod ?? "—"],
-              ["Reference", detailTarget.reference ?? "—"],
-              ["Approved Date", detailTarget.paidAt ?? "Not approved"],
+              [
+                t("detailModal.amount"),
+                formatRwfLocalized(detailTarget.amountRwf, locale),
+              ],
+              [t("detailModal.status"), tabLabel(detailTarget.status)],
+              [
+                t("detailModal.property"),
+                `${detailTarget.propertyName ?? "—"} ${detailTarget.unitNumber ? `(${detailTarget.unitNumber})` : ""}`,
+              ],
+              [
+                t("detailModal.dueDate"),
+                localizeDisplayDate(detailTarget.dueDate, locale),
+              ],
+              [
+                t("detailModal.method"),
+                localizePaymentMethod(detailTarget.paymentMethod, locale),
+              ],
+              [t("detailModal.reference"), detailTarget.reference ?? "—"],
+              [
+                t("detailModal.approvedDate"),
+                detailTarget.paidAt
+                  ? localizeDisplayDate(detailTarget.paidAt, locale)
+                  : t("detailModal.notApproved"),
+              ],
               ...(detailTarget.rejectionReason
                 ? [
-                    ["Rejection Reason", detailTarget.rejectionReason],
                     [
-                      "Creates Unpaid Balance",
-                      detailTarget.createsUnpaidBalance ? "Yes" : "No (administrative rejection)",
+                      t("detailModal.rejectionReason"),
+                      detailTarget.rejectionReason,
+                    ],
+                    [
+                      t("detailModal.createsUnpaidBalance"),
+                      detailTarget.createsUnpaidBalance
+                        ? t("detailModal.yes")
+                        : t("detailModal.noAdminRejection"),
                     ],
                   ]
                 : []),

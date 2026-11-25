@@ -1,0 +1,714 @@
+{
+  "workspace": {
+    "loadingWorkspace": "Birimo gufungura umwanya w'umupangayi...",
+    "errorTitle": "Habaye ikibazo",
+    "errorFallback": "Ntibyashobotse gufungura iyi paji y'umupangayi. Ongera ugerageze.",
+    "backToOverview": "Subira ku ncamake",
+    "unitLabel": "Umuryango {unit}",
+    "justNow": "Ubu nyine",
+    "unread": "Bitarasomwa"
+  },
+  "overview": {
+    "loading": "Birimo gufungura imbonerahamwe...",
+    "loadError": "Ntibyashobotse gufungura incamake y'umupangayi.",
+    "greeting": {
+      "morning": "Mwaramutse, {name}",
+      "afternoon": "Mwiriwe, {name}",
+      "evening": "Mwiriwe, {name}"
+    },
+    "payRentNow": "Ishyura ubukode ubu",
+    "exploreHomes": "Shakisha inzu",
+    "rentCard": {
+      "title": "Ubwishyu bw'ubukode",
+      "paidOn": "Yishyuwe ku wa",
+      "due": "Itariki ntarengwa",
+      "viewHistory": "Reba amateka y'ubwishyu",
+      "payRentNow": "Ishyura ubukode ubu"
+    },
+    "maintenanceCard": {
+      "title": "Gusana",
+      "allClear": "Nta kibazo",
+      "openRequestsSingle": "Ubusabe {count} bufunguye",
+      "openRequestsPlural": "Ubusabe {count} bufunguye",
+      "activeDescription": "Ubusabe butegereje cyangwa burimo gukorwa.",
+      "clearDescription": "Nta bibazo byo gusana byamenyeshejwe ubu.",
+      "manageRequests": "Cunga ubusabe"
+    },
+    "updatesCard": {
+      "title": "Ibikwibutsa n'amamenyesha",
+      "viewAll": "Reba byose",
+      "empty": "Nta bikwibutsa bishya bihari ubu.",
+      "rentalStanding": "Uko uhagaze mu bukode",
+      "noticePendingSingle": "Imenyesha {count} ritegereje isuzuma",
+      "noticePendingPlural": "Amamenyesha {count} ategereje isuzuma",
+      "goodStanding": "Uhagaze neza",
+      "standingActionDescription": "Suzuma amamenyesha ya nyir'inzu cyangwa wohereze inyemezabwishyu mu gihe cy'iminsi 3.",
+      "standingClearDescription": "Nta mwenda utarishyurwa wemejwe uri mu mateka yawe y'ubukode.",
+      "viewRentalHistory": "Reba amateka y'ubukode"
+    },
+    "quickActions": {
+      "title": "Inzira yihuse",
+      "myProperty": "Inzu ntuyemo",
+      "leaseAgreement": "Amasezerano y'ubukode",
+      "documentsAndReceipts": "Inyandiko n'inyemezabwishyu",
+      "exploreHomes": "Shakisha inzu",
+      "inquiriesAndVisits": "Ibibazo n'amasura",
+      "rentalHistory": "Amateka y'ubukode"
+    }
+  },
+  "property": {
+    "loading": "Birimo gufungura amakuru y'inzu...",
+    "loadError": "Ntibyashobotse gufungura amakuru y'inzu.",
+    "leaseBadge": "Amasezerano: {status}",
+    "leaseCard": {
+      "title": "Amakuru y'amasezerano",
+      "monthlyRent": "Ubukode bw'ukwezi",
+      "moveInDate": "Itariki watangiyeho guturamo",
+      "leaseTerm": "Igihe cy'amasezerano",
+      "openEnded": "Amasezerano y'ukwezi adafite igihe ntarengwa",
+      "viewFullLease": "Reba amasezerano yuzuye"
+    },
+    "landlordCard": {
+      "title": "Amakuru ya nyir'inzu",
+      "messageLandlord": "Andikira nyir'inzu"
+    },
+    "specsCard": {
+      "title": "Ibimenyetso by'umuryango n'ibikoresho",
+      "bedrooms": "Ibyumba byo kuraramo",
+      "bathrooms": "Ubwiherero n'ubwiyuhagiriro",
+      "parking": "Parikingi",
+      "parkingIncluded": "Iraboneka",
+      "parkingNone": "Nta ihari",
+      "wifi": "Wi-Fi",
+      "wifiAvailable": "Iraboneka",
+      "wifiNotIncluded": "Ntiboneka",
+      "includedAmenities": "Ibindi bikoresho n'inyungu",
+      "amenities": {
+        "dedicatedParking": "Umwanya wihariye wa parikingi",
+        "highSpeedWifi": "Interineti ya Wi-Fi yihuta",
+        "gatedSecurity": "Umutekano amasaha 24/7 n'uruzitiro",
+        "backupWaterTank": "Ikigega cy'amazi y'inyongera",
+        "balconyView": "Ibaraza rifite icyerekezo cyiza"
+      }
+    }
+  },
+  "lease": {
+    "loading": "Birimo gufungura amakuru y'amasezerano...",
+    "loadError": "Ntibyashobotse gufungura amakuru y'amasezerano.",
+    "title": "Amasezerano",
+    "subtitle": "{property} — Umuryango {unit}",
+    "leaseBadge": "Amasezerano: {status}",
+    "emptyTitle": "Nta masezerano y'ubukode akora abonetse.",
+    "emptyDescription": "Amakuru y'amasezerano yawe azagaragara hano ubukode nibumara gutegurwa.",
+    "termsTitle": "Amabwiriza y'amasezerano",
+    "startDate": "Itariki amasezerano yatangiriye",
+    "endDate": "Itariki amasezerano azarangirira",
+    "openEndedTenancy": "Ubukode bw'ukwezi budafite igihe ntarengwa",
+    "monthlyRent": "Ubukode bw'ukwezi",
+    "paymentDue": "Itariki yo kwishyura",
+    "paymentDueValue": "Ku wa {day} buri kwezi",
+    "securityDeposit": "Ingwate",
+    "noticePeriod": "Igihe cy'integuza",
+    "noticeDays": "Iminsi {days}",
+    "propertyAndLandlord": "Inzu na nyir'inzu",
+    "agreementSection": {
+      "title": "Amasezerano y'ubukode",
+      "contractFallback": "Amasezerano y'ubukode",
+      "viewAgreement": "Reba amasezerano",
+      "download": "Kuramo",
+      "downloadSuccess": "Kopi y'amasezerano yakuwemo (igerageza).",
+      "emptyTitle": "Nta masezerano y'ubukode arashyirwaho",
+      "emptyDescription": "Nyir'inzu azasangiza hano amasezerano yawe y'ubukode namara kuyategura."
+    },
+    "viewerModal": {
+      "title": "Amasezerano y'ubukode · {reference}",
+      "description": "{property} — Umuryango {unit}",
+      "print": "Capisha",
+      "downloadCopy": "Kuramo kopi",
+      "signAgreement": "Shyiraho umukono",
+      "monthlyRentLabel": "Ubukode bw'ukwezi:",
+      "depositLabel": "Ingwate:",
+      "articleHeading": "Ingingo ya {number}. {title}",
+      "downloadSuccess": "Kopi y'inyandiko y'amasezerano yakuwemo (igerageza).",
+      "signSuccess": "Amasezerano yashyizweho umukono mu buryo bw'ikoranabuhanga (igerageza)."
+    },
+    "agreementStatuses": {
+      "draft": "Inyandiko y'ibanze",
+      "readyForReview": "Yiteguye gusuzumwa",
+      "sent": "Yoherejwe",
+      "viewed": "Yarebwe",
+      "changesRequested": "Hasabwe impinduka",
+      "awaitingRenterSignature": "Bitegereje umukono w'umupangayi",
+      "awaitingLandlordSignature": "Bitegereje umukono wa nyir'inzu",
+      "signed": "Yashyizweho umukono",
+      "declined": "Yanzwe",
+      "expired": "Byarangiye igihe",
+      "superseded": "Yasimbuwe",
+      "cancelled": "Byahagaritswe"
+    }
+  },
+  "payments": {
+    "loading": "Birimo gufungura amakuru y'ubwishyu...",
+    "loadError": "Ntibyashobotse gufungura ubwishyu.",
+    "title": "Ubukode n'ubwishyu",
+    "subtitle": "Kurikirana ubukode bw'ukwezi, ishyura ubukode, kandi ubone inyemezabwishyu.",
+    "stats": {
+      "balanceDue": "Umwenda utarishyurwa ubu",
+      "totalPaid": "Igiteranyo cy'ibyishyuwe",
+      "receiptsAvailable": "Inyemezabwishyu zihari"
+    },
+    "overviewCard": {
+      "currentRent": "Ubukode bw'ubu ({period})",
+      "dueDate": "Itariki ntarengwa:",
+      "paidOn": "Yishyuwe ku wa:",
+      "refPrefix": "Nimero {reference}",
+      "payRentNow": "Ishyura ubukode ubu"
+    },
+    "history": {
+      "title": "Amateka y'ubwishyu",
+      "filterAria": "Shungura ubwishyu ukurikije uko buhagaze",
+      "filterAll": "Byose",
+      "emptyTitle": "Nta makuru y'ubwishyu abonetse",
+      "emptyDescription": "Nta bwishyu buhuye n'ishungura wahisemo.",
+      "columns": {
+        "period": "Igihe",
+        "amount": "Amafaranga",
+        "method": "Uburyo",
+        "date": "Itariki",
+        "status": "Uko buhagaze",
+        "receipt": "Inyemezabwishyu"
+      },
+      "viewReceipt": "Reba inyemezabwishyu",
+      "awaitingPayment": "Bitegereje kwishyurwa",
+      "paginationLabel": "ubwishyu"
+    },
+    "receiptModal": {
+      "title": "Inyemezabwishyu y'ubukode — {period}",
+      "print": "Capisha",
+      "downloadReceipt": "Kuramo inyemezabwishyu",
+      "downloadSuccess": "Kopi y'inyemezabwishyu yakuwemo (igerageza).",
+      "status": "Uko buhagaze",
+      "amountPaid": "Amafaranga yishyuwe",
+      "paymentMethod": "Uburyo bwo kwishyura",
+      "date": "Itariki",
+      "reference": "Nimero y'igikorwa",
+      "tenant": "Umupangayi",
+      "notSpecified": "Ntibyasobanuwe",
+      "na": "Ntacyo"
+    },
+    "payRent": {
+      "backToPayments": "Subira ku bwishyu",
+      "title": "Ishyura ubukode",
+      "subtitle": "Rangiza kwishyura ubukode bw'ukwezi kandi wohereze icyemezo cy'ubwishyu.",
+      "currentMonthFallback": "Uku kwezi",
+      "selectPaymentType": "Hitamo uburyo bwo kwishyura",
+      "methods": {
+        "mtnName": "MTN Mobile Money",
+        "mtnDesc": "Kwishyura ako kanya ukoresheje telefoni",
+        "airtelName": "Airtel Money",
+        "airtelDesc": "Kwishyura ako kanya ukoresheje telefoni",
+        "bankName": "Kohereza kuri banki",
+        "bankDesc": "Kohereza amafaranga kuri konti ya banki",
+        "cardName": "Ikarita ya banki",
+        "cardDesc": "Visa, Mastercard cyangwa ikarita yo mu Rwanda"
+      },
+      "rentalPeriod": "Igihe cy'ubukode",
+      "amountDue": "Asabwa",
+      "amountPaidLabel": "Amafaranga yishyuwe (RWF) *",
+      "amountPaidLabelSimple": "Amafaranga yishyuwe (RWF)",
+      "amountPlaceholder": "urugero: 250000",
+      "amountError": "Andika umubare wemewe utari munsi ya 1,000 RWF.",
+      "momoPhoneLabel": "Nimero ya telefoni ya Mobile Money *",
+      "phoneLabelSimple": "Nimero ya telefoni",
+      "phonePlaceholder": "+250 788 123 456",
+      "phoneExamplePlaceholder": "urugero: 0788123456",
+      "phoneError": "Andika nimero ya telefoni ya Mobile Money yemewe.",
+      "bankRefLabel": "Nimero y'igikorwa cya banki *",
+      "bankRefPlaceholder": "urugero: BK-984210",
+      "bankRefError": "Andika nimero y'igikorwa cy'ubwishyu.",
+      "momoRefLabel": "Nimero y'igikorwa (si itegeko)",
+      "momoRefPlaceholder": "urugero: TXN-99823",
+      "refNoteLabel": "Nimero y'igikorwa / Icyitonderwa",
+      "refNotePlaceholder": "urugero: TXN-984210",
+      "uploadLabel": "Ohereza icyemezo cy'ubwishyu / Inyemezabwishyu",
+      "dropActive": "Rekura inyemezabwishyu hano...",
+      "dropIdle": "Kurura ushyire inyemezabwishyu hano",
+      "dropHint": "cyangwa kanda uhitemo dosiye (PNG, JPG, WEBP, cyangwa PDF)",
+      "receiptPreviewAlt": "Ishusho y'inyemezabwishyu",
+      "attached": "{size} KB • Yashyizweho",
+      "previewNotice": "Uburyo bw'igerageza: kohereza bibika ubwishyu bwawe hano bigatanga inyemezabwishyu y'igerageza. Kwishyura ako kanya na MTN Mobile Money cyangwa Airtel Money bisaba ihuzwa rya sisitemu.",
+      "encryptedNote": "Icyemezo cy'ubwishyu kirinzwe",
+      "submitting": "Birimo kubikwa...",
+      "confirmSubmit": "Emeza kandi wohereze ubwishyu",
+      "modal": {
+        "title": "Ishyura ubukode ukoresheje Mobile Money",
+        "selectMethod": "Hitamo uburyo bwo kwishyura",
+        "processing": "Birimo gukorwa...",
+        "confirmPay": "Emeza wishyure"
+      }
+    }
+  },
+  "maintenance": {
+    "loading": "Birimo gufungura ubusabe bwo gusana...",
+    "loadError": "Ntibyashobotse gufungura amakuru yo gusana.",
+    "title": "Ubusabe bwo gusana inzu",
+    "subtitle": "Menyesha ibibazo kandi ukurikirane imirimo yo gusana inzu yawe.",
+    "reportNew": "Menyesha ikibazo gishya",
+    "searchPlaceholder": "Shakisha ubusabe ukurikije umutwe cyangwa icyiciro...",
+    "searchLabel": "Shakisha ubusabe bwo gusana",
+    "filterAria": "Shungura ubusabe bwo gusana ukurikije uko buhagaze",
+    "filterAll": "Byose",
+    "categoryAndPriority": "{category} · Uburemere: {priority}",
+    "submittedDate": "Yoherejwe ku wa {date}",
+    "viewDetails": "Reba birambuye",
+    "emptyTitle": "Nta busabe bwo gusana bubonetse",
+    "emptyFiltered": "Nta busabe buhuye n'ibyo ushakisha cyangwa ishungura.",
+    "emptyDefault": "Ohereza ubusabe niba hari ikibazo ubonye mu nzu yawe.",
+    "clearFilters": "Siba ishungura",
+    "categories": {
+      "plumbing": "Amazi n'imiyoboro",
+      "electrical": "Amashanyarazi",
+      "structural": "Inyubako",
+      "appliance": "Ibikoresho byo mu nzu",
+      "other": "Ibindi"
+    },
+    "createModal": {
+      "title": "Menyesha ikibazo cyo gusana",
+      "description": "Sobanura ikibazo kiri mu muryango wawe kugira ngo nyir'inzu ategure gusana.",
+      "submitting": "Birimo koherezwa...",
+      "submitRequest": "Ohereza ubusabe",
+      "issueTitleLabel": "Umutwe w'ikibazo *",
+      "issueTitlePlaceholder": "urugero: Amazi atonyanga munsi ya lavabo yo mu gikoni",
+      "issueTitleError": "Andika umutwe mugufi usobanura ikibazo.",
+      "categoryLabel": "Icyiciro",
+      "priorityLabel": "Uburemere",
+      "descriptionLabel": "Ibisobanuro *",
+      "descriptionPlaceholder": "Sobanura aho ikibazo kiri n'igihe cyatangiriye...",
+      "descriptionError": "Nyamuneka andika byibuze inyuguti 10 zisobanura ikibazo."
+    },
+    "detailModal": {
+      "cancelRequest": "Hagarika ubusabe",
+      "cancelSuccess": "Ubusabe bwo gusana bwahagaritswe.",
+      "status": "Uko bihagaze",
+      "submittedOn": "Itariki byoherejweho",
+      "issueDescription": "Ibisobanuro by'ikibazo",
+      "latestUpdate": "Amakuru mashya"
+    }
+  },
+  "rentalHistory": {
+    "title": "Amateka y'ubukode n'imyenda",
+    "subtitle": "Suzuma uko uhagaze mu mateka y'ubukode, subiza amamenyesha mu gihe cy'iminsi 3, cyangwa wohereze inyemezabwishyu.",
+    "stats": {
+      "confirmedDebt": "Umwenda utarishyurwa wemejwe",
+      "confirmedDebtHint": "Ntibibarirwamo ibirimo impaka cyangwa ibiri mu gihe cy'integuza",
+      "openNotices": "Amamenyesha afunguye / Impaka",
+      "openNoticesHint": "Bishobora gutangwaho ikimenyetso cy'impaka cyangwa bikishyurwa",
+      "resolvedRecords": "Ibirego byakemutse",
+      "resolvedRecordsHint": "Byafunzwe nta mwenda usigaye"
+    },
+    "tabs": {
+      "ariaLabel": "Shungura amateka y'ubukode",
+      "all": "Byose",
+      "actionable": "Bikeneye igisubizo",
+      "confirmed": "Byemejwe",
+      "resolved": "Byakemutse"
+    },
+    "emptyTitle": "Nta makuru ari muri iki cyiciro",
+    "emptyDescription": "Amateka yawe y'ubukode nta kibazo afite muri iri shungura.",
+    "card": {
+      "landlordLabel": "Nyir'inzu:",
+      "daysLeftSingle": "Hasigaye umunsi {days} mu gihe cy'integuza",
+      "daysLeftPlural": "Hasigaye iminsi {days} mu gihe cy'integuza",
+      "landlordReport": "Raporo ya nyir'inzu ({date})",
+      "yourResponse": "Igisubizo cyawe",
+      "underReview": "Birimo gusuzumwa",
+      "updateDispute": "Hindura impaka",
+      "disputeSubmit": "Tanga impaka / Ikimenyetso",
+      "recordSettlement": "Emeza ko byishyuwe"
+    },
+    "statusMeta": {
+      "reported": {
+        "label": "Birategereje gusuzumwa",
+        "description": "Byoherejwe na nyir'inzu; bitegereje igisubizo cy'umupangayi."
+      },
+      "unresolved": {
+        "label": "Bitarakemuka (Igihe cy'integuza)",
+        "description": "Igihe cy'iminsi 3 cy'integuza kirakora. Ntiraremezwa nk'umwenda utarishyurwa."
+      },
+      "disputed": {
+        "label": "Birimo impaka z'umupangayi",
+        "description": "Umupangayi yatanze igisubizo cyangwa inyemezabwishyu. Birimo gusuzumwa — si umwenda wemejwe."
+      },
+      "confirmed": {
+        "label": "Umwenda wemejwe",
+        "description": "Umwenda utarishyurwa wemejwe nyuma y'igihe cyo gusuzuma."
+      },
+      "resolved": {
+        "label": "Byakemutse",
+        "description": "Umwenda warishyuwe cyangwa ikimenyetso cyaremejwe; ikirego cyafunzwe."
+      },
+      "rejected": {
+        "label": "Byanzwe / Byafunzwe",
+        "description": "Raporo ntiyabonye ibimenyetso kandi yafunzwe nta mwenda."
+      }
+    },
+    "disputeModal": {
+      "title": "Tanga impaka n'ikimenyetso cy'ubwishyu",
+      "submitButton": "Ohereza impaka",
+      "infoNotice": "Gutanga impaka bishyira iri menyesha mu isuzuma. Ibirego birimo impaka ntibishyirwa ku rutonde rw'imyenda itarishyurwa yemejwe igihe isuzuma rigikomeje.",
+      "explanationLabel": "Ibisobanuro byawe *",
+      "explanationPlaceholder": "Sobanura impamvu aya mafaranga atari yo cyangwa utange itariki wishyuriyeho na nimero ya Mobile Money...",
+      "explanationError": "Nyamuneka tanga ibisobanuro bifite byibuze inyuguti 12.",
+      "proofLabel": "Ikimenyetso / Inyemezabwishyu (si itegeko)",
+      "attachPrompt": "Ongeraho ifoto y'inyemezabwishyu cyangwa PDF",
+      "notifTitle": "Impaka zoherejwe gusuzumwa",
+      "notifMessage": "Igisubizo cyawe kuri \"{title}\" ({amount}) cyabitswe.",
+      "notifAction": "Reba ikirego",
+      "toastSuccess": "Igisubizo cy'impaka cyoherejwe. Uko bihagaze byahinduwe Birimo impaka."
+    },
+    "settleModal": {
+      "title": "Andika ubwishyu bw'umwenda",
+      "confirmButton": "Emeza ubwishyu",
+      "methodLabel": "Uburyo bwo kwishyura",
+      "refLabel": "Nimero y'igikorwa cy'ubwishyu *",
+      "refPlaceholder": "urugero: TXN-782411",
+      "refError": "Andika nimero y'igikorwa cy'ubwishyu.",
+      "notifTitle": "Umwenda wishyuwe",
+      "notifMessage": "Ubwishyu bwa {amount} bwanditswe hakoreshejwe {method} (Nimero: {reference}).",
+      "notifAction": "Reba amateka",
+      "toastSuccess": "Ubwishyu bwabitswe (igerageza). Ikirego cyashyizwe ku Byakemutse."
+    }
+  },
+  "messages": {
+    "loading": "Birimo gufungura ikiganiro...",
+    "loadError": "Ntibyashobotse gufungura ubutumwa.",
+    "inputAria": "Ubutumwa bwoherezwa nyir'inzu",
+    "inputPlaceholder": "Andikira nyir'inzu ubutumwa...",
+    "sendAria": "Ohereza ubutumwa",
+    "onlineNow": "Ari ku murongo ubu",
+    "landlordRole": "Nyir'inzu",
+    "directContact": "Uburyo bwo kumuvugisha",
+    "phoneLabel": "Telefoni",
+    "emailLabel": "Imeyili",
+    "copyLabel": "Koporora {label}",
+    "propertyAndUnit": "Inzu n'umuryango",
+    "callLandlord": "Hamagara nyir'inzu",
+    "reportMaintenance": "Menyesha ikibazo cyo gusana"
+  },
+  "documents": {
+    "loading": "Birimo gufungura inyandiko...",
+    "loadError": "Ntibyashobotse gufungura inyandiko.",
+    "title": "Inyandiko zanjye",
+    "subtitle": "Reba kandi ukuremo amasezerano yawe y'ubukode, inyemezabwishyu, n'amamenyesha.",
+    "openLeaseDetails": "Amasezerano",
+    "searchPlaceholder": "Shakisha inyandiko n'inyemezabwishyu...",
+    "searchLabel": "Shakisha inyandiko",
+    "categoriesAria": "Ibyiciro by'inyandiko",
+    "categories": {
+      "all": "Byose",
+      "leaseAgreement": "Amasezerano y'ubukode",
+      "paymentReceipt": "Inyemezabwishyu",
+      "notice": "Imenyesha"
+    },
+    "preview": "Reba mbere",
+    "download": "Kuramo",
+    "print": "Capisha",
+    "downloadCopy": "Kuramo kopi",
+    "downloadSuccess": "Wakuwemo {title} (kopi y'igerageza).",
+    "emptyTitle": "Nta nyandiko zibonetse",
+    "emptyDescription": "Nta masezerano y'ubukode, inyemezabwishyu, cyangwa inyandiko bihuye byabonetse.",
+    "clearFilters": "Siba ishungura"
+  },
+  "discovery": {
+    "explore": {
+      "title": "Shakisha inzu",
+      "subtitle": "Vumbura inzu zizewe zikodeshwa muri Kigali, ohereza ibibazo, kandi usabe amasura y'inzu.",
+      "emptyTitle": "Nta nzu zihuye n'ibyo ushaka",
+      "emptyDescription": "Gerageza kwagura ibyo ushakisha, agace, umubare w'ibyumba, cyangwa ingengo y'imari.",
+      "resetFilters": "Subiramo",
+      "paginationLabel": "inzu"
+    },
+    "filters": {
+      "searchPlaceholder": "Shakisha ukurikije agace, izina ry'inzu, cyangwa nyir'inzu...",
+      "searchLabel": "Shakisha inzu ziboneka",
+      "switchLayoutAria": "Hindura uburyo bwo kwerekana inzu",
+      "locationAria": "Shungura ukurikije agace",
+      "allLocations": "Uduce twose",
+      "bedsAria": "Shungura ukurikije ibyumba",
+      "anyBedrooms": "Ibyumba byose",
+      "beds1": "Icyumba 1+",
+      "beds2": "Ibyumba 2+",
+      "beds3": "Ibyumba 3+",
+      "budgetAria": "Shungura ukurikije ubukode ntarengwa",
+      "anyBudget": "Ingengo y'imari yose",
+      "upTo": "Kugeza kuri {amount}",
+      "sortAria": "Tondeka inzu",
+      "sortDefault": "Ibyatoranyijwe",
+      "sortAsc": "Ubukode: Make",
+      "sortDesc": "Ubukode: Menshi"
+    },
+    "card": {
+      "bed": "Ibyumba {count}",
+      "bath": "Ubwiherero {count}",
+      "parking": "Parikingi",
+      "perMonth": "/ ukwezi",
+      "requestVisit": "Saba gusura",
+      "inquire": "Baza"
+    },
+    "inquiries": {
+      "title": "Ibibazo n'amasura",
+      "subtitle": "Kurikirana gahunda zo gusura inzu n'ibisubizo bya ba nyir'inzu ahantu hamwe.",
+      "browseListings": "Reba inzu zihari",
+      "tabsAria": "Shungura ibibazo n'amasura",
+      "tabAll": "Byose",
+      "tabViewings": "Ubusabe bwo gusura",
+      "tabInquiries": "Ibibazo",
+      "emptyTitle": "Nta bibazo cyangwa ubusabe bwo gusura birabaho",
+      "emptyDescription": "Shakisha inzu ziboneka wohereze ikibazo cyangwa utegure isura ry'inzu.",
+      "exploreHomes": "Shakisha inzu",
+      "viewingsSection": "Ubusabe bwo gusura ({count})",
+      "inquiriesSection": "Ibibazo ku nzu ({count})",
+      "notePrefix": "Icyitonderwa:",
+      "landlordNotePrefix": "Ubutumwa bwa nyir'inzu:",
+      "requestedDate": "Byasabwe ku wa {date}",
+      "cancelRequest": "Hagarika ubusabe",
+      "cancelViewingSuccess": "Ubusabe bwo gusura bwahagaritswe.",
+      "sentDate": "Byoherejwe ku wa {date}",
+      "senderLandlord": "Nyir'inzu",
+      "senderYou": "Wowe",
+      "followupPlaceholder": "Andika ikibazo gikurikirana...",
+      "followupSuccess": "Ubutumwa bukurikirana bwoherejwe nyir'inzu.",
+      "replyButton": "Subiza"
+    },
+    "inquiryModal": {
+      "title": "Ohereza ikibazo ku nzu",
+      "description": "Baza nyir'inzu ibyerekeye {property}.",
+      "submitButton": "Ohereza ikibazo",
+      "phoneLabel": "Telefoni yo kukuvugishaho *",
+      "phoneError": "Andika nimero ya telefoni yemewe.",
+      "questionLabel": "Ikibazo cyawe *",
+      "questionPlaceholder": "Baza niba inzu iboneka, amazi n'amashanyarazi, amabwiriza y'amasezerano, cyangwa itariki yo kwimuka...",
+      "questionError": "Andika byibuze inyuguti 8.",
+      "notifTitle": "Ikibazo ku nzu cyoherejwe",
+      "notifMessage": "Ikibazo cyawe kuri {property} cyagejejwe kuri nyir'inzu.",
+      "notifAction": "Reba ibibazo",
+      "toastSuccess": "Ikibazo cyoherejwe kuri nyir'inzu."
+    },
+    "viewingModal": {
+      "title": "Saba gusura inzu",
+      "description": "Hitamo itariki n'isaha bikubereye byo gusura {property}.",
+      "submitButton": "Ohereza ubusabe",
+      "dateLabel": "Itariki wifuza *",
+      "dateError": "Hitamo itariki.",
+      "timeLabel": "Isaha wifuza *",
+      "timeError": "Hitamo isaha.",
+      "phoneLabel": "Telefoni yo kukuvugishaho *",
+      "phoneError": "Andika nimero ya telefoni yemewe.",
+      "noteLabel": "Ubutumwa kuri nyir'inzu (si itegeko)",
+      "notePlaceholder": "Ibibazo cyangwa amabwiriza y'igihe uzagerera ku nzu...",
+      "notifTitle": "Ubusabe bwo gusura bwoherejwe",
+      "notifMessage": "Wasabye gusura {property} ku wa {date} saa {time}.",
+      "notifAction": "Kurikirana isura",
+      "toastSuccess": "Ubusabe bwo gusura bwoherejwe kuri nyir'inzu."
+    }
+  },
+  "notifications": {
+    "loading": "Birimo gufungura amamenyesha...",
+    "loadError": "Ntibyashobotse gufungura amamenyesha.",
+    "title": "Amamenyesha",
+    "unreadCount": "{count} bitarasomwa",
+    "subtitle": "Menya amakuru ku mataliki yo kwishyura ubukode, aho gusana bigeze, inyandiko z'amasezerano, n'ibibazo.",
+    "unreadOnly": "Ibitarasomwa gusa",
+    "markAllRead": "Emeza ko byose byasomwe",
+    "searchPlaceholder": "Shakisha amamenyesha...",
+    "searchLabel": "Shakisha amamenyesha y'umupangayi",
+    "categoriesAria": "Ibyiciro by'amamenyesha",
+    "categories": {
+      "all": "Byose",
+      "rent": "Ubukode",
+      "maintenance": "Gusana",
+      "lease": "Amasezerano",
+      "history": "Amateka y'ubukode",
+      "inquiry": "Ibibazo",
+      "notice": "Imenyesha"
+    },
+    "openAction": "Fungura",
+    "markAsRead": "Emeza ko byasomwe",
+    "markAsUnread": "Subiza ku bitarasomwa",
+    "dismissNotification": "Kuraho imenyesha",
+    "emptyTitle": "Nta mamenyesha mashya asigaye",
+    "emptyFiltered": "Nta mamenyesha ahuye n'ishungura ryawe.",
+    "emptyDefault": "Ibikwibutsa ubukode, amakuru yo gusana, n'amamenyesha y'amasezerano bizagaragara hano.",
+    "showAll": "Erekana amamenyesha yose"
+  },
+  "settings": {
+    "title": "Igenamiterere",
+    "subtitle": "Cunga umwirondoro wawe, ururimi, umutekano wa konti, n'amamenyesha y'ubukode.",
+    "sections": {
+      "profileTitle": "Amakuru yihariye",
+      "profileDesc": "Vugurura ifoto yawe, imyirondoro, n'umuntu wo guhamagara mu byihutirwa.",
+      "languageTitle": "Ururimi",
+      "languageDesc": "Hitamo ururimi wifuza gukoresha ku mapaji yose ya Urugo.",
+      "securityTitle": "Ijambobanga n'umutekano",
+      "securityDesc": "Hindura ijambobanga rya konti yawe. Koresha byibuze inyuguti 8.",
+      "notificationsTitle": "Amahitamo y'amamenyesha",
+      "notificationsDesc": "Hitamo amamenyesha n'ibikwibutsa wifuza kubona ku bikorwa byawe by'ubukode."
+    },
+    "profile": {
+      "photoTitle": "Ifoto y'umwirondoro",
+      "photoHint": "JPG, PNG, cyangwa WebP itarengeje 5 MB. Ibikwa hano mu buryo bw'igerageza.",
+      "uploading": "Birimo koherezwa...",
+      "uploadPhoto": "Shyiraho ifoto",
+      "remove": "Kuraho",
+      "invalidImage": "Nyamuneka hitamo dosiye y'ifoto yemewe.",
+      "imageTooLarge": "Ifoto ntigomba kurenza 5 MB.",
+      "photoUpdated": "Ifoto y'umwirondoro yavuguruwe.",
+      "photoReadError": "Ntibyashobotse gusoma dosiye y'ifoto.",
+      "photoRemoved": "Ifoto y'umwirondoro yakuweho.",
+      "fullName": "Amazina yose",
+      "fullNameRequired": "Amazina yose arakenewe.",
+      "fullNameMin": "Andika byibuze inyuguti 2.",
+      "email": "Aderesi ya imeyili",
+      "emailRequired": "Aderesi ya imeyili irakenewe.",
+      "emailInvalid": "Andika aderesi ya imeyili yemewe.",
+      "phone": "Nimero ya telefoni",
+      "phoneRequired": "Nimero ya telefoni irakenewe.",
+      "phoneInvalid": "Andika nimero ya telefoni yemewe.",
+      "emergencyHeading": "Uwo guhamagara mu byihutirwa",
+      "emergencyName": "Izina rye",
+      "emergencyPhone": "Telefoni ye",
+      "saving": "Birimo kubikwa...",
+      "saveChanges": "Bika impinduka",
+      "reset": "Subiza uko byari"
+    },
+    "password": {
+      "currentLabel": "Ijambobanga ry'ubu",
+      "currentPlaceholder": "Andika ijambobanga ry'ubu",
+      "currentRequired": "Ijambobanga ry'ubu rirakenewe.",
+      "newLabel": "Ijambobanga rishya",
+      "newPlaceholder": "Byibuze inyuguti 8",
+      "newRequired": "Ijambobanga rishya rirakenewe.",
+      "newMin": "Ijambobanga rigomba kugira byibuze inyuguti 8.",
+      "confirmLabel": "Emeza ijambobanga rishya",
+      "confirmPlaceholder": "Subiramo ijambobanga rishya",
+      "confirmRequired": "Nyamuneka emeza ijambobanga rishya.",
+      "confirmMismatch": "Amajambobanga mashya ntahura.",
+      "previewNotice": "Uburyo bw'igerageza: impinduka z'ijambobanga zigenzurwa hano kugeza ubwo sisitemu yo kwinjira ihujwe.",
+      "updateButton": "Hindura ijambobanga",
+      "toastSuccess": "Ijambobanga ryemejwe (igerageza — bisaba ihuzwa rya sisitemu kugira ngo ribikwe)."
+    },
+    "notifications": {
+      "savedToast": "Amahitamo y'amamenyesha yabitswe.",
+      "saveButton": "Bika amahitamo",
+      "items": {
+        "rentDue": {
+          "label": "Ibikwibutsa itariki y'ubukode",
+          "description": "Bona ibikwibutsa mbere y'itariki ntarengwa yo kwishyura ubukode bw'ukwezi."
+        },
+        "maintenance": {
+          "label": "Amakuru yo gusana inzu",
+          "description": "Amakuru iyo nyir'inzu ahinduye aho ubusabe bwo gusana bugeze."
+        },
+        "lease": {
+          "label": "Amamenyesha y'amasezerano n'amateka",
+          "description": "Amamenyesha ku masezerano y'ubukode, inyemezabwishyu, n'igihe cy'integuza."
+        }
+      }
+    }
+  },
+  "helpCenter": {
+    "title": "Ubufasha bw'umupangayi",
+    "subtitle": "Bona ubufasha ku bwishyu bw'ubukode, inyandiko z'amasezerano, ubusabe bwo gusana, impaka, no gushakisha inzu.",
+    "searchPlaceholder": "Shakisha amabwiriza, inyemezabwishyu, cyangwa amategeko y'impaka...",
+    "searchLabel": "Shakisha mu bufasha bw'umupangayi",
+    "categories": {
+      "payments": {
+        "label": "Ubwishyu",
+        "desc": "Ubukode n'inyemezabwishyu"
+      },
+      "leaseDocuments": {
+        "label": "Amasezerano",
+        "desc": "Amasezerano n'amabwiriza"
+      },
+      "maintenance": {
+        "label": "Gusana",
+        "desc": "Gusana n'aho bigeze"
+      },
+      "rentalHistory": {
+        "label": "Amateka y'ubukode",
+        "desc": "Integuza y'iminsi 3 n'impaka"
+      },
+      "discovery": {
+        "label": "Shakisha inzu",
+        "desc": "Amasura n'ibibazo"
+      }
+    },
+    "faqHeading": "Ibibazo bikunze kubazwa",
+    "showAllTopics": "Byose",
+    "emptyTitle": "Nta nyandiko zihuye zibonetse",
+    "emptyDescription": "Gerageza irindi jambo cyangwa ukureho ingingo wahisemo.",
+    "clearSearch": "Siba",
+    "recentTicketsHeading": "Ubusabe bwawe bw'ubufasha bwa vuba ({count})",
+    "ticketStatuses": {
+      "submitted": "Byoherejwe",
+      "inReview": "Birimo gusuzumwa"
+    },
+    "stillNeedHelp": "Uracyakeneye ubufasha?",
+    "supportHours": "Itsinda ryacu ry'ubufasha riboneka kuva ku wa Mbere kugeza ku wa Gatandatu, saa 08:00 – 18:00 ku isaha ya Kigali (CAT).",
+    "contactSupport": "Ubufasha",
+    "faqs": {
+      "rfaq1": {
+        "question": "Nishyura nte ubukode bw'ukwezi?",
+        "answer": "Fungura Ubwishyu maze uhitemo Ishyura ubukode ubu. Hitamo MTN Mobile Money, Airtel Money, cyangwa Kohereza kuri banki, andika nimero y'igikorwa cyangwa wohereze ifoto y'inyemezabwishyu, hanyuma wohereze."
+      },
+      "rfaq2": {
+        "question": "Ni hehe nakura inyemezabwishyu z'ubukode bwanjye?",
+        "answer": "Inyemezabwishyu zose zemejwe zigaragara ako kanya ku ipaji y'Ubwishyu (Reba inyemezabwishyu) no ku ipaji y'Inyandiko."
+      },
+      "rfaq3": {
+        "question": "Nasuzuma cyangwa ngashyira umukono ku masezerano y'ubukode nte?",
+        "answer": "Jya ku Masezerano urebe amabwiriza y'ubukode, itariki yo kwishyura, ingwate, kandi ufungure inyandiko yose y'amasezerano. Ushobora kureba mbere, gukuramo, cyangwa gushyira umukono ku masezerano ategereje."
+      },
+      "rfaq4": {
+        "question": "Namenyesha nte ikibazo cyo gusana mu nzu ntuyemo?",
+        "answer": "Jya kuri Gusana maze ukande Menyesha ikibazo gishya. Tanga umutwe usobanutse, icyiciro, uburemere, n'ibisobanuro kugira ngo nyir'inzu ategure gusana."
+      },
+      "rfaq5": {
+        "question": "Bigenda bite iyo nyir'inzu yanditse imenyesha ry'umwenda w'ubukode?",
+        "answer": "Uhambwa igihe cy'iminsi 3 cy'integuza mbere y'uko umwenda wemezwa. Mu Mateka y'ubukode, ushobora kwishyura umwenda cyangwa gutanga impaka hamwe n'inyemezabwishyu kugira ngo bisuzumwe."
+      },
+      "rfaq6": {
+        "question": "Ese nk'umupangayi nshobora gushakisha inzu nshya no gusaba kuzisura?",
+        "answer": "Yego. Koresha Shakisha inzu kugira ngo ushakishe inzu ziboneka ukurikije akarere, ingengo y'imari, n'ibyumba, wandikire ba nyir'inzu ibibazo, kandi usabe amasura."
+      }
+    },
+    "supportModal": {
+      "title": "Vugisha ubufasha bw'umupangayi",
+      "description": "Tubwire uko twagufasha ku bukode bwawe, ubwishyu, cyangwa konti yawe.",
+      "sendRequest": "Ohereza",
+      "topicLabel": "Ingingo",
+      "topics": {
+        "payments": "Ubwishyu n'inyemezabwishyu",
+        "leaseDocuments": "Amasezerano n'inyandiko",
+        "maintenance": "Gusana inzu",
+        "rentalHistory": "Amateka y'ubukode n'impaka",
+        "account": "Konti n'igenamiterere"
+      },
+      "subjectLabel": "Impamvu *",
+      "subjectPlaceholder": "urugero: Ikibazo ku cyemezo cy'ubwishyu bw'ukwezi kwa Nzeri",
+      "subjectError": "Andika impamvu ngufi.",
+      "messageLabel": "Ubutumwa *",
+      "messagePlaceholder": "Sobanura uko twagufasha...",
+      "messageError": "Nyamuneka sobanura ikibazo cyawe.",
+      "toastSuccess": "Ubusabe bw'ubufasha bwoherejwe. Itsinda ryacu riragusubiza vuba."
+    }
+  },
+  "toasts": {
+    "maintenanceSubmitted": "Ubusabe bwo gusana bwoherejwe.",
+    "maintenanceFailed": "Ntibyashobotse kohereza ubusabe bwo gusana.",
+    "paymentRecorded": "Ubwishyu bw'ubukode bwanditswe (igerageza). Inyemezabwishyu yabitswe mu Nyandiko.",
+    "paymentFailed": "Ntibyashobotse kohereza ubwishyu. Ongera ugerageze.",
+    "profileUpdated": "Umwirondoro wavuguruwe.",
+    "profileFailed": "Ntibyashobotse kuvugurura umwirondoro."
+  }
+}

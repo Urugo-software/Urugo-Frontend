@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { ModalDialog } from "@/components/shared/ModalDialog";
@@ -23,6 +24,8 @@ export function RenterSupportModal({
   open,
   onClose,
 }: RenterSupportModalProps) {
+  const t = useTranslations("renter.helpCenter.supportModal");
+  const tActions = useTranslations("common.actions");
   const addSupportTicket = useRenterWorkspace((s) => s.addSupportTicket);
   const {
     register,
@@ -35,7 +38,7 @@ export function RenterSupportModal({
 
   const onSubmit = (vals: SupportFormValues) => {
     addSupportTicket(vals);
-    toast.success("Support request submitted. Our team will respond shortly.");
+    toast.success(t("toastSuccess"));
     reset();
     onClose();
   };
@@ -44,8 +47,8 @@ export function RenterSupportModal({
     <ModalDialog
       open={open}
       onClose={onClose}
-      title="Contact Renter Support"
-      description="Tell us how we can assist with your tenancy, rent payment, or account."
+      title={t("title")}
+      description={t("description")}
       footer={
         <>
           <Button
@@ -54,14 +57,14 @@ export function RenterSupportModal({
             onClick={onClose}
             className="cursor-pointer rounded-none"
           >
-            Cancel
+            {tActions("cancel")}
           </Button>
           <Button
             type="submit"
             form="renter-support-form"
             className="cursor-pointer rounded-none"
           >
-            Send Request
+            {t("sendRequest")}
           </Button>
         </>
       }
@@ -73,44 +76,44 @@ export function RenterSupportModal({
         className="space-y-4"
       >
         <Field>
-          <FieldLabel htmlFor="rs-cat">Topic</FieldLabel>
+          <FieldLabel htmlFor="rs-cat">{t("topicLabel")}</FieldLabel>
           <select
             id="rs-cat"
             className="h-10 w-full rounded-none border border-input bg-white px-3 text-sm"
             {...register("category")}
           >
-            <option value="Payments">Payments &amp; Receipts</option>
-            <option value="Lease & Documents">Lease &amp; Documents</option>
-            <option value="Maintenance">Maintenance</option>
-            <option value="Rental History">Rental History &amp; Disputes</option>
-            <option value="Account">Account &amp; Settings</option>
+            <option value="Payments">{t("topics.payments")}</option>
+            <option value="Lease & Documents">
+              {t("topics.leaseDocuments")}
+            </option>
+            <option value="Maintenance">{t("topics.maintenance")}</option>
+            <option value="Rental History">{t("topics.rentalHistory")}</option>
+            <option value="Account">{t("topics.account")}</option>
           </select>
         </Field>
 
         <Field>
-          <FieldLabel htmlFor="rs-subject">Subject *</FieldLabel>
+          <FieldLabel htmlFor="rs-subject">{t("subjectLabel")}</FieldLabel>
           <Input
             id="rs-subject"
-            placeholder="e.g. Question about September rent confirmation"
+            placeholder={t("subjectPlaceholder")}
             className="h-10 rounded-none"
             {...register("subject", {
-              validate: (v) =>
-                v.trim().length >= 4 || "Enter a short subject.",
+              validate: (v) => v.trim().length >= 4 || t("subjectError"),
             })}
           />
           <FieldError>{errors.subject?.message}</FieldError>
         </Field>
 
         <Field>
-          <FieldLabel htmlFor="rs-message">Message *</FieldLabel>
+          <FieldLabel htmlFor="rs-message">{t("messageLabel")}</FieldLabel>
           <textarea
             id="rs-message"
             rows={4}
-            placeholder="Describe how we can help..."
+            placeholder={t("messagePlaceholder")}
             className="w-full rounded-none border border-input bg-white p-3 text-sm"
             {...register("message", {
-              validate: (v) =>
-                v.trim().length >= 10 || "Please describe your issue.",
+              validate: (v) => v.trim().length >= 10 || t("messageError"),
             })}
           />
           <FieldError>{errors.message?.message}</FieldError>

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { Archive, Mail, MessageSquare, Phone, Send } from "lucide-react";
@@ -11,9 +12,14 @@ import { Pagination } from "@/components/shared/Pagination";
 import { StatusBadge, type StatusTone } from "@/components/shared/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { FieldError } from "@/components/ui/field";
+import type { AppLocale } from "@/i18n/config";
+import { localizeRelativeTime } from "@/i18n/display-format";
 import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
 import type { InquiryStatus } from "@/types/landlord";
 import { paginateItems } from "@/utils/pagination";
+
+const SEED_INQUIRY_IDS = new Set(["inq-101", "inq-102", "inq-103"]);
+const SEED_REPLY_IDS = new Set(["rep-1"]);
 
 const ITEMS_PER_PAGE = 5;
 const TABS: Array<"All" | InquiryStatus> = ["All", "New", "Replied", "Archived"];
@@ -28,6 +34,10 @@ interface ReplyForm {
 }
 
 export function LandlordInquiriesView() {
+  const t = useTranslations("landlord.inquiries");
+  const tSeed = useTranslations("landlord.seed.inquiries");
+  const tStatuses = useTranslations("common.statuses");
+  const locale = useLocale() as AppLocale;
   const { inquiries, contactVisibility, replyToInquiry, updateInquiryStatus } =
     useLandlordWorkspace();
 
@@ -70,8 +80,15 @@ export function LandlordInquiriesView() {
   const onSendReply = (values: ReplyForm) => {
     if (!activeInquiry) return;
     replyToInquiry(activeInquiry.id, values.message.trim());
-    toast.success(`Reply sent to ${activeInquiry.senderName}.`);
+    toast.success(t("toastReplySent", { name: activeInquiry.senderName }));
     reset();
+  };
+
+  const tabLabel = (tab: "All" | InquiryStatus) => {
+    if (tab === "All") return t("tabAll");
+    if (tab === "New") return tStatuses("new");
+    if (tab === "Replied") return tStatuses("replied");
+    return tStatuses("archived");
   };
 
   return (
@@ -79,26 +96,24 @@ export function LandlordInquiriesView() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h2 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">
-            Property Inquiries
+            {t("title")}
           </h2>
-          <p className="mt-1 text-sm text-body">
-            Respond directly to prospective tenants asking about your listings.
-          </p>
+          <p className="mt-1 text-sm text-body">{t("subtitle")}</p>
         </div>
 
         <Link
           href="/landlord/settings?tab=profile"
           className="border border-line bg-white px-3 py-2 text-xs font-semibold text-body hover:text-ink"
         >
-          Contact visibility:{" "}
+          {t("contactVisibilityLabel")}{" "}
           <strong className="text-ink">
             {[
-              contactVisibility.showPhone && "Phone",
-              contactVisibility.showWhatsApp && "WhatsApp",
-              contactVisibility.showEmail && "Email",
+              contactVisibility.showPhone && t("channelPhone"),
+              contactVisibility.showWhatsApp && t("channelWhatsApp"),
+              contactVisibility.showEmail && t("channelEmail"),
             ]
               .filter(Boolean)
-              .join(", ") || "Platform only"}
+              .join(", ") || t("platformOnly")}
           </strong>
         </Link>
       </div>
@@ -111,13 +126,13 @@ export function LandlordInquiriesView() {
             setSearch(val);
             setCurrentPage(1);
           }}
-          placeholder="Search tenant, property, or message"
-          label="Search property inquiries"
+          placeholder={t("searchPlaceholder")}
+          label={t("searchAria")}
           className="w-full lg:max-w-md"
         />
         <div
           role="tablist"
-          aria-label="Filter inquiries"
+          aria-label={t("filterAria")}
           className="flex flex-wrap gap-1.5"
         >
           {TABS.map((tab) => {
@@ -138,7 +153,7 @@ export function LandlordInquiriesView() {
                     : "border-line bg-white text-body hover:bg-surface hover:text-ink"
                 }`}
               >
-                {tab}
+                {tabLabel(tab)}
               </button>
             );
           })}
@@ -148,8 +163,8 @@ export function LandlordInquiriesView() {
       {filtered.length === 0 ? (
         <EmptyStateBox
           icon={MessageSquare}
-          title="No inquiries found"
-          description="Incoming questions from prospective tenants will appear here."
+          title={t("emptyTitle")}
+          description={t("emptyDesc")}
           action={
             search || statusFilter !== "All" ? (
               <Button
@@ -161,7 +176,7 @@ export function LandlordInquiriesView() {
                   setStatusFilter("All");
                 }}
               >
-                Clear filters
+                {t("clearFilters")}
               </Button>
             ) : undefined
           }
@@ -193,9 +208,13 @@ export function LandlordInquiriesView() {
                     {inq.propertyName}
                   </p>
                   <p className="mt-1.5 line-clamp-2 text-xs text-body">
-                    {inq.message}
+                    {SEED_INQUIRY_IDS.has(inq.id)
+                      ? tSeed(`${inq.id}.message`)
+                      : inq.message}
                   </p>
-                  <p className="mt-2 text-[11px] text-faint">{inq.createdAt}</p>
+                  <p className="mt-2 text-[11px] text-faint">
+                    {localizeRelativeTime(inq.createdAt, locale)}
+                  </p>
                 </button>
               );
             })}
@@ -205,7 +224,7 @@ export function LandlordInquiriesView() {
               totalPages={totalPages}
               totalItems={totalItems}
               itemsPerPage={ITEMS_PER_PAGE}
-              itemLabel="inquiries"
+              itemLabel={t("paginationLabel")}
               onPageChange={setCurrentPage}
               className="mt-4 pt-4"
             />
@@ -252,14 +271,16 @@ export function LandlordInquiriesView() {
                       updateInquiryStatus(activeInquiry.id, next);
                       toast.success(
                         next === "Archived"
-                          ? "Inquiry archived."
-                          : "Inquiry reopened.",
+                          ? t("toastArchived")
+                          : t("toastReopened"),
                       );
                     }}
                     className="cursor-pointer rounded-none text-xs"
                   >
                     <Archive aria-hidden="true" className="size-3.5" />
-                    {activeInquiry.status === "Archived" ? "Reopen" : "Archive"}
+                    {activeInquiry.status === "Archived"
+                      ? t("reopen")
+                      : t("archive")}
                   </Button>
                 </div>
 
@@ -270,10 +291,14 @@ export function LandlordInquiriesView() {
                       <strong className="text-ink">
                         {activeInquiry.senderName}
                       </strong>
-                      <span>{activeInquiry.createdAt}</span>
+                      <span>
+                        {localizeRelativeTime(activeInquiry.createdAt, locale)}
+                      </span>
                     </div>
                     <p className="mt-2 text-sm leading-relaxed text-ink">
-                      {activeInquiry.message}
+                      {SEED_INQUIRY_IDS.has(activeInquiry.id)
+                        ? tSeed(`${activeInquiry.id}.message`)
+                        : activeInquiry.message}
                     </p>
                   </div>
 
@@ -283,11 +308,17 @@ export function LandlordInquiriesView() {
                       className="border border-blue-200 bg-brand-tint/40 p-4"
                     >
                       <div className="flex items-center justify-between text-xs text-faint">
-                        <strong className="text-brand-blue">You (Landlord)</strong>
-                        <span>{reply.timestamp}</span>
+                        <strong className="text-brand-blue">
+                          {t("youLandlord")}
+                        </strong>
+                        <span>
+                          {localizeRelativeTime(reply.timestamp, locale)}
+                        </span>
                       </div>
                       <p className="mt-2 text-sm leading-relaxed text-ink">
-                        {reply.text}
+                        {SEED_REPLY_IDS.has(reply.id)
+                          ? tSeed(`replies.${reply.id}`)
+                          : reply.text}
                       </p>
                     </div>
                   ))}
@@ -304,17 +335,17 @@ export function LandlordInquiriesView() {
                   htmlFor="inquiry-reply"
                   className="block text-xs font-semibold text-ink"
                 >
-                  Send a reply
+                  {t("sendReplyLabel")}
                 </label>
                 <textarea
                   id="inquiry-reply"
                   rows={3}
-                  placeholder="Write your response about pricing, availability, or viewing times..."
+                  placeholder={t("replyPlaceholder")}
                   aria-invalid={!!errors.message}
                   className="w-full rounded-none border border-input bg-white p-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
                   {...register("message", {
                     validate: (v) =>
-                      v.trim().length >= 3 || "Enter a reply message.",
+                      v.trim().length >= 3 || t("replyRequired"),
                   })}
                 />
                 <FieldError>{errors.message?.message}</FieldError>
@@ -324,7 +355,7 @@ export function LandlordInquiriesView() {
                     className="cursor-pointer rounded-none text-xs"
                   >
                     <Send aria-hidden="true" className="size-3.5" />
-                    Send Reply
+                    {t("sendReplyBtn")}
                   </Button>
                 </div>
               </form>

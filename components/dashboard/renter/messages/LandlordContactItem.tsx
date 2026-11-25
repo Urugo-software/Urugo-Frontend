@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Copy, Check, LucideIcon } from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 interface Props {
   label: string;
@@ -12,6 +13,7 @@ interface Props {
 }
 
 export function LandlordContactItem({ label, value, href, icon: Icon }: Props) {
+  const t = useTranslations("renter.messages");
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
@@ -19,6 +21,8 @@ export function LandlordContactItem({ label, value, href, icon: Icon }: Props) {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  const copyLabel = t("copyLabel", { label });
 
   return (
     <div className="flex items-center justify-between  border border-line p-3 bg-white">
@@ -37,9 +41,11 @@ export function LandlordContactItem({ label, value, href, icon: Icon }: Props) {
         </div>
       </div>
       <button
+        type="button"
         onClick={handleCopy}
         className="p-1 text-faint hover:text-ink transition-colors"
-        title={`Copy ${label}`}
+        title={copyLabel}
+        aria-label={copyLabel}
       >
         {copied ? (
           <Check className="size-4 text-emerald-600" />

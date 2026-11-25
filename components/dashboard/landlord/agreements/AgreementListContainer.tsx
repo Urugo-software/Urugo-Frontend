@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { FileText } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { EmptyStateBox } from "@/components/shared/EmptyStateBox";
 import { Pagination } from "@/components/shared/Pagination";
@@ -20,6 +21,7 @@ import {
 const AGREEMENTS_PER_PAGE = 6;
 
 export function AgreementListContainer() {
+  const t = useTranslations("landlord.agreements");
   const agreements = useLandlordWorkspace((s) => s.agreements);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<AgreementFilterTab>("all");
@@ -69,11 +71,11 @@ export function AgreementListContainer() {
       {filteredAgreements.length === 0 ? (
         <EmptyStateBox
           icon={FileText}
-          title="No agreements found"
+          title={t("list.empty.title")}
           description={
             hasActiveFilters
-              ? "No agreements match your search or filter criteria."
-              : "No lease agreements have been created yet."
+              ? t("list.empty.filteredDescription")
+              : t("list.empty.defaultDescription")
           }
           action={
             hasActiveFilters ? (
@@ -83,7 +85,7 @@ export function AgreementListContainer() {
                 onClick={clearFilters}
                 className="cursor-pointer rounded-none"
               >
-                Clear filters
+                {t("list.empty.clearFilters")}
               </Button>
             ) : (
               <Button
@@ -91,7 +93,7 @@ export function AgreementListContainer() {
                 onClick={() => setIsCreateOpen(true)}
                 className="cursor-pointer rounded-none bg-ink text-white hover:bg-black"
               >
-                New Agreement
+                {t("header.newAgreement")}
               </Button>
             )
           }
@@ -105,7 +107,7 @@ export function AgreementListContainer() {
             totalPages={paginated.totalPages}
             totalItems={paginated.totalItems}
             itemsPerPage={AGREEMENTS_PER_PAGE}
-            itemLabel="agreements"
+            itemLabel={t("list.paginationItemLabel")}
             onPageChange={setPage}
           />
         </>

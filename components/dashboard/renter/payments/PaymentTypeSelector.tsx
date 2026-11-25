@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslations } from "next-intl";
 import { paymentMethodsData, PaymentMethod } from "@/data/payment-methods-data";
 import { PaymentTypeCard } from "./PaymentTypeCard";
 
@@ -10,10 +11,12 @@ interface Props {
 }
 
 export function PaymentTypeSelector({ selected, onSelect }: Props) {
+  const t = useTranslations("renter.payments.payRent");
+
   return (
     <div className="space-y-3">
       <label className="block text-xs lg:text-md font-bold uppercase tracking-wider text-faint">
-        Select Payment Type
+        {t("selectPaymentType")}
       </label>
       <div className="grid grid-cols-1 gap-3 lg:gap-5 sm:grid-cols-2">
         {paymentMethodsData.map((method) => (

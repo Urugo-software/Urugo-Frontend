@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { Calendar, Check, Clock, Mail, Phone, X } from "lucide-react";
@@ -15,6 +16,8 @@ import { Input } from "@/components/ui/input";
 import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
 import type { ViewingRequest, ViewingStatus } from "@/types/landlord";
 import { paginateItems } from "@/utils/pagination";
+
+const SEED_VIEWING_IDS = new Set(["view-201", "view-202"]);
 
 const ITEMS_PER_PAGE = 6;
 const TABS: Array<"All" | ViewingStatus> = [
@@ -41,6 +44,9 @@ interface RejectValues {
 }
 
 export function LandlordViewingsView() {
+  const t = useTranslations("landlord.viewings");
+  const tSeed = useTranslations("landlord.seed.viewings");
+  const tStatuses = useTranslations("common.statuses");
   const containerRef = useRef<HTMLDivElement>(null);
   const { viewings, confirmViewing, rescheduleViewing, rejectViewing } =
     useLandlordWorkspace();
@@ -86,6 +92,14 @@ export function LandlordViewingsView() {
     setRescheduleTarget(req);
   };
 
+  const tabLabel = (tab: "All" | ViewingStatus) => {
+    if (tab === "All") return t("tabAll");
+    if (tab === "Pending") return tStatuses("pending");
+    if (tab === "Confirmed") return tStatuses("confirmed");
+    if (tab === "Rescheduled") return tStatuses("rescheduled");
+    return tStatuses("rejected");
+  };
+
   return (
     <div
       ref={containerRef}
@@ -93,12 +107,9 @@ export function LandlordViewingsView() {
     >
       <div>
         <h2 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">
-          Viewing Requests
+          {t("title")}
         </h2>
-        <p className="mt-1 text-sm text-body">
-          Confirm, reschedule, or decline property visit requests from
-          prospective tenants.
-        </p>
+        <p className="mt-1 text-sm text-body">{t("subtitle")}</p>
       </div>
 
       <div className="flex flex-col gap-3 border border-line bg-white p-3 shadow-2xs lg:flex-row lg:items-center lg:justify-between">
@@ -108,14 +119,14 @@ export function LandlordViewingsView() {
             setSearch(val);
             setCurrentPage(1);
           }}
-          placeholder="Search visitor, property, or date"
-          label="Search viewing requests"
+          placeholder={t("searchPlaceholder")}
+          label={t("searchAria")}
           className="w-full lg:max-w-md"
         />
 
         <div
           role="tablist"
-          aria-label="Filter viewing requests"
+          aria-label={t("filterAria")}
           className="flex flex-wrap gap-1.5"
         >
           {TABS.map((tab) => {
@@ -136,7 +147,7 @@ export function LandlordViewingsView() {
                     : "border-line bg-white text-body hover:bg-surface hover:text-ink"
                 }`}
               >
-                {tab}
+                {tabLabel(tab)}
               </button>
             );
           })}
@@ -146,8 +157,8 @@ export function LandlordViewingsView() {
       {paginated.length === 0 ? (
         <EmptyStateBox
           icon={Calendar}
-          title="No viewing requests found"
-          description="When prospective tenants request to inspect one of your properties, it will appear here."
+          title={t("emptyTitle")}
+          description={t("emptyDesc")}
           action={
             search || statusFilter !== "All" ? (
               <Button
@@ -160,7 +171,7 @@ export function LandlordViewingsView() {
                   setCurrentPage(1);
                 }}
               >
-                Clear filters
+                {t("clearFilters")}
               </Button>
             ) : undefined
           }
@@ -213,13 +224,16 @@ export function LandlordViewingsView() {
 
                   {req.note && (
                     <p className="border-l-2 border-line pl-3 text-xs leading-relaxed text-body">
-                      {req.note}
+                      {SEED_VIEWING_IDS.has(req.id)
+                        ? tSeed(`${req.id}.note`)
+                        : req.note}
                     </p>
                   )}
 
                   {req.rejectionReason && (
                     <p className="border border-rose-200 bg-rose-50 px-3 py-2 text-xs text-rose-700">
-                      <strong>Rejection reason:</strong> {req.rejectionReason}
+                      <strong>{t("rejectionReasonLabel")}</strong>{" "}
+                      {req.rejectionReason}
                     </p>
                   )}
                 </div>
@@ -233,13 +247,13 @@ export function LandlordViewingsView() {
                         onClick={() => {
                           confirmViewing(req.id);
                           toast.success(
-                            `Viewing confirmed for ${req.requesterName}.`,
+                            t("toastConfirmed", { name: req.requesterName }),
                           );
                         }}
                         className="cursor-pointer rounded-none bg-emerald-700 text-xs text-white hover:bg-emerald-800"
                       >
                         <Check aria-hidden="true" className="size-3.5" />
-                        Confirm
+                        {t("confirm")}
                       </Button>
                     )}
                     <Button
@@ -249,7 +263,7 @@ export function LandlordViewingsView() {
                       onClick={() => openReschedule(req)}
                       className="cursor-pointer rounded-none text-xs"
                     >
-                      Reschedule
+                      {t("reschedule")}
                     </Button>
                     <Button
                       type="button"
@@ -262,7 +276,7 @@ export function LandlordViewingsView() {
                       className="cursor-pointer rounded-none border-rose-200 text-xs text-rose-700 hover:bg-rose-50"
                     >
                       <X aria-hidden="true" className="size-3.5" />
-                      Decline
+                      {t("decline")}
                     </Button>
                   </div>
                 )}
@@ -275,7 +289,7 @@ export function LandlordViewingsView() {
             totalPages={totalPages}
             totalItems={totalItems}
             itemsPerPage={ITEMS_PER_PAGE}
-            itemLabel="viewing requests"
+            itemLabel={t("paginationLabel")}
             onPageChange={(nextPage) => {
               setCurrentPage(nextPage);
               containerRef.current?.scrollTo({ top: 0, behavior: "smooth" });
@@ -288,10 +302,13 @@ export function LandlordViewingsView() {
       <ModalDialog
         open={Boolean(rescheduleTarget)}
         onClose={() => setRescheduleTarget(null)}
-        title="Reschedule Viewing"
+        title={t("rescheduleModalTitle")}
         description={
           rescheduleTarget
-            ? `Propose a new slot for ${rescheduleTarget.requesterName} (${rescheduleTarget.propertyName}).`
+            ? t("rescheduleModalDesc", {
+                name: rescheduleTarget.requesterName,
+                property: rescheduleTarget.propertyName,
+              })
             : undefined
         }
         footer={
@@ -302,14 +319,14 @@ export function LandlordViewingsView() {
               onClick={() => setRescheduleTarget(null)}
               className="cursor-pointer rounded-none"
             >
-              Cancel
+              {t("cancel")}
             </Button>
             <Button
               type="submit"
               form="reschedule-viewing-form"
               className="cursor-pointer rounded-none"
             >
-              Save New Time
+              {t("saveNewTime")}
             </Button>
           </>
         }
@@ -324,21 +341,21 @@ export function LandlordViewingsView() {
               vals.preferredDate,
               vals.preferredTime,
             );
-            toast.success("Viewing rescheduled.");
+            toast.success(t("toastRescheduled"));
             setRescheduleTarget(null);
           })}
           className="grid grid-cols-1 gap-4 sm:grid-cols-2"
         >
           <Field>
             <FieldLabel htmlFor="reschedule-date">
-              New date <span className="text-rose-600">*</span>
+              {t("newDateLabel")} <span className="text-rose-600">*</span>
             </FieldLabel>
             <Input
               id="reschedule-date"
               type="date"
               className="h-10 rounded-none"
               {...rescheduleForm.register("preferredDate", {
-                required: "Choose a date.",
+                required: t("chooseDateError"),
               })}
             />
             <FieldError>
@@ -347,14 +364,14 @@ export function LandlordViewingsView() {
           </Field>
           <Field>
             <FieldLabel htmlFor="reschedule-time">
-              New time <span className="text-rose-600">*</span>
+              {t("newTimeLabel")} <span className="text-rose-600">*</span>
             </FieldLabel>
             <Input
               id="reschedule-time"
               type="time"
               className="h-10 rounded-none"
               {...rescheduleForm.register("preferredTime", {
-                required: "Choose a time.",
+                required: t("chooseTimeError"),
               })}
             />
             <FieldError>
@@ -369,10 +386,10 @@ export function LandlordViewingsView() {
         open={Boolean(rejectTarget)}
         onClose={() => setRejectTarget(null)}
         variant="alert"
-        title="Decline Viewing Request"
+        title={t("declineModalTitle")}
         description={
           rejectTarget
-            ? `Provide a brief reason for ${rejectTarget.requesterName}.`
+            ? t("declineModalDesc", { name: rejectTarget.requesterName })
             : undefined
         }
         footer={
@@ -383,7 +400,7 @@ export function LandlordViewingsView() {
               onClick={() => setRejectTarget(null)}
               className="cursor-pointer rounded-none"
             >
-              Cancel
+              {t("cancel")}
             </Button>
             <Button
               type="submit"
@@ -391,7 +408,7 @@ export function LandlordViewingsView() {
               variant="destructive"
               className="cursor-pointer rounded-none"
             >
-              Confirm Decline
+              {t("confirmDecline")}
             </Button>
           </>
         }
@@ -402,23 +419,22 @@ export function LandlordViewingsView() {
           onSubmit={rejectForm.handleSubmit((vals) => {
             if (!rejectTarget) return;
             rejectViewing(rejectTarget.id, vals.reason.trim());
-            toast.success("Viewing request declined.");
+            toast.success(t("toastDeclined"));
             setRejectTarget(null);
           })}
           className="space-y-2"
         >
           <Field>
             <FieldLabel htmlFor="viewing-reject-reason">
-              Reason <span className="text-rose-600">*</span>
+              {t("reasonLabel")} <span className="text-rose-600">*</span>
             </FieldLabel>
             <textarea
               id="viewing-reject-reason"
               rows={3}
-              placeholder="e.g., Unit already reserved, or unavailable on that day..."
+              placeholder={t("reasonPlaceholder")}
               className="w-full rounded-none border border-input bg-white p-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/50"
               {...rejectForm.register("reason", {
-                validate: (v) =>
-                  v.trim().length >= 5 || "Enter a short reason.",
+                validate: (v) => v.trim().length >= 5 || t("reasonError"),
               })}
             />
             <FieldError>{rejectForm.formState.errors.reason?.message}</FieldError>

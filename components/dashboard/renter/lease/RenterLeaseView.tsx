@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useRenterLease } from "@/hooks/query/renter.hooks";
 import SectionLoading from "@/components/shared/SectionLoading";
 import SectionError from "@/components/shared/SectionError";
@@ -10,14 +11,15 @@ import { LeaseAgreementSection } from "./LeaseAgreementSection";
 import { LeaseEmptyState } from "./LeaseEmptyState";
 
 export function RenterLeaseView() {
+  const t = useTranslations("renter.lease");
   const { isLoading, isError, refetch } = useRenterLease();
   const lease = useRenterWorkspace((s) => s.lease);
 
-  if (isLoading) return <SectionLoading message="Loading lease details..." />;
+  if (isLoading) return <SectionLoading message={t("loading")} />;
   if (isError) {
     return (
       <SectionError
-        message="Unable to load lease information."
+        message={t("loadError")}
         onRetry={() => void refetch()}
       />
     );

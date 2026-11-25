@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Agreement, AgreementLanguage } from "@/types/agreement.types";
 import { AgreementStatusBadge } from "../AgreementStatusBadge";
 import { PreviewActionButtons } from "./header/PreviewActionButtons";
@@ -25,6 +28,8 @@ export function AgreementPreviewHeader({
   onCreateRenewalDraft,
   onOpenRenterSimulator,
 }: Props) {
+  const t = useTranslations("landlord.agreements.preview");
+
   return (
     <header className="space-y-4 print:hidden">
       <div>
@@ -33,7 +38,7 @@ export function AgreementPreviewHeader({
           className="inline-flex items-center gap-1.5 text-[12.5px] font-medium text-faint transition-colors hover:text-ink"
         >
           <ArrowLeft className="size-3.5" />
-          <span>Back to Agreements</span>
+          <span>{t("backToAgreements")}</span>
         </Link>
       </div>
 
@@ -49,14 +54,17 @@ export function AgreementPreviewHeader({
 
           <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-body">
             <span className="font-mono text-[12.5px] text-faint">
-              Ref:{" "}
+              {t("refLabel")}{" "}
               <strong className="font-semibold text-ink">
                 {agreement.referenceNumber}
               </strong>
             </span>
             <span>&middot;</span>
             <span>
-              Unit {agreement.property.unitNumber}, {agreement.property.name}
+              {t("unitProperty", {
+                unit: agreement.property.unitNumber,
+                property: agreement.property.name,
+              })}
             </span>
             <span>&middot;</span>
             <span className="font-mono text-[12.5px]">
@@ -69,7 +77,7 @@ export function AgreementPreviewHeader({
                 onLanguageChange(activeLanguage === "en" ? "rw" : "en")
               }
               className="inline-flex cursor-pointer items-center gap-1 text-[12.5px] font-medium text-ink hover:underline"
-              title="Click to switch document language"
+              title={t("switchDocLangTitle")}
             >
               <span>{activeLanguage === "rw" ? "Kinyarwanda" : "English"}</span>
             </button>

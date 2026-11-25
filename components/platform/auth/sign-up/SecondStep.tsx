@@ -1,4 +1,7 @@
+"use client";
+
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
@@ -23,13 +26,19 @@ type SecondStepProps = {
 };
 
 function SecondStep({ fields, register, errors, onBack }: SecondStepProps) {
+  const tActions = useTranslations("common.actions");
+  const tValidation = useTranslations("auth.signUp.validation");
+
   return (
     <>
       {fields.map((field) => (
         <SignUpWizardField
           key={field.id}
           {...field}
-          registration={register(field.id, getSignUpFieldRules(field.id))}
+          registration={register(
+            field.id,
+            getSignUpFieldRules(field.id, (key) => tValidation(key)),
+          )}
           error={errors[field.id]?.message}
         />
       ))}
@@ -39,13 +48,13 @@ function SecondStep({ fields, register, errors, onBack }: SecondStepProps) {
             type="button"
             variant="outline"
             onClick={onBack}
-            className={`${AUTH_SECONDARY_BUTTON_CLASS} sm:w-28`}
+            className={`${AUTH_SECONDARY_BUTTON_CLASS} sm:min-w-28`}
           >
             <ArrowLeft aria-hidden="true" className="size-4" />
-            <span>Back</span>
+            <span>{tActions("back")}</span>
           </Button>
           <Button type="submit" className={AUTH_PRIMARY_BUTTON_CLASS}>
-            <span>Continue</span>
+            <span>{tActions("continue")}</span>
             <ArrowRight aria-hidden="true" className="size-4" />
           </Button>
         </div>

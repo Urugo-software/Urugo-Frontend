@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useRenterOverview } from "@/hooks/query/renter.hooks";
 import SectionLoading from "@/components/shared/SectionLoading";
 import SectionError from "@/components/shared/SectionError";
@@ -14,6 +15,7 @@ import { RenterRecentUpdatesCard } from "./RenterRecentUpdatesCard";
 import { RenterQuickActionsCard } from "./RenterQuickActionsCard";
 
 export function RenterOverviewDashboard() {
+  const t = useTranslations("renter.overview");
   const { isLoading, isError, refetch } = useRenterOverview();
   const profile = useRenterWorkspace((s) => s.profile);
   const property = useRenterWorkspace((s) => s.property);
@@ -22,11 +24,11 @@ export function RenterOverviewDashboard() {
   const notifications = useRenterWorkspace((s) => s.notifications);
   const issues = useLandlordWorkspace((s) => s.issues);
 
-  if (isLoading) return <SectionLoading message="Loading dashboard..." />;
+  if (isLoading) return <SectionLoading message={t("loading")} />;
   if (isError) {
     return (
       <SectionError
-        message="Unable to load renter overview."
+        message={t("loadError")}
         onRetry={() => void refetch()}
       />
     );

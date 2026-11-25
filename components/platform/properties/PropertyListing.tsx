@@ -2,10 +2,12 @@
 
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { ChevronDown, SearchX, SlidersHorizontal } from "lucide-react";
-import { listed_properties, sortOptions } from "@/data/properties";
+
 import { EmptyStateBox } from "@/components/shared/EmptyStateBox";
 import { ViewModeToggle } from "@/components/shared/ViewModeToggle";
+import { listed_properties, sortOptions } from "@/data/properties";
 import { paginateItems } from "@/utils/pagination";
 import {
   filterPublicProperties,
@@ -19,6 +21,12 @@ import SearchInput from "./SearchInput";
 import TotalAvailableProperties from "./TotalAvailableProperties";
 
 const ITEMS_PER_PAGE = 6;
+
+const SORT_KEY_MAP = {
+  default: "default",
+  price_asc: "priceAsc",
+  price_desc: "priceDesc",
+} as const;
 
 interface PropertyListingProps {
   filters: PublicPropertyFilters;
@@ -35,6 +43,7 @@ function PropertyListing({
   showFilter = false,
   onToggleFilter,
 }: PropertyListingProps) {
+  const t = useTranslations("properties");
   const [currentPage, setCurrentPage] = useState(1);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
@@ -101,14 +110,14 @@ function PropertyListing({
                 onClick={handleReset}
                 className="cursor-pointer text-xs font-semibold text-brand hover:underline"
               >
-                Clear filters
+                {t("filters.clearFilters")}
               </button>
             )}
           </div>
 
           <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
             <label htmlFor="public-properties-sort" className="sr-only">
-              Sort properties
+              {t("sort.label")}
             </label>
             <select
               id="public-properties-sort"
@@ -118,17 +127,21 @@ function PropertyListing({
               }
               className="h-10 cursor-pointer border border-line bg-white px-3 text-xs font-medium text-ink focus:border-brand focus:outline-none sm:text-sm"
             >
-              {sortOptions.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.name}
-                </option>
-              ))}
+              {sortOptions.map((option) => {
+                const key =
+                  SORT_KEY_MAP[option.id as keyof typeof SORT_KEY_MAP];
+                return (
+                  <option key={option.id} value={option.id}>
+                    {key ? t(`sort.${key}`) : option.name}
+                  </option>
+                );
+              })}
             </select>
 
             <ViewModeToggle
               value={viewMode}
               onChange={setViewMode}
-              label="Property display layout"
+              label={t("viewLayoutLabel")}
             />
 
             {onToggleFilter && (
@@ -142,9 +155,14 @@ function PropertyListing({
                     : "border-line bg-white text-ink hover:border-brand/40 hover:bg-surface hover:text-brand"
                 }`}
               >
-                <SlidersHorizontal aria-hidden="true" className="h-3.5 w-3.5" />
+                <SlidersHorizontal
+                  aria-hidden="true"
+                  className="h-3.5 w-3.5"
+                />
                 <span>
-                  {showFilter ? "Hide Filters" : "Filters"}
+                  {showFilter
+                    ? t("filters.toggleHide")
+                    : t("filters.toggleShow")}
                   {activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
                 </span>
                 <ChevronDown
@@ -189,15 +207,15 @@ function PropertyListing({
         <div className="mt-6">
           <EmptyStateBox
             icon={SearchX}
-            title="No homes match your current search"
-            description="Try removing a filter, choosing another district, or broadening your monthly budget."
+            title={t("empty.title")}
+            description={t("empty.description")}
             action={
               <button
                 type="button"
                 onClick={handleReset}
                 className="cursor-pointer border border-brand bg-brand px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-brand-deep"
               >
-                Reset all filters
+                {t("empty.resetAll")}
               </button>
             }
           />

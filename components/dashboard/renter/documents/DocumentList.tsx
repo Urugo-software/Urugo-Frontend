@@ -1,4 +1,7 @@
+"use client";
+
 import { Folder } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { EmptyStateBox } from "@/components/shared/EmptyStateBox";
 import type { RenterDocument } from "@/types/renter";
 import { DocumentItemCard } from "./DocumentItemCard";
@@ -9,12 +12,14 @@ interface DocumentListProps {
 }
 
 export function DocumentList({ docs, onReset }: DocumentListProps) {
+  const t = useTranslations("renter.documents");
+
   if (docs.length === 0) {
     return (
       <EmptyStateBox
         icon={Folder}
-        title="No documents found"
-        description="No matching lease agreements, receipts, or statements were found."
+        title={t("emptyTitle")}
+        description={t("emptyDescription")}
         action={
           onReset ? (
             <button
@@ -22,7 +27,7 @@ export function DocumentList({ docs, onReset }: DocumentListProps) {
               onClick={onReset}
               className="cursor-pointer border border-line bg-white px-4 py-2 text-xs font-semibold text-ink hover:bg-surface"
             >
-              Clear filters
+              {t("clearFilters")}
             </button>
           ) : undefined
         }

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { Calendar, Clock, Send, Trash2 } from "lucide-react";
@@ -24,6 +25,7 @@ const INQUIRY_TONE: Record<LandlordInquiry["status"], StatusTone> = {
 };
 
 export function RenterViewingCard({ viewing }: { viewing: ViewingRequest }) {
+  const t = useTranslations("renter.discovery.inquiries");
   const cancelViewing = useLandlordWorkspace((s) => s.cancelViewingRequest);
 
   return (
@@ -54,17 +56,19 @@ export function RenterViewingCard({ viewing }: { viewing: ViewingRequest }) {
       </div>
 
       {viewing.note && (
-        <p className="text-sm text-body">Note: {viewing.note}</p>
+        <p className="text-sm text-body">
+          {t("notePrefix")} {viewing.note}
+        </p>
       )}
 
       {viewing.rejectionReason && (
         <p className="border-l-2 border-rose-500 bg-rose-50/50 px-3 py-2 text-xs text-rose-700">
-          Landlord note: {viewing.rejectionReason}
+          {t("landlordNotePrefix")} {viewing.rejectionReason}
         </p>
       )}
 
       <div className="flex flex-wrap items-center justify-between gap-2 pt-1 text-xs text-faint">
-        <span>Requested {viewing.createdAt}</span>
+        <span>{t("requestedDate", { date: viewing.createdAt })}</span>
         {viewing.status === "Pending" && (
           <Button
             type="button"
@@ -72,12 +76,12 @@ export function RenterViewingCard({ viewing }: { viewing: ViewingRequest }) {
             size="sm"
             onClick={() => {
               cancelViewing(viewing.id);
-              toast.success("Viewing request cancelled.");
+              toast.success(t("cancelViewingSuccess"));
             }}
             className="h-8 cursor-pointer rounded-none text-xs text-rose-700 hover:bg-rose-50"
           >
             <Trash2 aria-hidden="true" className="size-3.5" />
-            Cancel Request
+            {t("cancelRequest")}
           </Button>
         )}
       </div>
@@ -86,6 +90,7 @@ export function RenterViewingCard({ viewing }: { viewing: ViewingRequest }) {
 }
 
 export function RenterInquiryCard({ inquiry }: { inquiry: LandlordInquiry }) {
+  const t = useTranslations("renter.discovery.inquiries");
   const replyToInquiry = useLandlordWorkspace((s) => s.replyToInquiry);
   const { register, handleSubmit, reset } = useForm<{ text: string }>({
     defaultValues: { text: "" },
@@ -95,7 +100,7 @@ export function RenterInquiryCard({ inquiry }: { inquiry: LandlordInquiry }) {
     const clean = text.trim();
     if (!clean) return;
     replyToInquiry(inquiry.id, clean, "seeker");
-    toast.success("Follow-up sent to landlord.");
+    toast.success(t("followupSuccess"));
     reset();
   };
 
@@ -109,7 +114,9 @@ export function RenterInquiryCard({ inquiry }: { inquiry: LandlordInquiry }) {
           >
             {inquiry.propertyName}
           </Link>
-          <p className="mt-0.5 text-xs text-faint">Sent {inquiry.createdAt}</p>
+          <p className="mt-0.5 text-xs text-faint">
+            {t("sentDate", { date: inquiry.createdAt })}
+          </p>
         </div>
         <StatusBadge
           label={inquiry.status}
@@ -131,7 +138,10 @@ export function RenterInquiryCard({ inquiry }: { inquiry: LandlordInquiry }) {
               }`}
             >
               <div className="font-semibold">
-                {reply.sender === "landlord" ? "Landlord" : "You"} &middot;{" "}
+                {reply.sender === "landlord"
+                  ? t("senderLandlord")
+                  : t("senderYou")}{" "}
+                &middot;{" "}
                 <span className="font-normal text-faint">
                   {reply.timestamp}
                 </span>
@@ -148,7 +158,7 @@ export function RenterInquiryCard({ inquiry }: { inquiry: LandlordInquiry }) {
           className="flex items-center gap-2 border-t border-line pt-3"
         >
           <Input
-            placeholder="Write a follow-up question..."
+            placeholder={t("followupPlaceholder")}
             className="h-9 flex-1 rounded-none text-sm"
             {...register("text", { required: true })}
           />
@@ -158,7 +168,7 @@ export function RenterInquiryCard({ inquiry }: { inquiry: LandlordInquiry }) {
             className="h-9 cursor-pointer rounded-none px-3.5 text-xs"
           >
             <Send aria-hidden="true" className="size-3.5" />
-            Reply
+            {t("replyButton")}
           </Button>
         </form>
       )}

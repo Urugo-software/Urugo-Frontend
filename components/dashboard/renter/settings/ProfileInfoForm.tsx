@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { Upload, Trash2 } from "lucide-react";
@@ -23,6 +24,7 @@ interface ProfileInputs {
 const MAX_AVATAR_BYTES = 5 * 1024 * 1024;
 
 export function ProfileInfoForm() {
+  const t = useTranslations("renter.settings.profile");
   const profile = useRenterWorkspace((s) => s.profile);
   const updateProfileStore = useRenterWorkspace((s) => s.updateProfile);
   const updateMutation = useUpdateRenterProfile();
@@ -67,11 +69,11 @@ export function ProfileInfoForm() {
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      toast.error("Please select a valid image file.");
+      toast.error(t("invalidImage"));
       return;
     }
     if (file.size > MAX_AVATAR_BYTES) {
-      toast.error("Image must be 5 MB or smaller.");
+      toast.error(t("imageTooLarge"));
       return;
     }
 
@@ -79,9 +81,9 @@ export function ProfileInfoForm() {
     try {
       const dataUrl = await readImageFile(file);
       updateProfileStore({ avatar: dataUrl });
-      toast.success("Profile photo updated.");
+      toast.success(t("photoUpdated"));
     } catch {
-      toast.error("Unable to read image file.");
+      toast.error(t("photoReadError"));
     } finally {
       setIsReadingPhoto(false);
     }
@@ -110,10 +112,8 @@ export function ProfileInfoForm() {
           className="size-16"
         />
         <div className="min-w-0 flex-1 space-y-1">
-          <div className="text-sm font-bold text-ink">Profile Photo</div>
-          <p className="text-xs text-body">
-            JPG, PNG, or WebP up to 5 MB. Stored locally in preview mode.
-          </p>
+          <div className="text-sm font-bold text-ink">{t("photoTitle")}</div>
+          <p className="text-xs text-body">{t("photoHint")}</p>
           <div className="flex flex-wrap gap-2 pt-1">
             <input
               ref={fileInputRef}
@@ -131,7 +131,7 @@ export function ProfileInfoForm() {
               className="cursor-pointer rounded-none"
             >
               <Upload aria-hidden="true" className="size-3.5" />
-              {isReadingPhoto ? "Uploading..." : "Upload Photo"}
+              {isReadingPhoto ? t("uploading") : t("uploadPhoto")}
             </Button>
             {profile.avatar && (
               <Button
@@ -140,12 +140,12 @@ export function ProfileInfoForm() {
                 size="sm"
                 onClick={() => {
                   updateProfileStore({ avatar: "" });
-                  toast.success("Profile photo removed.");
+                  toast.success(t("photoRemoved"));
                 }}
                 className="cursor-pointer rounded-none text-rose-700 hover:text-rose-800"
               >
                 <Trash2 aria-hidden="true" className="size-3.5" />
-                Remove
+                {t("remove")}
               </Button>
             )}
           </div>
@@ -154,32 +154,32 @@ export function ProfileInfoForm() {
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <Field>
-          <FieldLabel htmlFor="renter-profile-name">Full Name</FieldLabel>
+          <FieldLabel htmlFor="renter-profile-name">{t("fullName")}</FieldLabel>
           <Input
             id="renter-profile-name"
             type="text"
             placeholder="Jean Claude"
             className="h-10 rounded-none border-line bg-white"
             {...register("name", {
-              required: "Full name is required.",
-              minLength: { value: 2, message: "Enter at least 2 characters." },
+              required: t("fullNameRequired"),
+              minLength: { value: 2, message: t("fullNameMin") },
             })}
           />
           <FieldError errors={[errors.name]} />
         </Field>
 
         <Field>
-          <FieldLabel htmlFor="renter-profile-email">Email Address</FieldLabel>
+          <FieldLabel htmlFor="renter-profile-email">{t("email")}</FieldLabel>
           <Input
             id="renter-profile-email"
             type="email"
             placeholder="jean.claude@gmail.com"
             className="h-10 rounded-none border-line bg-white"
             {...register("email", {
-              required: "Email address is required.",
+              required: t("emailRequired"),
               pattern: {
                 value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: "Enter a valid email address.",
+                message: t("emailInvalid"),
               },
             })}
           />
@@ -189,15 +189,15 @@ export function ProfileInfoForm() {
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
         <Field>
-          <FieldLabel htmlFor="renter-profile-phone">Phone Number</FieldLabel>
+          <FieldLabel htmlFor="renter-profile-phone">{t("phone")}</FieldLabel>
           <Input
             id="renter-profile-phone"
             type="tel"
             placeholder="+250 788 000 000"
             className="h-10 rounded-none border-line bg-white"
             {...register("phone", {
-              required: "Phone number is required.",
-              minLength: { value: 9, message: "Enter a valid phone number." },
+              required: t("phoneRequired"),
+              minLength: { value: 9, message: t("phoneInvalid") },
             })}
           />
           <FieldError errors={[errors.phone]} />
@@ -206,11 +206,13 @@ export function ProfileInfoForm() {
 
       <div className="border-t border-line pt-5">
         <h4 className="mb-3 text-xs font-bold uppercase tracking-wider text-faint">
-          Emergency Contact
+          {t("emergencyHeading")}
         </h4>
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <Field>
-            <FieldLabel htmlFor="renter-emergency-name">Contact Name</FieldLabel>
+            <FieldLabel htmlFor="renter-emergency-name">
+              {t("emergencyName")}
+            </FieldLabel>
             <Input
               id="renter-emergency-name"
               type="text"
@@ -221,7 +223,9 @@ export function ProfileInfoForm() {
           </Field>
 
           <Field>
-            <FieldLabel htmlFor="renter-emergency-phone">Contact Phone</FieldLabel>
+            <FieldLabel htmlFor="renter-emergency-phone">
+              {t("emergencyPhone")}
+            </FieldLabel>
             <Input
               id="renter-emergency-phone"
               type="tel"
@@ -239,7 +243,7 @@ export function ProfileInfoForm() {
           disabled={updateMutation.isPending || !isDirty}
           className="cursor-pointer rounded-none px-6"
         >
-          {updateMutation.isPending ? "Saving..." : "Save Changes"}
+          {updateMutation.isPending ? t("saving") : t("saveChanges")}
         </Button>
         {isDirty && (
           <Button
@@ -248,7 +252,7 @@ export function ProfileInfoForm() {
             onClick={() => reset()}
             className="cursor-pointer rounded-none"
           >
-            Reset
+            {t("reset")}
           </Button>
         )}
       </div>

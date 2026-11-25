@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { CheckCheck } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { DashboardSearchInput } from "@/components/shared/DashboardSearchInput";
 import SectionLoading from "@/components/shared/SectionLoading";
 import SectionError from "@/components/shared/SectionError";
@@ -12,15 +13,16 @@ import { useRenterWorkspace } from "@/store/renter-workspace.store";
 import { NotificationList } from "./NotificationList";
 
 const TABS = [
-  { id: "all", label: "All" },
-  { id: "rent", label: "Rent" },
-  { id: "maintenance", label: "Maintenance" },
-  { id: "lease", label: "Lease" },
-  { id: "history", label: "Rental History" },
-  { id: "inquiry", label: "Inquiries" },
+  "all",
+  "rent",
+  "maintenance",
+  "lease",
+  "history",
+  "inquiry",
 ] as const;
 
 export function RenterNotificationsView() {
+  const t = useTranslations("renter.notifications");
   const { isLoading, isError, refetch } = useRenterNotifications();
   const notifications = useRenterWorkspace((s) => s.notifications);
   const markRead = useRenterWorkspace((s) => s.markNotificationRead);
@@ -44,11 +46,11 @@ export function RenterNotificationsView() {
     });
   }, [activeTab, notifications, search, unreadOnly]);
 
-  if (isLoading) return <SectionLoading message="Loading notifications..." />;
+  if (isLoading) return <SectionLoading message={t("loading")} />;
   if (isError) {
     return (
       <SectionError
-        message="Unable to load notifications."
+        message={t("loadError")}
         onRetry={() => void refetch()}
       />
     );
@@ -61,18 +63,15 @@ export function RenterNotificationsView() {
           <div>
             <div className="flex flex-wrap items-baseline gap-3">
               <h2 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">
-                Notifications
+                {t("title")}
               </h2>
               {unreadCount > 0 && (
                 <span className="text-sm font-semibold text-brand-blue">
-                  {unreadCount} unread
+                  {t("unreadCount", { count: unreadCount })}
                 </span>
               )}
             </div>
-            <p className="mt-1 text-sm text-body">
-              Stay informed about rent due dates, maintenance progress, lease
-              documents, and inquiries.
-            </p>
+            <p className="mt-1 text-sm text-body">{t("subtitle")}</p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
@@ -83,7 +82,7 @@ export function RenterNotificationsView() {
               onClick={() => setUnreadOnly((prev) => !prev)}
               className="h-9 cursor-pointer rounded-none px-3.5 text-xs font-semibold"
             >
-              Unread only
+              {t("unreadOnly")}
             </Button>
             {unreadCount > 0 && (
               <Button
@@ -93,7 +92,7 @@ export function RenterNotificationsView() {
                 className="h-9 cursor-pointer rounded-none px-3.5 text-xs font-semibold"
               >
                 <CheckCheck aria-hidden="true" className="size-4" />
-                Mark all read
+                {t("markAllRead")}
               </Button>
             )}
           </div>
@@ -102,36 +101,36 @@ export function RenterNotificationsView() {
         <DashboardSearchInput
           value={search}
           onChange={setSearch}
-          placeholder="Search notifications..."
-          label="Search renter notifications"
+          placeholder={t("searchPlaceholder")}
+          label={t("searchLabel")}
           className="max-w-md"
         />
 
         <div
           role="tablist"
-          aria-label="Notification categories"
+          aria-label={t("categoriesAria")}
           className="flex items-center gap-4 overflow-x-auto border-b border-line sm:gap-6"
         >
-          {TABS.map((tab) => {
+          {TABS.map((tabId) => {
             const count = notifications.filter((n) => {
               if (unreadOnly && n.read) return false;
-              return tab.id === "all" || n.category === tab.id;
+              return tabId === "all" || n.category === tabId;
             }).length;
             return (
               <button
-                key={tab.id}
+                key={tabId}
                 type="button"
                 role="tab"
-                aria-selected={activeTab === tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                aria-selected={activeTab === tabId}
+                onClick={() => setActiveTab(tabId)}
                 className={cn(
                   "-mb-px flex shrink-0 cursor-pointer items-center gap-1.5 whitespace-nowrap border-b-2 pb-3 pt-1 text-sm transition-colors",
-                  activeTab === tab.id
+                  activeTab === tabId
                     ? "border-ink font-semibold text-ink"
                     : "border-transparent font-medium text-body hover:text-ink",
                 )}
               >
-                <span>{tab.label}</span>
+                <span>{t(`categories.${tabId}`)}</span>
                 {count > 0 && (
                   <span className="font-ibm text-xs text-faint">{count}</span>
                 )}

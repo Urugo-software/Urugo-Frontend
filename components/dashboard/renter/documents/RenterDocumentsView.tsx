@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { DashboardSearchInput } from "@/components/shared/DashboardSearchInput";
 import SectionLoading from "@/components/shared/SectionLoading";
 import SectionError from "@/components/shared/SectionError";
@@ -10,9 +11,15 @@ import { cn } from "@/lib/utils";
 import { useRenterWorkspace } from "@/store/renter-workspace.store";
 import { DocumentList } from "./DocumentList";
 
-const CATEGORIES = ["All", "Lease Agreement", "Payment Receipt", "Notice"] as const;
+const CATEGORIES = [
+  { value: "All", key: "all" },
+  { value: "Lease Agreement", key: "leaseAgreement" },
+  { value: "Payment Receipt", key: "paymentReceipt" },
+  { value: "Notice", key: "notice" },
+] as const;
 
 export function RenterDocumentsView() {
+  const t = useTranslations("renter.documents");
   const { isLoading, isError, refetch } = useRenterDocuments();
   const docs = useRenterWorkspace((s) => s.documents);
   const [search, setSearch] = useState("");
@@ -29,11 +36,11 @@ export function RenterDocumentsView() {
     });
   }, [category, docs, search]);
 
-  if (isLoading) return <SectionLoading message="Loading documents..." />;
+  if (isLoading) return <SectionLoading message={t("loading")} />;
   if (isError) {
     return (
       <SectionError
-        message="Unable to load documents."
+        message={t("loadError")}
         onRetry={() => void refetch()}
       />
     );
@@ -44,18 +51,15 @@ export function RenterDocumentsView() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h2 className="text-xl font-bold tracking-tight text-ink sm:text-2xl">
-            My Documents
+            {t("title")}
           </h2>
-          <p className="mt-1 text-sm text-body">
-            Preview and download your lease contract, rent receipts, and
-            notices.
-          </p>
+          <p className="mt-1 text-sm text-body">{t("subtitle")}</p>
         </div>
         <Link
           href="/renter/lease"
           className="text-xs font-semibold text-brand-blue hover:underline"
         >
-          Open Lease Details &rarr;
+          {t("openLeaseDetails")} &rarr;
         </Link>
       </div>
 
@@ -63,31 +67,31 @@ export function RenterDocumentsView() {
         <DashboardSearchInput
           value={search}
           onChange={setSearch}
-          placeholder="Search documents and receipts..."
-          label="Search documents"
+          placeholder={t("searchPlaceholder")}
+          label={t("searchLabel")}
           className="max-w-md"
         />
 
         <div
           role="tablist"
-          aria-label="Document categories"
+          aria-label={t("categoriesAria")}
           className="flex items-center gap-6 overflow-x-auto border-b border-line"
         >
           {CATEGORIES.map((tab) => (
             <button
-              key={tab}
+              key={tab.value}
               type="button"
               role="tab"
-              aria-selected={category === tab}
-              onClick={() => setCategory(tab)}
+              aria-selected={category === tab.value}
+              onClick={() => setCategory(tab.value)}
               className={cn(
                 "-mb-px cursor-pointer whitespace-nowrap border-b-2 pb-3 pt-1 text-sm transition-colors",
-                category === tab
+                category === tab.value
                   ? "border-ink font-semibold text-ink"
                   : "border-transparent font-medium text-body hover:text-ink",
               )}
             >
-              {tab}
+              {t(`categories.${tab.key}`)}
             </button>
           ))}
         </div>

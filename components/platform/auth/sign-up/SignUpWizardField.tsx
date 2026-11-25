@@ -39,6 +39,16 @@ export type SignUpField = {
   description?: string;
 };
 
+export type SignUpValidationKey =
+  | "fullNameRequired"
+  | "fullNameMin"
+  | "emailRequired"
+  | "emailInvalid"
+  | "telephoneRequired"
+  | "telephoneInvalid"
+  | "nationalIdRequired"
+  | "nationalIdInvalid";
+
 const fieldIcons: Record<keyof SignUpValues, LucideIcon> = {
   fullName: UserRound,
   email: Mail,
@@ -48,33 +58,29 @@ const fieldIcons: Record<keyof SignUpValues, LucideIcon> = {
 
 export function getSignUpFieldRules(
   id: keyof SignUpValues,
+  t: (key: SignUpValidationKey) => string,
 ): RegisterOptions<SignUpValues, keyof SignUpValues> {
   switch (id) {
     case "fullName":
       return {
-        required: "Please enter your full name.",
-        validate: (value) =>
-          value.trim().length >= 2 ||
-          "Full name must be at least 2 characters.",
+        required: t("fullNameRequired"),
+        validate: (value) => value.trim().length >= 2 || t("fullNameMin"),
       };
     case "email":
       return {
-        required: "Please enter your email address.",
-        validate: (value) =>
-          isValidEmail(value) || "Please enter a valid email address.",
+        required: t("emailRequired"),
+        validate: (value) => isValidEmail(value) || t("emailInvalid"),
       };
     case "telephone":
       return {
-        required: "Please enter your phone number.",
-        validate: (value) =>
-          isValidTelephone(value) ||
-          "Enter a valid phone number (e.g. +250 788 000 000).",
+        required: t("telephoneRequired"),
+        validate: (value) => isValidTelephone(value) || t("telephoneInvalid"),
       };
     case "nationalId":
       return {
-        required: "Please enter your national ID number.",
+        required: t("nationalIdRequired"),
         validate: (value) =>
-          isValidNationalId(value) || "Enter a valid national ID number.",
+          isValidNationalId(value) || t("nationalIdInvalid"),
       };
   }
 }

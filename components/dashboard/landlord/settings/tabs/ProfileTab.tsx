@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,7 @@ interface ProfileFormValues {
 }
 
 export function ProfileTab({ onSave }: { onSave: () => void }) {
+  const t = useTranslations("landlord.settings.profile");
   const { profile, contactVisibility, updateProfile, updateContactVisibility } =
     useLandlordWorkspace();
 
@@ -46,7 +48,7 @@ export function ProfileTab({ onSave }: { onSave: () => void }) {
       showWhatsApp: vals.showWhatsApp,
       showEmail: vals.showEmail,
     });
-    toast.success("Profile and contact visibility saved.");
+    toast.success(t("toastSaved"));
     onSave();
   };
 
@@ -57,19 +59,14 @@ export function ProfileTab({ onSave }: { onSave: () => void }) {
       className="max-w-2xl space-y-6"
     >
       <div>
-        <h3 className="text-lg font-bold text-ink">
-          Landlord Profile & Contact Visibility
-        </h3>
-        <p className="mt-1 text-xs text-body">
-          Update your identity details and decide which contact channels
-          prospective tenants can see on your published listings.
-        </p>
+        <h3 className="text-lg font-bold text-ink">{t("title")}</h3>
+        <p className="mt-1 text-xs text-body">{t("subtitle")}</p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field className="sm:col-span-2">
           <FieldLabel htmlFor="settings-name">
-            Full legal name <span className="text-rose-600">*</span>
+            {t("fullNameLabel")} <span className="text-rose-600">*</span>
           </FieldLabel>
           <Input
             id="settings-name"
@@ -77,7 +74,7 @@ export function ProfileTab({ onSave }: { onSave: () => void }) {
             aria-invalid={!!errors.fullName}
             {...register("fullName", {
               validate: (v) =>
-                v.trim().length >= 2 || "Enter your full legal name.",
+                v.trim().length >= 2 || t("fullNameRequired"),
             })}
           />
           <FieldError>{errors.fullName?.message}</FieldError>
@@ -85,7 +82,7 @@ export function ProfileTab({ onSave }: { onSave: () => void }) {
 
         <Field>
           <FieldLabel htmlFor="settings-email">
-            Email address <span className="text-rose-600">*</span>
+            {t("emailLabel")} <span className="text-rose-600">*</span>
           </FieldLabel>
           <Input
             id="settings-email"
@@ -95,7 +92,7 @@ export function ProfileTab({ onSave }: { onSave: () => void }) {
             {...register("email", {
               validate: (v) =>
                 /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) ||
-                "Enter a valid email address.",
+                t("emailInvalid"),
             })}
           />
           <FieldError>{errors.email?.message}</FieldError>
@@ -103,7 +100,7 @@ export function ProfileTab({ onSave }: { onSave: () => void }) {
 
         <Field>
           <FieldLabel htmlFor="settings-phone">
-            Phone number <span className="text-rose-600">*</span>
+            {t("phoneLabel")} <span className="text-rose-600">*</span>
           </FieldLabel>
           <Input
             id="settings-phone"
@@ -112,8 +109,7 @@ export function ProfileTab({ onSave }: { onSave: () => void }) {
             aria-invalid={!!errors.phone}
             {...register("phone", {
               validate: (v) =>
-                v.replace(/\D/g, "").length >= 9 ||
-                "Enter a valid phone number.",
+                v.replace(/\D/g, "").length >= 9 || t("phoneInvalid"),
             })}
           />
           <FieldError>{errors.phone?.message}</FieldError>
@@ -123,24 +119,24 @@ export function ProfileTab({ onSave }: { onSave: () => void }) {
       {/* Contact Visibility Controls */}
       <fieldset className="space-y-3 border-t border-line pt-5">
         <legend className="text-xs font-semibold uppercase tracking-wider text-faint">
-          Public Listing Contact Visibility
+          {t("visibilityLegend")}
         </legend>
         {(
           [
             {
               name: "showPhone" as const,
-              title: "Show phone number on listings",
-              desc: "Allow prospective tenants to call you directly from property pages.",
+              title: t("showPhoneTitle"),
+              desc: t("showPhoneDesc"),
             },
             {
               name: "showWhatsApp" as const,
-              title: "Enable WhatsApp contact button",
-              desc: "Display a direct WhatsApp shortcut alongside Urugo inquiries.",
+              title: t("showWhatsAppTitle"),
+              desc: t("showWhatsAppDesc"),
             },
             {
               name: "showEmail" as const,
-              title: "Show email address publicly",
-              desc: "Expose your email address on listing cards (otherwise kept private inside Urugo).",
+              title: t("showEmailTitle"),
+              desc: t("showEmailDesc"),
             },
           ] as const
         ).map((item) => (
@@ -169,7 +165,7 @@ export function ProfileTab({ onSave }: { onSave: () => void }) {
           disabled={isSubmitting}
           className="cursor-pointer rounded-none"
         >
-          Save Profile
+          {t("saveBtn")}
         </Button>
       </div>
     </form>

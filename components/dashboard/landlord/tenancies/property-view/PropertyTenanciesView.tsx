@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Building2, Plus, SearchX } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { ViewMode } from "@/components/dashboard/landlord/properties/PortfolioCard";
 import { DashboardSearchInput } from "@/components/shared/DashboardSearchInput";
 import { Pagination } from "@/components/shared/Pagination";
@@ -31,15 +32,16 @@ type UnitFilter = "all" | "occupied" | "vacant" | "maintenance" | "ending";
 
 const UNITS_PER_PAGE = 6;
 
-const filterOptions: { key: UnitFilter; label: string }[] = [
-  { key: "all", label: "All Units" },
-  { key: "occupied", label: "Occupied" },
-  { key: "vacant", label: "Vacant" },
-  { key: "maintenance", label: "Maintenance" },
-  { key: "ending", label: "Ending Soon" },
+const filterOptionKeys: { key: UnitFilter; labelKey: string }[] = [
+  { key: "all", labelKey: "filterAll" },
+  { key: "occupied", labelKey: "filterOccupied" },
+  { key: "vacant", labelKey: "filterVacant" },
+  { key: "maintenance", labelKey: "filterMaintenance" },
+  { key: "ending", labelKey: "filterEnding" },
 ];
 
 export function PropertyTenanciesView({ propertyId }: { propertyId: string }) {
+  const t = useTranslations("landlord.tenancies.propertyView");
   const { properties, groups, units } = useLandlordProperties();
   const renters = useLandlordWorkspace((s) => s.renters);
   const unitsSectionRef = useRef<HTMLElement>(null);
@@ -106,24 +108,24 @@ export function PropertyTenanciesView({ propertyId }: { propertyId: string }) {
   if (!property || !summary) {
     return (
       <main className="min-h-0 flex-1 space-y-6 overflow-y-auto bg-surface/30 p-4 pb-16 sm:p-8 md:p-10">
-        <PropertyTenancyBreadcrumb currentLabel="Property not found" />
+        <PropertyTenancyBreadcrumb currentLabel={t("propertyNotFound")} />
         <EmptyStateBox
           icon={Building2}
-          title="Property not found"
-          description="We couldn't find this property in your portfolio. It may have been removed or the link may be outdated."
+          title={t("propertyNotFound")}
+          description={t("propertyNotFoundDesc")}
           action={
             <div className="flex flex-wrap items-center justify-center gap-2">
               <Link
                 href="/landlord/properties"
                 className={cn(buttonVariants({ variant: "outline" }), "rounded-none")}
               >
-                Return to My Properties
+                {t("returnToProperties")}
               </Link>
               <Link
                 href="/landlord/tenancies"
                 className={cn(buttonVariants({ variant: "default" }), "rounded-none")}
               >
-                View All Tenancies
+                {t("viewAllTenancies")}
               </Link>
             </div>
           }
@@ -176,7 +178,7 @@ export function PropertyTenanciesView({ propertyId }: { propertyId: string }) {
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2.5">
               <h2 id="property-units-heading" className="text-xl font-semibold text-ink">
-                Units &amp; Leases
+                {t("unitsAndLeasesHeading")}
               </h2>
               <span className="border border-line bg-white px-2.5 py-0.5 font-ibm text-[12.5px] font-semibold text-body">
                 {hasActiveFilters
@@ -194,18 +196,18 @@ export function PropertyTenanciesView({ propertyId }: { propertyId: string }) {
                   setSearchTerm(val);
                   setCurrentPage(1);
                 }}
-                placeholder="Search by unit number, floor, or tenant"
-                label="Search units or tenants"
+                placeholder={t("searchPlaceholder")}
+                label={t("searchAria")}
                 className="w-full lg:max-w-md"
               />
 
               <div className="flex flex-wrap items-center gap-2">
                 <div
                   role="group"
-                  aria-label="Filter units by status"
+                  aria-label={t("filterUnitsAria")}
                   className="flex flex-wrap items-center gap-1.5"
                 >
-                  {filterOptions.map(({ key, label }) => (
+                  {filterOptionKeys.map(({ key, labelKey }) => (
                     <Button
                       key={key}
                       type="button"
@@ -217,14 +219,14 @@ export function PropertyTenanciesView({ propertyId }: { propertyId: string }) {
                       }}
                       className="h-9 cursor-pointer rounded-none px-3 text-xs font-semibold"
                     >
-                      {label}
+                      {t(labelKey)}
                     </Button>
                   ))}
                 </div>
                 <ViewModeToggle
                   value={viewMode}
                   onChange={setViewMode}
-                  label="Units layout"
+                  label={t("unitsLayoutLabel")}
                 />
               </div>
             </div>
@@ -233,8 +235,8 @@ export function PropertyTenanciesView({ propertyId }: { propertyId: string }) {
           {doors.length === 0 ? (
             <EmptyStateBox
               icon={Building2}
-              title="No units added yet"
-              description="Add the individually rentable doors in this building along with their photos and monthly rent."
+              title={t("noUnitsTitle")}
+              description={t("noUnitsDesc")}
               action={
                 <Button
                   type="button"
@@ -242,15 +244,15 @@ export function PropertyTenanciesView({ propertyId }: { propertyId: string }) {
                   className="cursor-pointer rounded-none"
                 >
                   <Plus aria-hidden="true" className="size-4" />
-                  Add First Unit
+                  {t("addFirstUnit")}
                 </Button>
               }
             />
           ) : filteredDoors.length === 0 ? (
             <EmptyStateBox
               icon={SearchX}
-              title="No matching units"
-              description="Try clearing your search or switching back to all units."
+              title={t("noMatchingUnitsTitle")}
+              description={t("noMatchingUnitsDesc")}
               action={
                 <Button
                   type="button"
@@ -262,7 +264,7 @@ export function PropertyTenanciesView({ propertyId }: { propertyId: string }) {
                     setCurrentPage(1);
                   }}
                 >
-                  Clear filters
+                  {t("clearFilters")}
                 </Button>
               }
             />
@@ -298,7 +300,7 @@ export function PropertyTenanciesView({ propertyId }: { propertyId: string }) {
                 totalPages={totalPages}
                 totalItems={totalItems}
                 itemsPerPage={UNITS_PER_PAGE}
-                itemLabel="units"
+                itemLabel={t("paginationLabel")}
                 onPageChange={handlePageChange}
               />
             </>
@@ -307,7 +309,7 @@ export function PropertyTenanciesView({ propertyId }: { propertyId: string }) {
       ) : (
         <section aria-labelledby="single-property-lease-heading" className="space-y-4">
           <h2 id="single-property-lease-heading" className="text-xl font-semibold text-ink">
-            Current Lease
+            {t("currentLeaseHeading")}
           </h2>
           <SinglePropertyLeaseCard
             propertyId={property.id}

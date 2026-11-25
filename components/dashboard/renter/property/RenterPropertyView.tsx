@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useRenterProperty } from "@/hooks/query/renter.hooks";
 import SectionLoading from "@/components/shared/SectionLoading";
 import SectionError from "@/components/shared/SectionError";
@@ -10,16 +11,17 @@ import { LandlordContactCard } from "./LandlordContactCard";
 import { PropertySpecsCard } from "./PropertySpecsCard";
 
 export function RenterPropertyView() {
+  const t = useTranslations("renter.property");
   const { isLoading, isError, refetch } = useRenterProperty();
   const property = useRenterWorkspace((s) => s.property);
 
   if (isLoading) {
-    return <SectionLoading message="Loading property details..." />;
+    return <SectionLoading message={t("loading")} />;
   }
   if (isError) {
     return (
       <SectionError
-        message="Unable to load property details."
+        message={t("loadError")}
         onRetry={() => void refetch()}
       />
     );

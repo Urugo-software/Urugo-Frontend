@@ -1,10 +1,11 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { LanguageSwitcher } from "@/components/shared/LanguageSwitcher";
 import {
   dataExport,
   deleteAccount,
-  languages,
   privacyData,
   settingsData,
 } from "@/data/home-seeker-data";
@@ -12,10 +13,10 @@ import { SettingsSection } from "./SettingsSection";
 import { SettingToggle } from "./SettingToggle";
 
 export function SettingsPanel() {
+  const tLang = useTranslations("common.language");
   const [settings, setSettings] = useState(
     settingsData.map(([, , value]) => value),
   );
-  const [language, setLanguage] = useState(languages[0]);
   const [showActivity, setShowActivity] = useState<boolean>(privacyData[2]);
   const toggle = (index: number) =>
     setSettings((current) =>
@@ -45,21 +46,8 @@ export function SettingsPanel() {
           </div>
         ))}
       </SettingsSection>
-      <SettingsSection
-        title="Language"
-        description="Choose the language for the interface and AI Assistant."
-      >
-        <div className="flex flex-wrap gap-2.5">
-          {languages.map((item) => (
-            <button
-              key={item}
-              onClick={() => setLanguage(item)}
-              className={`rounded-full px-5 py-2.5 text-sm font-semibold transition ${language === item ? "bg-brand text-white" : "border border-line hover:bg-surface"}`}
-            >
-              {item}
-            </button>
-          ))}
-        </div>
+      <SettingsSection title={tLang("label")} description={tLang("savedNote")}>
+        <LanguageSwitcher variant="full" shape="pill" />
       </SettingsSection>
       <SettingsSection title="Privacy">
         <div className="flex items-center justify-between gap-5 border-t border-line py-4">

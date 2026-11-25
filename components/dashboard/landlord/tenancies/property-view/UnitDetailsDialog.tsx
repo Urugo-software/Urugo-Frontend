@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { Trash2 } from "lucide-react";
@@ -33,6 +34,7 @@ export function UnitDetailsDialog({
   unit,
   onClose,
 }: UnitDetailsDialogProps) {
+  const t = useTranslations("landlord.tenancies.propertyView.unitDialog");
   const { addUnit, updateUnit, deleteUnit } = useLandlordProperties();
   const isEditing = Boolean(unit);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -67,14 +69,14 @@ export function UnitDetailsDialog({
 
     if (unit) {
       updateUnit(unit.id, payload, propertyId);
-      toast.success(`Unit ${payload.unitNumber} updated.`);
+      toast.success(t("toastUpdated", { unit: payload.unitNumber }));
     } else {
       addUnit({
         ...payload,
         propertyId,
         renterId: null,
       });
-      toast.success(`Unit ${payload.unitNumber} added.`);
+      toast.success(t("toastAdded", { unit: payload.unitNumber }));
     }
     onClose();
   };
@@ -87,10 +89,10 @@ export function UnitDetailsDialog({
         maxWidthClassName="max-w-2xl"
         title={
           isEditing
-            ? `Unit ${unit?.unitNumber} — Details & Photos`
-            : "Add New Unit"
+            ? t("editTitle", { unit: unit?.unitNumber ?? "" })
+            : t("addTitle")
         }
-        description="Configure door specifications, monthly rent, status, and unit photos."
+        description={t("description")}
         footer={
           <div className="flex w-full flex-wrap items-center justify-between gap-2">
             <div>
@@ -103,7 +105,7 @@ export function UnitDetailsDialog({
                   className="cursor-pointer rounded-none text-xs"
                 >
                   <Trash2 aria-hidden="true" className="size-3.5" />
-                  Delete Unit
+                  {t("deleteUnit")}
                 </Button>
               )}
             </div>
@@ -114,7 +116,7 @@ export function UnitDetailsDialog({
                 onClick={onClose}
                 className="cursor-pointer rounded-none"
               >
-                Cancel
+                {t("cancel")}
               </Button>
               <Button
                 type="submit"
@@ -122,7 +124,7 @@ export function UnitDetailsDialog({
                 disabled={isSubmitting}
                 className="cursor-pointer rounded-none"
               >
-                {isEditing ? "Save Changes" : "Add Unit"}
+                {isEditing ? t("saveChanges") : t("addUnitBtn")}
               </Button>
             </div>
           </div>
@@ -148,33 +150,34 @@ export function UnitDetailsDialog({
           <div className="grid grid-cols-1 gap-4 border-t border-line pt-5 sm:grid-cols-2">
             <Field>
               <FieldLabel htmlFor="unit-number">
-                Unit / Door Number <span className="text-rose-600">*</span>
+                {t("unitNumberLabel")} <span className="text-rose-600">*</span>
               </FieldLabel>
               <Input
                 id="unit-number"
-                placeholder="e.g., A-07 or Studio C"
+                placeholder={t("unitNumberPlaceholder")}
                 aria-invalid={!!errors.unitNumber}
                 className="h-10 rounded-none"
                 {...register("unitNumber", {
-                  validate: (v) =>
-                    !!v.trim() || "Enter a unit number (e.g., A-01).",
+                  validate: (v) => !!v.trim() || t("unitNumberRequired"),
                 })}
               />
               <FieldError>{errors.unitNumber?.message}</FieldError>
             </Field>
 
             <Field>
-              <FieldLabel htmlFor="unit-floor">Floor (optional)</FieldLabel>
+              <FieldLabel htmlFor="unit-floor">{t("floorLabel")}</FieldLabel>
               <Input
                 id="unit-floor"
-                placeholder="e.g., 1st Floor"
+                placeholder={t("floorPlaceholder")}
                 className="h-10 rounded-none"
                 {...register("floor")}
               />
             </Field>
 
             <Field>
-              <FieldLabel htmlFor="unit-bedrooms">Bedrooms</FieldLabel>
+              <FieldLabel htmlFor="unit-bedrooms">
+                {t("bedroomsLabel")}
+              </FieldLabel>
               <Input
                 id="unit-bedrooms"
                 type="number"
@@ -185,7 +188,9 @@ export function UnitDetailsDialog({
             </Field>
 
             <Field>
-              <FieldLabel htmlFor="unit-bathrooms">Bathrooms</FieldLabel>
+              <FieldLabel htmlFor="unit-bathrooms">
+                {t("bathroomsLabel")}
+              </FieldLabel>
               <Input
                 id="unit-bathrooms"
                 type="number"
@@ -197,7 +202,7 @@ export function UnitDetailsDialog({
 
             <Field>
               <FieldLabel htmlFor="unit-rent">
-                Monthly Rent (RWF) <span className="text-rose-600">*</span>
+                {t("monthlyRentLabel")} <span className="text-rose-600">*</span>
               </FieldLabel>
               <Input
                 id="unit-rent"
@@ -211,8 +216,7 @@ export function UnitDetailsDialog({
                   validate: (v) => {
                     const n = Number(v);
                     return (
-                      (Number.isFinite(n) && n > 0) ||
-                      "Enter a valid positive rent amount."
+                      (Number.isFinite(n) && n > 0) || t("monthlyRentPositive")
                     );
                   },
                 })}
@@ -221,16 +225,18 @@ export function UnitDetailsDialog({
             </Field>
 
             <Field>
-              <FieldLabel htmlFor="unit-status">Unit Status</FieldLabel>
+              <FieldLabel htmlFor="unit-status">
+                {t("unitStatusLabel")}
+              </FieldLabel>
               <select
                 id="unit-status"
                 disabled={Boolean(unit?.renterId)}
                 className="h-10 w-full rounded-none border border-input bg-white px-3 text-sm disabled:bg-surface disabled:opacity-70"
                 {...register("status")}
               >
-                <option value="Vacant">Vacant</option>
-                <option value="Maintenance">Under Maintenance</option>
-                <option value="Occupied">Occupied</option>
+                <option value="Vacant">{t("statusVacant")}</option>
+                <option value="Maintenance">{t("statusMaintenance")}</option>
+                <option value="Occupied">{t("statusOccupied")}</option>
               </select>
             </Field>
           </div>
@@ -241,8 +247,8 @@ export function UnitDetailsDialog({
         open={confirmDelete}
         onClose={() => setConfirmDelete(false)}
         variant="alert"
-        title="Delete unit?"
-        description={`Remove Unit ${unit?.unitNumber ?? ""} from this building?`}
+        title={t("deleteConfirmTitle")}
+        description={t("deleteConfirmDesc", { unit: unit?.unitNumber ?? "" })}
         footer={
           <>
             <Button
@@ -251,7 +257,7 @@ export function UnitDetailsDialog({
               onClick={() => setConfirmDelete(false)}
               className="cursor-pointer rounded-none"
             >
-              Cancel
+              {t("cancel")}
             </Button>
             <Button
               type="button"
@@ -259,21 +265,19 @@ export function UnitDetailsDialog({
               onClick={() => {
                 if (unit) {
                   deleteUnit(unit.id);
-                  toast.success(`Unit ${unit.unitNumber} removed.`);
+                  toast.success(t("toastRemoved", { unit: unit.unitNumber }));
                 }
                 setConfirmDelete(false);
                 onClose();
               }}
               className="cursor-pointer rounded-none"
             >
-              Confirm Delete
+              {t("confirmDelete")}
             </Button>
           </>
         }
       >
-        <p className="text-xs text-body">
-          Only vacant or unlinked units can be deleted.
-        </p>
+        <p className="text-xs text-body">{t("deleteConfirmNote")}</p>
       </ModalDialog>
     </>
   );

@@ -2,10 +2,10 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { CreditCard } from "lucide-react";
-import {
-  formatRwf,
-  InitialPaymentCalculation,
-} from "@/types/renter-wizard.types";
+import { useLocale, useTranslations } from "next-intl";
+import type { AppLocale } from "@/i18n/config";
+import { formatRwfLocalized } from "@/i18n/formatting";
+import type { InitialPaymentCalculation } from "@/types/renter-wizard.types";
 
 interface TenancyPaymentSummaryCardProps {
   paymentSummary: InitialPaymentCalculation;
@@ -14,6 +14,8 @@ interface TenancyPaymentSummaryCardProps {
 export function TenancyPaymentSummaryCard({
   paymentSummary,
 }: TenancyPaymentSummaryCardProps) {
+  const t = useTranslations("landlord.renters.wizard.paymentSummary");
+  const locale = useLocale() as AppLocale;
   const shouldReduceMotion = useReducedMotion();
 
   return (
@@ -37,50 +39,54 @@ export function TenancyPaymentSummaryCard({
         <div className="flex items-center gap-2.5">
           <CreditCard className="size-4 text-ink" />
           <h4 className="text-[12.5px] font-semibold text-ink uppercase tracking-wider">
-            Move-In Payment Breakdown
+            {t("heading")}
           </h4>
         </div>
         <span className="inline-flex items-center border border-line bg-white px-2 py-0.5 text-[12.5px] font-medium text-body">
-          Preliminary Schedule
+          {t("badge")}
         </span>
       </div>
 
       {/* Breakdown Rows */}
       <div className="p-4 sm:p-5 space-y-3">
         <div className="flex items-center justify-between text-[12.5px]">
-          <span className="text-body">Agreed Monthly Rent</span>
+          <span className="text-body">{t("agreedMonthlyRent")}</span>
           <span className=" font-medium text-ink">
-            {formatRwf(paymentSummary.monthlyRent)}
+            {formatRwfLocalized(paymentSummary.monthlyRent, locale)}
           </span>
         </div>
 
         <div className="flex items-center justify-between text-[12.5px]">
-          <span className="text-body">Initial Advance Period</span>
+          <span className="text-body">{t("initialAdvancePeriod")}</span>
           <span className="font-medium text-ink">
-            {paymentSummary.initialMonths}{" "}
-            {paymentSummary.initialMonths === 1 ? "Month" : "Months"}
+            {t(
+              paymentSummary.initialMonths === 1
+                ? "monthSingle"
+                : "monthPlural",
+              { count: paymentSummary.initialMonths },
+            )}
           </span>
         </div>
 
         <div className="flex items-center justify-between text-[12.5px] border-b border-line/80 pb-3">
           <span className="text-body">
-            Initial Advance Subtotal{" "}
+            {t("initialAdvanceSubtotal")}{" "}
             <span className="text-faint">
-              ({formatRwf(paymentSummary.monthlyRent)} ×{" "}
+              ({formatRwfLocalized(paymentSummary.monthlyRent, locale)} ×{" "}
               {paymentSummary.initialMonths})
             </span>
           </span>
           <span className=" font-medium text-ink">
-            {formatRwf(paymentSummary.initialRentAmount)}
+            {formatRwfLocalized(paymentSummary.initialRentAmount, locale)}
           </span>
         </div>
 
         <div className="flex items-center justify-between text-[12.5px] border-b border-line/80 pb-3">
-          <span className="text-body">Refundable Security Deposit</span>
+          <span className="text-body">{t("refundableDeposit")}</span>
           <span className=" font-medium text-ink">
             {paymentSummary.securityDeposit > 0
-              ? formatRwf(paymentSummary.securityDeposit)
-              : "0 RWF (None)"}
+              ? formatRwfLocalized(paymentSummary.securityDeposit, locale)
+              : t("noDeposit")}
           </span>
         </div>
 
@@ -88,14 +94,14 @@ export function TenancyPaymentSummaryCard({
         <div className="flex items-center justify-between border border-line bg-surface/50 p-3.5">
           <div>
             <span className="block text-sm font-semibold text-ink">
-              Total Initial Move-in Due
+              {t("totalMoveInDue")}
             </span>
             <span className="text-[12.5px] text-body">
-              Advance rent + refundable security deposit
+              {t("totalMoveInDesc")}
             </span>
           </div>
           <span className=" text-base sm:text-lg font-semibold text-ink">
-            {formatRwf(paymentSummary.totalInitialAmount)}
+            {formatRwfLocalized(paymentSummary.totalInitialAmount, locale)}
           </span>
         </div>
       </div>

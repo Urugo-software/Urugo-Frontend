@@ -1,4 +1,7 @@
+"use client";
+
 import { ArrowRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
@@ -19,19 +22,25 @@ type FirstStepProps = {
 };
 
 function FirstStep({ fields, register, errors }: FirstStepProps) {
+  const tActions = useTranslations("common.actions");
+  const tValidation = useTranslations("auth.signUp.validation");
+
   return (
     <>
       {fields.map((field) => (
         <SignUpWizardField
           key={field.id}
           {...field}
-          registration={register(field.id, getSignUpFieldRules(field.id))}
+          registration={register(
+            field.id,
+            getSignUpFieldRules(field.id, (key) => tValidation(key)),
+          )}
           error={errors[field.id]?.message}
         />
       ))}
       <Field className="pt-1">
         <Button type="submit" className={AUTH_PRIMARY_BUTTON_CLASS}>
-          <span>Continue</span>
+          <span>{tActions("continue")}</span>
           <ArrowRight aria-hidden="true" className="size-4" />
         </Button>
       </Field>

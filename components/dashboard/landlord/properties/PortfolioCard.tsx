@@ -1,5 +1,8 @@
+"use client";
+
 import type { ReactNode } from "react";
 import { Ellipsis, MapPin } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -24,6 +27,7 @@ export function PortfolioCard({ name, location, cover, folder, mode, tools, acti
   menuId?: string;
   children: ReactNode;
 }) {
+  const t = useTranslations("landlord.properties");
   return (
     <Card className={cn("h-full min-w-0 gap-0 rounded-none border border-line bg-white py-0 shadow-2xs ring-0", mode === "list" && "sm:flex-row")}>
       <div className={cn("relative", mode === "list" && "sm:w-48 sm:shrink-0")}>
@@ -39,7 +43,7 @@ export function PortfolioCard({ name, location, cover, folder, mode, tools, acti
         <div className="flex items-center justify-between gap-2 border-t border-line bg-surface/40 px-4 py-2">
           {action}
           <DropdownMenu>
-            <DropdownMenuTrigger id={menuId} render={<Button variant="ghost" size="icon" aria-label={`Actions for ${name}`}><Ellipsis /></Button>} />
+            <DropdownMenuTrigger id={menuId} render={<Button variant="ghost" size="icon" aria-label={t("actionsFor", { name })}><Ellipsis /></Button>} />
             <DropdownMenuContent align="end" className="w-auto min-w-44">{menu}</DropdownMenuContent>
           </DropdownMenu>
         </div>

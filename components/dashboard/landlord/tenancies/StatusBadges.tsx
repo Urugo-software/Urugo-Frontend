@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import type { LandlordRenter, TenancyStatus } from "@/types/landlord";
 
 const tenancyTextStyles: Record<TenancyStatus, string> = {
@@ -26,9 +29,10 @@ export function TenancyStatusBadge({
   status: TenancyStatus;
   label?: string;
 }) {
+  const t = useTranslations("landlord.tenancies.badges");
   return (
     <span className={`shrink-0 text-sm font-semibold ${tenancyTextStyles[status]}`}>
-      {label ?? status}
+      {label ?? t(status)}
     </span>
   );
 }
@@ -40,9 +44,11 @@ export function PaymentStatusBadge({
   status: LandlordRenter["paymentStatus"];
   prefix?: string;
 }) {
+  const t = useTranslations("landlord.tenancies.badges");
+  const statusLabel = t(status);
   return (
     <span className={`shrink-0 text-sm font-semibold ${paymentTextStyles[status]}`}>
-      {prefix ? `${prefix}: ${status}` : status}
+      {prefix ? `${prefix}: ${statusLabel}` : statusLabel}
     </span>
   );
 }
@@ -52,9 +58,10 @@ export function OccupancyBadge({
 }: {
   status: keyof typeof occupancyTextStyles;
 }) {
+  const t = useTranslations("landlord.tenancies.badges");
   return (
     <span className={`shrink-0 text-sm font-semibold ${occupancyTextStyles[status]}`}>
-      {status}
+      {t(status)}
     </span>
   );
 }

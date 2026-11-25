@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import { AlertCircle, ArrowLeft } from "lucide-react";
+
 import SectionContainer from "@/components/platform/home/SectionContainer";
 
 export interface LegalSection {
@@ -15,13 +17,15 @@ interface LegalDocumentLayoutProps {
   sections: LegalSection[];
 }
 
-export function LegalDocumentLayout({
+export async function LegalDocumentLayout({
   title,
   subtitle,
   lastUpdated,
   provisionalNote,
   sections,
 }: LegalDocumentLayoutProps) {
+  const t = await getTranslations("public.legal");
+
   return (
     <main className="min-h-screen w-full bg-white py-10 sm:py-16">
       <SectionContainer className="mx-auto max-w-3xl">
@@ -30,12 +34,12 @@ export function LegalDocumentLayout({
           className="mb-6 inline-flex items-center gap-1.5 text-sm font-semibold text-brand transition-colors hover:text-brand-deep hover:underline"
         >
           <ArrowLeft aria-hidden="true" className="size-4" />
-          <span>Back to home</span>
+          <span>{t("backToHome")}</span>
         </Link>
 
         <header className="border-b border-line pb-6">
           <span className="inline-block text-xs font-bold uppercase tracking-widest text-brand">
-            Provisional Document
+            {t("provisionalBadge")}
           </span>
           <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">
             {title}
@@ -43,7 +47,9 @@ export function LegalDocumentLayout({
           <p className="mt-2 text-sm leading-relaxed text-body sm:text-base">
             {subtitle}
           </p>
-          <p className="mt-3 text-xs text-faint">Last updated: {lastUpdated}</p>
+          <p className="mt-3 text-xs text-faint">
+            {t("lastUpdated", { date: lastUpdated })}
+          </p>
         </header>
 
         <div
@@ -76,7 +82,7 @@ export function LegalDocumentLayout({
         </div>
 
         <div className="mt-10 border-t border-line pt-6 text-sm text-body">
-          Questions about this document? Reach us at{" "}
+          {t("questionsPrompt")}{" "}
           <a
             href="mailto:info@urugo.rw"
             className="font-semibold text-brand hover:underline"

@@ -1,9 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight, Calendar, Home, Phone, ShieldCheck, UserPlus } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { buttonVariants } from "@/components/ui/button";
+import type { AppLocale } from "@/i18n/config";
+import { formatRwfLocalized } from "@/i18n/formatting";
 import { cn } from "@/lib/utils";
 import type { LandlordRenter } from "@/types/landlord";
-import { formatCurrencyRwf } from "@/utils/agreement-utils";
 import { EmptyStateBox } from "../EmptyStateBox";
 import { PaymentStatusBadge, TenancyStatusBadge } from "../StatusBadges";
 
@@ -16,24 +20,35 @@ export function SinglePropertyLeaseCard({
   propertyId,
   renter,
 }: SinglePropertyLeaseCardProps) {
+  const t = useTranslations("landlord.tenancies.propertyView");
+  const tBadges = useTranslations("landlord.tenancies.badges");
+  const locale = useLocale() as AppLocale;
+
   if (!renter) {
     return (
       <EmptyStateBox
         icon={Home}
-        title="No active lease"
-        description="This home is vacant. Add a renter to start tracking monthly rent payments."
+        title={t("noActiveLeaseTitle")}
+        description={t("noActiveLeaseDesc")}
         action={
           <Link
             href="/landlord/renters/add"
             className={cn(buttonVariants({ variant: "default" }), "rounded-none")}
           >
             <UserPlus aria-hidden="true" className="size-4" />
-            Add Renter
+            {t("addRenter")}
           </Link>
         }
       />
     );
   }
+
+  const leaseStatusLabel =
+    renter.tenancyStatus === "Active"
+      ? tBadges("activeLease")
+      : renter.tenancyStatus === "Ending"
+        ? tBadges("endingLease")
+        : tBadges("closedLease");
 
   return (
     <article className="border border-line bg-white shadow-2xs">
@@ -42,10 +57,13 @@ export function SinglePropertyLeaseCard({
           <div className="flex flex-wrap items-center gap-2.5">
             <TenancyStatusBadge
               status={renter.tenancyStatus}
-              label={`${renter.tenancyStatus} Lease`}
+              label={leaseStatusLabel}
             />
             <span aria-hidden="true" className="text-line">|</span>
-            <PaymentStatusBadge status={renter.paymentStatus} prefix="Rent" />
+            <PaymentStatusBadge
+              status={renter.paymentStatus}
+              prefix={tBadges("rentPrefix")}
+            />
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
@@ -53,7 +71,7 @@ export function SinglePropertyLeaseCard({
             {renter.isIdentityVerified && (
               <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700">
                 <ShieldCheck aria-hidden="true" className="size-4" />
-                Verified
+                {t("verified")}
               </span>
             )}
           </div>
@@ -65,7 +83,8 @@ export function SinglePropertyLeaseCard({
             </span>
             <span className="inline-flex items-center gap-1.5">
               <Calendar aria-hidden="true" className="size-4 text-faint" />
-              Started <strong className="font-semibold text-ink">{renter.startDate}</strong>
+              {t("startedLabel")}{" "}
+              <strong className="font-semibold text-ink">{renter.startDate}</strong>
             </span>
           </div>
         </div>
@@ -73,10 +92,10 @@ export function SinglePropertyLeaseCard({
         <div className="flex flex-wrap items-center justify-between gap-4 border-t border-line pt-4 md:flex-col md:items-end md:border-t-0 md:pt-0">
           <div className="md:text-right">
             <span className="block text-xs font-semibold uppercase tracking-wider text-faint">
-              Monthly Rent
+              {t("monthlyRentLabel")}
             </span>
             <span className="block font-ibm text-xl font-bold text-brand">
-              {formatCurrencyRwf(renter.monthlyRentRwf)}
+              {formatRwfLocalized(renter.monthlyRentRwf, locale)}
             </span>
           </div>
 
@@ -84,7 +103,7 @@ export function SinglePropertyLeaseCard({
             href={`/landlord/tenancies/${encodeURIComponent(renter.id)}?fromProperty=${encodeURIComponent(propertyId)}`}
             className={cn(buttonVariants({ variant: "default" }), "rounded-none")}
           >
-            <span>Manage Tenancy</span>
+            <span>{t("manageTenancy")}</span>
             <ArrowRight aria-hidden="true" className="size-4" />
           </Link>
         </div>

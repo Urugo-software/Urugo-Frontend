@@ -36,7 +36,7 @@ export function DocumentPartySignatureBlock({
             </span>
             <span className="inline-flex items-center gap-1 text-[12.5px] font-mono text-blue-700">
               <Check className="size-3" />
-              <span>Signed</span>
+              <span>{isKinyarwanda ? "Yashyizweho umukono" : "Signed"}</span>
             </span>
           </div>
 
@@ -57,11 +57,16 @@ export function DocumentPartySignatureBlock({
               <span className="text-faint">
                 {isKinyarwanda ? "Itariki: " : "Date: "}
               </span>
-              <span className="text-ink">{formatDate(signature.signedAt)}</span>
+              <span className="text-ink">
+                {formatDate(signature.signedAt, isKinyarwanda ? "rw" : "en")}
+              </span>
             </p>
             {signature.ipAddress && (
               <p className="font-mono text-[12.5px] text-faint">
-                IP: {signature.ipAddress} &middot; Electronic Record
+                IP: {signature.ipAddress} &middot;{" "}
+                {isKinyarwanda
+                  ? "Inyandiko y'Ikoranabuhanga"
+                  : "Electronic Record"}
               </p>
             )}
           </div>

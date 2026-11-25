@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
+import { useForm } from "react-hook-form";
 import {
   Bot,
   Check,
@@ -12,6 +13,7 @@ import {
   Send,
   Sparkles,
 } from "lucide-react";
+
 import { listed_properties } from "@/data/properties";
 import type { AssistantAnimState } from "@/types/ai-assistant";
 import { parseNumericPrice } from "@/utils/public-properties";
@@ -39,22 +41,25 @@ interface ComposerForm {
   message: string;
 }
 
-const SUGGESTION_CHIPS = [
-  "Studio in Kacyiru under 150k",
-  "2BR home in Kimironko",
-  "Explain move-in costs",
-  "Listing-only vs managed",
-];
+type ZoeTranslator = ReturnType<typeof useTranslations<"public.zoe">>;
+
+const SUGGESTION_CHIP_KEYS = [
+  "studioKacyiru",
+  "twoBrKimironko",
+  "moveInCosts",
+  "landlordModes",
+] as const;
 
 function toMatchItem(
   item: (typeof listed_properties)[number],
+  t: ZoeTranslator,
 ): PropertyMatchItem {
   return {
     id: item.id,
     image: item.image,
     name: item.headline,
     location: item.location,
-    details: `${item.beds} ${item.beds === 1 ? "Bed" : "Beds"} · ${item.baths} ${item.baths === 1 ? "Bath" : "Baths"}${item.parking ? " · Parking" : ""}`,
+    details: `${t("matches.beds", { count: item.beds })} · ${t("matches.baths", { count: item.baths })}${item.parking ? ` · ${t("matches.parking")}` : ""}`,
     price: `${item.price} ${item.currency}`,
     isVerified: item.isVerified,
   };
@@ -62,19 +67,23 @@ function toMatchItem(
 
 function buildPreviewReply(
   queryText: string,
+  t: ZoeTranslator,
 ): Omit<WidgetMessage, "id" | "role" | "timestamp"> {
   const q = queryText.toLowerCase();
 
   if (
     q.includes("listing-only") ||
     q.includes("managed") ||
-    q.includes("landlord")
+    q.includes("landlord") ||
+    q.includes("kwamamaza") ||
+    q.includes("gucunga") ||
+    q.includes("nyir'inzu") ||
+    q.includes("nyirinzu")
   ) {
     return {
-      badge: "Landlord Options",
-      content:
-        "Urugo supports two landlord service paths on the same account:\n\n• Listing-Only: Publish properties with photos, prices, and availability, and handle inquiries and viewings yourself.\n• Full Rental Management: Add tenants, leases, mobile money payment tracking, and renter history whenever you need it.",
-      suggestedActions: ["Browse available homes", "Explain move-in costs"],
+      badge: t("replies.landlordBadge"),
+      content: t("replies.landlordContent"),
+      suggestedActions: [t("chips.browseHomes"), t("chips.moveInCosts")],
     };
   }
 
@@ -82,16 +91,15 @@ function buildPreviewReply(
     q.includes("move-in") ||
     q.includes("cost") ||
     q.includes("deposit") ||
-    q.includes("afford")
+    q.includes("afford") ||
+    q.includes("kwimuka") ||
+    q.includes("ikiguzi") ||
+    q.includes("ingwate")
   ) {
     return {
-      badge: "Move-In Cost Guidance",
-      content:
-        "Before moving in, landlords in Kigali typically ask for:\n\n• Upfront monthly rent (often 1 to 3 months depending on the listing)\n• A refundable security deposit (usually 1 month's rent)\n\nOpen any property page to inspect its specific move-in and monthly cost breakdown before requesting a visit.",
-      suggestedActions: [
-        "Studio in Kacyiru under 150k",
-        "2BR home in Kimironko",
-      ],
+      badge: t("replies.moveInBadge"),
+      content: t("replies.moveInContent"),
+      suggestedActions: [t("chips.studioKacyiru"), t("chips.twoBrKimironko")],
     };
   }
 
@@ -99,13 +107,15 @@ function buildPreviewReply(
     q.includes("visit") ||
     q.includes("viewing") ||
     q.includes("sign") ||
-    q.includes("register")
+    q.includes("register") ||
+    q.includes("gusura") ||
+    q.includes("isura") ||
+    q.includes("iyandikishe")
   ) {
     return {
-      badge: "How to Get Started",
-      content:
-        "You can browse all public properties on Urugo without creating an account. When you find a home you like, open its details page and choose Request a visit or Send an inquiry to reach the landlord directly.",
-      suggestedActions: ["Browse available homes", "Listing-only vs managed"],
+      badge: t("replies.visitBadge"),
+      content: t("replies.visitContent"),
+      suggestedActions: [t("chips.browseHomes"), t("chips.landlordModes")],
     };
   }
 
@@ -117,34 +127,36 @@ function buildPreviewReply(
       (q.includes("kicukiro") && hay.includes("kicukiro")) ||
       (q.includes("nyarutarama") && hay.includes("nyarutarama")) ||
       (q.includes("gacuriro") && hay.includes("gacuriro")) ||
-      (q.includes("studio") && hay.includes("studio")) ||
+      ((q.includes("studio") || q.includes("situdiyo")) &&
+        hay.includes("studio")) ||
       (q.includes("villa") && hay.includes("villa")) ||
-      (q.includes("2br") && item.beds === 2);
+      ((q.includes("2br") || q.includes("ibyumba 2")) && item.beds === 2);
 
-    const underMatch = q.match(/under\s+(\d+)\s*k?/);
+    const underMatch = q.match(/(?:under|munsi ya)\s+(\d+)\s*k?/);
     if (underMatch) {
       const raw = Number(underMatch[1]);
       const cap = raw < 1000 ? raw * 1000 : raw;
-      const hasAreaKeyword = /kacyiru|kimironko|kicukiro|nyarutarama|gacuriro/.test(
-        q,
+      const hasAreaKeyword =
+        /kacyiru|kimironko|kicukiro|nyarutarama|gacuriro/.test(q);
+      return (
+        parseNumericPrice(item.price) <= cap && (areaHit || !hasAreaKeyword)
       );
-      return parseNumericPrice(item.price) <= cap && (areaHit || !hasAreaKeyword);
     }
     return areaHit;
   });
 
   const selected = (
     areaMatches.length > 0 ? areaMatches : listed_properties.slice(0, 3)
-  ).map(toMatchItem);
+  ).map((item) => toMatchItem(item, t));
 
   return {
-    badge: `${selected.length} Sample ${selected.length === 1 ? "Listing" : "Listings"}`,
+    badge: t("replies.listingsBadge", { count: selected.length }),
     content:
       areaMatches.length > 0
-        ? `Here ${selected.length === 1 ? "is a sample listing" : "are sample listings"} matching your query. Select any property to view full photos, costs, and landlord contact options:`
-        : "Here are sample rental listings currently available on Urugo. Tell me a neighborhood (like Kacyiru, Kimironko, or Kicukiro) or your monthly budget to narrow these down:",
+        ? t("replies.listingsMatched", { count: selected.length })
+        : t("replies.listingsFallback"),
     propertyMatches: selected,
-    suggestedActions: ["Explain move-in costs", "Listing-only vs managed"],
+    suggestedActions: [t("chips.moveInCosts"), t("chips.landlordModes")],
   };
 }
 
@@ -153,21 +165,8 @@ export function AssistantPanel({
   initialPrompt,
   onConsumePrompt,
 }: AssistantPanelProps) {
-  const [messages, setMessages] = useState<WidgetMessage[]>(() => [
-    {
-      id: "welcome-1",
-      role: "assistant",
-      content:
-        "Hello! I'm Zoe. Ask about rental areas in Kigali, upfront move-in costs, or how Listing-Only and Full Rental Management work.",
-      timestamp: "Just now",
-      suggestedActions: [
-        "Studio in Kacyiru under 150k",
-        "Explain move-in costs",
-        "Listing-only vs managed",
-      ],
-      badge: "Zoe Preview",
-    },
-  ]);
+  const t = useTranslations("public.zoe");
+  const [messages, setMessages] = useState<WidgetMessage[]>([]);
   const [pendingQuery, setPendingQuery] = useState<string | null>(null);
   const [animState, setAnimState] = useState<AssistantAnimState>("idle");
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -180,6 +179,21 @@ export function AssistantPanel({
   });
 
   const isTyping = pendingQuery !== null;
+
+  const welcomeMessage: WidgetMessage = {
+    id: "welcome-1",
+    role: "assistant",
+    content: t("welcomeMessage"),
+    timestamp: t("justNow"),
+    suggestedActions: [
+      t("chips.studioKacyiru"),
+      t("chips.moveInCosts"),
+      t("chips.landlordModes"),
+    ],
+    badge: t("welcomeBadge"),
+  };
+
+  const allMessages = [welcomeMessage, ...messages];
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -197,13 +211,13 @@ export function AssistantPanel({
     if (!pendingQuery) return;
     const query = pendingQuery;
     const replyTimer = setTimeout(() => {
-      const replyData = buildPreviewReply(query);
+      const replyData = buildPreviewReply(query, t);
       setMessages((prev) => [
         ...prev,
         {
           id: `ai-${crypto.randomUUID()}`,
           role: "assistant",
-          timestamp: "Just now",
+          timestamp: t("justNow"),
           ...replyData,
         },
       ]);
@@ -211,7 +225,7 @@ export function AssistantPanel({
       setAnimState("talking");
     }, 600);
     return () => clearTimeout(replyTimer);
-  }, [pendingQuery]);
+  }, [pendingQuery, t]);
 
   useEffect(() => {
     if (animState !== "talking") return;
@@ -228,7 +242,7 @@ export function AssistantPanel({
         id: `u-${crypto.randomUUID()}`,
         role: "user",
         content: trimmed,
-        timestamp: "Just now",
+        timestamp: t("justNow"),
       },
     ]);
     setAnimState("thinking");
@@ -247,14 +261,14 @@ export function AssistantPanel({
           id: `u-${crypto.randomUUID()}`,
           role: "user",
           content: queued,
-          timestamp: "Just now",
+          timestamp: t("justNow"),
         },
       ]);
       setAnimState("thinking");
       setPendingQuery(queued);
     }, 0);
     return () => clearTimeout(timer);
-  }, [initialPrompt, onConsumePrompt]);
+  }, [initialPrompt, onConsumePrompt, t]);
 
   const handleCopy = (id: string, text: string) => {
     if (typeof navigator !== "undefined" && navigator.clipboard) {
@@ -284,7 +298,7 @@ export function AssistantPanel({
       <motion.aside
         role="dialog"
         aria-modal={isMaximized}
-        aria-label="Zoe"
+        aria-label={t("name")}
         className={`fixed z-50 flex flex-col overflow-hidden border border-line bg-white shadow-2xl shadow-brand/15 transition-all duration-300 ease-in-out ${
           isMaximized
             ? "inset-3 mx-auto h-[calc(100dvh-1.5rem)] max-w-5xl rounded-2xl sm:inset-6 sm:h-[calc(100dvh-3rem)]"
@@ -313,17 +327,14 @@ export function AssistantPanel({
 
         <div className="flex items-center gap-2 border-b border-line bg-brand-tint/40 px-4 py-2 text-xs text-brand-deep">
           <Info aria-hidden="true" className="size-3.5 shrink-0 text-brand" />
-          <span>
-            Preview mode: Zoe replies using sample listings while live search is
-            being connected.
-          </span>
+          <span>{t("previewNotice")}</span>
         </div>
 
         <div className="flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto bg-surface p-4 sm:p-5">
           <div
             className={`mx-auto flex w-full flex-col gap-4 ${isMaximized ? "max-w-4xl" : ""}`}
           >
-            {messages.map((msg) => (
+            {allMessages.map((msg) => (
               <div
                 key={msg.id}
                 className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}
@@ -349,40 +360,48 @@ export function AssistantPanel({
                         {msg.content}
                       </p>
 
-                      {msg.propertyMatches && msg.propertyMatches.length > 0 && (
-                        <PropertyMatches
-                          items={msg.propertyMatches}
-                          compact={!isMaximized}
-                          onNavigate={onClose}
-                        />
-                      )}
+                      {msg.propertyMatches &&
+                        msg.propertyMatches.length > 0 && (
+                          <PropertyMatches
+                            items={msg.propertyMatches}
+                            compact={!isMaximized}
+                            onNavigate={onClose}
+                          />
+                        )}
 
-                      {msg.suggestedActions && msg.suggestedActions.length > 0 && (
-                        <div className="mt-1 flex flex-wrap gap-1.5 border-t border-line/40 pt-2">
-                          {msg.suggestedActions.map((action) => (
-                            <button
-                              key={action}
-                              type="button"
-                              onClick={() => queueMessage(action)}
-                              className="inline-flex cursor-pointer items-center gap-1 rounded-full border border-brand/20 bg-brand-tint px-2.5 py-1 text-[12.5px] font-semibold text-brand transition hover:bg-brand hover:text-white"
-                            >
-                              <span>{action}</span>
-                              <ChevronRight aria-hidden="true" className="size-3" />
-                            </button>
-                          ))}
-                        </div>
-                      )}
+                      {msg.suggestedActions &&
+                        msg.suggestedActions.length > 0 && (
+                          <div className="mt-1 flex flex-wrap gap-1.5 border-t border-line/40 pt-2">
+                            {msg.suggestedActions.map((action) => (
+                              <button
+                                key={action}
+                                type="button"
+                                onClick={() => queueMessage(action)}
+                                className="inline-flex cursor-pointer items-center gap-1 rounded-full border border-brand/20 bg-brand-tint px-2.5 py-1 text-[12.5px] font-semibold text-brand transition hover:bg-brand hover:text-white"
+                              >
+                                <span>{action}</span>
+                                <ChevronRight
+                                  aria-hidden="true"
+                                  className="size-3"
+                                />
+                              </button>
+                            ))}
+                          </div>
+                        )}
 
                       <div className="mt-0.5 flex items-center justify-between border-t border-line/30 pt-1 text-xs text-faint">
                         <span>{msg.timestamp}</span>
                         <button
                           type="button"
-                          aria-label="Copy response"
+                          aria-label={t("copyResponseAria")}
                           onClick={() => handleCopy(msg.id, msg.content)}
                           className="cursor-pointer rounded p-1 transition hover:bg-surface hover:text-ink"
                         >
                           {copiedId === msg.id ? (
-                            <Check aria-hidden="true" className="size-3.5 text-success" />
+                            <Check
+                              aria-hidden="true"
+                              className="size-3.5 text-success"
+                            />
                           ) : (
                             <Copy aria-hidden="true" className="size-3.5" />
                           )}
@@ -400,7 +419,7 @@ export function AssistantPanel({
                   <Bot aria-hidden="true" className="size-4 animate-pulse" />
                 </div>
                 <div className="flex items-center gap-1 rounded-2xl rounded-tl-xs border border-line bg-white px-3 py-2 text-xs text-brand shadow-2xs">
-                  <span className="font-semibold">Checking sample listings</span>
+                  <span className="font-semibold">{t("checkingListings")}</span>
                   <span className="size-1 animate-bounce rounded-full bg-brand [animation-delay:-0.3s]" />
                   <span className="size-1 animate-bounce rounded-full bg-brand [animation-delay:-0.15s]" />
                   <span className="size-1 animate-bounce rounded-full bg-brand" />
@@ -412,16 +431,19 @@ export function AssistantPanel({
         </div>
 
         <div className="flex items-center gap-1.5 overflow-x-auto border-t border-line bg-white px-3 py-2 text-xs">
-          {SUGGESTION_CHIPS.map((prompt) => (
-            <button
-              key={prompt}
-              type="button"
-              onClick={() => queueMessage(prompt)}
-              className="shrink-0 cursor-pointer rounded-full border border-line bg-surface px-3 py-1 text-[12.5px] font-medium text-body transition hover:border-brand hover:bg-brand-tint hover:text-brand"
-            >
-              {prompt}
-            </button>
-          ))}
+          {SUGGESTION_CHIP_KEYS.map((key) => {
+            const prompt = t(`chips.${key}`);
+            return (
+              <button
+                key={key}
+                type="button"
+                onClick={() => queueMessage(prompt)}
+                className="shrink-0 cursor-pointer rounded-full border border-line bg-surface px-3 py-1 text-[12.5px] font-medium text-body transition hover:border-brand hover:bg-brand-tint hover:text-brand"
+              >
+                {prompt}
+              </button>
+            );
+          })}
         </div>
 
         <form
@@ -432,18 +454,18 @@ export function AssistantPanel({
             className={`flex w-full items-center gap-2 ${isMaximized ? "max-w-4xl" : ""}`}
           >
             <label className="sr-only" htmlFor="assistant-message">
-              Ask Zoe
+              {t("inputLabel")}
             </label>
             <input
               id="assistant-message"
               type="text"
-              placeholder="Ask Zoe about Kigali homes, costs, or landlord plans..."
+              placeholder={t("inputPlaceholder")}
               className="min-w-0 flex-1 rounded-xl border border-line bg-surface px-3.5 py-2.5 text-sm text-ink outline-none placeholder:text-faint focus:border-brand focus:bg-white focus:ring-2 focus:ring-brand/15"
               {...register("message")}
             />
             <button
               type="submit"
-              aria-label="Send message"
+              aria-label={t("sendAria")}
               className="grid size-10 shrink-0 cursor-pointer place-items-center rounded-xl bg-brand text-white shadow-xs transition hover:bg-brand-deep"
             >
               <Send aria-hidden="true" className="size-4" />

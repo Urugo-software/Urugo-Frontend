@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { mockAgreements } from "@/data/mock-agreements";
 import { AgreementEditView } from "@/components/dashboard/landlord/agreements/AgreementEditView";
 
@@ -7,12 +8,13 @@ interface Props {
 
 export async function generateMetadata({ params }: Props) {
   const { id } = await params;
+  const t = await getTranslations("landlord.pages.agreements");
   const agreement = mockAgreements.find((a) => a.id === id);
 
   return {
     title: agreement
-      ? `Edit ${agreement.referenceNumber} — Lease Agreement | Urugo Landlord`
-      : "Edit Lease Agreement | Urugo Landlord",
+      ? t("editTitle", { referenceNumber: agreement.referenceNumber })
+      : t("editFallbackTitle"),
   };
 }
 

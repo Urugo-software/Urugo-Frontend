@@ -1,46 +1,31 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Search, ChevronLeft, ChevronRight } from "lucide-react";
-import HomeStasCounter from "./HomeStasCounter";
-import { home_stats } from "@/data/home-data";
+import { useTranslations } from "next-intl";
+import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 
+import { home_stats } from "@/data/home-data";
 import slide1 from "@/public/assets/home/im1.webp";
 import slide2 from "@/public/assets/home/im2.webp";
 import slide3 from "@/public/assets/home/im3.webp";
 import slide4 from "@/public/assets/home/im4.webp";
+import HomeStasCounter from "./HomeStasCounter";
 
-const heroSlides = [
-  {
-    id: 1,
-    image: slide1,
-    title: "Spacious Family Residence",
-    location: "Nyarutarama, Kigali",
-  },
-  {
-    id: 2,
-    image: slide2,
-    title: "Bright Studio Apartment",
-    location: "Kacyiru, Kigali",
-  },
-  {
-    id: 3,
-    image: slide3,
-    title: "Furnished 1-Bedroom Home",
-    location: "Kicukiro, Kigali",
-  },
-  {
-    id: 4,
-    image: slide4,
-    title: "Modern Garden Apartment",
-    location: "Kimironko, Kigali",
-  },
-];
+const HERO_SLIDES = [
+  { id: "1", image: slide1, location: "Nyarutarama, Kigali" },
+  { id: "2", image: slide2, location: "Kacyiru, Kigali" },
+  { id: "3", image: slide3, location: "Kicukiro, Kigali" },
+  { id: "4", image: slide4, location: "Kimironko, Kigali" },
+] as const;
+
+type StatKey = "1" | "2" | "3" | "4";
 
 function HeroSection() {
   const router = useRouter();
+  const t = useTranslations("public.home.hero");
+  const tActions = useTranslations("common.actions");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -48,19 +33,19 @@ function HeroSection() {
   useEffect(() => {
     if (isPaused) return;
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+      setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
     }, 5000);
 
     return () => clearInterval(interval);
   }, [isPaused]);
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    setCurrentSlide((prev) => (prev + 1) % HERO_SLIDES.length);
   };
 
   const prevSlide = () => {
     setCurrentSlide(
-      (prev) => (prev - 1 + heroSlides.length) % heroSlides.length,
+      (prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length,
     );
   };
 
@@ -78,11 +63,14 @@ function HeroSection() {
     <section className="w-full">
       <div className="pb-6 pt-6 text-center sm:pt-10 md:pb-8 md:pt-12">
         <h1 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl md:text-5xl lg:text-6xl">
-          Find your <span className="font-serif font-normal italic">Home</span>
+          {t.rich("title", {
+            accent: (chunks) => (
+              <span className="font-serif font-normal italic">{chunks}</span>
+            ),
+          })}
         </h1>
         <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-body sm:text-base">
-          Browse rental homes across Rwanda, or list and manage your properties
-          from move-in to move-out.
+          {t("subtitle")}
         </p>
       </div>
 
@@ -91,7 +79,7 @@ function HeroSection() {
         <form
           onSubmit={handleSearch}
           role="search"
-          aria-label="Search rental properties"
+          aria-label={t("searchFormAria")}
           className="flex items-center justify-between gap-2 rounded-full border border-brand/15 bg-white/95 p-2 pl-4 shadow-lg shadow-black/8 backdrop-blur-md transition-all focus-within:border-brand focus-within:ring-2 focus-within:ring-brand/10 sm:gap-3 sm:pl-6"
         >
           <div className="flex min-w-0 flex-1 items-center gap-3">
@@ -100,14 +88,14 @@ function HeroSection() {
               className="hidden h-4 w-4 shrink-0 text-faint sm:block"
             />
             <label htmlFor="hero-property-search" className="sr-only">
-              Search by district, neighborhood, or property type
+              {t("searchLabel")}
             </label>
             <input
               id="hero-property-search"
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by district, neighborhood, or home type..."
+              placeholder={t("searchPlaceholder")}
               className="w-full bg-transparent py-2 text-sm text-ink placeholder:text-faint focus:outline-none"
             />
           </div>
@@ -116,7 +104,7 @@ function HeroSection() {
             className="flex shrink-0 cursor-pointer items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-medium text-white shadow-xs transition-colors hover:bg-brand-deep sm:px-6"
           >
             <Search aria-hidden="true" className="h-4 w-4" />
-            <span>Search</span>
+            <span>{tActions("search")}</span>
           </button>
         </form>
       </div>
@@ -127,21 +115,25 @@ function HeroSection() {
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
-        {heroSlides.map((slide, index) => {
+        {HERO_SLIDES.map((slide, index) => {
           const isActive = currentSlide === index;
+          const slideTitle = t(`slides.${slide.id}`);
           return (
             <div
               key={slide.id}
               aria-hidden={!isActive}
               className={`absolute inset-0 transition-all duration-700 ease-in-out ${
                 isActive
-                  ? "z-10 scale-100 opacity-100 pointer-events-auto"
-                  : "z-0 scale-105 opacity-0 pointer-events-none"
+                  ? "pointer-events-auto z-10 scale-100 opacity-100"
+                  : "pointer-events-none z-0 scale-105 opacity-0"
               }`}
             >
               <Image
                 src={slide.image}
-                alt={`${slide.title} in ${slide.location}`}
+                alt={t("slideAlt", {
+                  title: slideTitle,
+                  location: slide.location,
+                })}
                 fill
                 priority={index === 0}
                 className="object-cover"
@@ -156,7 +148,7 @@ function HeroSection() {
         <button
           type="button"
           onClick={prevSlide}
-          aria-label="Previous featured home photo"
+          aria-label={t("prevSlideAria")}
           className="absolute left-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-black/45 text-white shadow-md backdrop-blur-md transition-all hover:bg-black/70 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:left-5 md:opacity-0 md:group-hover:opacity-100"
         >
           <ChevronLeft aria-hidden="true" className="h-5 w-5" />
@@ -166,7 +158,7 @@ function HeroSection() {
         <button
           type="button"
           onClick={nextSlide}
-          aria-label="Next featured home photo"
+          aria-label={t("nextSlideAria")}
           className="absolute right-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-black/45 text-white shadow-md backdrop-blur-md transition-all hover:bg-black/70 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white sm:right-5 md:opacity-0 md:group-hover:opacity-100"
         >
           <ChevronRight aria-hidden="true" className="h-5 w-5" />
@@ -174,12 +166,15 @@ function HeroSection() {
 
         {/* Slider Pagination Indicators */}
         <div className="absolute bottom-4 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 rounded-full bg-black/40 px-3 py-1.5 backdrop-blur-md sm:bottom-6">
-          {heroSlides.map((slide, idx) => (
+          {HERO_SLIDES.map((slide, idx) => (
             <button
               key={slide.id}
               type="button"
               onClick={() => setCurrentSlide(idx)}
-              aria-label={`View slide ${idx + 1}: ${slide.title}`}
+              aria-label={t("viewSlideAria", {
+                index: idx + 1,
+                title: t(`slides.${slide.id}`),
+              })}
               aria-current={currentSlide === idx ? "true" : undefined}
               className={`h-2 cursor-pointer rounded-full transition-all duration-300 ${
                 currentSlide === idx
@@ -197,7 +192,7 @@ function HeroSection() {
           <HomeStasCounter
             key={item.id}
             title={item.title}
-            paragraph={item.paragraph}
+            paragraph={t(`stats.${item.id as StatKey}`)}
           />
         ))}
       </div>
