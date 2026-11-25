@@ -1,12 +1,24 @@
 "use client";
 
-import { TenancyPayment } from "@/types/landlord";
-import CustomButton from "@/components/shared/CustomButton";
+import { useState } from "react";
+import { Check, CheckCircle2, X } from "lucide-react";
+import { RejectPaymentModal } from "@/components/dashboard/landlord/payments/RejectPaymentModal";
+import { StatusBadge } from "@/components/shared/StatusBadge";
+import { Button } from "@/components/ui/button";
+import type {
+  PaymentRejectionCategory,
+  TenancyPayment,
+} from "@/types/landlord";
+import { formatRwf } from "@/utils/format";
 
 interface PendingPaymentsReviewProps {
   payments: TenancyPayment[];
   onApprove: (id: string) => void;
-  onReject: (id: string) => void;
+  onReject: (
+    id: string,
+    category: PaymentRejectionCategory,
+    reason: string,
+  ) => void;
 }
 
 export function PendingPaymentsReview({
@@ -14,72 +26,115 @@ export function PendingPaymentsReview({
   onApprove,
   onReject,
 }: PendingPaymentsReviewProps) {
+  const [rejectTarget, setRejectTarget] = useState<TenancyPayment | null>(null);
   const pending = payments.filter((p) => p.status === "Pending");
 
-  if (pending.length === 0) {
-    return (
-      <div className="border border-blue-200 bg-brand-tint/60 p-5 shadow-2xs">
-        <div>
-          <p className="text-sm sm:text-[15px] font-semibold text-ink">
-            All payments cleared
-          </p>
-          <p className="mt-1 text-sm text-body">
-            There are no pending unverified payments for this tenancy. You may
-            proceed to the next step.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="border border-line bg-white shadow-2xs">
-      <div className="border-b border-line bg-amber-50 px-5 py-4">
-        <p className="text-sm sm:text-[15px] font-semibold text-ink">
-          Pending Payments Waiting for Review ({pending.length})
-        </p>
-        <p className="mt-1 text-sm text-body">
-          A tenancy cannot be closed while unverified payments exist. Review
-          each payment before continuing.
-        </p>
-      </div>
-
-      <div className="divide-y divide-line">
-        {pending.map((pay) => (
-          <div
-            key={pay.id}
-            className="flex flex-wrap items-center justify-between gap-4 px-5 py-5"
-          >
-            <div>
-              <p className="text-sm font-bold text-ink">{pay.period} Rent</p>
-              <p className="mt-1 text-sm text-body">
-                {pay.amountRwf.toLocaleString()} RWF &middot;{" "}
-                {pay.paymentMethod || "Direct Payment"}
-              </p>
-            </div>
-            <div className="flex items-center gap-2">
-              <div
-                className="            
-               w-fit h-fit border-2 border-red-600 
-                "
-              >
-                <CustomButton variant="cancel" onClick={() => onReject(pay.id)}>
-                  <span className="text-red-600 group-hover:text-white">
-                    Reject
+    <div className="space-y-4">
+      {pending.length === 0 ? (
+        <div className="flex items-center gap-2.5 border border-emerald-200 bg-emerald-50/70 p-4 text-xs font-medium text-emerald-900">
+          <CheckCircle2
+            aria-hidden="true"
+            className="size-4 shrink-0 text-emerald-600"
+          />
+          <span>
+            No pending rent submissions awaiting review for this tenancy.
+          </span>
+        </div>
+      ) : (
+        <div className="divide-y divide-line border border-line bg-white">
+          {pending.map((payment) => (
+            <div
+              key={payment.id}
+              className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between"
+            >
+              <div className="space-y-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-sm font-bold text-ink">
+                    {payment.period}
                   </span>
-                </CustomButton>
+                  <span aria-hidden="true" className="text-line">&middot;</span>
+                  <StatusBadge label="Pending verification" tone="warning" />
+                </div>
+                <p className="text-xs text-body">
+                  {payment.paymentMethod ?? "Payment proof"}
+                  {payment.reference ? ` · Ref: ${payment.reference}` : ""} ·
+                  Due {payment.dueDate}
+                </p>
               </div>
-              <CustomButton
-                variant="colored"
-                className="bg-brand hover:bg-brand-deep text-white"
-                onClick={() => onApprove(pay.id)}
-              >
-                Approve Payment
-              </CustomButton>
+
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="mr-2 font-ibm text-sm font-bold text-ink">
+                  {formatRwf(payment.amountRwf)}
+                </span>
+                <Button
+                  type="button"
+                  size="sm"
+                  onClick={() => onApprove(payment.id)}
+                  className="h-9 cursor-pointer rounded-none bg-emerald-700 px-3 text-xs text-white hover:bg-emerald-800"
+                >
+                  <Check aria-hidden="true" className="size-3.5" />
+                  Approve
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setRejectTarget(payment)}
+                  className="h-9 cursor-pointer rounded-none border-rose-200 px-3 text-xs text-rose-700 hover:bg-rose-50"
+                >
+                  <X aria-hidden="true" className="size-3.5" />
+                  Reject
+                </Button>
+              </div>
             </div>
+          ))}
+        </div>
+      )}
+
+      {payments.length > pending.length && (
+        <div className="space-y-2">
+          <p className="text-xs font-semibold uppercase tracking-wider text-faint">
+            Reviewed Payment History ({payments.length - pending.length})
+          </p>
+          <div className="divide-y divide-line border border-line bg-surface/30">
+            {payments
+              .filter((p) => p.status !== "Pending")
+              .map((payment) => (
+                <div
+                  key={payment.id}
+                  className="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 text-xs"
+                >
+                  <div>
+                    <span className="font-semibold text-ink">
+                      {payment.period}
+                    </span>
+                    {payment.rejectionReason && (
+                      <span className="ml-2 text-rose-700">
+                        — {payment.rejectionReason}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2.5">
+                    <span className="font-ibm font-semibold text-ink">
+                      {formatRwf(payment.amountRwf)}
+                    </span>
+                    <StatusBadge
+                      label={payment.status}
+                      tone={payment.status === "Approved" ? "success" : "danger"}
+                    />
+                  </div>
+                </div>
+              ))}
           </div>
-        ))}
-      </div>
+        </div>
+      )}
+
+      <RejectPaymentModal
+        payment={rejectTarget}
+        onClose={() => setRejectTarget(null)}
+        onConfirm={(id, category, reason) => onReject(id, category, reason)}
+      />
     </div>
   );
 }
