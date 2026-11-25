@@ -36,6 +36,7 @@ export function GroupHeroHeader({
             key={group.coverImage}
             src={group.coverImage}
             folder
+            sizes="100vw"
             className="h-full w-full"
           />
           <div
@@ -52,13 +53,13 @@ export function GroupHeroHeader({
             Property Group
           </span>
 
-          <h1
+          <h2
             id="membership-heading"
             tabIndex={-1}
             className="break-words text-2xl font-bold tracking-tight text-ink sm:text-3xl"
           >
             {group.name}
-          </h1>
+          </h2>
 
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-body">
             {group.location && (
