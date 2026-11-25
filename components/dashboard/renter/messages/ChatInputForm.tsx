@@ -1,8 +1,10 @@
 "use client";
 
-import React from "react";
 import { useForm } from "react-hook-form";
 import { Send } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useSendMessage } from "@/hooks/mutate/useSendMessage";
 
 interface Inputs {
@@ -10,7 +12,10 @@ interface Inputs {
 }
 
 export function ChatInputForm() {
-  const { register, handleSubmit, reset } = useForm<Inputs>();
+  const t = useTranslations("renter.messages");
+  const { register, handleSubmit, reset } = useForm<Inputs>({
+    defaultValues: { messageText: "" },
+  });
   const sendMutation = useSendMessage();
 
   const onSubmit = (data: Inputs) => {
@@ -24,21 +29,24 @@ export function ChatInputForm() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex items-center gap-2 border-t border-line bg-white p-3 py-6"
+      className="flex items-center gap-2 border-t border-line bg-white p-3 sm:px-5 sm:py-4"
     >
-      <input
+      <Input
         type="text"
+        aria-label={t("inputAria")}
+        placeholder={t("inputPlaceholder")}
+        className="h-10 flex-1 rounded-none border-line bg-surface text-sm text-ink focus:bg-white"
         {...register("messageText", { required: true })}
-        placeholder="Type a message to your landlord..."
-        className="flex-1 rounded-full border border-line bg-surface p-3 px-4 lg:px-5 placeholder:text-sm text-sm text-ink focus:bg-white focus:outline-brand"
       />
-      <button
+      <Button
         type="submit"
+        size="icon"
+        aria-label={t("sendAria")}
         disabled={sendMutation.isPending}
-        className="grid size-9 shrink-0 place-items-center rounded-full bg-brand text-white transition hover:bg-brand/90 disabled:opacity-50"
+        className="size-10 shrink-0 cursor-pointer rounded-none"
       >
-        <Send className="size-4" />
-      </button>
+        <Send aria-hidden="true" className="size-4" />
+      </Button>
     </form>
   );
 }

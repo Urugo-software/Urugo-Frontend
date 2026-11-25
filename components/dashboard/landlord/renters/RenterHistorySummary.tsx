@@ -1,8 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { StatusBadge } from "@/components/shared/StatusBadge";
+import type { AppLocale } from "@/i18n/config";
+import { formatRwfLocalized } from "@/i18n/formatting";
 import type { RentalIssue } from "@/types/landlord";
-import { formatRwf } from "@/utils/format";
 import { getIssueStatusMeta } from "@/utils/rental-debt";
 
 interface RenterHistorySummaryProps {
@@ -14,6 +18,9 @@ export function RenterHistorySummary({
   issues,
   completedTenanciesCount = 1,
 }: RenterHistorySummaryProps) {
+  const t = useTranslations("landlord.renters.detail.history");
+  const tStatusMeta = useTranslations("landlord.renterHistory.statusMeta");
+  const locale = useLocale() as AppLocale;
   const confirmedCount = issues.filter(
     (i) => getIssueStatusMeta(i.status).isConfirmedObligation,
   ).length;
@@ -29,18 +36,16 @@ export function RenterHistorySummary({
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div>
           <h3 className="text-xs font-semibold uppercase tracking-wider text-faint">
-            Rental History Summary
+            {t("heading")}
           </h3>
-          <p className="mt-1 text-sm font-semibold text-ink">
-            Verified tenancy record & rental obligations
-          </p>
+          <p className="mt-1 text-sm font-semibold text-ink">{t("subtitle")}</p>
         </div>
 
         <Link
           href="/landlord/renter-history"
           className="inline-flex items-center gap-1 text-xs font-semibold text-brand-blue hover:underline"
         >
-          <span>Open Rental History</span>
+          <span>{t("openRentalHistory")}</span>
           <ArrowRight aria-hidden="true" className="size-3.5" />
         </Link>
       </div>
@@ -48,7 +53,7 @@ export function RenterHistorySummary({
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="border border-line bg-surface/40 p-4">
           <p className="text-xs font-semibold uppercase tracking-wider text-faint">
-            Recorded Tenancies
+            {t("recordedTenancies")}
           </p>
           <p className="mt-1 font-ibm text-xl font-bold text-ink">
             {completedTenanciesCount}
@@ -56,7 +61,7 @@ export function RenterHistorySummary({
         </div>
         <div className="border border-line bg-surface/40 p-4">
           <p className="text-xs font-semibold uppercase tracking-wider text-faint">
-            Open / Under Review
+            {t("openUnderReview")}
           </p>
           <p className="mt-1 font-ibm text-xl font-bold text-amber-700">
             {openCount}
@@ -64,7 +69,7 @@ export function RenterHistorySummary({
         </div>
         <div className="border border-line bg-surface/40 p-4">
           <p className="text-xs font-semibold uppercase tracking-wider text-faint">
-            Confirmed Obligations
+            {t("confirmedObligations")}
           </p>
           <p className="mt-1 font-ibm text-xl font-bold text-rose-700">
             {confirmedCount}
@@ -75,7 +80,7 @@ export function RenterHistorySummary({
       {issues.length === 0 ? (
         <div className="flex items-center gap-2.5 border border-emerald-200 bg-emerald-50/70 p-4 text-xs font-medium text-emerald-900">
           <CheckCircle2 aria-hidden="true" className="size-4 shrink-0 text-emerald-600" />
-          <span>No rental history issues or unpaid obligations on record.</span>
+          <span>{t("noIssues")}</span>
         </div>
       ) : (
         <div className="divide-y divide-line border border-line">
@@ -97,9 +102,12 @@ export function RenterHistorySummary({
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="font-ibm text-sm font-bold text-ink">
-                    {formatRwf(issue.amountRwf)}
+                    {formatRwfLocalized(issue.amountRwf, locale)}
                   </span>
-                  <StatusBadge label={meta.label} tone={meta.tone} />
+                  <StatusBadge
+                    label={tStatusMeta(`${issue.status}.label`)}
+                    tone={meta.tone}
+                  />
                 </div>
               </Link>
             );

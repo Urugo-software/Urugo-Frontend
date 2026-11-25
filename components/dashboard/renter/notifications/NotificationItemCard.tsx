@@ -1,44 +1,134 @@
-import React from "react";
-import { DollarSign, Zap, Wrench, FileText } from "lucide-react";
-import { RenterNotification } from "@/types/renter";
+"use client";
 
-export function NotificationItemCard({ notif }: { notif: RenterNotification }) {
-  const getCategoryIcon = (cat: string) => {
-    switch (cat) {
-      case "rent":
-        return <DollarSign className="size-4 text-emerald-600" />;
-      case "electricity":
-        return <Zap className="size-4 text-amber-600" />;
-      case "maintenance":
-        return <Wrench className="size-4 text-blue-600" />;
-      default:
-        return <FileText className="size-4 text-purple-600" />;
-    }
+import Link from "next/link";
+import {
+  ArrowRight,
+  Bell,
+  Calendar,
+  Check,
+  DollarSign,
+  FileText,
+  History,
+  MailOpen,
+  Wrench,
+  X,
+} from "lucide-react";
+import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import type { RenterNotification } from "@/types/renter";
+
+const CATEGORY_META = {
+  rent: { icon: DollarSign, key: "rent", tone: "text-success" },
+  maintenance: { icon: Wrench, key: "maintenance", tone: "text-brand-blue" },
+  lease: { icon: FileText, key: "lease", tone: "text-ink" },
+  history: { icon: History, key: "history", tone: "text-amber-700" },
+  inquiry: { icon: Calendar, key: "inquiry", tone: "text-brand-blue" },
+} as const;
+
+interface NotificationItemCardProps {
+  notif: RenterNotification;
+  onMarkRead: (id: string) => void;
+  onToggleRead: (id: string) => void;
+  onDismiss: (id: string) => void;
+}
+
+export function NotificationItemCard({
+  notif,
+  onMarkRead,
+  onToggleRead,
+  onDismiss,
+}: NotificationItemCardProps) {
+  const t = useTranslations("renter.notifications");
+  const tWorkspace = useTranslations("renter.workspace");
+
+  const meta = CATEGORY_META[notif.category] ?? {
+    icon: Bell,
+    key: "notice",
+    tone: "text-faint",
   };
+  const Icon = meta.icon;
+  const toggleReadLabel = !notif.read ? t("markAsRead") : t("markAsUnread");
 
   return (
-    <div
-      className={`flex items-start gap-3 rounded-sm border border-line p-4 shadow-xs transition ${
-        !notif.read ? "bg-brand-tint/20 border-brand/20" : "bg-white"
-      }`}
-    >
-      <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-surface mt-0.5">
-        {getCategoryIcon(notif.category)}
-      </div>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center justify-between gap-2">
-          <h4 className="text-[13.5px] font-bold text-ink truncate">
-            {notif.title}
-          </h4>
-          <span className="text-[12.5px] text-faint shrink-0">{notif.date}</span>
-        </div>
-        <p className="mt-1 text-[12.5px] lg:text-[13px] text-body leading-relaxed">
-          {notif.message}
-        </p>
-      </div>
-      {!notif.read && (
-        <span className="size-2 rounded-full bg-brand shrink-0 mt-2" />
+    <article
+      className={cn(
+        "flex flex-col justify-between gap-4 p-5 transition-colors sm:flex-row sm:items-start",
+        !notif.read
+          ? "border-l-2 border-l-brand-blue bg-brand-tint/30"
+          : "bg-white hover:bg-surface/40",
       )}
-    </div>
+    >
+      <div className="flex min-w-0 flex-1 items-start gap-4">
+        <div className="flex size-10 shrink-0 items-center justify-center border border-line bg-white">
+          <Icon className={cn("size-4", meta.tone)} />
+        </div>
+
+        <div className="min-w-0 space-y-1.5">
+          <div className="flex flex-wrap items-center gap-x-2.5 gap-y-0.5 text-xs">
+            <span className={cn("font-semibold", meta.tone)}>
+              {t(`categories.${meta.key}`)}
+            </span>
+            <span aria-hidden="true" className="text-line">&middot;</span>
+            <span className="text-faint">{notif.date}</span>
+            {!notif.read && (
+              <>
+                <span aria-hidden="true" className="text-line">&middot;</span>
+                <span className="font-semibold text-brand-blue">
+                  {tWorkspace("unread")}
+                </span>
+              </>
+            )}
+          </div>
+
+          <h3 className="text-sm font-bold leading-snug text-ink">
+            {notif.title}
+          </h3>
+          <p className="text-sm leading-relaxed text-body">{notif.message}</p>
+
+          {notif.href && (
+            <div className="pt-1">
+              <Link
+                href={notif.href}
+                onClick={() => onMarkRead(notif.id)}
+                className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-blue hover:underline"
+              >
+                <span>{notif.actionLabel || t("openAction")}</span>
+                <ArrowRight aria-hidden="true" className="size-3.5" />
+              </Link>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="flex shrink-0 items-center gap-1 self-end sm:self-start">
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          title={toggleReadLabel}
+          aria-label={toggleReadLabel}
+          onClick={() => onToggleRead(notif.id)}
+          className="size-8 cursor-pointer rounded-none text-faint hover:text-ink"
+        >
+          {!notif.read ? (
+            <Check className="size-4" />
+          ) : (
+            <MailOpen className="size-4" />
+          )}
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          title={t("dismissNotification")}
+          aria-label={t("dismissNotification")}
+          onClick={() => onDismiss(notif.id)}
+          className="size-8 cursor-pointer rounded-none text-faint hover:text-ink"
+        >
+          <X className="size-4" />
+        </Button>
+      </div>
+    </article>
   );
 }

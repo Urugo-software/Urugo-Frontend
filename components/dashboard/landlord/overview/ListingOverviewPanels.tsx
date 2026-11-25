@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ArrowRight, Calendar, MessageSquare, Sparkles } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -14,17 +15,22 @@ interface ListingOverviewPanelsProps {
   viewings: ViewingRequest[];
 }
 
+const SEED_INQUIRY_IDS = new Set(["inq-101", "inq-102", "inq-103"]);
+
 export function ListingOverviewPanels({
   stats,
   inquiries,
   viewings,
 }: ListingOverviewPanelsProps) {
+  const t = useTranslations("landlord.overview.listingPanels");
+  const tSeedInq = useTranslations("landlord.seed.inquiries");
+
   const breakdown = [
-    { label: "Published", count: stats.publishedListings, tone: "success" as const },
-    { label: "Draft", count: stats.draftListings, tone: "neutral" as const },
-    { label: "Paused", count: stats.pausedListings, tone: "warning" as const },
-    { label: "Rented", count: stats.rentedListings, tone: "info" as const },
-    { label: "Archived", count: stats.archivedListings, tone: "neutral" as const },
+    { key: "published", label: "Published", count: stats.publishedListings, tone: "success" as const },
+    { key: "draft", label: "Draft", count: stats.draftListings, tone: "neutral" as const },
+    { key: "paused", label: "Paused", count: stats.pausedListings, tone: "warning" as const },
+    { key: "rented", label: t("rentedStatus"), count: stats.rentedListings, tone: "info" as const },
+    { key: "archived", label: "Archived", count: stats.archivedListings, tone: "neutral" as const },
   ];
 
   return (
@@ -35,19 +41,19 @@ export function ListingOverviewPanels({
           <div>
             <div className="flex items-center justify-between gap-2">
               <h3 className="text-xs font-semibold uppercase tracking-wider text-faint">
-                Recent Inquiries
+                {t("recentInquiries")}
               </h3>
               <MessageSquare aria-hidden="true" className="size-4 text-faint" />
             </div>
-            <div className="mt-4 divide-y divide-line">
+            <div className="mt-5 divide-y divide-line">
               {inquiries.length === 0 ? (
                 <p className="py-6 text-center text-xs text-body">
-                  No tenant inquiries yet.
+                  {t("noInquiries")}
                 </p>
               ) : (
                 inquiries.slice(0, 3).map((inq) => (
-                  <div key={inq.id} className="space-y-1 py-3 first:pt-0">
-                    <div className="flex items-center justify-between gap-2">
+                  <div key={inq.id} className="space-y-1.5 py-3.5 first:pt-0">
+                    <div className="flex items-center justify-between gap-3">
                       <span className="truncate text-sm font-semibold text-ink">
                         {inq.senderName}
                       </span>
@@ -59,8 +65,10 @@ export function ListingOverviewPanels({
                     <p className="truncate text-xs text-faint">
                       {inq.propertyName}
                     </p>
-                    <p className="line-clamp-2 text-xs text-body">
-                      {inq.message}
+                    <p className="line-clamp-2 text-xs leading-relaxed text-body">
+                      {SEED_INQUIRY_IDS.has(inq.id)
+                        ? tSeedInq(`${inq.id}.message`)
+                        : inq.message}
                     </p>
                   </div>
                 ))
@@ -69,9 +77,9 @@ export function ListingOverviewPanels({
           </div>
           <Link
             href="/landlord/inquiries"
-            className="mt-4 inline-flex items-center justify-between border-t border-line pt-3.5 text-xs font-semibold text-ink hover:underline"
+            className="mt-5 inline-flex items-center justify-between border-t border-line pt-4 text-xs font-semibold text-ink hover:underline"
           >
-            <span>Manage All Inquiries</span>
+            <span>{t("manageAllInquiries")}</span>
             <ArrowRight aria-hidden="true" className="size-3.5" />
           </Link>
         </div>
@@ -81,19 +89,19 @@ export function ListingOverviewPanels({
           <div>
             <div className="flex items-center justify-between gap-2">
               <h3 className="text-xs font-semibold uppercase tracking-wider text-faint">
-                Viewing Requests
+                {t("viewingRequests")}
               </h3>
               <Calendar aria-hidden="true" className="size-4 text-faint" />
             </div>
-            <div className="mt-4 divide-y divide-line">
+            <div className="mt-5 divide-y divide-line">
               {viewings.length === 0 ? (
                 <p className="py-6 text-center text-xs text-body">
-                  No viewing requests yet.
+                  {t("noViewings")}
                 </p>
               ) : (
                 viewings.slice(0, 3).map((req) => (
-                  <div key={req.id} className="space-y-1 py-3 first:pt-0">
-                    <div className="flex items-center justify-between gap-2">
+                  <div key={req.id} className="space-y-1.5 py-3.5 first:pt-0">
+                    <div className="flex items-center justify-between gap-3">
                       <span className="truncate text-sm font-semibold text-ink">
                         {req.requesterName}
                       </span>
@@ -123,9 +131,9 @@ export function ListingOverviewPanels({
           </div>
           <Link
             href="/landlord/viewings"
-            className="mt-4 inline-flex items-center justify-between border-t border-line pt-3.5 text-xs font-semibold text-ink hover:underline"
+            className="mt-5 inline-flex items-center justify-between border-t border-line pt-4 text-xs font-semibold text-ink hover:underline"
           >
-            <span>Manage Viewing Requests</span>
+            <span>{t("manageViewings")}</span>
             <ArrowRight aria-hidden="true" className="size-3.5" />
           </Link>
         </div>
@@ -134,13 +142,13 @@ export function ListingOverviewPanels({
         <div className="flex flex-col justify-between border border-line bg-white p-5 shadow-2xs sm:p-6">
           <div>
             <h3 className="text-xs font-semibold uppercase tracking-wider text-faint">
-              Listing Visibility Snapshot
+              {t("visibilitySnapshot")}
             </h3>
-            <div className="mt-4 space-y-2.5">
+            <div className="mt-5 space-y-3">
               {breakdown.map((row) => (
                 <div
-                  key={row.label}
-                  className="flex items-center justify-between border border-line/70 px-3 py-2"
+                  key={row.key}
+                  className="flex items-center justify-between border border-line/70 px-3.5 py-2.5"
                 >
                   <StatusBadge label={row.label} tone={row.tone} />
                   <span className="font-ibm text-sm font-bold text-ink">
@@ -152,28 +160,25 @@ export function ListingOverviewPanels({
           </div>
           <Link
             href="/landlord/properties"
-            className="mt-4 inline-flex items-center justify-between border-t border-line pt-3.5 text-xs font-semibold text-ink hover:underline"
+            className="mt-5 inline-flex items-center justify-between border-t border-line pt-4 text-xs font-semibold text-ink hover:underline"
           >
-            <span>Manage My Properties</span>
+            <span>{t("manageProperties")}</span>
             <ArrowRight aria-hidden="true" className="size-3.5" />
           </Link>
         </div>
       </div>
 
       {/* Optional Upgrade Path */}
-      <div className="flex flex-col gap-4 border border-blue-200 bg-brand-tint/60 p-5 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-start gap-3">
+      <div className="flex flex-col gap-5 border border-blue-200 bg-brand-tint/60 p-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-start gap-3.5">
           <Sparkles
             aria-hidden="true"
             className="mt-0.5 size-5 shrink-0 text-brand-blue"
           />
-          <div>
-            <h3 className="text-sm font-bold text-ink">
-              Need digital leases, rent tracking, and verified rental history?
-            </h3>
-            <p className="mt-0.5 text-xs leading-relaxed text-body">
-              Upgrade this same landlord account to Urugo Full Rental Management
-              whenever you are ready—all existing properties stay intact.
+          <div className="space-y-1">
+            <h3 className="text-sm font-bold text-ink">{t("upgradeTitle")}</h3>
+            <p className="text-xs leading-relaxed text-body">
+              {t("upgradeDesc")}
             </p>
           </div>
         </div>
@@ -181,10 +186,10 @@ export function ListingOverviewPanels({
           href="/landlord/settings?tab=service"
           className={cn(
             buttonVariants({ variant: "default" }),
-            "shrink-0 rounded-none text-xs font-semibold",
+            "h-10 shrink-0 rounded-none px-4 text-xs font-semibold",
           )}
         >
-          Explore Managed Tools
+          {t("exploreManagedTools")}
         </Link>
       </div>
     </div>

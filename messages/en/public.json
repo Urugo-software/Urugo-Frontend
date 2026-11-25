@@ -1,0 +1,524 @@
+{
+  "nav": {
+    "home": "Home",
+    "properties": "Properties",
+    "features": "Features",
+    "howItWorks": "How it works",
+    "logoAria": "Urugo Home",
+    "mobileNavAria": "Mobile navigation",
+    "navigationHeading": "Navigation",
+    "openMenuAria": "Open navigation menu",
+    "closeMenuAria": "Close navigation menu"
+  },
+  "home": {
+    "meta": {
+      "title": "Urugo — Find a Home & Manage Rentals in Rwanda",
+      "description": "Search rental homes across Rwanda, request viewings, or list and manage your rental properties from move-in to move-out."
+    },
+    "hero": {
+      "title": "Find your <accent>Home</accent>",
+      "subtitle": "Browse rental homes across Rwanda, or list and manage your properties from move-in to move-out.",
+      "searchFormAria": "Search rental properties",
+      "searchLabel": "Search by district, neighborhood, or property type",
+      "searchPlaceholder": "Search by district, neighborhood, or home type...",
+      "prevSlideAria": "Previous featured home photo",
+      "nextSlideAria": "Next featured home photo",
+      "viewSlideAria": "View slide {index}: {title}",
+      "slideAlt": "{title} in {location}",
+      "slides": {
+        "1": "Spacious Family Residence",
+        "2": "Bright Studio Apartment",
+        "3": "Furnished 1-Bedroom Home",
+        "4": "Modern Garden Apartment"
+      },
+      "stats": {
+        "1": "Verified properties",
+        "2": "Registered Landlords",
+        "3": "Payment success rate",
+        "4": "Zoe availability"
+      }
+    },
+    "featured": {
+      "title": "Available Homes",
+      "description": "Explore rental properties currently open for inquiries and viewings.",
+      "viewAll": "View all properties",
+      "errorFallback": "Unable to load featured homes right now.",
+      "emptyTitle": "No featured homes available right now",
+      "emptyDescription": "Browse all currently listed rental properties across Rwanda.",
+      "browseAll": "Browse all properties",
+      "perMonth": "per month",
+      "standardAmenities": "Standard amenities",
+      "amenityCount": "{count, plural, one {# amenity} other {# amenities}}"
+    },
+    "ctaBand": {
+      "title": "List a home or manage your rentals on Urugo.",
+      "description": "Advertise properties on your own with Listing-Only mode, or manage leases, rent payments, and tenants in one dashboard.",
+      "createAccount": "Create an account",
+      "askZoe": "Ask Zoe"
+    },
+    "landlordShowcase": {
+      "title": "Built for every landlord - list only or manage everything.",
+      "description": "Publish your properties and handle inquiries independently, or turn on full rental management for leases, rent payments, and tenants.",
+      "items": {
+        "1": {
+          "title": "Listing-only or full management",
+          "description": "Start by listing properties and handling inquiries yourself, or enable full rental management anytime."
+        },
+        "2": {
+          "title": "One clear landlord dashboard",
+          "description": "Track your properties, individual units, occupancy, and viewing requests from a single view."
+        },
+        "3": {
+          "title": "Mobile money payment tracking",
+          "description": "Renters submit MTN Mobile Money or Airtel Money payment records with proof for you to review."
+        },
+        "4": {
+          "title": "Digital lease agreements",
+          "description": "Prepare and keep written lease terms organized so both landlord and renter can access them anytime."
+        },
+        "5": {
+          "title": "Renter history checks",
+          "description": "Review confirmed rental history records and manage disputes fairly before signing a new lease."
+        },
+        "6": {
+          "title": "Move-in to move-out records",
+          "description": "Keep tenancy timelines, maintenance updates, and checkout balances clear until the renter leaves."
+        }
+      },
+      "dashboardPreview": {
+        "searchPlaceholder": "Search properties, tenants, payments…",
+        "flagAlt": "Rwanda Flag",
+        "title": "Dashboard",
+        "totalProperties": "Total Properties",
+        "vsLastMonth": "↑ 4.2% vs last month",
+        "activeLandlords": "Active Landlords",
+        "monthlyRevenue": "Monthly Revenue",
+        "pendingVerification": "Pending Verification",
+        "rentalHistoryReports": "Rental History Reports",
+        "propertiesAvailable": "Properties Available"
+      }
+    },
+    "zoeSection": {
+      "subTitle": "Meet Zoe",
+      "title": "Ask questions while you search.",
+      "description": "Describe your budget and preferred area in plain language to get quick home suggestions and move-in cost guidance."
+    },
+    "zoePreview": {
+      "tryIt": "Try it",
+      "homeSeeker": "Home seeker",
+      "matchingListings": "Matching listings",
+      "costGuidance": "Cost guidance",
+      "msgUser1": "I need a 2-bedroom home near Kimironko or Kacyiru under 250,000 RWF.",
+      "msgZoe1": "I found available homes in Kacyiru and Kimironko within your budget. Would you like to compare them or review upfront move-in costs?",
+      "msgUser2": "Show me the move-in estimate for Kimironko.",
+      "msgZoe2": "For a 250,000 RWF/month home, expect upfront rent plus a refundable security deposit. Open any listing to view full photos and request a visit.",
+      "samplePrompts": {
+        "1": "2BR home in Kimironko",
+        "2": "Studio in Kacyiru under 150k",
+        "3": "Explain move-in costs",
+        "4": "Listing-only vs managed"
+      },
+      "askLabel": "Ask Zoe",
+      "inputPlaceholder": "Ask Zoe about areas, budgets, or move-in costs..."
+    },
+    "zoeSteps": {
+      "01": {
+        "title": "Describe what you need",
+        "description": "Share your preferred area, bedroom count, and monthly budget in plain language."
+      },
+      "02": {
+        "title": "Compare Kigali neighborhoods",
+        "description": "Get simple guidance on typical rent ranges and areas that fit your daily commute."
+      },
+      "03": {
+        "title": "Estimate upfront move-in costs",
+        "description": "See a breakdown of rent, security deposit, and monthly living expenses before visiting."
+      },
+      "04": {
+        "title": "Explore matching homes",
+        "description": "Jump straight from Zoe's suggestions to full property details and photos."
+      },
+      "05": {
+        "title": "Contact landlords directly",
+        "description": "Send an inquiry or request an in-person viewing directly from any listing page."
+      }
+    },
+    "rolesSection": {
+      "subTitle": "One platform for every stage",
+      "title": "Built for home seekers, landlords, and renters.",
+      "cards": {
+        "1": {
+          "title": "Landlords",
+          "description": "Choose Listing-Only to advertise properties on your own, or Full Rental Management to run your rentals on Urugo.",
+          "features": {
+            "1": "Publish listings with photos, pricing, and availability",
+            "2": "Receive inquiries and manage viewing requests directly",
+            "3": "Upgrade anytime for leases, rent tracking, and renter history"
+          },
+          "onboarding": "Listing-only or managed"
+        },
+        "2": {
+          "title": "Home Seekers",
+          "description": "Looking for your next place? Browse public listings freely and contact landlords without middlemen.",
+          "features": {
+            "1": "Search by district, budget, bedrooms, and amenities",
+            "2": "Review transparent move-in and monthly cost estimates",
+            "3": "Request viewings or ask Zoe for guidance"
+          },
+          "onboarding": "Free to browse"
+        },
+        "3": {
+          "title": "Renters",
+          "description": "Already renting through a managed landlord? Keep your home details, lease, and payments organized in one account.",
+          "features": {
+            "1": "Access your lease agreement and payment receipts anytime",
+            "2": "Submit monthly rent records and track repair requests",
+            "3": "Review and respond to rental history notices fairly"
+          },
+          "onboarding": "Invited by landlord or sign up"
+        }
+      }
+    }
+  },
+  "features": {
+    "meta": {
+      "title": "Features",
+      "description": "Explore Urugo's tools for home seekers, listing-only landlords, managed landlords, and renters."
+    },
+    "hero": {
+      "subTitle": "Features",
+      "title": "Everything you need to find a home or manage rentals.",
+      "description": "Simple tools for home seekers browsing Rwanda rentals, landlords who want to list only or manage everything, and renters keeping their lease organized.",
+      "categoriesNavAria": "Feature categories"
+    },
+    "categories": {
+      "1": "For Landlords",
+      "2": "For Renters",
+      "3": "For Home Seekers",
+      "4": "Meet Zoe"
+    },
+    "landlords": {
+      "subHeader": "For Landlords",
+      "header": "List properties yourself, or manage every rental in one dashboard.",
+      "seeMore": "Open Landlord Dashboard",
+      "items": {
+        "1": {
+          "title": "Listing-only mode",
+          "description": "Advertise properties with photos, prices, and availability, and handle inquiries on your own."
+        },
+        "2": {
+          "title": "Full rental management",
+          "description": "Upgrade anytime on the same account to track units, tenants, leases, and monthly rent."
+        },
+        "3": {
+          "title": "Viewing requests & inquiries",
+          "description": "Confirm, reschedule, or reply to prospective renters directly from your dashboard."
+        },
+        "4": {
+          "title": "Mobile money payment tracking",
+          "description": "Renters submit MTN Mobile Money or Airtel Money payment records with proof for you to review."
+        },
+        "5": {
+          "title": "Digital lease agreements",
+          "description": "Keep written lease terms organized so both landlord and renter can view them anytime."
+        },
+        "6": {
+          "title": "Renter history checks",
+          "description": "Review confirmed rental history records and handle unresolved notices fairly before signing."
+        }
+      }
+    },
+    "renters": {
+      "subHeader": "For Renters",
+      "header": "Keep your lease, rent records, and repairs in one place.",
+      "seeMore": "Open Renter Dashboard",
+      "items": {
+        "1": {
+          "title": "Submit rent from your phone",
+          "description": "Record MTN Mobile Money, Airtel Money, or bank transfer payments with your reference number."
+        },
+        "2": {
+          "title": "Digital lease, always on hand",
+          "description": "Review your lease terms, due date, and security deposit details anytime without paper hunting."
+        },
+        "3": {
+          "title": "Payment receipts & records",
+          "description": "Access your payment history and downloadable receipt copies in one organized place."
+        },
+        "4": {
+          "title": "Maintenance requests",
+          "description": "Report repairs in your unit and follow progress from pending to resolved."
+        },
+        "5": {
+          "title": "Fair rental history notices",
+          "description": "Receive a 3-day notice window to settle or dispute any reported balance with proof."
+        },
+        "6": {
+          "title": "Clear dashboard notifications",
+          "description": "Stay informed about rent due dates, maintenance updates, and landlord responses."
+        }
+      }
+    },
+    "homeSeekers": {
+      "subHeader": "For Home Seekers",
+      "header": "Find available homes with clear pricing and direct contact.",
+      "seeMore": "Browse Properties",
+      "items": {
+        "1": {
+          "title": "Search homes across Rwanda",
+          "description": "Filter rental listings by district, monthly budget, bedrooms, and key amenities."
+        },
+        "2": {
+          "title": "Clear move-in cost breakdowns",
+          "description": "See upfront rent, security deposit, and monthly costs upfront before booking a visit."
+        },
+        "3": {
+          "title": "Direct landlord contact",
+          "description": "Send questions or request an in-person viewing directly from any property page."
+        },
+        "4": {
+          "title": "Zoe search guidance",
+          "description": "Describe what you need in plain language to get quick suggestions and cost guidance."
+        }
+      }
+    },
+    "zoe": {
+      "subTitle": "Meet Zoe",
+      "title": "Helpful guidance while you search.",
+      "description": "Ask about neighborhoods, monthly budgets, or upfront move-in costs and jump straight to matching listings."
+    }
+  },
+  "howItWorks": {
+    "meta": {
+      "title": "How It Works",
+      "description": "Whether you own a property, rent one, or are looking for a home, discover how Urugo works step by step."
+    },
+    "header": {
+      "subTitle": "How it works",
+      "title": "Explore roles.",
+      "description": "Whether you own a property, rent one, or you're just looking, here's exactly what happens on Urugo, step by step."
+    },
+    "stepLabel": "Step {number}",
+    "nextStep": "Next Step",
+    "roles": {
+      "home_seeker": {
+        "tabLabel": "For Home Seekers",
+        "steps": {
+          "1": {
+            "title": "Browse available homes",
+            "description": "Search public listings by district, budget, bedrooms, and amenities with no account required."
+          },
+          "2": {
+            "title": "Review photos & real costs",
+            "description": "Inspect property photos, included amenities, monthly rent, and upfront move-in estimates."
+          },
+          "3": {
+            "title": "Ask questions or book a visit",
+            "description": "Send an inquiry or request an in-person viewing directly from the property page."
+          },
+          "4": {
+            "title": "Move in with clarity",
+            "description": "Visit the home, agree on lease terms with the landlord, and transition smoothly into your renter account if managed on Urugo."
+          }
+        },
+        "banner": {
+          "title": "Ready to find your next home?",
+          "description": "Browse available properties across Rwanda or ask Zoe for quick guidance.",
+          "ctaText": "Browse Properties"
+        }
+      },
+      "landlord": {
+        "tabLabel": "For Landlords",
+        "steps": {
+          "1": {
+            "title": "Choose your service path",
+            "description": "Create an account and pick Listing-Only to advertise homes independently, or Full Rental Management to manage everything on Urugo."
+          },
+          "2": {
+            "title": "Publish your properties",
+            "description": "Add photos, monthly rent, location, units, and availability so home seekers can find your listings."
+          },
+          "3": {
+            "title": "Handle inquiries & viewings",
+            "description": "Reply to questions and confirm or reschedule property viewing requests from your dashboard."
+          },
+          "4": {
+            "title": "Manage rentals when ready",
+            "description": "With Full Rental Management (which you can enable anytime), manage renters, leases, mobile money payment records, and renter history."
+          }
+        },
+        "banner": {
+          "title": "List a property or manage your full portfolio.",
+          "description": "Start with Listing-Only mode or switch to Full Rental Management on the same landlord account anytime.",
+          "ctaText": "Go to Landlord Dashboard"
+        }
+      },
+      "renter": {
+        "tabLabel": "For Renters",
+        "steps": {
+          "1": {
+            "title": "Join your rental workspace",
+            "description": "Use your landlord's invitation link or sign up as a renter to access your current unit details."
+          },
+          "2": {
+            "title": "Review your lease & terms",
+            "description": "Check your monthly rent, due date, security deposit, and downloadable lease agreement anytime."
+          },
+          "3": {
+            "title": "Submit payments & keep receipts",
+            "description": "Record MTN Mobile Money, Airtel Money, or bank rent payments and access your receipt history."
+          },
+          "4": {
+            "title": "Track repairs & rental history",
+            "description": "Log maintenance issues, message your landlord, and review any rental history notices until move-out."
+          }
+        },
+        "banner": {
+          "title": "Keep your tenancy organized from day one.",
+          "description": "Access your lease, payment history, repair requests, and documents in one simple dashboard.",
+          "ctaText": "Go to Renter Dashboard"
+        }
+      }
+    }
+  },
+  "footer": {
+    "description": "Urugo helps people find rental homes across Rwanda and helps landlords list properties or manage leases, rent payments, and tenants from move-in to move-out.",
+    "contactUs": "Contact Us",
+    "productTitle": "Product",
+    "stayUpdated": "Stay updated",
+    "newsletterDescription": "Receive occasional product updates and new rental listings in Rwanda.",
+    "emailLabel": "Email address",
+    "emailPlaceholder": "Enter your email",
+    "emailRequired": "Please enter your email address.",
+    "emailInvalid": "Please enter a valid email address.",
+    "subscribe": "Subscribe",
+    "subscribedToast": "Email recorded (preview mode).",
+    "previewSavedTitle": "Preview saved",
+    "previewSavedBody": "Email delivery is not connected yet. Your address was validated locally in preview mode.",
+    "enterAnotherEmail": "Enter another email",
+    "copyright": "© {year} Urugo. All rights reserved.",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service"
+  },
+  "legal": {
+    "backToHome": "Back to home",
+    "provisionalBadge": "Provisional Document",
+    "lastUpdated": "Last updated: {date}",
+    "questionsPrompt": "Questions about this document? Reach us at",
+    "privacy": {
+      "meta": {
+        "title": "Privacy Policy (Provisional)",
+        "description": "Provisional privacy policy describing how Urugo handles user information during platform development."
+      },
+      "title": "Privacy Policy",
+      "subtitle": "A plain-language overview of how Urugo plans to collect and use information across our public site and rental dashboards.",
+      "lastUpdatedDate": "November 2026",
+      "provisionalNote": "Provisional notice: This Privacy Policy is a working draft for the current product preview and requires formal legal review before general public release.",
+      "sections": {
+        "about": {
+          "heading": "About Urugo",
+          "p1": "Urugo is a rental housing platform designed to help people find homes in Rwanda and help landlords list properties or manage rentals from move-in to move-out."
+        },
+        "info": {
+          "heading": "Information You Provide",
+          "p1": "When you create an account, list a property, request a viewing, send an inquiry, or manage a lease on Urugo, you may enter details such as your name, phone number, email address, property details, and rental records.",
+          "p2": "During the current frontend preview stage, several interactions are stored locally in your browser so you can test workflows. Live backend storage, authentication, and notification services will be covered by the final reviewed policy before public launch."
+        },
+        "use": {
+          "heading": "How Information Is Intended to Be Used",
+          "p1": "Information entered on Urugo is intended to connect home seekers with landlords, schedule property viewings, keep lease and payment records organized, and support rental history reviews.",
+          "p2": "Landlords using Urugo can choose whether to display their phone number, WhatsApp contact, or email address on public listings."
+        },
+        "sharing": {
+          "heading": "Sharing and Visibility",
+          "p1": "Public property details such as location, rent, photos, and amenities are visible to anyone browsing Urugo. Contact details and private rental records are intended only for the relevant landlord, renter, or authorized platform support staff once backend access controls are active."
+        },
+        "choices": {
+          "heading": "Your Choices",
+          "p1": "You can browse public listings without creating an account. For preview data stored in your browser, you can clear your browser storage at any time. Once live accounts launch, you will be able to update or request deletion of your account information."
+        }
+      }
+    },
+    "terms": {
+      "meta": {
+        "title": "Terms of Service (Provisional)",
+        "description": "Provisional terms of service for home seekers, landlords, and renters using the Urugo platform."
+      },
+      "title": "Terms of Service",
+      "subtitle": "Clear, straightforward expectations for home seekers, landlords, and renters using Urugo.",
+      "lastUpdatedDate": "November 2026",
+      "provisionalNote": "Provisional notice: These Terms of Service are a working draft for the current product preview and require formal legal review before general public release.",
+      "sections": {
+        "scope": {
+          "heading": "Scope of Urugo",
+          "p1": "Urugo provides tools for searching rental properties, connecting home seekers with landlords, and helping landlords either advertise listings (Listing-Only mode) or manage leases, rent payment records, and tenancies (Full Rental Management).",
+          "p2": "Urugo is a software platform and is not a party to rental contracts between landlords and renters."
+        },
+        "landlord": {
+          "heading": "Landlord Responsibilities",
+          "p1": "Landlords who list properties on Urugo are responsible for providing accurate descriptions, photos, pricing, and availability status.",
+          "p2": "Listing-Only landlords manage their own viewing schedules, agreements, and rent collection independently. Managed landlords remain responsible for verifying payments and following applicable local rental laws."
+        },
+        "renter": {
+          "heading": "Home Seeker and Renter Responsibilities",
+          "p1": "Home seekers should inspect properties in person and confirm lease terms directly with the landlord before paying any deposit or rent.",
+          "p2": "Renters using Urugo's rental management tools are responsible for submitting accurate payment references and communicating repair requests or balance disputes in good faith."
+        },
+        "history": {
+          "heading": "Rental History and Disputes",
+          "p1": "Any rental balance notice logged on Urugo is intended to give renters a clear notice window to settle or dispute the record with supporting proof before it is confirmed."
+        },
+        "preview": {
+          "heading": "Preview Status and Changes",
+          "p1": "Parts of Urugo's frontend currently run in preview mode using sample data while backend services are being connected. Features and these provisional terms may change prior to full public launch."
+        }
+      }
+    }
+  },
+  "zoe": {
+    "name": "Zoe",
+    "previewBadge": "Preview",
+    "openAria": "Open Zoe",
+    "askTitle": "Ask Zoe",
+    "expandAria": "Expand Zoe",
+    "restoreAria": "Restore Zoe size",
+    "expandTitle": "Expand",
+    "restoreTitle": "Restore size",
+    "closeAria": "Close Zoe",
+    "closeTitle": "Close Zoe",
+    "previewNotice": "Preview mode: Zoe replies using sample listings while live search is being connected.",
+    "welcomeBadge": "Zoe Preview",
+    "welcomeMessage": "Hello! I'm Zoe. Ask about rental areas in Kigali, upfront move-in costs, or how Listing-Only and Full Rental Management work.",
+    "justNow": "Just now",
+    "copyResponseAria": "Copy response",
+    "checkingListings": "Checking sample listings",
+    "inputLabel": "Ask Zoe",
+    "inputPlaceholder": "Ask Zoe about Kigali homes, costs, or landlord plans...",
+    "sendAria": "Send message",
+    "chips": {
+      "studioKacyiru": "Studio in Kacyiru under 150k",
+      "twoBrKimironko": "2BR home in Kimironko",
+      "moveInCosts": "Explain move-in costs",
+      "landlordModes": "Listing-only vs managed",
+      "browseHomes": "Browse available homes"
+    },
+    "replies": {
+      "landlordBadge": "Landlord Options",
+      "landlordContent": "Urugo supports two landlord service paths on the same account:\n\n• Listing-Only: Publish properties with photos, prices, and availability, and handle inquiries and viewings yourself.\n• Full Rental Management: Add tenants, leases, mobile money payment tracking, and renter history whenever you need it.",
+      "moveInBadge": "Move-In Cost Guidance",
+      "moveInContent": "Before moving in, landlords in Kigali typically ask for:\n\n• Upfront monthly rent (often 1 to 3 months depending on the listing)\n• A refundable security deposit (usually 1 month's rent)\n\nOpen any property page to inspect its specific move-in and monthly cost breakdown before requesting a visit.",
+      "visitBadge": "How to Get Started",
+      "visitContent": "You can browse all public properties on Urugo without creating an account. When you find a home you like, open its details page and choose Request a visit or Send an inquiry to reach the landlord directly.",
+      "listingsBadge": "{count, plural, one {# Sample Listing} other {# Sample Listings}}",
+      "listingsMatched": "{count, plural, one {Here is a sample listing matching your query. Select any property to view full photos, costs, and landlord contact options:} other {Here are sample listings matching your query. Select any property to view full photos, costs, and landlord contact options:}}",
+      "listingsFallback": "Here are sample rental listings currently available on Urugo. Tell me a neighborhood (like Kacyiru, Kimironko, or Kicukiro) or your monthly budget to narrow these down:"
+    },
+    "matches": {
+      "monthlyRent": "Monthly rent",
+      "view": "View",
+      "beds": "{count, plural, one {# Bed} other {# Beds}}",
+      "baths": "{count, plural, one {# Bath} other {# Baths}}",
+      "parking": "Parking"
+    }
+  }
+}

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { CheckCircle2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 
@@ -18,35 +19,41 @@ export function SimulatorSignTab({
   onClose,
   onSign,
 }: Props) {
+  const t = useTranslations("landlord.agreements.preview.simulator");
+  const tSign = useTranslations("landlord.agreements.preview.signModal");
+  const tCommon = useTranslations("common");
   const [signerName, setSignerName] = useState(defaultSignerName);
 
   const handleSign = (e: React.FormEvent) => {
     e.preventDefault();
     if (!signerName.trim()) {
-      toast.error("Please enter your legal name to endorse.");
+      toast.error(tSign("nameRequired"));
       return;
     }
 
     onSign(signerName.trim());
-    toast.success("Agreement signed successfully as Renter!");
+    toast.success(t("renterSignedSuccess"));
     onClose();
   };
 
   return (
     <form onSubmit={handleSign} className="space-y-4 text-[12.5px]">
-      <div className="border border-line bg-surface/50 p-4 text-[13px] text-body space-y-2">
+      <div className="space-y-2 border border-line bg-surface/50 p-4 text-[13px] text-body">
         <div className="flex items-center gap-2 font-semibold text-ink">
           <CheckCircle2 className="size-4 text-ink" />
-          <span>Legal Acknowledgment</span>
+          <span>{t("legalAckTitle")}</span>
         </div>
         <p className="leading-relaxed">
-          By typing your legal name and confirming below, you acknowledge having read and accepted all covenants of Lease Agreement <strong>{referenceNumber}</strong>.
+          {t.rich("legalAckBody", {
+            ref: referenceNumber,
+            strong: (chunks) => <strong>{chunks}</strong>,
+          })}
         </p>
       </div>
 
       <div>
-        <label className="block text-[12.5px] font-semibold text-ink mb-1.5">
-          Full Legal Name as Signature
+        <label className="mb-1.5 block text-[12.5px] font-semibold text-ink">
+          {t("fullNameSignature")}
         </label>
         <input
           type="text"
@@ -56,20 +63,20 @@ export function SimulatorSignTab({
         />
       </div>
 
-      <div className="pt-2 flex justify-end gap-2 border-t border-line">
+      <div className="flex justify-end gap-2 border-t border-line pt-2">
         <Button
           type="button"
           variant="outline"
           onClick={onClose}
-          className="rounded-none border-line text-[12.5px] font-medium h-8.5 px-4"
+          className="h-8.5 rounded-none border-line px-4 text-[12.5px] font-medium"
         >
-          Cancel
+          {tCommon("actions.cancel")}
         </Button>
         <Button
           type="submit"
-          className="rounded-none bg-ink text-white hover:bg-black text-[12.5px] font-semibold h-8.5 px-4 cursor-pointer"
+          className="h-8.5 cursor-pointer rounded-none bg-ink px-4 text-[12.5px] font-semibold text-white hover:bg-black"
         >
-          Sign & Endorse Agreement
+          {t("signSubmit")}
         </Button>
       </div>
     </form>

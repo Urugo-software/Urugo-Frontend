@@ -2,14 +2,20 @@
 
 import { useState } from "react";
 import { Check, CheckCircle2, X } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { RejectPaymentModal } from "@/components/dashboard/landlord/payments/RejectPaymentModal";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { Button } from "@/components/ui/button";
+import type { AppLocale } from "@/i18n/config";
+import {
+  localizeDisplayDate,
+  localizePaymentMethod,
+} from "@/i18n/display-format";
+import { formatRwfLocalized } from "@/i18n/formatting";
 import type {
   PaymentRejectionCategory,
   TenancyPayment,
 } from "@/types/landlord";
-import { formatRwf } from "@/utils/format";
 
 interface PendingPaymentsReviewProps {
   payments: TenancyPayment[];
@@ -26,6 +32,8 @@ export function PendingPaymentsReview({
   onApprove,
   onReject,
 }: PendingPaymentsReviewProps) {
+  const t = useTranslations("landlord.tenancies.endWorkflow");
+  const locale = useLocale() as AppLocale;
   const [rejectTarget, setRejectTarget] = useState<TenancyPayment | null>(null);
   const pending = payments.filter((p) => p.status === "Pending");
 
@@ -37,9 +45,7 @@ export function PendingPaymentsReview({
             aria-hidden="true"
             className="size-4 shrink-0 text-emerald-600"
           />
-          <span>
-            No pending rent submissions awaiting review for this tenancy.
-          </span>
+          <span>{t("noPendingSubmissions")}</span>
         </div>
       ) : (
         <div className="divide-y divide-line border border-line bg-white">
@@ -51,21 +57,28 @@ export function PendingPaymentsReview({
               <div className="space-y-1">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="text-sm font-bold text-ink">
-                    {payment.period}
+                    {localizeDisplayDate(payment.period, locale)}
                   </span>
                   <span aria-hidden="true" className="text-line">&middot;</span>
                   <StatusBadge label="Pending verification" tone="warning" />
                 </div>
                 <p className="text-xs text-body">
-                  {payment.paymentMethod ?? "Payment proof"}
-                  {payment.reference ? ` · Ref: ${payment.reference}` : ""} ·
-                  Due {payment.dueDate}
+                  {payment.paymentMethod
+                    ? localizePaymentMethod(payment.paymentMethod, locale)
+                    : t("paymentProofFallback")}
+                  {payment.reference
+                    ? ` · ${t("refPrefix", { reference: payment.reference })}`
+                    : ""}{" "}
+                  ·{" "}
+                  {t("duePrefix", {
+                    date: localizeDisplayDate(payment.dueDate, locale),
+                  })}
                 </p>
               </div>
 
               <div className="flex flex-wrap items-center gap-2">
                 <span className="mr-2 font-ibm text-sm font-bold text-ink">
-                  {formatRwf(payment.amountRwf)}
+                  {formatRwfLocalized(payment.amountRwf, locale)}
                 </span>
                 <Button
                   type="button"
@@ -74,7 +87,7 @@ export function PendingPaymentsReview({
                   className="h-9 cursor-pointer rounded-none bg-emerald-700 px-3 text-xs text-white hover:bg-emerald-800"
                 >
                   <Check aria-hidden="true" className="size-3.5" />
-                  Approve
+                  {t("approve")}
                 </Button>
                 <Button
                   type="button"
@@ -84,7 +97,7 @@ export function PendingPaymentsReview({
                   className="h-9 cursor-pointer rounded-none border-rose-200 px-3 text-xs text-rose-700 hover:bg-rose-50"
                 >
                   <X aria-hidden="true" className="size-3.5" />
-                  Reject
+                  {t("reject")}
                 </Button>
               </div>
             </div>
@@ -95,7 +108,9 @@ export function PendingPaymentsReview({
       {payments.length > pending.length && (
         <div className="space-y-2">
           <p className="text-xs font-semibold uppercase tracking-wider text-faint">
-            Reviewed Payment History ({payments.length - pending.length})
+            {t("reviewedHistoryHeading", {
+              count: payments.length - pending.length,
+            })}
           </p>
           <div className="divide-y divide-line border border-line bg-surface/30">
             {payments
@@ -107,7 +122,7 @@ export function PendingPaymentsReview({
                 >
                   <div>
                     <span className="font-semibold text-ink">
-                      {payment.period}
+                      {localizeDisplayDate(payment.period, locale)}
                     </span>
                     {payment.rejectionReason && (
                       <span className="ml-2 text-rose-700">
@@ -117,7 +132,7 @@ export function PendingPaymentsReview({
                   </div>
                   <div className="flex items-center gap-2.5">
                     <span className="font-ibm font-semibold text-ink">
-                      {formatRwf(payment.amountRwf)}
+                      {formatRwfLocalized(payment.amountRwf, locale)}
                     </span>
                     <StatusBadge
                       label={payment.status}

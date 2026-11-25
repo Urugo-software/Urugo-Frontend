@@ -1,9 +1,13 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight, ShieldCheck, Users } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { EmptyStateBox } from "@/components/shared/EmptyStateBox";
 import { StatusBadge } from "@/components/shared/StatusBadge";
+import type { AppLocale } from "@/i18n/config";
+import { formatRwfLocalized } from "@/i18n/formatting";
 import type { LandlordRenter } from "@/types/landlord";
-import { formatRwf } from "@/utils/format";
 
 interface RentersTableProps {
   renters: LandlordRenter[];
@@ -11,16 +15,22 @@ interface RentersTableProps {
 }
 
 export function RentersTable({ renters, emptyAction }: RentersTableProps) {
+  const t = useTranslations("landlord.renters.list");
+  const locale = useLocale() as AppLocale;
+
   if (renters.length === 0) {
     return (
       <EmptyStateBox
         icon={Users}
-        title="No renters match your criteria"
-        description="Try adjusting your search query or filters, or register a new renter."
+        title={t("emptyTitle")}
+        description={t("emptyDesc")}
         action={emptyAction}
       />
     );
   }
+
+  const tenancyStatusLabel = (status: LandlordRenter["tenancyStatus"]) =>
+    status === "Ending" ? t("tenancyEnding") : status;
 
   return (
     <>
@@ -29,13 +39,13 @@ export function RentersTable({ renters, emptyAction }: RentersTableProps) {
         <table className="w-full border-collapse text-left text-sm">
           <thead>
             <tr className="border-b border-line bg-surface/60 text-xs font-semibold uppercase tracking-wider text-faint">
-              <th scope="col" className="px-4 py-3.5">Renter</th>
-              <th scope="col" className="px-4 py-3.5">Property & Unit</th>
-              <th scope="col" className="px-4 py-3.5">Tenancy</th>
-              <th scope="col" className="px-4 py-3.5">Monthly Rent</th>
-              <th scope="col" className="px-4 py-3.5">Payment</th>
-              <th scope="col" className="px-4 py-3.5">Lease Period</th>
-              <th scope="col" className="px-4 py-3.5 text-right">Actions</th>
+              <th scope="col" className="px-4 py-3.5">{t("colRenter")}</th>
+              <th scope="col" className="px-4 py-3.5">{t("colPropertyUnit")}</th>
+              <th scope="col" className="px-4 py-3.5">{t("colTenancy")}</th>
+              <th scope="col" className="px-4 py-3.5">{t("colMonthlyRent")}</th>
+              <th scope="col" className="px-4 py-3.5">{t("colPayment")}</th>
+              <th scope="col" className="px-4 py-3.5">{t("colLeasePeriod")}</th>
+              <th scope="col" className="px-4 py-3.5 text-right">{t("colActions")}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-line">
@@ -49,7 +59,7 @@ export function RentersTable({ renters, emptyAction }: RentersTableProps) {
                     <span>{renter.name}</span>
                     {renter.isIdentityVerified && (
                       <ShieldCheck
-                        aria-label="Verified identity"
+                        aria-label={t("verifiedIdentityAria")}
                         className="size-4 shrink-0 text-emerald-600"
                       />
                     )}
@@ -58,11 +68,13 @@ export function RentersTable({ renters, emptyAction }: RentersTableProps) {
                 </td>
                 <td className="px-4 py-3.5">
                   <p className="font-medium text-ink">{renter.propertyName}</p>
-                  <p className="text-xs text-faint">Unit {renter.unitNumber}</p>
+                  <p className="text-xs text-faint">
+                    {t("unitLabel", { unit: renter.unitNumber })}
+                  </p>
                 </td>
                 <td className="px-4 py-3.5">
                   <StatusBadge
-                    label={renter.tenancyStatus}
+                    label={tenancyStatusLabel(renter.tenancyStatus)}
                     tone={
                       renter.tenancyStatus === "Active"
                         ? "success"
@@ -73,7 +85,7 @@ export function RentersTable({ renters, emptyAction }: RentersTableProps) {
                   />
                 </td>
                 <td className="px-4 py-3.5 font-ibm font-semibold text-ink whitespace-nowrap">
-                  {formatRwf(renter.monthlyRentRwf)}
+                  {formatRwfLocalized(renter.monthlyRentRwf, locale)}
                 </td>
                 <td className="px-4 py-3.5">
                   <StatusBadge
@@ -90,7 +102,9 @@ export function RentersTable({ renters, emptyAction }: RentersTableProps) {
                 <td className="px-4 py-3.5 text-xs text-body whitespace-nowrap">
                   <p>{renter.startDate}</p>
                   {renter.endDate && (
-                    <p className="text-faint">Ends {renter.endDate}</p>
+                    <p className="text-faint">
+                      {t("endsDate", { date: renter.endDate })}
+                    </p>
                   )}
                 </td>
                 <td className="px-4 py-3.5 text-right whitespace-nowrap">
@@ -98,7 +112,7 @@ export function RentersTable({ renters, emptyAction }: RentersTableProps) {
                     href={`/landlord/renters/${renter.id}`}
                     className="inline-flex items-center gap-1 text-xs font-semibold text-brand-blue hover:underline"
                   >
-                    <span>View</span>
+                    <span>{t("view")}</span>
                     <ArrowRight aria-hidden="true" className="size-3.5" />
                   </Link>
                 </td>
@@ -130,11 +144,11 @@ export function RentersTable({ renters, emptyAction }: RentersTableProps) {
                   )}
                 </div>
                 <p className="truncate text-xs text-faint">
-                  {renter.propertyName} · Unit {renter.unitNumber}
+                  {renter.propertyName} · {t("unitLabel", { unit: renter.unitNumber })}
                 </p>
               </div>
               <StatusBadge
-                label={renter.tenancyStatus}
+                label={tenancyStatusLabel(renter.tenancyStatus)}
                 tone={
                   renter.tenancyStatus === "Active"
                     ? "success"
@@ -147,7 +161,7 @@ export function RentersTable({ renters, emptyAction }: RentersTableProps) {
 
             <div className="flex flex-wrap items-center justify-between gap-2 border-t border-line pt-2.5 text-xs">
               <span className="font-ibm font-bold text-ink">
-                {formatRwf(renter.monthlyRentRwf)}
+                {formatRwfLocalized(renter.monthlyRentRwf, locale)}
               </span>
               <StatusBadge
                 label={renter.paymentStatus}

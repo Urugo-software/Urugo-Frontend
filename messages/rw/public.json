@@ -1,0 +1,524 @@
+{
+  "nav": {
+    "home": "Ahabanza",
+    "properties": "Inzu",
+    "features": "Ibyo itanga",
+    "howItWorks": "Uko bikora",
+    "logoAria": "Urugo Ahabanza",
+    "mobileNavAria": "Urutonde rw'amapaji",
+    "navigationHeading": "Ibikubiyemo",
+    "openMenuAria": "Fungura urutonde rw'amapaji",
+    "closeMenuAria": "Funga urutonde rw'amapaji"
+  },
+  "home": {
+    "meta": {
+      "title": "Urugo — Shaka Inzu kandi Ucunge Ubukode mu Rwanda",
+      "description": "Shakisha inzu zikodeshwa mu Rwanda, saba gusura inzu, cyangwa wamaze kandi ucunge amazu yawe kuva umupangayi yimuka kugeza asohotse."
+    },
+    "hero": {
+      "title": "Shaka <accent>Inzu</accent> yawe",
+      "subtitle": "Shakisha inzu zikodeshwa mu Rwanda, cyangwa wamaze kandi ucunge amazu yawe kuva umupangayi yinjira kugeza asohotse.",
+      "searchFormAria": "Shakisha inzu zikodeshwa",
+      "searchLabel": "Shakisha ukurikije akarere, agace, cyangwa ubwoko bw'inzu",
+      "searchPlaceholder": "Shakisha akarere, agace, cyangwa ubwoko bw'inzu...",
+      "prevSlideAria": "Ifoto y'inzu ibanziriza",
+      "nextSlideAria": "Ifoto y'inzu ikurikira",
+      "viewSlideAria": "Reba ifoto ya {index}: {title}",
+      "slideAlt": "{title} i {location}",
+      "slides": {
+        "1": "Inzu ngari y'umuryango",
+        "2": "Inzu nto y'icyumba kimwe cyakeye",
+        "3": "Inzu y'icyumba 1 irimo ibikoresho",
+        "4": "Inzu igezweho ifite ubusitani"
+      },
+      "stats": {
+        "1": "Inzu zemejwe",
+        "2": "Ba nyir'inzu biyandikishije",
+        "3": "Igipimo cy'ubwishyu bugenda neza",
+        "4": "Zoe iboneka amasaha yose"
+      }
+    },
+    "featured": {
+      "title": "Inzu ziboneka",
+      "description": "Reba inzu zikodeshwa zifunguye ubu ku bibazo no gusura inzu.",
+      "viewAll": "Reba inzu zose",
+      "errorFallback": "Ntibishobotse gufungura inzu zatoranyijwe ubu.",
+      "emptyTitle": "Nta nzu zatoranyijwe zihari ubu",
+      "emptyDescription": "Reba inzu zose zikodeshwa ziri ku rubuga mu Rwanda.",
+      "browseAll": "Reba inzu zose",
+      "perMonth": "ku kwezi",
+      "standardAmenities": "Ibikorwa remezo by'ibanze",
+      "amenityCount": "{count, plural, one {igikorwa remezo #} other {ibikorwa remezo #}}"
+    },
+    "ctaBand": {
+      "title": "Tangaza inzu cyangwa ucunge ubukode bwawe kuri Urugo.",
+      "description": "Wamamaze inzu zawe wenyine ukoresheje uburyo bwa Kwamamaza gusa, cyangwa ucunge amasezerano y'ubukode, ubwishyu, n'abapangayi mu mbonerahamwe imwe.",
+      "createAccount": "Fungura konti",
+      "askZoe": "Baza Zoe"
+    },
+    "landlordShowcase": {
+      "title": "Yubakiwe buri nyir'inzu — Kwamamaza gusa cyangwa Gucunga ubukode bwose.",
+      "description": "Tangaza inzu zawe kandi usubize ibibazo ku giti cyawe, cyangwa ukoreshe Gucunga ubukode bwose ku masezerano y'ubukode, ubwishyu, n'abapangayi.",
+      "items": {
+        "1": {
+          "title": "Kwamamaza gusa cyangwa Gucunga ubukode bwose",
+          "description": "Tangira utangaza inzu kandi usubiza ibibazo wenyine, cyangwa wongereho Gucunga ubukode bwose igihe cyose ushakiye."
+        },
+        "2": {
+          "title": "Imbonerahamwe imwe isobanutse ya nyir'inzu",
+          "description": "Kurikirana inzu zawe, imiryango yazo, izituwemo, n'ubusabe bwo gusura inzu ahantu hamwe."
+        },
+        "3": {
+          "title": "Gukurikirana ubwishyu bwa Mobile Money",
+          "description": "Abapangayi bohereza inyandiko z'ubwishyu bwa MTN Mobile Money cyangwa Airtel Money ziherekejwe n'igihamya kugira ngo ubisuzume."
+        },
+        "4": {
+          "title": "Amasezerano y'ubukode y'ikoranabuhanga",
+          "description": "Tegura kandi ubike amasezerano y'ubukode yanditse ku buryo nyir'inzu n'umupangayi babasha kuyabona igihe cyose."
+        },
+        "5": {
+          "title": "Isuzuma ry'amateka y'ubukode",
+          "description": "Suzuma amateka y'ubukode yemejwe kandi ukemure impaka mu buryo bukwiye mbere yo gusinya amasezerano mashya."
+        },
+        "6": {
+          "title": "Inyandiko kuva kwimuka kugeza gusohoka",
+          "description": "Bika gahunda y'ubukode, amakuru yo gusana, n'ibirarane bisigaye kugeza umupangayi avuye mu nzu."
+        }
+      },
+      "dashboardPreview": {
+        "searchPlaceholder": "Shakisha inzu, abapangayi, ubwishyu…",
+        "flagAlt": "Ibendera ry'u Rwanda",
+        "title": "Imbonerahamwe",
+        "totalProperties": "Inzu zose hamwe",
+        "vsLastMonth": "↑ 4.2% ugereranyije n'ukwezi gushize",
+        "activeLandlords": "Ba nyir'inzu bakora",
+        "monthlyRevenue": "Inyungu y'ukwezi",
+        "pendingVerification": "Zitegereje kwemezwa",
+        "rentalHistoryReports": "Raporo z'amateka y'ubukode",
+        "propertiesAvailable": "Inzu ziboneka"
+      }
+    },
+    "zoeSection": {
+      "subTitle": "Menya Zoe",
+      "title": "Baza ibibazo mu gihe ushakisha.",
+      "description": "Sobanura ingengo y'imari yawe n'agace wifuza mu mvugo isanzwe ubone inama z'inzu zihuye n'ibyo ushaka n'ikiguzi cyo kwimuka."
+    },
+    "zoePreview": {
+      "tryIt": "Gerageza",
+      "homeSeeker": "Ushaka inzu",
+      "matchingListings": "Inzu zihuye n'ibyo ushaka",
+      "costGuidance": "Inama ku kiguzi",
+      "msgUser1": "Nkeneye inzu y'ibyumba 2 hafi ya Kimironko cyangwa Kacyiru iri munsi ya 250,000 RWF.",
+      "msgZoe1": "Nabonye inzu ziboneka i Kacyiru n'i Kimironko ziri mu ngengo yawe. Urashaka kuzigereranya cyangwa kureba ikiguzi cyo kwimuka?",
+      "msgUser2": "Nyereka ikiguzi cyo kwimuka cy'i Kimironko.",
+      "msgZoe2": "Ku nzu ya 250,000 RWF ku kwezi, itegure ubukode bw'ukwezi bwa mbere hamwe n'ingwate isubizwa. Fungura inzu iyo ari yo yose urebe amafoto yose kandi usabe gusura inzu.",
+      "samplePrompts": {
+        "1": "Inzu y'ibyumba 2 i Kimironko",
+        "2": "Studio i Kacyiru munsi ya 150k",
+        "3": "Sobanura ikiguzi cyo kwimuka",
+        "4": "Kwamamaza gusa vs Gucunga ubukode"
+      },
+      "askLabel": "Baza Zoe",
+      "inputPlaceholder": "Baza Zoe ibijyanye n'uduce, ibiciro, cyangwa ikiguzi cyo kwimuka..."
+    },
+    "zoeSteps": {
+      "01": {
+        "title": "Sobanura ibyo ukeneye",
+        "description": "Tanga agace wifuza, umubare w'ibyumba, n'ubukode bw'ukwezi ushobora mu mvugo isanzwe."
+      },
+      "02": {
+        "title": "Gereranya uduce twa Kigali",
+        "description": "Bona inama zoroshye ku biciro by'ubukode n'uduce duhuza n'ingendo zawe za buri munsi."
+      },
+      "03": {
+        "title": "Gereranya ikiguzi cyo kwimuka",
+        "description": "Reba ibigize ubukode, ingwate, n'ibindi bisabwa buri kwezi mbere yo gusura inzu."
+      },
+      "04": {
+        "title": "Sura inzu zihuye n'ibyo ushaka",
+        "description": "Kanda ku nzu Zoe yakweretse urebe amakuru yose n'amafoto yayo."
+      },
+      "05": {
+        "title": "Vugana na ba nyir'inzu imbona nkubone",
+        "description": "Ohereza ikibazo cyangwa usabe gusura inzu uturutse ku ipaji y'inzu iyo ari yo yose."
+      }
+    },
+    "rolesSection": {
+      "subTitle": "Urubuga rumwe ku byiciro byose",
+      "title": "Yubakiwe abashaka inzu, ba nyir'inzu, n'abapangayi.",
+      "cards": {
+        "1": {
+          "title": "Ba nyir'inzu",
+          "description": "Hitamo Kwamamaza gusa kugira ngo utangaze amazu ku giti cyawe, cyangwa Gucunga ubukode bwose kuri Urugo.",
+          "features": {
+            "1": "Tangaza inzu zifite amafoto, ibiciro, n'uko ziboneka",
+            "2": "Akira ibibazo kandi ucunge ubusabe bwo gusura inzu imbona nkubone",
+            "3": "Ongera ubushobozi igihe cyose ushaka amasezerano y'ubukode, ubwishyu, n'amateka y'ubukode"
+          },
+          "onboarding": "Kwamamaza gusa cyangwa Gucunga"
+        },
+        "2": {
+          "title": "Abashaka inzu",
+          "description": "Urashaka inzu nshya? Shakisha inzu ziri ku rubuga ku buntu kandi uvugane na ba nyir'inzu nta bakomisiyoneri.",
+          "features": {
+            "1": "Shakisha ukurikije akarere, ingengo y'imari, ibyumba, n'ibikorwa remezo",
+            "2": "Reba ikiguzi cyo kwimuka n'ubukode bw'ukwezi bisobanutse",
+            "3": "Saba gusura inzu cyangwa ubaze Zoe ubufasha"
+          },
+          "onboarding": "Gusura ni ubuntu"
+        },
+        "3": {
+          "title": "Abapangayi",
+          "description": "Usanzwe ukodesha kwa nyir'inzu ukoresha Urugo? Bika amakuru y'inzu, amasezerano y'ubukode, n'ubwishyu muri konti imwe.",
+          "features": {
+            "1": "Reba amasezerano y'ubukode n'inyemezabwishyu zawe igihe cyose",
+            "2": "Ohereza ubwishyu bw'ukwezi kandi ukurikirane ubusabe bwo gusana",
+            "3": "Suzuma kandi usubize amamenyesha y'amateka y'ubukode mu buryo bukwiye"
+          },
+          "onboarding": "Ubutumire bwa nyir'inzu cyangwa kwiyandikisha"
+        }
+      }
+    }
+  },
+  "features": {
+    "meta": {
+      "title": "Ibyo itanga",
+      "description": "Menya ibikoresho bya Urugo bigenewe abashaka inzu, ba nyir'inzu bamamaza gusa, ba nyir'inzu bacunga ubukode bwose, n'abapangayi."
+    },
+    "hero": {
+      "subTitle": "Ibyo itanga",
+      "title": "Ibikenewe byose mu gushaka inzu cyangwa gucunga ubukode.",
+      "description": "Ibikoresho byoroshye ku bashaka inzu mu Rwanda, ba nyir'inzu bahitamo Kwamamaza gusa cyangwa Gucunga ubukode bwose, n'abapangayi babika amasezerano yabo neza.",
+      "categoriesNavAria": "Ibyiciro by'ibyo sisitemu itanga"
+    },
+    "categories": {
+      "1": "Kuri Ba nyir'inzu",
+      "2": "Ku Bapangayi",
+      "3": "Ku Bashaka inzu",
+      "4": "Menya Zoe"
+    },
+    "landlords": {
+      "subHeader": "Kuri Ba nyir'inzu",
+      "header": "Tangaza inzu ku giti cyawe, cyangwa ucunge ubukode bwose mu mbonerahamwe imwe.",
+      "seeMore": "Fungura imbonerahamwe ya nyir'inzu",
+      "items": {
+        "1": {
+          "title": "Uburyo bwa Kwamamaza gusa",
+          "description": "Wamamaze inzu zifite amafoto, ibiciro, n'uko ziboneka, kandi usubize ibibazo ku giti cyawe."
+        },
+        "2": {
+          "title": "Gucunga ubukode bwose",
+          "description": "Ongera ubushobozi igihe cyose kuri konti imwe ukurikirane imiryango, abapangayi, amasezerano y'ubukode, n'ubukode bw'ukwezi."
+        },
+        "3": {
+          "title": "Ubusabe bwo gusura inzu n'ibibazo",
+          "description": "Emeza, wimure igihe, cyangwa usubize abashaka inzu uturutse ku mbonerahamwe yawe."
+        },
+        "4": {
+          "title": "Gukurikirana ubwishyu bwa Mobile Money",
+          "description": "Abapangayi bohereza inyandiko z'ubwishyu bwa MTN Mobile Money cyangwa Airtel Money zifite igihamya kugira ngo ubisuzume."
+        },
+        "5": {
+          "title": "Amasezerano y'ubukode y'ikoranabuhanga",
+          "description": "Bika amasezerano y'ubukode yanditse ku buryo nyir'inzu n'umupangayi babasha kuyareba igihe cyose."
+        },
+        "6": {
+          "title": "Isuzuma ry'amateka y'ubukode",
+          "description": "Suzuma amateka y'ubukode yemejwe kandi ukemure amamenyesha atarakemuka mu buryo bukwiye mbere yo gusinya."
+        }
+      }
+    },
+    "renters": {
+      "subHeader": "Ku Bapangayi",
+      "header": "Bika amasezerano y'ubukode, ubwishyu, n'ubusabe bwo gusana ahantu hamwe.",
+      "seeMore": "Fungura imbonerahamwe y'umupangayi",
+      "items": {
+        "1": {
+          "title": "Ohereza ubwishyu ukoresheje telefoni",
+          "description": "Andika ubwishyu bwa MTN Mobile Money, Airtel Money, cyangwa banki hamwe na nomero y'igihamya."
+        },
+        "2": {
+          "title": "Amasezerano y'ubukode ahora hafi",
+          "description": "Reba amategeko y'amasezerano, itariki yo kwishyura, n'ingwate igihe cyose udashakishije impapuro."
+        },
+        "3": {
+          "title": "Inyemezabwishyu n'amateka y'ubwishyu",
+          "description": "Reba amateka y'ubwishyu bwawe kandi ukuremo inyemezabwishyu ahantu hamwe hasobanutse."
+        },
+        "4": {
+          "title": "Ubusabe bwo gusana",
+          "description": "Menyesha ibikeneye gusanwa mu nzu utuyemo kandi ukurikirane aho bigeze kugeza bikemutse."
+        },
+        "5": {
+          "title": "Amamenyesha y'amateka y'ubukode aboneye",
+          "description": "Bona iminsi 3 yo gukemura cyangwa kuvuguruza umwenda wamenyeshejwe ufite ibimenyetso."
+        },
+        "6": {
+          "title": "Amamenyesha asobanutse",
+          "description": "Menya ku gihe amatariki yo kwishyura ubukode, aho gusana bigeze, n'ibisubizo bya nyir'inzu."
+        }
+      }
+    },
+    "homeSeekers": {
+      "subHeader": "Ku Bashaka inzu",
+      "header": "Bona inzu ziboneka zifite ibiciro bisobanutse no kuvugana imbona nkubone.",
+      "seeMore": "Reba inzu zikodeshwa",
+      "items": {
+        "1": {
+          "title": "Shakisha inzu mu Rwanda hose",
+          "description": "Toranya inzu ukurikije akarere, ubukode bw'ukwezi, umubare w'ibyumba, n'ibikorwa remezo."
+        },
+        "2": {
+          "title": "Ikiguzi cyo kwimuka gisobanutse",
+          "description": "Reba ubukode bwa mbere, ingwate, n'ibiguzi by'ukwezi mbere yo gusaba gusura inzu."
+        },
+        "3": {
+          "title": "Kuvugana na nyir'inzu imbona nkubone",
+          "description": "Ohereza ibibazo cyangwa usabe gusura inzu uturutse ku ipaji y'inzu iyo ari yo yose."
+        },
+        "4": {
+          "title": "Ubufasha bwa Zoe mu gushakisha",
+          "description": "Sobanura ibyo ukeneye mu mvugo isanzwe ubone inzu zikwiranye nawe n'inama ku kiguzi."
+        }
+      }
+    },
+    "zoe": {
+      "subTitle": "Menya Zoe",
+      "title": "Ubufasha bwihuse mu gihe ushakisha.",
+      "description": "Baza ibijyanye n'uduce, ingengo y'imari y'ukwezi, cyangwa ikiguzi cyo kwimuka kandi ufungure inzu zihuye n'ibyo ushaka."
+    }
+  },
+  "howItWorks": {
+    "meta": {
+      "title": "Uko bikora",
+      "description": "Waba uri nyir'inzu, umupangayi, cyangwa ushaka inzu, menya uko Urugo ikora intambwe ku yindi."
+    },
+    "header": {
+      "subTitle": "Uko bikora",
+      "title": "Menya ibyiciro by'abakoresha.",
+      "description": "Waba ufite inzu, uyikodesha, cyangwa urimo kuyishaka, dore uko Urugo ikora intambwe ku yindi."
+    },
+    "stepLabel": "Intambwe {number}",
+    "nextStep": "Igikurikira",
+    "roles": {
+      "home_seeker": {
+        "tabLabel": "Ku Bashaka inzu",
+        "steps": {
+          "1": {
+            "title": "Shakisha inzu ziboneka",
+            "description": "Shakisha inzu ziri ku rubuga ukurikije akarere, ingengo y'imari, ibyumba, n'ibikorwa remezo udafite konti."
+          },
+          "2": {
+            "title": "Reba amafoto n'ikiguzi nyacyo",
+            "description": "Suzuma amafoto y'inzu, ibikorwa remezo birimo, ubukode bw'ukwezi, n'ikiguzi cyo kwimuka."
+          },
+          "3": {
+            "title": "Baza ibibazo cyangwa saba gusura inzu",
+            "description": "Ohereza ikibazo cyangwa usabe gusura inzu imbona nkubone uturutse ku ipaji y'inzu."
+          },
+          "4": {
+            "title": "Imuka byose bisobanutse",
+            "description": "Sura inzu, wumvikane na nyir'inzu ku masezerano y'ubukode, hanyuma ukomeze kuri konti y'umupangayi niba icungwa kuri Urugo."
+          }
+        },
+        "banner": {
+          "title": "Witeguye kubona inzu yawe ikurikira?",
+          "description": "Shakisha inzu ziboneka mu Rwanda hose cyangwa ubaze Zoe ubufasha bwihuse.",
+          "ctaText": "Shaka inzu"
+        }
+      },
+      "landlord": {
+        "tabLabel": "Kuri Ba nyir'inzu",
+        "steps": {
+          "1": {
+            "title": "Hitamo uburyo bwa serivisi",
+            "description": "Fungura konti maze uhitemo Kwamamaza gusa ngo utangaze amazu ku giti cyawe, cyangwa Gucunga ubukode bwose kuri Urugo."
+          },
+          "2": {
+            "title": "Tangaza inzu zawe",
+            "description": "Ongeramo amafoto, ubukode bw'ukwezi, aho inzu iherereye, imiryango, n'uko iboneka kugira ngo abashaka inzu bayibone."
+          },
+          "3": {
+            "title": "Subiza ibibazo n'ubusabe bwo gusura",
+            "description": "Subiza ibibazo kandi wemeze cyangwa wimure gahunda zo gusura inzu uturutse ku mbonerahamwe yawe."
+          },
+          "4": {
+            "title": "Cunga ubukode igihe witeguye",
+            "description": "Ukoresheje Gucunga ubukode bwose (ushobora gushyiraho igihe cyose), cunga abapangayi, amasezerano y'ubukode, ubwishyu bwa Mobile Money, n'amateka y'ubukode."
+          }
+        },
+        "banner": {
+          "title": "Tangaza inzu imwe cyangwa ucunge amazu yawe yose.",
+          "description": "Tangirana na Kwamamaza gusa cyangwa uhindure ujye muri Gucunga ubukode bwose kuri konti imwe ya nyir'inzu igihe cyose.",
+          "ctaText": "Kwa nyir'inzu"
+        }
+      },
+      "renter": {
+        "tabLabel": "Ku Bapangayi",
+        "steps": {
+          "1": {
+            "title": "Injira mu mwanya w'ubukode bwawe",
+            "description": "Koresha ihuza ry'ubutumire rya nyir'inzu cyangwa wiyandikishe nk'umupangayi urebe amakuru y'inzu utuyemo."
+          },
+          "2": {
+            "title": "Reba amasezerano y'ubukode",
+            "description": "Reba ubukode bw'ukwezi, itariki yo kwishyura, ingwate, kandi ukuremo amasezerano y'ubukode igihe cyose."
+          },
+          "3": {
+            "title": "Ohereza ubwishyu kandi ubike inyemezabwishyu",
+            "description": "Andika ubwishyu bwa MTN Mobile Money, Airtel Money, cyangwa banki kandi ubone amateka y'inyemezabwishyu zawe."
+          },
+          "4": {
+            "title": "Kurikirana gusana n'amateka y'ubukode",
+            "description": "Ohereza ibikeneye gusanwa, andikira nyir'inzu, kandi usuzume amamenyesha y'amateka y'ubukode kugeza usohotse."
+          }
+        },
+        "banner": {
+          "title": "Bika gahunda y'ubukode bwawe neza kuva ku munsi wa mbere.",
+          "description": "Reba amasezerano y'ubukode, amateka y'ubwishyu, ubusabe bwo gusana, n'inyandiko mu mbonerahamwe imwe yoroshye.",
+          "ctaText": "K'umupangayi"
+        }
+      }
+    }
+  },
+  "footer": {
+    "description": "Urugo ifasha abantu kubona inzu zikodeshwa mu Rwanda kandi igafasha ba nyir'inzu kwamamaza inzu cyangwa gucunga amasezerano y'ubukode, ubwishyu, n'abapangayi kuva kwimuka kugeza gusohoka.",
+    "contactUs": "Twandikire",
+    "productTitle": "Ibikubiyemo",
+    "stayUpdated": "Menya amakuru mashya",
+    "newsletterDescription": "Akira amakuru mashya ya Urugo n'inzu nshya zikodeshwa mu Rwanda.",
+    "emailLabel": "Aderesi ya imeyili",
+    "emailPlaceholder": "Andika imeyili yawe",
+    "emailRequired": "Nyamuneka andika aderesi ya imeyili yawe.",
+    "emailInvalid": "Nyamuneka andika aderesi ya imeyili iboneye.",
+    "subscribe": "Iyandikishe",
+    "subscribedToast": "Imeyili yabitswe (uburyo bw'igerageza).",
+    "previewSavedTitle": "Byabitswe mu igerageza",
+    "previewSavedBody": "Kohereza imeyili ntibiratangira gukora. Aderesi yawe yagenzuwe mu buryo bw'igerageza.",
+    "enterAnotherEmail": "Andika indi imeyili",
+    "copyright": "© {year} Urugo. Uburenganzira bwose burarinzwe.",
+    "privacyPolicy": "Politiki y'ibanga",
+    "termsOfService": "Amabwiriza y'imikoreshereze"
+  },
+  "legal": {
+    "backToHome": "Subira ahabanza",
+    "provisionalBadge": "Inyandiko y'agateganyo",
+    "lastUpdated": "Yaherukaga kuvugururwa: {date}",
+    "questionsPrompt": "Ufite ikibazo kuri iyi nyandiko? Twandikire kuri",
+    "privacy": {
+      "meta": {
+        "title": "Politiki y'ibanga (Inyandiko y'agateganyo)",
+        "description": "Politiki y'ibanga y'agateganyo isobanura uko Urugo ibika kandi igakoresha amakuru y'abakoresha mu gihe cy'igerageza."
+      },
+      "title": "Politiki y'ibanga",
+      "subtitle": "Incamake isobanutse y'uko Urugo iteganya gukusanya no gukoresha amakuru ku rubuga rwayo no mu mbonerahamwe z'ubukode.",
+      "lastUpdatedDate": "Ugushyingo 2026",
+      "provisionalNote": "Inyandiko y'agateganyo — itegereje isuzuma ry'amategeko: Iyi Politiki y'ibanga ni inyandiko y'ibanze igenewe igerageza rya sisitemu kandi izasuzumwa n'inzobere mu mategeko mbere yo gutangira gukoreshwa ku mugaragaro.",
+      "sections": {
+        "about": {
+          "heading": "Ibyerekeye Urugo",
+          "p1": "Urugo ni urubuga rw'inzu zikodeshwa rwubakiwe gufasha abantu kubona inzu mu Rwanda no gufasha ba nyir'inzu gutangaza inzu cyangwa gucunga ubukode kuva kwimuka kugeza gusohoka."
+        },
+        "info": {
+          "heading": "Amakuru utanga",
+          "p1": "Iyo ufunguye konti, utangaje inzu, usabye gusura inzu, wohereje ikibazo, cyangwa ucunga amasezerano y'ubukode kuri Urugo, ushobora gutanga amazina yawe, nomero ya telefoni, imeyili, amakuru y'inzu, n'inyandiko z'ubukode.",
+          "p2": "Muri iki cyiciro cy'igerageza ry'urubuga, bimwe mu bikorwa bibikwa muri mushakisha yawe kugira ngo ubashe kubigerageza. Ububiko bwa seriveri, kwemeza imyirondoro, n'amamenyesha nyakuri bizagengwa na politiki ya nyuma imaze gusuzumwa n'amategeko mbere yo gutangira ku mugaragaro."
+        },
+        "use": {
+          "heading": "Uko amakuru agenewe gukoreshwa",
+          "p1": "Amakuru yinjijwe kuri Urugo agamije guhuza abashaka inzu na ba nyir'inzu, gutegura gahunda zo gusura inzu, kubika amasezerano y'ubukode n'ubwishyu ku murongo, no gushyigikira isuzuma ry'amateka y'ubukode.",
+          "p2": "Ba nyir'inzu bakoresha Urugo bashobora guhitamo niba nomero ya telefoni, WhatsApp, cyangwa imeyili yabo bigaragara ku nzu batangaje."
+        },
+        "sharing": {
+          "heading": "Gusangira no kugaragara kw'amakuru",
+          "p1": "Amakuru rusange y'inzu nk'aho iherereye, ubukode bw'ukwezi, amafoto, n'ibikorwa remezo agaragarira buri wese usura Urugo. Amakuru yo guhamagarana n'inyandiko zihariye z'ubukode bigenewe gusa nyir'inzu, umupangayi bireba, cyangwa abakozi babifitiye uburenganzira igihe ububiko nyakuri buzatangira."
+        },
+        "choices": {
+          "heading": "Amahitamo yawe",
+          "p1": "Ushobora gushakisha inzu ziri ku rubuga udafite konti. Ku makuru y'igerageza abitswe muri mushakisha yawe, ushobora kuyasiba igihe cyose. Igihe konti nyakuri zizatangira, uzabasha kuvugurura cyangwa gusaba gusiba amakuru ya konti yawe."
+        }
+      }
+    },
+    "terms": {
+      "meta": {
+        "title": "Amabwiriza y'imikoreshereze (Inyandiko y'agateganyo)",
+        "description": "Amabwiriza y'imikoreshereze y'agateganyo agenewe abashaka inzu, ba nyir'inzu, n'abapangayi bakoresha Urugo."
+      },
+      "title": "Amabwiriza y'imikoreshereze",
+      "subtitle": "Ibiteganyijwe bisobanutse ku bashaka inzu, ba nyir'inzu, n'abapangayi bakoresha Urugo.",
+      "lastUpdatedDate": "Ugushyingo 2026",
+      "provisionalNote": "Inyandiko y'agateganyo — itegereje isuzuma ry'amategeko: Aya Mabwiriza y'imikoreshereze ni inyandiko y'ibanze igenewe igerageza rya sisitemu kandi izasuzumwa n'inzobere mu mategeko mbere yo gutangira gukoreshwa ku mugaragaro.",
+      "sections": {
+        "scope": {
+          "heading": "Imiterere ya serivisi za Urugo",
+          "p1": "Urugo itanga ibikoresho byo gushakisha inzu zikodeshwa, guhuza abashaka inzu na ba nyir'inzu, no gufasha ba nyir'inzu kwamamaza inzu (Kwamamaza gusa) cyangwa gucunga amasezerano y'ubukode, ubwishyu, n'abapangayi (Gucunga ubukode bwose).",
+          "p2": "Urugo ni urubuga rw'ikoranabuhanga kandi ntiruri mu bagize amasezerano y'ubukode hagati ya nyir'inzu n'umupangayi."
+        },
+        "landlord": {
+          "heading": "Inshingano za ba nyir'inzu",
+          "p1": "Ba nyir'inzu batangaza inzu kuri Urugo bafite inshingano yo gutanga ibisobanuro by'ukuri, amafoto, ibiciro, n'uko inzu iboneka.",
+          "p2": "Ba nyir'inzu bahisemo Kwamamaza gusa bakurikirana amasura y'inzu, amasezerano, n'ubwishyu ku giti cyabo. Ba nyir'inzu bahisemo Gucunga ubukode bwose bakomeza kugira inshingano yo kugenzura ubwishyu no kubahiriza amategeko y'ubukode."
+        },
+        "renter": {
+          "heading": "Inshingano z'abashaka inzu n'abapangayi",
+          "p1": "Abashaka inzu bagomba gusura inzu imbona nkubone kandi bakemeranya na nyir'inzu ku masezerano y'ubukode mbere yo kwishyura ingwate cyangwa ubukode.",
+          "p2": "Abapangayi bakoresha ibikoresho byo gucunga ubukode bya Urugo bafite inshingano yo gutanga ibihamya by'ubwishyu by'ukuri no kumenyesha ibikeneye gusanwa cyangwa impaka mu kuri."
+        },
+        "history": {
+          "heading": "Amateka y'ubukode n'impaka",
+          "p1": "Imenyesha ryose ry'umwenda w'ubukode ryanditswe kuri Urugo rigamije guha umupangayi igihe gisobanutse cyo kwishyura cyangwa kuvuguruza iyo nyandiko afite ibimenyetso mbere y'uko yemezwa."
+        },
+        "preview": {
+          "heading": "Icyiciro cy'igerageza n'impinduka",
+          "p1": "Bimwe mu bice by'urubuga rwa Urugo ubu bikora mu buryo bw'igerageza bikoresheje amakuru y'urugero mu gihe seriveri zirimo guhuzwa. Ibirimo n'aya mabwiriza y'agateganyo bishobora guhinduka mbere yo gutangira ku mugaragaro."
+        }
+      }
+    }
+  },
+  "zoe": {
+    "name": "Zoe",
+    "previewBadge": "Igerageza",
+    "openAria": "Fungura Zoe",
+    "askTitle": "Baza Zoe",
+    "expandAria": "Agura Zoe",
+    "restoreAria": "Subiza Zoe uko yanganaga",
+    "expandTitle": "Agura",
+    "restoreTitle": "Subiza uko yari",
+    "closeAria": "Funga Zoe",
+    "closeTitle": "Funga Zoe",
+    "previewNotice": "Uburyo bw'igerageza: Zoe isubiza ikoresheje inzu z'urugero mu gihe ishakisha nyakuri ririmo guhuzwa.",
+    "welcomeBadge": "Zoe (Igerageza)",
+    "welcomeMessage": "Muraho! Nitwa Zoe. Mbaza ibijyanye n'uduce two gukodeshamo i Kigali, ikiguzi cyo kwimuka, cyangwa uko Kwamamaza gusa na Gucunga ubukode bwose bikora.",
+    "justNow": "Nonaha",
+    "copyResponseAria": "Koporora igisubizo",
+    "checkingListings": "Birimo gushakisha inzu z'urugero",
+    "inputLabel": "Baza Zoe",
+    "inputPlaceholder": "Baza Zoe inzu i Kigali, ibiciro, cyangwa uburyo bwa nyir'inzu...",
+    "sendAria": "Ohereza ubutumwa",
+    "chips": {
+      "studioKacyiru": "Studio i Kacyiru munsi ya 150k",
+      "twoBrKimironko": "Inzu y'ibyumba 2 i Kimironko",
+      "moveInCosts": "Sobanura ikiguzi cyo kwimuka",
+      "landlordModes": "Kwamamaza gusa vs Gucunga ubukode",
+      "browseHomes": "Reba inzu ziboneka"
+    },
+    "replies": {
+      "landlordBadge": "Amahitamo ya nyir'inzu",
+      "landlordContent": "Urugo itanga uburyo bubiri kuri nyir'inzu kuri konti imwe:\n\n• Kwamamaza gusa: Tangaza inzu zifite amafoto, ibiciro, n'uko ziboneka, kandi usubize ibibazo n'amasura y'inzu ku giti cyawe.\n• Gucunga ubukode bwose: Ongeramo abapangayi, amasezerano y'ubukode, gukurikirana ubwishyu bwa Mobile Money, n'amateka y'ubukode igihe cyose ubishakiye.",
+      "moveInBadge": "Inama ku kiguzi cyo kwimuka",
+      "moveInContent": "Mbere yo kwimuka, ba nyir'inzu i Kigali bakunze gusaba:\n\n• Ubukode bw'ukwezi bwishyurwa mbere (akenshi ukwezi 1 kugeza ku mezi 3 bitewe n'inzu)\n• Ingwate isubizwa (akenshi ihwanye n'ubukode bw'ukwezi 1)\n\nFungura ipaji y'inzu iyo ari yo yose urebe ikiguzi cyo kwimuka n'ibiguzi by'ukwezi mbere yo gusaba gusura inzu.",
+      "visitBadge": "Uko watangira",
+      "visitContent": "Ushobora gushakisha inzu zose ziri ku rubuga rwa Urugo udafite konti. Nubona inzu ukunze, fungura amakuru yayo maze uhitemo Saba gusura inzu cyangwa Ohereza ikibazo kugira ngo uvugane na nyir'inzu imbona nkubone.",
+      "listingsBadge": "{count, plural, one {Inzu # y'urugero} other {Inzu # z'urugero}}",
+      "listingsMatched": "{count, plural, one {Dore inzu y'urugero ihuye n'ibyo ushakisha. Kanda kuri iyo nzu urebe amafoto yose, ikiguzi, n'uburyo bwo kuvugana na nyir'inzu:} other {Dore inzu z'urugero zihuye n'ibyo ushakisha. Kanda ku nzu iyo ari yo yose urebe amafoto yose, ikiguzi, n'uburyo bwo kuvugana na nyir'inzu:}}",
+      "listingsFallback": "Dore inzu z'urugero ziboneka ubu kuri Urugo. Mbwira agace (nka Kacyiru, Kimironko, cyangwa Kicukiro) cyangwa ingengo y'imari yawe y'ukwezi ngufashe guhitamo:"
+    },
+    "matches": {
+      "monthlyRent": "Ubukode bw'ukwezi",
+      "view": "Reba",
+      "beds": "{count, plural, one {Icyumba #} other {Ibyumba #}}",
+      "baths": "{count, plural, one {Ubwiherero #} other {Ubwiherero #}}",
+      "parking": "Parikingi"
+    }
+  }
+}

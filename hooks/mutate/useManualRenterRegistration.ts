@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import toast from "react-hot-toast";
 import {
   LandlordProfileSettings,
@@ -46,8 +47,11 @@ export const INITIAL_TENANCY_DRAFT: TenancyConfigDraft = {
   securityDepositRwf: "",
 };
 
+type WizardMsg = (key: string) => string;
+
 export function validateRenterIdentity(
   draft: RenterIdentityDraft,
+  t?: WizardMsg,
 ): RenterIdentityErrors {
   const errors: RenterIdentityErrors = {};
   const trimmedName = draft.fullName.trim();
@@ -56,28 +60,33 @@ export function validateRenterIdentity(
   const normalizedNationalId = draft.nationalId.replace(/\s+/g, "");
 
   if (!trimmedName) {
-    errors.fullName = "Full legal name is required.";
+    errors.fullName = t ? t("fullNameRequired") : "Full legal name is required.";
   } else if (trimmedName.length < 2) {
-    errors.fullName = "Enter at least 2 characters for the legal name.";
+    errors.fullName = t
+      ? t("fullNameMin")
+      : "Enter at least 2 characters for the legal name.";
   }
 
   if (!trimmedEmail) {
-    errors.email = "Email address is required.";
+    errors.email = t ? t("emailRequired") : "Email address is required.";
   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
-    errors.email = "Enter a valid email address.";
+    errors.email = t ? t("emailInvalid") : "Enter a valid email address.";
   }
 
   if (!normalizedPhone) {
-    errors.phoneNumber = "Phone number is required.";
+    errors.phoneNumber = t ? t("phoneRequired") : "Phone number is required.";
   } else if (!/^\+?\d{9,15}$/.test(normalizedPhone)) {
-    errors.phoneNumber =
-      "Enter a valid phone number (9 to 15 digits, e.g. +250 788 123 456).";
+    errors.phoneNumber = t
+      ? t("phoneInvalid")
+      : "Enter a valid phone number (9 to 15 digits, e.g. +250 788 123 456).";
   }
 
   if (!normalizedNationalId) {
-    errors.nationalId = "National ID is required.";
+    errors.nationalId = t ? t("nationalIdRequired") : "National ID is required.";
   } else if (!/^\d{16}$/.test(normalizedNationalId)) {
-    errors.nationalId = "National ID must be exactly 16 digits.";
+    errors.nationalId = t
+      ? t("nationalIdInvalid")
+      : "National ID must be exactly 16 digits.";
   }
 
   return errors;
@@ -85,12 +94,15 @@ export function validateRenterIdentity(
 
 export function validateTenancyConfig(
   draft: TenancyConfigDraft,
+  t?: WizardMsg,
 ): TenancyConfigErrors {
   const errors: TenancyConfigErrors = {};
   if (!draft.isConfigured) return errors;
 
   if (!draft.propertyId) {
-    errors.propertyId = "Please select an assigned property.";
+    errors.propertyId = t
+      ? t("propertyRequired")
+      : "Please select an assigned property.";
   }
 
   if (
@@ -98,23 +110,26 @@ export function validateTenancyConfig(
     isNaN(draft.monthlyRentRwf) ||
     draft.monthlyRentRwf <= 0
   ) {
-    errors.monthlyRentRwf = "Enter a valid positive monthly rent in RWF.";
+    errors.monthlyRentRwf = t
+      ? t("rentPositive")
+      : "Enter a valid positive monthly rent in RWF.";
   }
 
-  // If first-payment commencement is enabled, manual start date is not required
   if (!draft.useFirstPaymentAsCommencement && !draft.startDate) {
-    errors.startDate = "Tenancy start date is required.";
+    errors.startDate = t
+      ? t("startDateRequired")
+      : "Tenancy start date is required.";
   }
 
-  // Monthly Rent Due Day validation: must be a valid day from 1 to 31
   if (
     typeof draft.paymentDueDay !== "number" ||
     isNaN(draft.paymentDueDay) ||
     draft.paymentDueDay < 1 ||
     draft.paymentDueDay > 31
   ) {
-    errors.paymentDueDay =
-      "Please select an agreed monthly rent due date between 1 and 31.";
+    errors.paymentDueDay = t
+      ? t("dueDayRange")
+      : "Please select an agreed monthly rent due date between 1 and 31.";
   }
 
   if (
@@ -122,7 +137,9 @@ export function validateTenancyConfig(
     (typeof draft.customDurationMonths !== "number" ||
       draft.customDurationMonths <= 0)
   ) {
-    errors.customDurationMonths = "Enter a valid custom duration in months.";
+    errors.customDurationMonths = t
+      ? t("customDurationInvalid")
+      : "Enter a valid custom duration in months.";
   }
 
   return errors;
@@ -392,6 +409,7 @@ export function useRenterWizard(
   properties: LandlordPropertyItem[],
   initialMode: AddRenterMode = "manual",
 ) {
+  const tWizard = useTranslations("landlord.hookFeedback.renterWizard");
   const { profile, addRenter, upsertAgreement } = useLandlordWorkspace();
   const { units, assignRenterToUnit } = useLandlordProperties();
 
@@ -501,7 +519,7 @@ export function useRenterWizard(
       existingRenterId: renter.id,
     });
     setIdentityErrors({});
-    toast.success(`Selected verified tenant: ${renter.name}`);
+    toast.success(tWizard("selectedVerifiedRenter", { name: renter.name }));
   };
 
   const updateTenancyField = <K extends keyof TenancyConfigDraft>(
@@ -532,10 +550,10 @@ export function useRenterWizard(
 
   // Step 1 -> Step 2
   const goToStep2 = () => {
-    const errors = validateTenancyConfig(tenancyDraft);
+    const errors = validateTenancyConfig(tenancyDraft, (k) => tWizard(k));
     if (Object.keys(errors).length > 0) {
       setTenancyErrors(errors);
-      toast.error("Please select a property and set rent before proceeding.");
+      toast.error(tWizard("missingPropertyOrRent"));
       return;
     }
     setStepDirection(1);
@@ -551,20 +569,20 @@ export function useRenterWizard(
   // Step 2 -> Step 3
   const goToStep3 = () => {
     if (mode === "manual") {
-      const errors = validateRenterIdentity(identityDraft);
+      const errors = validateRenterIdentity(identityDraft, (k) => tWizard(k));
       if (Object.keys(errors).length > 0) {
         setIdentityErrors(errors);
-        toast.error("Please fill in the required identity fields.");
+        toast.error(tWizard("missingIdentityFields"));
         return;
       }
     } else if (mode === "existing") {
       if (!identityDraft.fullName || !identityDraft.isExistingRenter) {
-        toast.error("Please select an existing renter from your portfolio.");
+        toast.error(tWizard("selectExistingRenter"));
         return;
       }
     } else if (mode === "link") {
       if (!linkState.generatedLink) {
-        toast.error("Generate an invitation link before continuing.");
+        toast.error(tWizard("generateInviteFirst"));
         return;
       }
     }
@@ -575,7 +593,7 @@ export function useRenterWizard(
   // Step 3 -> Step 4 (Populate Agreement & Launch Editor directly in session)
   const goToStep4 = () => {
     if (!selectedLanguage) {
-      toast.error("Please select an agreement language.");
+      toast.error(tWizard("selectAgreementLanguage"));
       return;
     }
 

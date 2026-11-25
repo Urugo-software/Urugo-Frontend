@@ -1,6 +1,7 @@
 "use client";
 
 import { FileText } from "lucide-react";
+import { useTranslations } from "next-intl";
 import {
   AgreementLanguage,
   SavedAgreementTemplate,
@@ -24,16 +25,21 @@ export function SelectTemplateModal({
   onSelectTemplate,
   onSelectStandard,
 }: Props) {
+  const t = useTranslations("landlord.agreements.editor.templateModal");
+  const tLangs = useTranslations("landlord.agreements.languageNames");
+  const tCommon = useTranslations("common");
+
   const compatibleTemplates = SAVED_AGREEMENT_TEMPLATES.filter(
     (t) => t.language === language,
   );
+  const langName = tLangs(language);
 
   return (
     <ModalDialog
       open={isOpen}
       onClose={onClose}
-      title="Agreement Starting Template"
-      description="Start from Urugo's standard statutory clauses or load one of the pre-built templates. A working copy will be loaded into this draft."
+      title={t("title")}
+      description={t("description")}
       maxWidthClassName="max-w-xl"
       footer={
         <Button
@@ -42,7 +48,7 @@ export function SelectTemplateModal({
           onClick={onClose}
           className="h-8.5 cursor-pointer rounded-none border-line px-4 text-xs font-medium"
         >
-          Cancel
+          {tCommon("actions.cancel")}
         </Button>
       }
     >
@@ -51,15 +57,13 @@ export function SelectTemplateModal({
           <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-start">
             <div>
               <span className="block text-[12.5px] font-bold uppercase tracking-wider text-faint">
-                Option A: Default
+                {t("optionALabel")}
               </span>
               <h4 className="mt-0.5 text-[13px] font-bold text-ink sm:text-sm">
-                Standard Statutory Lease Agreement (
-                {language === "rw" ? "Kinyarwanda" : "English"})
+                {t("standardTitle", { language: langName })}
               </h4>
               <p className="mt-1 text-[12.5px] text-body">
-                18 standard legal clauses aligned with Rwandan residential
-                tenancy regulations.
+                {t("standardDescription")}
               </p>
             </div>
             <Button
@@ -67,20 +71,19 @@ export function SelectTemplateModal({
               onClick={onSelectStandard}
               className="h-8 shrink-0 cursor-pointer rounded-none bg-ink px-3 text-[12.5px] text-white hover:bg-black"
             >
-              Use Standard
+              {t("useStandard")}
             </Button>
           </div>
         </div>
 
         <div className="pt-1">
           <span className="mb-2 block text-[12.5px] font-bold uppercase tracking-wider text-faint">
-            Option B: Pre-built Templates ({language.toUpperCase()})
+            {t("optionBLabel", { langCode: language.toUpperCase() })}
           </span>
 
           {compatibleTemplates.length === 0 ? (
             <p className="border border-line p-3 text-[12.5px] italic text-faint">
-              No additional pre-built templates available for{" "}
-              {language === "rw" ? "Kinyarwanda" : "English"}.
+              {t("noTemplates", { language: langName })}
             </p>
           ) : (
             <div className="space-y-2.5">
@@ -98,8 +101,10 @@ export function SelectTemplateModal({
                     </div>
                     <p className="text-[12.5px] text-body">{tpl.description}</p>
                     <span className="block font-mono text-[12.5px] text-faint">
-                      {tpl.articles.length} clauses &middot; Updated:{" "}
-                      {tpl.lastModified}
+                      {t("templateMeta", {
+                        count: tpl.articles.length,
+                        date: tpl.lastModified,
+                      })}
                     </span>
                   </div>
 
@@ -109,7 +114,7 @@ export function SelectTemplateModal({
                     onClick={() => onSelectTemplate(tpl)}
                     className="h-8 shrink-0 cursor-pointer rounded-none border-line px-3 text-[12.5px] font-semibold hover:bg-surface"
                   >
-                    Load Template
+                    {t("loadTemplate")}
                   </Button>
                 </div>
               ))}

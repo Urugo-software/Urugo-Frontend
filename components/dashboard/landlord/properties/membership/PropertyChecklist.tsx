@@ -1,4 +1,7 @@
+"use client";
+
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { DashboardSearchInput } from "@/components/shared/DashboardSearchInput";
 import type { LandlordPropertyItem } from "@/types/landlord";
 
@@ -13,6 +16,7 @@ export function PropertyChecklist({
   selected,
   onChange,
 }: PropertyChecklistProps) {
+  const t = useTranslations("landlord.properties.membership");
   const [search, setSearch] = useState("");
   const query = search.trim().toLowerCase();
   const matches = properties.filter(({ name, location }) =>
@@ -21,12 +25,12 @@ export function PropertyChecklist({
 
   return (
     <fieldset className="min-w-0 space-y-3">
-      <legend className="mb-2 text-sm font-medium">Ungrouped Properties</legend>
+      <legend className="mb-2 text-sm font-medium">{t("ungroupedLegend")}</legend>
       <DashboardSearchInput
         value={search}
         onChange={setSearch}
-        placeholder="Search by name or location"
-        label="Search ungrouped properties by name or location"
+        placeholder={t("searchPlaceholder")}
+        label={t("searchAria")}
         preventFormEnter
       />
       {matches.length ? (
@@ -60,13 +64,11 @@ export function PropertyChecklist({
         </ul>
       ) : (
         <p className="text-sm text-body">
-          {properties.length
-            ? "No properties match your search."
-            : "There are no ungrouped properties to add."}
+          {properties.length ? t("noSearchMatches") : t("noUngrouped")}
         </p>
       )}
       <p role="status" className="text-sm font-medium">
-        {selected.length} selected
+        {t("selectedCount", { count: selected.length })}
       </p>
     </fieldset>
   );

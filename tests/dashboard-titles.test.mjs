@@ -49,12 +49,14 @@ test("resolves all landlord dashboard and nested page titles", () => {
 test("resolves all renter dashboard and nested page titles", () => {
   const cases = [
     ["/renter", "Overview"],
+    ["/renter/explore", "Explore Homes"],
+    ["/renter/inquiries", "Inquiries & Visits"],
     ["/renter/property", "My Property"],
     ["/renter/lease", "Lease"],
     ["/renter/payments", "Payments"],
     ["/renter/payments/pay-rent", "Pay Rent"],
-    ["/renter/electricity", "Electricity"],
     ["/renter/maintenance", "Maintenance"],
+    ["/renter/rental-history", "Rental History"],
     ["/renter/messages", "Messages"],
     ["/renter/documents", "Documents"],
     ["/renter/notifications", "Notifications"],

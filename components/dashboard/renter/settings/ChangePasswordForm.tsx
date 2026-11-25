@@ -1,8 +1,11 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
-import CustomButton from "@/components/shared/CustomButton";
 import toast from "react-hot-toast";
+import { Button } from "@/components/ui/button";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 
 interface PasswordInputs {
   currentPassword: string;
@@ -10,67 +13,99 @@ interface PasswordInputs {
   confirmPassword: string;
 }
 
-const FIELD_BASE =
-  "w-full border border-line bg-white p-3 text-sm text-ink placeholder:text-faint focus:border-brand focus:outline-hidden focus:ring-2 focus:ring-brand/20 rounded-sm";
-
 export function ChangePasswordForm() {
-  const { register, handleSubmit, reset } = useForm<PasswordInputs>();
+  const t = useTranslations("renter.settings.password");
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<PasswordInputs>({
+    defaultValues: {
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    },
+  });
 
-  const onSubmit = (data: PasswordInputs) => {
-    if (data.newPassword !== data.confirmPassword) {
-      toast.error("New passwords do not match.");
-      return;
-    }
-    // Placeholder — connect to real API when ready
-    toast.success("Password updated successfully.");
+  const onSubmit = () => {
+    // Backend authentication endpoint is not connected yet.
+    toast.success(t("toastSuccess"));
     reset();
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-      <div>
-        <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-faint">
-          Current Password
-        </label>
-        <input
+    <form noValidate onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+      <Field>
+        <FieldLabel htmlFor="renter-current-password">
+          {t("currentLabel")}
+        </FieldLabel>
+        <Input
+          id="renter-current-password"
           type="password"
-          {...register("currentPassword", { required: true })}
-          placeholder="Enter current password"
-          className={FIELD_BASE}
+          autoComplete="current-password"
+          placeholder={t("currentPlaceholder")}
+          className="h-10 rounded-none border-line bg-white"
+          {...register("currentPassword", {
+            required: t("currentRequired"),
+          })}
         />
-      </div>
+        <FieldError errors={[errors.currentPassword]} />
+      </Field>
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <div>
-          <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-faint">
-            New Password
-          </label>
-          <input
+        <Field>
+          <FieldLabel htmlFor="renter-new-password">{t("newLabel")}</FieldLabel>
+          <Input
+            id="renter-new-password"
             type="password"
-            {...register("newPassword", { required: true, minLength: 8 })}
-            placeholder="Min. 8 characters"
-            className={FIELD_BASE}
+            autoComplete="new-password"
+            placeholder={t("newPlaceholder")}
+            className="h-10 rounded-none border-line bg-white"
+            {...register("newPassword", {
+              required: t("newRequired"),
+              minLength: {
+                value: 8,
+                message: t("newMin"),
+              },
+            })}
           />
-        </div>
-        <div>
-          <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-faint">
-            Confirm New Password
-          </label>
-          <input
+          <FieldError errors={[errors.newPassword]} />
+        </Field>
+
+        <Field>
+          <FieldLabel htmlFor="renter-confirm-password">
+            {t("confirmLabel")}
+          </FieldLabel>
+          <Input
+            id="renter-confirm-password"
             type="password"
-            {...register("confirmPassword", { required: true })}
-            placeholder="Repeat new password"
-            className={FIELD_BASE}
+            autoComplete="new-password"
+            placeholder={t("confirmPlaceholder")}
+            className="h-10 rounded-none border-line bg-white"
+            {...register("confirmPassword", {
+              required: t("confirmRequired"),
+              validate: (value) =>
+                value === getValues("newPassword") || t("confirmMismatch"),
+            })}
           />
-        </div>
+          <FieldError errors={[errors.confirmPassword]} />
+        </Field>
       </div>
 
-      <div className="pt-2">
-        <CustomButton type="submit" variant="light" className="px-6 py-2.5 rounded-none">
-          <span className="-translate-x-4 group-hover:text-white text-sm font-bold">
-            Update Password
-          </span>
-        </CustomButton>
+      <p className="border border-line bg-surface px-3.5 py-2.5 text-xs text-body">
+        {t("previewNotice")}
+      </p>
+
+      <div>
+        <Button
+          type="submit"
+          disabled={isSubmitting}
+          className="cursor-pointer rounded-none px-6"
+        >
+          {t("updateButton")}
+        </Button>
       </div>
     </form>
   );

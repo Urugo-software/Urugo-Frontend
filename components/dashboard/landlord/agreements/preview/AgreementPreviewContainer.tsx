@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Agreement, AgreementStatus } from "@/types/agreement.types";
 import { useAgreementPreview } from "@/hooks/useAgreementPreview";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,8 @@ const SIMULATABLE_STATUSES: AgreementStatus[] = [
 const IS_DEV = process.env.NODE_ENV === "development";
 
 export function AgreementPreviewContainer({ initialAgreement }: Props) {
+  const t = useTranslations("landlord.agreements.preview.cancelModal");
+  const tStatuses = useTranslations("landlord.agreements.statuses");
   const {
     agreement,
     activeLanguage,
@@ -113,8 +116,8 @@ export function AgreementPreviewContainer({ initialAgreement }: Props) {
         onClose={() => setIsCancelConfirmOpen(false)}
         variant="alert"
         maxWidthClassName="max-w-md"
-        title="Cancel Lease Agreement?"
-        description={`Agreement ${agreement.referenceNumber} will be marked as Cancelled and locked from further editing or signing.`}
+        title={t("title")}
+        description={t("description", { ref: agreement.referenceNumber })}
         footer={
           <>
             <Button
@@ -123,21 +126,23 @@ export function AgreementPreviewContainer({ initialAgreement }: Props) {
               onClick={() => setIsCancelConfirmOpen(false)}
               className="h-9 cursor-pointer rounded-none border-line px-4 text-xs"
             >
-              Keep Agreement
+              {t("keep")}
             </Button>
             <Button
               type="button"
               onClick={handleCancelAgreement}
               className="h-9 cursor-pointer rounded-none bg-red-600 px-4 text-xs font-semibold text-white hover:bg-red-700"
             >
-              Cancel Agreement
+              {t("confirm")}
             </Button>
           </>
         }
       >
         <p className="text-xs leading-relaxed text-body">
-          This updates the agreement status to <strong>Cancelled</strong> in
-          your workspace. You can always create a new draft later if needed.
+          {t.rich("body", {
+            status: tStatuses("cancelled"),
+            strong: (chunks) => <strong>{chunks}</strong>,
+          })}
         </p>
       </ModalDialog>
     </div>

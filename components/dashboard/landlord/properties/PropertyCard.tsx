@@ -3,11 +3,14 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { ArrowRight, Layers, Pencil } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { StatusBadge, type StatusTone } from "@/components/shared/StatusBadge";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import type { AppLocale } from "@/i18n/config";
+import { formatRwfLocalized } from "@/i18n/formatting";
 import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
 import type { LandlordPropertyItem, ListingStatus } from "@/types/landlord";
-import { formatPropertyRent, formatRwf } from "@/utils/format";
+import { formatPropertyRent } from "@/utils/format";
 import { PortfolioCard, type ViewMode } from "./PortfolioCard";
 
 const LISTING_TONE: Record<ListingStatus, StatusTone> = {
@@ -36,12 +39,19 @@ export function PropertyCard({
   viewMode?: ViewMode;
   membershipActions?: ReactNode;
 }) {
+  const t = useTranslations("landlord.properties");
+  const locale = useLocale() as AppLocale;
   const serviceMode = useLandlordWorkspace((s) => s.serviceMode);
   const { id, name, type, location, image, status, hasUnits, totalUnits, occupiedUnits } =
     property;
   const listingStatus: ListingStatus =
     property.listingStatus ?? (status === "Occupied" ? "Rented" : "Published");
   const monthlyRent = formatPropertyRent(property);
+
+  const listingStatusLabel =
+    listingStatus === "Rented" ? t("statuses.rentedBadge") : listingStatus;
+  const occupancyStatusLabel =
+    status === "Partial" ? t("statuses.partialBadge") : status;
 
   return (
     <PortfolioCard
@@ -55,7 +65,7 @@ export function PropertyCard({
           href={`/landlord/properties/${encodeURIComponent(id)}`}
           className="inline-flex items-center gap-1.5 text-sm font-semibold text-ink hover:text-brand-blue hover:underline"
         >
-          <span>View Property</span>
+          <span>{t("card.viewProperty")}</span>
           <ArrowRight aria-hidden="true" className="size-4" />
         </Link>
       }
@@ -68,7 +78,7 @@ export function PropertyCard({
               />
             }
           >
-            <Pencil aria-hidden="true" /> Edit Property
+            <Pencil aria-hidden="true" /> {t("card.editProperty")}
           </DropdownMenuItem>
           {serviceMode === "managed" && (
             <DropdownMenuItem
@@ -79,7 +89,7 @@ export function PropertyCard({
               }
             >
               <Layers aria-hidden="true" />{" "}
-              {hasUnits ? "Units & Leases" : "Manage Lease"}
+              {hasUnits ? t("card.unitsAndLeases") : t("card.manageLease")}
             </DropdownMenuItem>
           )}
           {membershipActions}
@@ -87,16 +97,19 @@ export function PropertyCard({
       }
     >
       <div className="flex flex-wrap items-center gap-1.5 text-xs font-semibold">
-        <span className="tracking-wide text-body">{type}</span>
+        <span className="tracking-wide text-body">{t(`types.${type}`)}</span>
         <span aria-hidden="true" className="text-line">&middot;</span>
         <StatusBadge
-          label={listingStatus}
+          label={listingStatusLabel}
           tone={LISTING_TONE[listingStatus]}
         />
-        {serviceMode === "managed" && status && (
+        {serviceMode === "managed" && status && occupancyStatusLabel && (
           <>
             <span aria-hidden="true" className="text-line">&middot;</span>
-            <StatusBadge label={status} tone={OCCUPANCY_TONE[status]} />
+            <StatusBadge
+              label={occupancyStatusLabel}
+              tone={OCCUPANCY_TONE[status]}
+            />
           </>
         )}
       </div>
@@ -105,18 +118,21 @@ export function PropertyCard({
         {monthlyRent !== undefined && (
           <div>
             <dt className="text-xs text-faint">
-              {hasUnits ? "Expected monthly rent" : "Monthly rent"}
+              {hasUnits ? t("card.expectedMonthlyRent") : t("card.monthlyRent")}
             </dt>
             <dd className="font-ibm font-semibold text-ink">
-              {formatRwf(monthlyRent)}
+              {formatRwfLocalized(monthlyRent, locale)}
             </dd>
           </div>
         )}
         {hasUnits && totalUnits !== undefined && (
           <div>
-            <dt className="text-xs text-faint">Units</dt>
+            <dt className="text-xs text-faint">{t("card.unitsLabel")}</dt>
             <dd className="font-ibm font-semibold text-ink">
-              {occupiedUnits ?? 0}/{totalUnits} occupied
+              {t("card.unitsOccupiedValue", {
+                occupied: occupiedUnits ?? 0,
+                total: totalUnits,
+              })}
             </dd>
           </div>
         )}

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ArrowRight, RotateCcw, FileText } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { WizardCompletionViewProps } from "@/types/renter-wizard.types";
 import { CompletionSuccessBanner } from "./completion/CompletionSuccessBanner";
@@ -12,6 +13,8 @@ export function WizardCompletionView({
   onRegisterAnother,
   onDone,
 }: WizardCompletionViewProps) {
+  const t = useTranslations("landlord.renters.wizard.completion");
+
   return (
     <div className="space-y-8 sm:space-y-9">
       {/* Success Notification Banner */}
@@ -29,7 +32,7 @@ export function WizardCompletionView({
           className="inline-flex h-10.5 cursor-pointer items-center gap-2 rounded-none border-line bg-white px-5 text-xs font-medium text-ink hover:bg-surface transition-colors"
         >
           <RotateCcw className="size-3.5" />
-          <span>Register Another Renter</span>
+          <span>{t("registerAnother")}</span>
         </Button>
 
         <Button
@@ -38,7 +41,7 @@ export function WizardCompletionView({
           onClick={onDone}
           className="inline-flex h-10.5 cursor-pointer items-center gap-2 rounded-none border-line bg-white px-5 text-xs font-medium text-ink hover:bg-surface transition-colors"
         >
-          <span>View Renters</span>
+          <span>{t("viewRenters")}</span>
         </Button>
 
         <Link
@@ -52,8 +55,10 @@ export function WizardCompletionView({
           <FileText className="size-3.5" />
           <span>
             {submission.agreementId
-              ? `View Agreement (${submission.agreementRef || "Draft"})`
-              : "Prepare Lease Agreement"}
+              ? t("viewAgreement", {
+                  ref: submission.agreementRef || t("draftFallback"),
+                })
+              : t("prepareAgreement")}
           </span>
           <ArrowRight className="size-3.5 ml-1" />
         </Link>

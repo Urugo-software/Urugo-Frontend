@@ -1,0 +1,213 @@
+{
+  "meta": {
+    "title": "Properties",
+    "description": "Search available rental homes across Rwanda by district, monthly rent, bedrooms, and amenities.",
+    "notFoundTitle": "Property Not Found",
+    "notFoundDescription": "The requested rental property could not be found on Urugo."
+  },
+  "loading": "Loading available homes...",
+  "paginationLabel": "properties",
+  "search": {
+    "formAria": "Search rental listings",
+    "label": "Search by neighborhood, district, or property name",
+    "placeholder": "Search by location, district, or home type (e.g. Kimironko)..."
+  },
+  "counts": {
+    "matchingOne": "<bold>{count}</bold> property matching your filters",
+    "matchingOther": "<bold>{count}</bold> properties matching your filters",
+    "availableOne": "<bold>{count}</bold> property available",
+    "availableOther": "<bold>{count}</bold> properties available"
+  },
+  "sort": {
+    "label": "Sort properties",
+    "default": "Default order",
+    "priceAsc": "Price: Low to high",
+    "priceDesc": "Price: High to low"
+  },
+  "viewLayoutLabel": "Property display layout",
+  "filters": {
+    "toggleShow": "Filters",
+    "toggleHide": "Hide Filters",
+    "clearFilters": "Clear filters",
+    "title": "Filter Properties",
+    "closeAria": "Close filters",
+    "district": "District",
+    "allDistricts": "All districts",
+    "priceRange": "Price range (RWF / month)",
+    "minRentAria": "Minimum monthly rent",
+    "maxRentAria": "Maximum monthly rent",
+    "anyMin": "Any min",
+    "anyMax": "Any max",
+    "bedrooms": "Bedrooms",
+    "bedroomOptions": {
+      "any": "Any",
+      "studio": "Studio",
+      "1": "1",
+      "2": "2",
+      "3plus": "3+"
+    },
+    "amenities": "Amenities",
+    "amenityOptions": {
+      "wifi": "WiFi",
+      "parking": "Parking",
+      "water": "Water",
+      "security": "Security"
+    },
+    "pillsMultiAria": "Select one or more options",
+    "pillsSingleAria": "Select an option",
+    "apply": "Apply Filters",
+    "reset": "Reset Filters"
+  },
+  "empty": {
+    "title": "No homes match your current search",
+    "description": "Try removing a filter, choosing another district, or broadening your monthly budget.",
+    "resetAll": "Reset all filters"
+  },
+  "sidebarPromo": {
+    "asideAria": "Helpful actions",
+    "landlordTitle": "Have a home to rent?",
+    "landlordDescription": "List your property in Listing-Only mode to receive viewing requests, or manage leases and rent on Urugo.",
+    "zoeTitle": "Not sure what fits your budget?",
+    "zoeDescription": "Ask Zoe in plain language for Kigali area guidance and move-in cost estimates.",
+    "askZoe": "Ask Zoe"
+  },
+  "card": {
+    "byOwner": "By {owner}",
+    "viewDetailsAria": "View details for {headline}",
+    "beds": "{count, plural, one {# Bed} other {# Beds}}",
+    "baths": "{count, plural, one {# Bath} other {# Baths}}",
+    "parking": "Parking",
+    "viewDetails": "View details"
+  },
+  "periods": {
+    "month": "month",
+    "perMonth": "per month"
+  },
+  "availability": {
+    "availableNow": "Available now",
+    "currentlyOccupied": "Currently occupied",
+    "verifiedListing": "Verified listing",
+    "immediately": "Immediately",
+    "nextMonth": "Next month"
+  },
+  "amenityLabels": {
+    "waterIncluded": "Water included",
+    "wifiIncluded": "WiFi included",
+    "security247": "24/7 security",
+    "laundryArea": "Laundry area",
+    "privateParking": "Private parking",
+    "spaciousLivingRoom": "Spacious living room",
+    "furnishedLivingRoom": "Furnished living room"
+  },
+  "costLabels": {
+    "firstMonthRent": "First month rent",
+    "rentUpfront2Months": "Rent upfront (2 months)",
+    "securityDeposit1Month": "Security deposit (1 month)",
+    "monthlyRent": "Monthly rent",
+    "water": "Water",
+    "wifi": "WiFi",
+    "waterAndWifi": "Water & WiFi",
+    "compoundSecurity": "Compound security",
+    "wasteCollection": "Waste collection",
+    "homeInternet": "Home internet"
+  },
+  "details": {
+    "backToProperties": "Back to Properties",
+    "aboutHeading": "About this property",
+    "whatsIncluded": "What's included",
+    "moreHomes": "More homes to explore",
+    "viewAllProperties": "View all properties",
+    "bedroomsLong": "{count, plural, one {# Bedroom} other {# Bedrooms}}",
+    "bathroomsLong": "{count, plural, one {# Bathroom} other {# Bathrooms}}",
+    "parking": "Parking",
+    "gallery": {
+      "noPhotos": "No property photos available yet",
+      "openPhotoAria": "Open photo {current} of {total} in gallery",
+      "prevPhotoAria": "Previous property photo",
+      "nextPhotoAria": "Next property photo",
+      "allPhotos": "All {total} photos",
+      "viewPhotoAria": "View photo {current} of {total}: {alt}",
+      "openExtraAria": "Open gallery to view {count, plural, one {# more photo} other {# more photos}}",
+      "morePhotosLabel": "{count, plural, one {more photo} other {more photos}}",
+      "viewAllPhotos": "View all {total} photos"
+    },
+    "lightbox": {
+      "dialogAria": "Property photo gallery",
+      "photoCounter": "Photo {current} of {total}",
+      "closeAria": "Close photo gallery",
+      "prevAria": "Previous photo",
+      "nextAria": "Next photo",
+      "imageUnavailable": "Image unavailable",
+      "thumbAria": "View photo {index}: {alt}"
+    },
+    "costs": {
+      "heading": "Payment & Costs",
+      "beforeMovingIn": "Before moving in",
+      "moveInHeading": "Move-in cost breakdown",
+      "estimatedMoveInTotal": "Estimated total to move in",
+      "totalToMoveIn": "Total to move in",
+      "monthlyCosts": "Monthly costs",
+      "included": "Included",
+      "estimatedTag": "(Estimated)",
+      "paidByRenter": "Paid by renter",
+      "paidByLandlord": "Paid by landlord",
+      "estimatedMonthlyTotal": "Estimated monthly renter total",
+      "disclaimer": "Monthly estimates may vary depending on household usage and final lease terms agreed with the landlord."
+    },
+    "landlord": {
+      "verifiedLandlord": "Verified landlord",
+      "propertyOwner": "Property owner"
+    },
+    "sidebar": {
+      "asideAria": "Property pricing and contact",
+      "perPeriod": "per {period}",
+      "bedrooms": "Bedrooms",
+      "bathrooms": "Bathrooms",
+      "parking": "Parking",
+      "included": "Included",
+      "notIncluded": "Not included",
+      "availableFrom": "Available from",
+      "askZoeTitle": "Ask Zoe",
+      "askZoeDescription": "Need help estimating upfront costs or comparing neighborhoods?",
+      "askAboutHome": "Ask about this home",
+      "askAboutPrompt": "Explain move-in costs for {headline} in {location} ({price}/month)."
+    },
+    "leads": {
+      "requestVisit": "Request a visit",
+      "sendInquiry": "Send an inquiry",
+      "whatsappLink": "Or message landlord on WhatsApp",
+      "whatsappMessage": "Hello, I am interested in {propertyTitle} on Urugo.",
+      "visitModal": {
+        "title": "Request a Property Visit",
+        "description": "Schedule an inspection for {propertyTitle}.",
+        "submit": "Submit Request",
+        "successToast": "Viewing request sent to the landlord.",
+        "fullName": "Full name *",
+        "phone": "Phone *",
+        "email": "Email *",
+        "preferredDate": "Preferred date *",
+        "preferredTime": "Preferred time *",
+        "note": "Note (optional)",
+        "nameRequired": "Enter your name.",
+        "phoneRequired": "Enter your phone.",
+        "emailRequired": "Enter your email.",
+        "dateRequired": "Pick a date.",
+        "timeRequired": "Pick a time."
+      },
+      "inquiryModal": {
+        "title": "Send Property Inquiry",
+        "description": "Ask the landlord a question about {propertyTitle}.",
+        "submit": "Send Inquiry",
+        "successToast": "Inquiry delivered to the landlord.",
+        "fullName": "Full name *",
+        "phone": "Phone *",
+        "email": "Email *",
+        "message": "Message *",
+        "nameRequired": "Enter your name.",
+        "phoneRequired": "Enter your phone.",
+        "emailRequired": "Enter your email.",
+        "messageRequired": "Enter your question."
+      }
+    }
+  }
+}

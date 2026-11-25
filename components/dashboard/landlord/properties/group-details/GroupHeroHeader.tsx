@@ -1,5 +1,8 @@
+"use client";
+
 import type { ReactNode } from "react";
 import { Ellipsis, Folder, ImagePlus, MapPin, Pencil, Trash2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -25,6 +28,8 @@ export function GroupHeroHeader({
   addPropertiesAction,
   onGroupAction,
 }: GroupHeroHeaderProps) {
+  const t = useTranslations("landlord.properties.groups");
+
   return (
     <section
       aria-labelledby="membership-heading"
@@ -50,7 +55,7 @@ export function GroupHeroHeader({
         <div className="min-w-0 space-y-2">
           <span className="inline-flex items-center gap-1.5 border border-line bg-surface px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wider text-body">
             <Folder aria-hidden="true" className="size-3.5 text-faint" />
-            Property Group
+            {t("badge")}
           </span>
 
           <h2
@@ -69,7 +74,12 @@ export function GroupHeroHeader({
               </span>
             )}
             <span className="text-faint">
-              {propertyCount} {propertyCount === 1 ? "property" : "properties"} assigned
+              {t(
+                propertyCount === 1
+                  ? "propertiesAssignedSingle"
+                  : "propertiesAssignedPlural",
+                { count: propertyCount },
+              )}
             </span>
           </div>
         </div>
@@ -84,7 +94,7 @@ export function GroupHeroHeader({
                 <Button
                   variant="outline"
                   size="icon"
-                  aria-label={`Manage ${group.name}`}
+                  aria-label={t("manageGroupAria", { name: group.name })}
                   className="cursor-pointer rounded-none"
                 >
                   <Ellipsis className="size-4" />
@@ -96,13 +106,13 @@ export function GroupHeroHeader({
                 className="cursor-pointer"
                 onClick={() => onGroupAction("rename")}
               >
-                <Pencil className="size-4" /> Rename Group
+                <Pencil className="size-4" /> {t("renameGroup")}
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="cursor-pointer"
                 onClick={() => onGroupAction("cover")}
               >
-                <ImagePlus className="size-4" /> Change Cover Image
+                <ImagePlus className="size-4" /> {t("changeCoverImage")}
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
@@ -110,7 +120,7 @@ export function GroupHeroHeader({
                 className="cursor-pointer"
                 onClick={() => onGroupAction("delete")}
               >
-                <Trash2 className="size-4" /> Delete Group
+                <Trash2 className="size-4" /> {t("deleteGroup")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

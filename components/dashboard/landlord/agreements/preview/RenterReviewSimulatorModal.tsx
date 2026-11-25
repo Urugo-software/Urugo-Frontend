@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { MessageSquarePlus, PenTool } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { ModalDialog } from "@/components/shared/ModalDialog";
 import { Agreement, RenterChangeRequest } from "@/types/agreement.types";
 import { SimulatorRequestChangeTab } from "./simulator/SimulatorRequestChangeTab";
@@ -22,6 +23,7 @@ export function RenterReviewSimulatorModal({
   onSubmitChangeRequest,
   onSignAgreement,
 }: Props) {
+  const t = useTranslations("landlord.agreements.preview.simulator");
   const [activeTab, setActiveTab] = useState<"request_change" | "sign">(
     "request_change",
   );
@@ -30,8 +32,8 @@ export function RenterReviewSimulatorModal({
     <ModalDialog
       open={isOpen}
       onClose={onClose}
-      title="Renter Review Simulator (Dev)"
-      description={`Simulating actions for ${agreement.renter.name}`}
+      title={t("title")}
+      description={t("description", { renter: agreement.renter.name })}
       maxWidthClassName="max-w-lg"
     >
       <div className="space-y-5 text-[12.5px]">
@@ -51,7 +53,7 @@ export function RenterReviewSimulatorModal({
             }`}
           >
             <MessageSquarePlus className="size-3.5" />
-            <span>Request Changes</span>
+            <span>{t("tabRequestChanges")}</span>
           </button>
           <button
             type="button"
@@ -65,7 +67,7 @@ export function RenterReviewSimulatorModal({
             }`}
           >
             <PenTool className="size-3.5" />
-            <span>Sign Agreement</span>
+            <span>{t("tabSignAgreement")}</span>
           </button>
         </div>
 

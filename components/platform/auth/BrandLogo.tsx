@@ -1,27 +1,26 @@
-function BrandLogo() {
+import { getTranslations } from "next-intl/server";
+
+async function BrandLogo() {
+  const t = await getTranslations("auth.brand");
+
   return (
-    <div className=" hidden lg:flex flex-col text-body bg-white  items-center justify-center">
-      <h1
+    <div className="hidden flex-col items-center justify-center border-r border-line/70 bg-white px-10 text-body lg:flex">
+      <span
+        aria-hidden="true"
         style={{
           WebkitTextStroke: "2px #040200",
           WebkitTextFillColor: "#ffffff",
         }}
-        className="text-9xl font-extrabold  "
+        className="select-none text-9xl font-extrabold leading-none"
       >
         U
-      </h1>
+      </span>
 
-      <p
-        style={{
-          WebkitTextStroke: "0.5px black",
-          WebkitTextFillColor: "transparent",
-        }}
-        className="text-md text-brand font-medium tracking-widest uppercase "
-      >
-        Rental Platform
+      <p className="mt-3 text-xs font-semibold uppercase tracking-[0.25em] text-brand">
+        {t("subtitle")}
       </p>
-      <p className="max-w-sm text-[12.5px] uppercase text-center mt-4 leading-7 text-gray-400 ">
-        {`  Rwanda's verified rental platform for landlords, renters, and guests.`}
+      <p className="mt-4 max-w-xs text-center text-sm leading-relaxed text-body">
+        {t("tagline")}
       </p>
     </div>
   );

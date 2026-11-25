@@ -4,8 +4,11 @@ import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { HelpCircle, Settings, X } from "lucide-react";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
+
 import { useDashboardNavigation } from "@/hooks/useDashboardNavigation";
 import { SidebarItem } from "../../SidebarItem";
+import { WorkspaceRoleSwitcher } from "../../WorkspaceRoleSwitcher";
 
 function MobileSidebar({
   setMobileSidebarOpen,
@@ -13,8 +16,15 @@ function MobileSidebar({
   setMobileSidebarOpen: (open: boolean) => void;
 }) {
   const pathname = usePathname();
-  const { isAdmin, rootHref, navList, persona, isActive } =
-    useDashboardNavigation(pathname);
+  const tNav = useTranslations("common.navigation");
+  const {
+    isAdmin,
+    activeWorkspaceRole,
+    rootHref,
+    navList,
+    persona,
+    isActive,
+  } = useDashboardNavigation(pathname);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -29,7 +39,7 @@ function MobileSidebar({
       className="fixed inset-0 z-40 md:hidden"
       role="dialog"
       aria-modal="true"
-      aria-label="Navigation menu"
+      aria-label={tNav("navigation")}
     >
       <motion.div
         initial={{ opacity: 0 }}
@@ -46,10 +56,12 @@ function MobileSidebar({
         className="relative flex h-[100dvh] w-[82%] max-w-[320px] flex-col overflow-hidden border-r border-line bg-white shadow-xl"
       >
         <div className="flex items-center justify-between border-b border-line px-4 py-3">
-          <span className="text-sm font-bold text-ink">Navigation</span>
+          <span className="text-sm font-bold text-ink">
+            {tNav("navigation")}
+          </span>
           <button
             type="button"
-            aria-label="Close mobile menu"
+            aria-label={tNav("closeMobileMenu")}
             className="flex size-10 cursor-pointer items-center justify-center text-body hover:bg-surface hover:text-ink"
             onClick={() => setMobileSidebarOpen(false)}
           >
@@ -74,20 +86,20 @@ function MobileSidebar({
             <>
               <div className="px-3 pt-4 pb-1.5">
                 <span className="text-[12.5px] font-bold uppercase tracking-widest text-faint">
-                  Settings
+                  {tNav("settingsSection")}
                 </span>
               </div>
               <SidebarItem
                 href={`${rootHref}/settings`}
                 icon={Settings}
-                label="Settings"
+                label={tNav("settings")}
                 active={isActive(`${rootHref}/settings`)}
                 onClick={() => setMobileSidebarOpen(false)}
               />
               <SidebarItem
                 href={`${rootHref}/help-center`}
                 icon={HelpCircle}
-                label="Help Center"
+                label={tNav("helpCenter")}
                 active={isActive(`${rootHref}/help-center`)}
                 onClick={() => setMobileSidebarOpen(false)}
               />
@@ -96,18 +108,24 @@ function MobileSidebar({
         </nav>
 
         <div className="shrink-0 border-t border-line bg-surface px-5 py-4">
-          <div className="flex items-center gap-3">
-            <div className="grid size-10 shrink-0 place-items-center rounded-full bg-brand-tint text-sm font-bold text-brand-blue">
-              {persona.initials}
-            </div>
-            <div className="min-w-0">
-              <div className="truncate text-[13.5px] font-bold text-ink">
-                {persona.name}
+          <div className="flex items-center justify-between gap-2.5">
+            <div className="flex min-w-0 items-center gap-3">
+              <div className="grid size-10 shrink-0 place-items-center bg-brand-tint text-sm font-bold text-brand-blue">
+                {persona.initials}
               </div>
-              <div className="truncate text-[12.5px] text-faint">
-                {persona.subtitle}
+              <div className="min-w-0">
+                <div className="truncate text-[13.5px] font-bold text-ink">
+                  {persona.name}
+                </div>
+                <div className="truncate text-[12.5px] text-faint">
+                  {persona.subtitle}
+                </div>
               </div>
             </div>
+            <WorkspaceRoleSwitcher
+              currentRole={activeWorkspaceRole}
+              onNavigate={() => setMobileSidebarOpen(false)}
+            />
           </div>
         </div>
       </motion.div>

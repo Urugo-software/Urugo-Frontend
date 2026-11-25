@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { ModalDialog } from "@/components/shared/ModalDialog";
 import { Button } from "@/components/ui/button";
-import { formatRwf } from "@/utils/format";
+import type { AppLocale } from "@/i18n/config";
+import { formatRwfLocalized } from "@/i18n/formatting";
 
 export interface FinalChargeItem {
   key: "water" | "electricity" | "other";
@@ -27,6 +29,8 @@ export function FinalBalanceSummary({
   onBack,
   onSubmit,
 }: FinalBalanceSummaryProps) {
+  const t = useTranslations("landlord.tenancies.endWorkflow");
+  const locale = useLocale() as AppLocale;
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const unpaidCharges = charges.filter(
@@ -42,39 +46,39 @@ export function FinalBalanceSummary({
     <div className="space-y-5">
       <div className="border border-line bg-surface/40 p-5 space-y-3">
         <h3 className="text-xs font-semibold uppercase tracking-wider text-faint">
-          Final Balance Breakdown
+          {t("breakdownHeading")}
         </h3>
 
         <dl className="divide-y divide-line text-sm">
           <div className="flex justify-between gap-4 py-2">
-            <dt className="text-body">Approved Rent Payments</dt>
+            <dt className="text-body">{t("approvedRentPayments")}</dt>
             <dd className="font-semibold text-ink">{approvedCount}</dd>
           </div>
           <div className="flex justify-between gap-4 py-2">
-            <dt className="text-body">Unpaid Rent Balance</dt>
+            <dt className="text-body">{t("unpaidRentBalance")}</dt>
             <dd className="font-ibm font-semibold text-ink">
-              {formatRwf(unpaidRentRwf)}
+              {formatRwfLocalized(unpaidRentRwf, locale)}
             </dd>
           </div>
           {unpaidCharges.map((charge) => (
             <div key={charge.key} className="flex justify-between gap-4 py-2">
-              <dt className="text-body">Unpaid {charge.label}</dt>
+              <dt className="text-body">
+                {t("unpaidChargeRow", { label: charge.label })}
+              </dt>
               <dd className="font-ibm font-semibold text-ink">
-                {formatRwf(charge.amountRwf)}
+                {formatRwfLocalized(charge.amountRwf, locale)}
               </dd>
             </div>
           ))}
           <div className="flex justify-between gap-4 pt-3 text-base font-bold text-ink">
-            <dt>Total Remaining Balance</dt>
-            <dd className="font-ibm">{formatRwf(totalOwed)}</dd>
+            <dt>{t("totalRemainingBalance")}</dt>
+            <dd className="font-ibm">{formatRwfLocalized(totalOwed, locale)}</dd>
           </div>
         </dl>
       </div>
 
       <p className="border border-blue-200 bg-brand-tint/60 p-4 text-xs leading-relaxed text-brand-deep">
-        {totalOwed > 0
-          ? "Submitting this notice opens a 3-day resolution and dispute window. The balance is recorded as Unresolved (not Confirmed debt) until the renter pays, provides proof, or the 3-day review period concludes."
-          : "No unpaid rent or utility obligations remain. Submitting closes this tenancy cleanly."}
+        {totalOwed > 0 ? t("noticeWithBalance") : t("noticeZeroBalance")}
       </p>
 
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -84,14 +88,14 @@ export function FinalBalanceSummary({
           onClick={onBack}
           className="cursor-pointer rounded-none"
         >
-          &larr; Back to Final Charges
+          &larr; {t("backToCharges")}
         </Button>
         <Button
           type="button"
           onClick={() => setConfirmOpen(true)}
           className="cursor-pointer rounded-none"
         >
-          {totalOwed > 0 ? "Issue Final Notice & Close" : "Close Tenancy"}
+          {totalOwed > 0 ? t("issueFinalNoticeBtn") : t("closeTenancyBtn")}
         </Button>
       </div>
 
@@ -99,11 +103,13 @@ export function FinalBalanceSummary({
         open={confirmOpen}
         onClose={() => setConfirmOpen(false)}
         variant="alert"
-        title="Confirm tenancy closure"
+        title={t("confirmTitle")}
         description={
           totalOwed > 0
-            ? `Close this tenancy and notify the renter of ${formatRwf(totalOwed)} remaining balance (3-day review window)?`
-            : "Close this tenancy with zero remaining balance and mark the unit vacant?"
+            ? t("confirmDescWithBalance", {
+                amount: formatRwfLocalized(totalOwed, locale),
+              })
+            : t("confirmDescZero")
         }
         footer={
           <>
@@ -113,7 +119,7 @@ export function FinalBalanceSummary({
               onClick={() => setConfirmOpen(false)}
               className="cursor-pointer rounded-none"
             >
-              Cancel
+              {t("cancel")}
             </Button>
             <Button
               type="button"
@@ -123,15 +129,12 @@ export function FinalBalanceSummary({
               }}
               className="cursor-pointer rounded-none"
             >
-              Confirm Closure
+              {t("confirmClosureBtn")}
             </Button>
           </>
         }
       >
-        <p className="text-xs text-body">
-          The tenancy status will change to Closed and the assigned unit will be
-          marked Vacant.
-        </p>
+        <p className="text-xs text-body">{t("confirmBodyNote")}</p>
       </ModalDialog>
     </div>
   );

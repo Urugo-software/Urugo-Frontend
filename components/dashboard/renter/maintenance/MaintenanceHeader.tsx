@@ -1,32 +1,32 @@
-import React from "react";
+"use client";
+
 import { Plus } from "lucide-react";
-import CustomButton from "@/components/shared/CustomButton";
+import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/button";
 
 export function MaintenanceHeader({
   onOpenModal,
 }: {
   onOpenModal: () => void;
 }) {
+  const t = useTranslations("renter.maintenance");
+
   return (
-    <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+    <div className="flex flex-wrap items-end justify-between gap-4">
       <div>
-        <h2 className="text-xl font-bold text-ink sm:text-2xl">
-          Maintenance Requests
+        <h2 className="text-xl font-bold tracking-tight text-ink sm:text-2xl">
+          {t("title")}
         </h2>
-        <p className="text-[15px] text-body mt-0.5">
-          Report issues and track repairs for your apartment.
-        </p>
+        <p className="mt-1 text-sm text-body">{t("subtitle")}</p>
       </div>
-      <CustomButton
+      <Button
+        type="button"
         onClick={onOpenModal}
-        variant="light"
-        className="px-4 py-2  rounded-none font-bold text-xs"
+        className="h-9 cursor-pointer rounded-none px-4 text-xs font-semibold"
       >
-        <span className="-translate-x-5   group-hover:text-white flex items-center">
-          {" "}
-          <Plus className="mr-1 size-4" /> Report New Issue
-        </span>
-      </CustomButton>
+        <Plus aria-hidden="true" className="size-4" />
+        {t("reportNew")}
+      </Button>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { Check } from "lucide-react";
+import { useTranslations } from "next-intl";
 import {
   WizardProgressIndicatorProps,
   WizardStep,
@@ -8,21 +9,22 @@ import {
 
 interface StepMeta {
   number: WizardStep;
-  label: string;
-  subtitle: string;
+  labelKey: string;
+  subtitleKey: string;
 }
 
 const STEPS: StepMeta[] = [
-  { number: 1, label: "Tenancy Config", subtitle: "Property & Pricing" },
-  { number: 2, label: "Renter Details", subtitle: "Register or Select" },
-  { number: 3, label: "Language", subtitle: "English / Kinyarwanda" },
-  { number: 4, label: "Agreement Editor", subtitle: "Review & Customize" },
+  { number: 1, labelKey: "step1Label", subtitleKey: "step1Subtitle" },
+  { number: 2, labelKey: "step2Label", subtitleKey: "step2Subtitle" },
+  { number: 3, labelKey: "step3Label", subtitleKey: "step3Subtitle" },
+  { number: 4, labelKey: "step4Label", subtitleKey: "step4Subtitle" },
 ];
 
 export function WizardProgressIndicator({
   currentStep,
   onStepClick,
 }: WizardProgressIndicatorProps) {
+  const t = useTranslations("landlord.renters.wizard.progress");
   // Percentage for progress line
   const progressLinePercent = Math.min(
     100,
@@ -32,7 +34,7 @@ export function WizardProgressIndicator({
   return (
     <div className="border-b border-line bg-white px-4 py-6 sm:px-8">
       <div className="mx-auto max-w-3xl">
-        <nav aria-label="Tenancy Creation Progress" className="relative">
+        <nav aria-label={t("navAria")} className="relative">
           {/* Connecting Track Line */}
           <div
             aria-hidden="true"
@@ -90,13 +92,13 @@ export function WizardProgressIndicator({
                             : "text-faint"
                       }`}
                     >
-                      Step {s.number}
+                      {t("stepNumber", { number: s.number })}
                     </span>
                     <span className="block text-xs sm:text-sm font-bold text-ink">
-                      {s.label}
+                      {t(s.labelKey)}
                     </span>
                     <span className="hidden md:block text-[12.5px] text-body">
-                      {s.subtitle}
+                      {t(s.subtitleKey)}
                     </span>
                   </div>
                 </button>

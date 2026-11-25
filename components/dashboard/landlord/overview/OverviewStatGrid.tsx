@@ -10,21 +10,24 @@ export interface OverviewStatCardItem {
   accent?: "default" | "success" | "warning" | "danger";
 }
 
-const ACCENT_VALUE: Record<NonNullable<OverviewStatCardItem["accent"]>, string> = {
+const ACCENT_VALUE: Record<
+  NonNullable<OverviewStatCardItem["accent"]>,
+  string
+> = {
   default: "text-ink",
   success: "text-emerald-700",
   warning: "text-amber-700",
-  danger: "text-rose-700",
+  danger: "text-red-600",
 };
 
 export function OverviewStatGrid({ items }: { items: OverviewStatCardItem[] }) {
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
       {items.map((item) => {
         const content = (
-          <div className="flex h-full flex-col justify-between border border-line bg-white p-5 shadow-2xs transition-colors hover:border-ink/25">
-            <div className="flex items-start justify-between gap-2">
-              <span className="text-xs font-semibold uppercase tracking-wider text-faint">
+          <div className="flex h-full flex-col justify-between border border-line bg-white p-5.5 shadow-2xs transition-colors hover:border-ink/25 sm:p-6">
+            <div className="flex items-start justify-between gap-3">
+              <span className="text-xs font-semibold uppercase leading-snug tracking-wider text-faint">
                 {item.label}
               </span>
               {item.href && (
@@ -35,9 +38,9 @@ export function OverviewStatGrid({ items }: { items: OverviewStatCardItem[] }) {
               )}
             </div>
 
-            <div className="mt-3">
+            <div className="mt-4">
               <p
-                className={`font-ibm text-2xl font-bold tracking-tight ${
+                className={`text-2xl font-bold tracking-tight ${
                   ACCENT_VALUE[item.accent ?? "default"]
                 }`}
               >
@@ -45,15 +48,17 @@ export function OverviewStatGrid({ items }: { items: OverviewStatCardItem[] }) {
               </p>
 
               {typeof item.progressPercent === "number" && (
-                <div className="mt-2.5 h-1.5 w-full overflow-hidden bg-surface">
+                <div className="mt-3.5 h-1.5 w-full overflow-hidden bg-surface">
                   <div
                     className="h-full bg-emerald-600 transition-all"
-                    style={{ width: `${Math.min(100, Math.max(0, item.progressPercent))}%` }}
+                    style={{
+                      width: `${Math.min(100, Math.max(0, item.progressPercent))}%`,
+                    }}
                   />
                 </div>
               )}
 
-              <p className="mt-2 text-xs leading-relaxed text-body">
+              <p className="mt-3 text-[13px] leading-relaxed text-body">
                 {item.helper}
               </p>
             </div>

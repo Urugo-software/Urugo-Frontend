@@ -1,14 +1,19 @@
-import Link from "next/dist/client/link";
+"use client";
+
+import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 function Logo() {
+  const t = useTranslations("public.nav");
+
   return (
-    <div>
-      <Link href="/">
-        <h1 className="font-extrabold text-brand tracking-tight text-xl">
-          URUGO
-        </h1>
-      </Link>
-    </div>
+    <Link
+      href="/"
+      aria-label={t("logoAria")}
+      className="inline-flex items-center text-xl font-extrabold tracking-tight text-brand transition-colors hover:text-brand-deep"
+    >
+      URUGO
+    </Link>
   );
 }
 

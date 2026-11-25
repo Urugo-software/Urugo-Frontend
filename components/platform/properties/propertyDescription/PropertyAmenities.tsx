@@ -1,62 +1,80 @@
-import { PropertyAmenity } from "@/types/properties";
+import { getTranslations } from "next-intl/server";
+import {
+  CarFront,
+  CheckCircle2,
+  Droplets,
+  ShieldCheck,
+  Sofa,
+  WashingMachine,
+  Wifi,
+} from "lucide-react";
+
+import type { PropertyAmenity } from "@/types/properties";
 
 interface PropertyAmenitiesProps {
   amenities: PropertyAmenity[];
 }
 
+const AMENITY_LABEL_KEYS = {
+  "water included": "waterIncluded",
+  "wifi included": "wifiIncluded",
+  "24/7 security": "security247",
+  "laundry area": "laundryArea",
+  "private parking": "privateParking",
+  "spacious living room": "spaciousLivingRoom",
+  "furnished living room": "furnishedLivingRoom",
+} as const;
+
 function AmenityIcon({ type }: { type: string }) {
-  if (type === "wifi") {
-    return (
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-        <path
-          d="M2 8.5C7 3 17 3 22 8.5M5.5 12C9 8.5 15 8.5 18.5 12M9 15.5C10.5 14 13.5 14 15 15.5M12 19H12.01"
-          stroke="#1D4ED8"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-        />
-      </svg>
-    );
-  }
+  const iconClass = "size-4 text-brand";
 
-  if (type === "parking") {
-    return (
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-        <rect
-          x="3"
-          y="9"
-          width="18"
-          height="9"
-          rx="1.5"
-          stroke="#1D4ED8"
-          strokeWidth="1.6"
-        />
-        <path
-          d="M6 9V7a2 2 0 012-2h8a2 2 0 012 2v2"
-          stroke="#1D4ED8"
-          strokeWidth="1.6"
-        />
-      </svg>
-    );
+  switch (type) {
+    case "wifi":
+      return <Wifi aria-hidden="true" className={iconClass} />;
+    case "parking":
+      return <CarFront aria-hidden="true" className={iconClass} />;
+    case "water":
+      return <Droplets aria-hidden="true" className={iconClass} />;
+    case "security":
+      return <ShieldCheck aria-hidden="true" className={iconClass} />;
+    case "laundry":
+      return <WashingMachine aria-hidden="true" className={iconClass} />;
+    case "living-room":
+      return <Sofa aria-hidden="true" className={iconClass} />;
+    default:
+      return <CheckCircle2 aria-hidden="true" className={iconClass} />;
   }
-
-  return <div className="w-[15px] h-[15px] rounded-full border border-brand" />;
 }
 
-export default function PropertyAmenities({
+export default async function PropertyAmenities({
   amenities,
 }: PropertyAmenitiesProps) {
+  const t = await getTranslations("properties");
+
+  const resolveAmenityName = (name: string) => {
+    const key =
+      AMENITY_LABEL_KEYS[
+        name.trim().toLowerCase() as keyof typeof AMENITY_LABEL_KEYS
+      ];
+    return key ? t(`amenityLabels.${key}`) : name;
+  };
+
   return (
     <section>
-      <h2 className="text-lg font-extrabold mb-4">{"What's included"}</h2>
+      <h2 className="mb-4 text-lg font-extrabold text-ink">
+        {t("details.whatsIncluded")}
+      </h2>
 
-      <div className="grid grid-cols-2 gap-3.5">
+      <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
         {amenities.map((amenity) => (
-          <div key={amenity.id} className="flex items-center gap-2.5 text-sm">
-            <div className="w-8 h-8 rounded-lg bg-surface flex items-center justify-center">
+          <div
+            key={amenity.id}
+            className="flex items-center gap-2.5 text-sm text-ink"
+          >
+            <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-surface">
               <AmenityIcon type={amenity.icon} />
             </div>
-
-            {amenity.name}
+            <span>{resolveAmenityName(amenity.name)}</span>
           </div>
         ))}
       </div>

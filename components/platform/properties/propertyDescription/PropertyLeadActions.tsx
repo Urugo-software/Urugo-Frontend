@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+
 import CustomButton from "@/components/shared/CustomButton";
 import { ModalDialog } from "@/components/shared/ModalDialog";
 import { Button } from "@/components/ui/button";
@@ -37,6 +39,8 @@ export function PropertyLeadActions({
   propertyTitle,
   landlordPhone,
 }: PropertyLeadActionsProps) {
+  const t = useTranslations("properties.details.leads");
+  const tActions = useTranslations("common.actions");
   const { contactVisibility, addInquiry, addViewingRequest } =
     useLandlordWorkspace();
   const [modal, setModal] = useState<"visit" | "inquiry" | null>(null);
@@ -58,20 +62,22 @@ export function PropertyLeadActions({
 
   const whatsappHref =
     contactVisibility.showWhatsApp && landlordPhone
-      ? `https://wa.me/${landlordPhone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(`Hello, I am interested in ${propertyTitle} on Urugo.`)}`
+      ? `https://wa.me/${landlordPhone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
+          t("whatsappMessage", { propertyTitle }),
+        )}`
       : null;
 
   return (
     <>
       <CustomButton
-        title="Request a visit"
+        title={t("requestVisit")}
         variant="colored"
         onClick={() => setModal("visit")}
         className="mb-3 w-full rounded-none bg-brand py-6"
       />
 
       <CustomButton
-        title="Send an inquiry"
+        title={t("sendInquiry")}
         variant="light"
         onClick={() => setModal("inquiry")}
         className="mb-2 w-full rounded-none py-6"
@@ -84,15 +90,15 @@ export function PropertyLeadActions({
           rel="noopener noreferrer"
           className="mb-2 block text-center text-xs font-semibold text-brand-blue hover:underline"
         >
-          Or message landlord on WhatsApp
+          {t("whatsappLink")}
         </a>
       )}
 
       <ModalDialog
         open={modal === "visit"}
         onClose={() => setModal(null)}
-        title="Request a Property Visit"
-        description={`Schedule an inspection for ${propertyTitle}.`}
+        title={t("visitModal.title")}
+        description={t("visitModal.description", { propertyTitle })}
         footer={
           <>
             <Button
@@ -101,14 +107,14 @@ export function PropertyLeadActions({
               onClick={() => setModal(null)}
               className="cursor-pointer rounded-none"
             >
-              Cancel
+              {tActions("cancel")}
             </Button>
             <Button
               type="submit"
               form="public-visit-form"
               className="cursor-pointer rounded-none"
             >
-              Submit Request
+              {t("visitModal.submit")}
             </Button>
           </>
         }
@@ -127,55 +133,67 @@ export function PropertyLeadActions({
               preferredTime: vals.preferredTime,
               note: vals.note.trim() || undefined,
             });
-            toast.success("Viewing request sent to the landlord.");
+            toast.success(t("visitModal.successToast"));
             visitForm.reset();
             setModal(null);
           })}
           className="space-y-3"
         >
           <Field>
-            <FieldLabel htmlFor="visit-name">Full name *</FieldLabel>
+            <FieldLabel htmlFor="visit-name">
+              {t("visitModal.fullName")}
+            </FieldLabel>
             <Input
               id="visit-name"
               className="h-10 rounded-none"
               {...visitForm.register("name", {
-                validate: (v) => !!v.trim() || "Enter your name.",
+                validate: (v) => !!v.trim() || t("visitModal.nameRequired"),
               })}
             />
             <FieldError>{visitForm.formState.errors.name?.message}</FieldError>
           </Field>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <Field>
-              <FieldLabel htmlFor="visit-phone">Phone *</FieldLabel>
+              <FieldLabel htmlFor="visit-phone">
+                {t("visitModal.phone")}
+              </FieldLabel>
               <Input
                 id="visit-phone"
                 className="h-10 rounded-none"
                 {...visitForm.register("phone", {
-                  validate: (v) => !!v.trim() || "Enter your phone.",
+                  validate: (v) => !!v.trim() || t("visitModal.phoneRequired"),
                 })}
               />
-              <FieldError>{visitForm.formState.errors.phone?.message}</FieldError>
+              <FieldError>
+                {visitForm.formState.errors.phone?.message}
+              </FieldError>
             </Field>
             <Field>
-              <FieldLabel htmlFor="visit-email">Email *</FieldLabel>
+              <FieldLabel htmlFor="visit-email">
+                {t("visitModal.email")}
+              </FieldLabel>
               <Input
                 id="visit-email"
                 type="email"
                 className="h-10 rounded-none"
                 {...visitForm.register("email", {
-                  validate: (v) => !!v.trim() || "Enter your email.",
+                  validate: (v) => !!v.trim() || t("visitModal.emailRequired"),
                 })}
               />
-              <FieldError>{visitForm.formState.errors.email?.message}</FieldError>
+              <FieldError>
+                {visitForm.formState.errors.email?.message}
+              </FieldError>
             </Field>
             <Field>
-              <FieldLabel htmlFor="visit-date">Preferred date *</FieldLabel>
+              <FieldLabel htmlFor="visit-date">
+                {t("visitModal.preferredDate")}
+              </FieldLabel>
               <Input
                 id="visit-date"
                 type="date"
                 className="h-10 rounded-none"
                 {...visitForm.register("preferredDate", {
-                  required: "Pick a date.",
+                  required: t("visitModal.dateRequired"),
                 })}
               />
               <FieldError>
@@ -183,13 +201,15 @@ export function PropertyLeadActions({
               </FieldError>
             </Field>
             <Field>
-              <FieldLabel htmlFor="visit-time">Preferred time *</FieldLabel>
+              <FieldLabel htmlFor="visit-time">
+                {t("visitModal.preferredTime")}
+              </FieldLabel>
               <Input
                 id="visit-time"
                 type="time"
                 className="h-10 rounded-none"
                 {...visitForm.register("preferredTime", {
-                  required: "Pick a time.",
+                  required: t("visitModal.timeRequired"),
                 })}
               />
               <FieldError>
@@ -198,7 +218,7 @@ export function PropertyLeadActions({
             </Field>
           </div>
           <Field>
-            <FieldLabel htmlFor="visit-note">Note (optional)</FieldLabel>
+            <FieldLabel htmlFor="visit-note">{t("visitModal.note")}</FieldLabel>
             <textarea
               id="visit-note"
               rows={2}
@@ -212,8 +232,8 @@ export function PropertyLeadActions({
       <ModalDialog
         open={modal === "inquiry"}
         onClose={() => setModal(null)}
-        title="Send Property Inquiry"
-        description={`Ask the landlord a question about ${propertyTitle}.`}
+        title={t("inquiryModal.title")}
+        description={t("inquiryModal.description", { propertyTitle })}
         footer={
           <>
             <Button
@@ -222,14 +242,14 @@ export function PropertyLeadActions({
               onClick={() => setModal(null)}
               className="cursor-pointer rounded-none"
             >
-              Cancel
+              {tActions("cancel")}
             </Button>
             <Button
               type="submit"
               form="public-inquiry-form"
               className="cursor-pointer rounded-none"
             >
-              Send Inquiry
+              {t("inquiryModal.submit")}
             </Button>
           </>
         }
@@ -246,57 +266,73 @@ export function PropertyLeadActions({
               senderEmail: vals.email.trim(),
               message: vals.message.trim(),
             });
-            toast.success("Inquiry delivered to the landlord.");
+            toast.success(t("inquiryModal.successToast"));
             inquiryForm.reset();
             setModal(null);
           })}
           className="space-y-3"
         >
           <Field>
-            <FieldLabel htmlFor="inq-name">Full name *</FieldLabel>
+            <FieldLabel htmlFor="inq-name">
+              {t("inquiryModal.fullName")}
+            </FieldLabel>
             <Input
               id="inq-name"
               className="h-10 rounded-none"
               {...inquiryForm.register("name", {
-                validate: (v) => !!v.trim() || "Enter your name.",
+                validate: (v) => !!v.trim() || t("inquiryModal.nameRequired"),
               })}
             />
-            <FieldError>{inquiryForm.formState.errors.name?.message}</FieldError>
+            <FieldError>
+              {inquiryForm.formState.errors.name?.message}
+            </FieldError>
           </Field>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <Field>
-              <FieldLabel htmlFor="inq-phone">Phone *</FieldLabel>
+              <FieldLabel htmlFor="inq-phone">
+                {t("inquiryModal.phone")}
+              </FieldLabel>
               <Input
                 id="inq-phone"
                 className="h-10 rounded-none"
                 {...inquiryForm.register("phone", {
-                  validate: (v) => !!v.trim() || "Enter your phone.",
+                  validate: (v) =>
+                    !!v.trim() || t("inquiryModal.phoneRequired"),
                 })}
               />
-              <FieldError>{inquiryForm.formState.errors.phone?.message}</FieldError>
+              <FieldError>
+                {inquiryForm.formState.errors.phone?.message}
+              </FieldError>
             </Field>
             <Field>
-              <FieldLabel htmlFor="inq-email">Email *</FieldLabel>
+              <FieldLabel htmlFor="inq-email">
+                {t("inquiryModal.email")}
+              </FieldLabel>
               <Input
                 id="inq-email"
                 type="email"
                 className="h-10 rounded-none"
                 {...inquiryForm.register("email", {
-                  validate: (v) => !!v.trim() || "Enter your email.",
+                  validate: (v) =>
+                    !!v.trim() || t("inquiryModal.emailRequired"),
                 })}
               />
-              <FieldError>{inquiryForm.formState.errors.email?.message}</FieldError>
+              <FieldError>
+                {inquiryForm.formState.errors.email?.message}
+              </FieldError>
             </Field>
           </div>
           <Field>
-            <FieldLabel htmlFor="inq-msg">Message *</FieldLabel>
+            <FieldLabel htmlFor="inq-msg">
+              {t("inquiryModal.message")}
+            </FieldLabel>
             <textarea
               id="inq-msg"
               rows={3}
               className="w-full rounded-none border border-input p-2.5 text-sm"
               {...inquiryForm.register("message", {
                 validate: (v) =>
-                  v.trim().length >= 5 || "Enter your question.",
+                  v.trim().length >= 5 || t("inquiryModal.messageRequired"),
               })}
             />
             <FieldError>

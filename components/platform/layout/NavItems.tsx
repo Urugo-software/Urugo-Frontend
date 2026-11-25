@@ -1,18 +1,21 @@
 "use client";
+
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { isActivePath } from "@/lib/utils";
-import Link from "next/link";
-
-import { NavItemProps } from "@/types";
+import type { NavItemProps } from "@/types";
 
 function NavItems({ href, name }: NavItemProps) {
   const pathname = usePathname();
   const isActive = isActivePath(pathname, href);
-  console.log("isActive", isActive, pathname, href);
+
   return (
     <Link
-      className={` hover:border-b-2 duration-300 hover:border-brand/80 hover:text-brand  px-2 text-sm tracking-wide ${isActive ? "border-b-2 border-brand text-brand" : "text-ink"}`}
       href={href}
+      aria-current={isActive ? "page" : undefined}
+      className={`whitespace-nowrap px-2 py-1 text-sm tracking-wide transition-colors duration-200 hover:border-b-2 hover:border-brand/80 hover:text-brand ${
+        isActive ? "border-b-2 border-brand font-semibold text-brand" : "text-ink"
+      }`}
     >
       {name}
     </Link>

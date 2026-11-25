@@ -11,20 +11,21 @@ import {
   DollarSign,
   Wrench,
   Folder,
-  Zap,
   MessageSquare,
   ScrollText,
   CreditCard,
   ShieldCheck,
   Settings,
   History,
-  LucideIcon,
+  Compass,
 } from "lucide-react";
-import { RoleType } from "@/types";
+import type { LucideIcon } from "lucide-react";
+import type { RoleType } from "@/types";
 import type { LandlordServiceMode } from "@/types/landlord";
 
 export interface NavItemConfig {
   label: string;
+  labelKey?: string;
   href: string;
   icon: LucideIcon;
   badge?: number;
@@ -45,16 +46,18 @@ export function getLandlordNavItems(
   const countOrUndefined = (n?: number) => (n && n > 0 ? n : undefined);
 
   const sharedBase: NavItemConfig[] = [
-    { label: "Dashboard", href: "/landlord", icon: LayoutDashboard },
-    { label: "My Properties", href: "/landlord/properties", icon: Building2 },
+    { label: "Dashboard", labelKey: "dashboard", href: "/landlord", icon: LayoutDashboard },
+    { label: "My Properties", labelKey: "myProperties", href: "/landlord/properties", icon: Building2 },
     {
       label: "Inquiries",
+      labelKey: "inquiries",
       href: "/landlord/inquiries",
       icon: MessageSquare,
       badge: countOrUndefined(badges.inquiries),
     },
     {
       label: "Viewings",
+      labelKey: "viewings",
       href: "/landlord/viewings",
       icon: Calendar,
       badge: countOrUndefined(badges.viewings),
@@ -62,17 +65,19 @@ export function getLandlordNavItems(
   ];
 
   const managedItems: NavItemConfig[] = [
-    { label: "Renters", href: "/landlord/renters", icon: User },
-    { label: "Agreements", href: "/landlord/agreements", icon: FileText },
-    { label: "Tenancies", href: "/landlord/tenancies", icon: ScrollText },
+    { label: "Renters", labelKey: "renters", href: "/landlord/renters", icon: User },
+    { label: "Agreements", labelKey: "agreements", href: "/landlord/agreements", icon: FileText },
+    { label: "Tenancies", labelKey: "tenancies", href: "/landlord/tenancies", icon: ScrollText },
     {
       label: "Payments",
+      labelKey: "payments",
       href: "/landlord/payments",
       icon: CreditCard,
       badge: countOrUndefined(badges.payments),
     },
     {
       label: "Renter History",
+      labelKey: "renterHistory",
       href: "/landlord/renter-history",
       icon: History,
       badge: countOrUndefined(badges.issues),
@@ -81,6 +86,7 @@ export function getLandlordNavItems(
 
   const notificationsItem: NavItemConfig = {
     label: "Notifications",
+    labelKey: "notifications",
     href: "/landlord/notifications",
     icon: Bell,
     badge: countOrUndefined(badges.notifications),
@@ -89,6 +95,64 @@ export function getLandlordNavItems(
   return serviceMode === "listing_only"
     ? [...sharedBase, notificationsItem]
     : [...sharedBase, ...managedItems, notificationsItem];
+}
+
+export interface RenterNavOptions {
+  activeInquiries?: number;
+  pendingPayments?: number;
+  activeMaintenance?: number;
+  actionableIssues?: number;
+  unreadNotifications?: number;
+}
+
+export function getRenterNavItems(
+  options: RenterNavOptions = {},
+): NavItemConfig[] {
+  const badge = (n?: number) => (n && n > 0 ? n : undefined);
+
+  return [
+    { label: "Overview", labelKey: "overview", href: "/renter", icon: LayoutDashboard },
+    { label: "Explore Homes", labelKey: "exploreHomes", href: "/renter/explore", icon: Compass },
+    {
+      label: "Inquiries & Visits",
+      labelKey: "inquiriesAndVisits",
+      href: "/renter/inquiries",
+      icon: Calendar,
+      badge: badge(options.activeInquiries),
+    },
+    { label: "My Property", labelKey: "myProperty", href: "/renter/property", icon: Building2 },
+    { label: "Lease", labelKey: "lease", href: "/renter/lease", icon: ScrollText },
+    {
+      label: "Payments",
+      labelKey: "payments",
+      href: "/renter/payments",
+      icon: DollarSign,
+      badge: badge(options.pendingPayments),
+    },
+    {
+      label: "Maintenance",
+      labelKey: "maintenance",
+      href: "/renter/maintenance",
+      icon: Wrench,
+      badge: badge(options.activeMaintenance),
+    },
+    {
+      label: "Rental History",
+      labelKey: "rentalHistory",
+      href: "/renter/rental-history",
+      icon: History,
+      badge: badge(options.actionableIssues),
+    },
+    { label: "Documents", labelKey: "documents", href: "/renter/documents", icon: Folder },
+    { label: "Messages", labelKey: "messages", href: "/renter/messages", icon: MessageSquare },
+    {
+      label: "Notifications",
+      labelKey: "notifications",
+      href: "/renter/notifications",
+      icon: Bell,
+      badge: badge(options.unreadNotifications),
+    },
+  ];
 }
 
 export function isNavItemActive(
@@ -150,7 +214,6 @@ export const roleNavItems: Record<RoleType, NavItemConfig[]> = {
     { label: "My Property", href: "/renter/property", icon: Building2 },
     { label: "Lease", href: "/renter/lease", icon: ScrollText },
     { label: "Payments", href: "/renter/payments", icon: DollarSign },
-    { label: "Electricity", href: "/renter/electricity", icon: Zap },
     {
       label: "Maintenance",
       href: "/renter/maintenance",
@@ -174,20 +237,20 @@ export const roleNavItems: Record<RoleType, NavItemConfig[]> = {
 };
 
 export const adminNavItems: NavItemConfig[] = [
-  { label: "Overview", href: "/admin", icon: LayoutDashboard },
-  { label: "Users", href: "/admin/users", icon: User },
-  { label: "Properties", href: "/admin/properties", icon: Building2 },
-  { label: "Verification", href: "/admin/property-verification", icon: ShieldCheck },
-  { label: "Leases", href: "/admin/leases", icon: ScrollText },
-  { label: "Payments", href: "/admin/payments", icon: CreditCard },
-  { label: "Complaints", href: "/admin/complaints", icon: MessageSquare },
-  { label: "Renter's History", href: "/admin/renter-history", icon: FileText },
-  { label: "Analytics", href: "/admin/analytics", icon: Calendar },
-  { label: "Notifications", href: "/admin/notifications", icon: Bell },
-  { label: "Moderation", href: "/admin/moderation", icon: Wrench },
-  { label: "Audit Logs", href: "/admin/audit-logs", icon: Clock },
-  { label: "Admin Management", href: "/admin/admin-management", icon: User },
-  { label: "Settings", href: "/admin/settings", icon: Settings },
+  { label: "Overview", labelKey: "overview", href: "/admin", icon: LayoutDashboard },
+  { label: "Users", labelKey: "users", href: "/admin/users", icon: User },
+  { label: "Properties", labelKey: "properties", href: "/admin/properties", icon: Building2 },
+  { label: "Verification", labelKey: "verification", href: "/admin/property-verification", icon: ShieldCheck },
+  { label: "Leases", labelKey: "leases", href: "/admin/leases", icon: ScrollText },
+  { label: "Payments", labelKey: "payments", href: "/admin/payments", icon: CreditCard },
+  { label: "Complaints", labelKey: "complaints", href: "/admin/complaints", icon: MessageSquare },
+  { label: "Renter's History", labelKey: "renterHistory", href: "/admin/renter-history", icon: FileText },
+  { label: "Analytics", labelKey: "analytics", href: "/admin/analytics", icon: Calendar },
+  { label: "Notifications", labelKey: "notifications", href: "/admin/notifications", icon: Bell },
+  { label: "Moderation", labelKey: "moderation", href: "/admin/moderation", icon: Wrench },
+  { label: "Audit Logs", labelKey: "auditLogs", href: "/admin/audit-logs", icon: Clock },
+  { label: "Admin Management", labelKey: "adminManagement", href: "/admin/admin-management", icon: User },
+  { label: "Settings", labelKey: "settings", href: "/admin/settings", icon: Settings },
 ];
 
 export interface SavedPropertyItem {

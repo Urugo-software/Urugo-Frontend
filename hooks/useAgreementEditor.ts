@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import toast from "react-hot-toast";
 
 import {
@@ -56,6 +57,7 @@ export function useAgreementEditor(
   options?: UseAgreementEditorOptions,
 ) {
   const router = useRouter();
+  const tToast = useTranslations("landlord.hookFeedback.agreement");
   const upsertAgreement = useLandlordWorkspace((s) => s.upsertAgreement);
 
   const [agreement, setAgreement] = useState<Agreement>(initialAgreement);
@@ -123,11 +125,14 @@ export function useAgreementEditor(
     setHasUnsavedChanges(true);
   }, []);
 
-  const handleDeleteArticle = useCallback((id: string) => {
-    setArticles((prev) => deleteArticle(prev, id));
-    setHasUnsavedChanges(true);
-    toast.success("Clause removed from agreement.");
-  }, []);
+  const handleDeleteArticle = useCallback(
+    (id: string) => {
+      setArticles((prev) => deleteArticle(prev, id));
+      setHasUnsavedChanges(true);
+      toast.success(tToast("clauseRemoved"));
+    },
+    [tToast],
+  );
 
   const handleAddCustomArticle = useCallback(
     (title: string, content: string, insertIndex?: number) => {
@@ -147,9 +152,9 @@ export function useAgreementEditor(
       setExpandedArticleId(newArticle.id);
       setHasUnsavedChanges(true);
       setIsAddModalOpen(false);
-      toast.success(`Custom clause added as Article ${clampedIndex + 1}.`);
+      toast.success(tToast("customClauseAdded", { number: clampedIndex + 1 }));
     },
-    [articles.length],
+    [articles.length, tToast],
   );
 
   const handleRestoreStandardArticle = useCallback(
@@ -158,9 +163,9 @@ export function useAgreementEditor(
         restoreStandardArticle(prev, standardNumber, language),
       );
       setHasUnsavedChanges(true);
-      toast.success(`Restored statutory clause #${standardNumber}.`);
+      toast.success(tToast("clauseRestored", { number: standardNumber }));
     },
-    [language],
+    [language, tToast],
   );
 
   const handleRestoreAll = useCallback(() => {
@@ -172,8 +177,8 @@ export function useAgreementEditor(
     );
     setHasUnsavedChanges(true);
     setIsRestoreModalOpen(false);
-    toast.success("Restored all omitted statutory clauses.");
-  }, [deletedStandardDefs, language]);
+    toast.success(tToast("allClausesRestored"));
+  }, [deletedStandardDefs, language, tToast]);
 
   const handleResetEntireAgreement = useCallback(() => {
     const standard = resetAllToStandardArticles(language);
@@ -181,8 +186,8 @@ export function useAgreementEditor(
     setExpandedArticleId(standard[0]?.id ?? null);
     setHasUnsavedChanges(true);
     setIsConfirmResetOpen(false);
-    toast.success("Reset agreement to standard 18 statutory clauses.");
-  }, [language]);
+    toast.success(tToast("agreementReset"));
+  }, [language, tToast]);
 
   const handleSelectTemplate = useCallback(
     (template: SavedAgreementTemplate) => {
@@ -195,9 +200,9 @@ export function useAgreementEditor(
       setExpandedArticleId(workingArticles[0]?.id ?? null);
       setHasUnsavedChanges(true);
       setIsTemplateModalOpen(false);
-      toast.success(`Loaded template: "${template.name}".`);
+      toast.success(tToast("templateLoaded", { name: template.name }));
     },
-    [],
+    [tToast],
   );
 
   const handleSelectStandard = useCallback(() => {
@@ -206,8 +211,8 @@ export function useAgreementEditor(
     setExpandedArticleId(standard[0]?.id ?? null);
     setHasUnsavedChanges(true);
     setIsTemplateModalOpen(false);
-    toast.success("Loaded standard 18 statutory clauses.");
-  }, [language]);
+    toast.success(tToast("standardLoaded"));
+  }, [language, tToast]);
 
   const applyLanguageSwitch = useCallback(
     (newLang: AgreementLanguage) => {
@@ -241,10 +246,12 @@ export function useAgreementEditor(
       setPendingLanguage(null);
       options?.onSave?.(updated);
       toast.success(
-        `Language switched to ${newLang === "rw" ? "Kinyarwanda" : "English"}.`,
+        tToast("languageSwitched", {
+          language: newLang === "rw" ? "Kinyarwanda" : "English",
+        }),
       );
     },
-    [agreement, articles, options],
+    [agreement, articles, options, tToast],
   );
 
   const handleLanguageToggle = useCallback(
@@ -262,9 +269,7 @@ export function useAgreementEditor(
   const handleSaveDraft = useCallback(() => {
     if (!validation.isValid) {
       setShowValidation(true);
-      toast.error(
-        validation.errors[0] || "Please address validation errors before saving.",
-      );
+      toast.error(tToast("validationErrorSave"));
       return;
     }
 
@@ -280,13 +285,13 @@ export function useAgreementEditor(
     setShowValidation(false);
     upsertAgreement(updatedDraft);
     options?.onSave?.(updatedDraft);
-    toast.success("Agreement draft saved.");
-  }, [articles, language, validation, agreement, upsertAgreement, options]);
+    toast.success(tToast("draftSaved"));
+  }, [articles, language, validation, agreement, upsertAgreement, options, tToast]);
 
   const handleSendToRenter = useCallback(() => {
     if (!validation.isValid) {
       setShowValidation(true);
-      toast.error("Resolve validation issues before sending the agreement.");
+      toast.error(tToast("validationErrorSend"));
       return;
     }
 
@@ -307,9 +312,7 @@ export function useAgreementEditor(
     setAgreement(finalizedAgreement);
     setHasUnsavedChanges(false);
     upsertAgreement(finalizedAgreement);
-    toast.success(
-      `Agreement sent to ${agreement.renter.name} for digital review.`,
-    );
+    toast.success(tToast("sentToRenter", { name: agreement.renter.name }));
     if (options?.onSend) {
       options.onSend(finalizedAgreement);
     } else {
@@ -323,15 +326,13 @@ export function useAgreementEditor(
     upsertAgreement,
     router,
     options,
+    tToast,
   ]);
 
   const handleOpenPreview = useCallback(() => {
     if (!validation.isValid) {
       setShowValidation(true);
-      toast.error(
-        validation.errors[0] ||
-          "Please resolve validation errors before previewing.",
-      );
+      toast.error(tToast("validationErrorPreview"));
       return;
     }
 
@@ -345,7 +346,7 @@ export function useAgreementEditor(
     options?.onSave?.(workingAgreement);
     options?.onPreview?.(workingAgreement);
     setIsPreviewMode(true);
-  }, [agreement, articles, language, validation, options]);
+  }, [agreement, articles, language, validation, options, tToast]);
 
   const handleClosePreview = useCallback(() => {
     setIsPreviewMode(false);

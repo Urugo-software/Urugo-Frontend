@@ -1,6 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
+
 import HeaderSection from "../home/AI-assistant/HeaderSection";
 
 export interface HowItWorksHeaderProps {
@@ -10,16 +12,18 @@ export interface HowItWorksHeaderProps {
 }
 
 export default function HowItWorksHeader({
-  subTitle = "How it works",
-  title = "Explore roles.",
-  description = "Whether you own a property, rent one, or you're just looking, here's exactly what happens on Urugo, step by step.",
+  subTitle,
+  title,
+  description,
 }: HowItWorksHeaderProps) {
+  const t = useTranslations("public.howItWorks.header");
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-      className="text-center max-w-4xl mx-auto pt-16 px-6"
+      className="mx-auto max-w-4xl px-6 pt-16 text-center"
     >
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
@@ -27,12 +31,12 @@ export default function HowItWorksHeader({
         transition={{ delay: 0.1, duration: 0.4 }}
       >
         <HeaderSection
-          subTitle={subTitle}
-          Title={title}
+          subTitle={subTitle ?? t("subTitle")}
+          Title={title ?? t("title")}
           classNameTitle="text-3xl text-ink sm:text-4xl lg:text-5xl font-extrabold tracking-tight"
         >
-          <p className="text-body text-base md:text-lg mt-4 max-w-2xl mx-auto leading-relaxed text-gray-600">
-            {description}
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-body md:text-lg">
+            {description ?? t("description")}
           </p>
         </HeaderSection>
       </motion.div>

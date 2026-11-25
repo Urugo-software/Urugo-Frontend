@@ -1,9 +1,11 @@
 "use client";
 
-import { RoleFlow } from "@/types";
-import { AnimatePresence, motion } from "framer-motion";
-import { ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
+import { AnimatePresence, motion } from "framer-motion";
+import { useTranslations } from "next-intl";
+import { ArrowRight } from "lucide-react";
+
+import type { RoleFlow } from "@/types";
 
 interface RoleBannerCTAProps {
   banner: RoleFlow["banner"];
@@ -11,47 +13,52 @@ interface RoleBannerCTAProps {
 }
 
 export default function RoleBannerCTA({ banner, roleId }: RoleBannerCTAProps) {
+  const t = useTranslations("public.howItWorks");
+
   return (
     <AnimatePresence mode="wait">
       <motion.div
         key={roleId}
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -10 }}
-        transition={{ duration: 0.4 }}
-        className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-brand to-blue-700 text-white p-8 sm:p-10 md:p-12 shadow-xl"
+        transition={{ duration: 0.35 }}
+        className="relative overflow-hidden rounded-3xl bg-brand p-8 text-white sm:p-10 md:p-12"
       >
-        {/* Background Decorative Circles */}
-        <div className="absolute -right-12 -top-12 w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none" />
-        <div className="absolute -left-12 -bottom-12 w-64 h-64 bg-black/10 rounded-full blur-2xl pointer-events-none" />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-white/10"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -bottom-28 -left-20 h-72 w-72 rounded-full bg-white/10"
+        />
 
-        <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+        <div className="relative z-10 flex flex-col items-center justify-between gap-6 text-center md:flex-row md:text-left">
           <div className="max-w-xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 text-white/90 text-xs font-semibold mb-3 backdrop-blur-xs">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Next Step</span>
-            </div>
-            <h3 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-2">
+            <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-white/75">
+              {t("nextStep")}
+            </p>
+            <h3 className="mb-2 text-2xl font-extrabold tracking-tight sm:text-3xl">
               {banner.title}
             </h3>
-            <p className="text-white/80 text-sm sm:text-base leading-relaxed">
+            <p className="text-sm leading-relaxed text-white/85 sm:text-base">
               {banner.description}
             </p>
           </div>
 
-          <motion.div
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.96 }}
-            className="shrink-0"
-          >
+          <div className="shrink-0">
             <Link
               href={banner.ctaHref}
-              className="inline-flex items-center gap-2 px-7 py-4 rounded-2xl bg-white text-brand font-bold text-sm sm:text-base shadow-lg hover:bg-surface transition-colors group cursor-pointer"
+              className="group inline-flex h-12 cursor-pointer items-center gap-2 rounded-full bg-white px-7 text-sm font-semibold text-brand transition-colors hover:bg-surface sm:text-base"
             >
               <span>{banner.ctaText.replace(" →", "")}</span>
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />
+              <ArrowRight
+                aria-hidden="true"
+                className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1"
+              />
             </Link>
-          </motion.div>
+          </div>
         </div>
       </motion.div>
     </AnimatePresence>

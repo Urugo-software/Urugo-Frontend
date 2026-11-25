@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { Building2, Folder, MapPin, Pencil, Plus, UserPlus } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { PropertyCover } from "@/components/dashboard/landlord/properties/PropertyCover";
 import { cn } from "@/lib/utils";
@@ -23,6 +26,8 @@ export function PropertyTenancyHero({
   canAddRenter,
   onAddUnit,
 }: PropertyTenancyHeroProps) {
+  const t = useTranslations("landlord.tenancies.propertyView");
+  const tTypes = useTranslations("landlord.properties.types");
   const occupancyStatus =
     occupiedUnits === 0
       ? "Vacant"
@@ -52,8 +57,10 @@ export function PropertyTenancyHero({
           <div className="flex flex-wrap items-center gap-2.5">
             <span className="inline-flex items-center gap-1.5 text-[12.5px] font-semibold uppercase tracking-wider text-body">
               <Building2 aria-hidden="true" className="size-3.5 text-faint" />
-              {property.type}
-              {property.hasUnits && totalUnits > 0 ? ` · ${totalUnits} Units` : ""}
+              {tTypes(property.type)}
+              {property.hasUnits && totalUnits > 0
+                ? t("unitsSuffix", { count: totalUnits })
+                : ""}
             </span>
             <span aria-hidden="true" className="text-line">|</span>
             <OccupancyBadge status={occupancyStatus} />
@@ -93,7 +100,7 @@ export function PropertyTenancyHero({
               className="cursor-pointer rounded-none"
             >
               <Plus aria-hidden="true" className="size-4" />
-              Add Unit
+              {t("addUnit")}
             </Button>
           )}
           {canAddRenter && (
@@ -102,7 +109,7 @@ export function PropertyTenancyHero({
               className={cn(buttonVariants({ variant: "default" }), "rounded-none")}
             >
               <UserPlus aria-hidden="true" className="size-4" />
-              Add Renter
+              {t("addRenter")}
             </Link>
           )}
           <Link
@@ -110,7 +117,7 @@ export function PropertyTenancyHero({
             className={cn(buttonVariants({ variant: "outline" }), "rounded-none")}
           >
             <Pencil aria-hidden="true" className="size-4" />
-            Edit Property
+            {t("editProperty")}
           </Link>
         </div>
       </div>

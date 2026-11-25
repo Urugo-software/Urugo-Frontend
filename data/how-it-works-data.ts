@@ -1,4 +1,4 @@
-import { RoleFlow} from "@/types";
+import type { RoleFlow } from "@/types";
 
 export const howItWorksData: Record<
   "home_seeker" | "landlord" | "renter",
@@ -10,34 +10,34 @@ export const howItWorksData: Record<
     steps: [
       {
         stepNumber: 1,
-        title: "Create your account",
+        title: "Browse available homes",
         description:
-          "Sign up for Urugo to access available properties and the AI assistant.",
+          "Search public listings by district, budget, bedrooms, and amenities with no account required.",
       },
       {
         stepNumber: 2,
-        title: "Find a home",
+        title: "Review photos & real costs",
         description:
-          "Browse available properties or tell the AI assistant what kind of home you are looking for.",
+          "Inspect property photos, included amenities, monthly rent, and upfront move-in estimates.",
       },
       {
         stepNumber: 3,
-        title: "Explore the details",
+        title: "Ask questions or book a visit",
         description:
-          "Check the price, location, photos, amenities, and estimated rental costs of each property.",
+          "Send an inquiry or request an in-person viewing directly from the property page.",
       },
       {
         stepNumber: 4,
-        title: "Choose your home",
+        title: "Move in with clarity",
         description:
-          "Found a property you like? Continue with the rental process and provide the required information.",
+          "Visit the home, agree on lease terms with the landlord, and transition smoothly into your renter account if managed on Urugo.",
       },
     ],
     banner: {
       title: "Ready to find your next home?",
       description:
-        "Explore properties and use Urugo's tools to make your home search easier.",
-      ctaText: "Find a Home →",
+        "Browse available properties across Rwanda or ask Zoe for quick guidance.",
+      ctaText: "Browse Properties",
       ctaHref: "/properties",
     },
   },
@@ -48,34 +48,34 @@ export const howItWorksData: Record<
     steps: [
       {
         stepNumber: 1,
-        title: "Get registered",
+        title: "Choose your service path",
         description:
-          "An Urugo admin verifies your identity and registers your landlord account.",
+          "Create an account and pick Listing-Only to advertise homes independently, or Full Rental Management to manage everything on Urugo.",
       },
       {
         stepNumber: 2,
-        title: "Add your properties",
+        title: "Publish your properties",
         description:
-          "Add your properties with photos, prices, locations, descriptions, amenities, and other important details.",
+          "Add photos, monthly rent, location, units, and availability so home seekers can find your listings.",
       },
       {
         stepNumber: 3,
-        title: "Manage your properties",
+        title: "Handle inquiries & viewings",
         description:
-          "Update your property information, photos, availability, and other details whenever you need.",
+          "Reply to questions and confirm or reschedule property viewing requests from your dashboard.",
       },
       {
         stepNumber: 4,
-        title: "Manage your rentals",
+        title: "Manage rentals when ready",
         description:
-          "Manage renters, track payments, leases, and other important rental information from your dashboard.",
+          "With Full Rental Management (which you can enable anytime), manage renters, leases, mobile money payment records, and renter history.",
       },
     ],
     banner: {
-      title: "Your properties, managed in one place.",
+      title: "List a property or manage your full portfolio.",
       description:
-        "Urugo helps you manage your properties, renters, payments, leases, and rental information from one dashboard.",
-      ctaText: "See the Dashboard →",
+        "Start with Listing-Only mode or switch to Full Rental Management on the same landlord account anytime.",
+      ctaText: "Go to Landlord Dashboard",
       ctaHref: "/landlord",
     },
   },
@@ -86,34 +86,34 @@ export const howItWorksData: Record<
     steps: [
       {
         stepNumber: 1,
-        title: "Find your home",
+        title: "Join your rental workspace",
         description:
-          "Choose a property that fits your needs, budget, and preferred location.",
+          "Use your landlord's invitation link or sign up as a renter to access your current unit details.",
       },
       {
         stepNumber: 2,
-        title: "Complete the rental process",
+        title: "Review your lease & terms",
         description:
-          "Provide the required information and complete the steps needed to rent the property.",
+          "Check your monthly rent, due date, security deposit, and downloadable lease agreement anytime.",
       },
       {
         stepNumber: 3,
-        title: "Manage your lease",
+        title: "Submit payments & keep receipts",
         description:
-          "Access your lease and important rental information from your Urugo account.",
+          "Record MTN Mobile Money, Airtel Money, or bank rent payments and access your receipt history.",
       },
       {
         stepNumber: 4,
-        title: "Track your payments",
+        title: "Track repairs & rental history",
         description:
-          "View your rental payments, payment status, and other important records from your dashboard.",
+          "Log maintenance issues, message your landlord, and review any rental history notices until move-out.",
       },
     ],
     banner: {
-      title: "Make renting easier with Urugo.",
+      title: "Keep your tenancy organized from day one.",
       description:
-        "Keep your lease, payments, and important rental information organized in one place.",
-      ctaText: "Go to Dashboard →",
+        "Access your lease, payment history, repair requests, and documents in one simple dashboard.",
+      ctaText: "Go to Renter Dashboard",
       ctaHref: "/renter",
     },
   },

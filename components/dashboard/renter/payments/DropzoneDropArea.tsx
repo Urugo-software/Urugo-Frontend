@@ -2,6 +2,7 @@
 
 import React from "react";
 import { UploadCloud } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { DropzoneRootProps, DropzoneInputProps } from "react-dropzone";
 
 interface Props {
@@ -11,6 +12,8 @@ interface Props {
 }
 
 export function DropzoneDropArea({ getRootProps, getInputProps, isDragActive }: Props) {
+  const t = useTranslations("renter.payments.payRent");
+
   return (
     <div
       {...getRootProps()}
@@ -25,11 +28,9 @@ export function DropzoneDropArea({ getRootProps, getInputProps, isDragActive }: 
         <UploadCloud className="size-6" />
       </div>
       <div className="mt-3 text-xs font-bold text-ink">
-        {isDragActive ? "Drop receipt here..." : "Drag & drop payment receipt here"}
+        {isDragActive ? t("dropActive") : t("dropIdle")}
       </div>
-      <p className="mt-1 text-[12.5px] text-body">
-        or click to browse files (PNG, JPG, WEBP, or PDF)
-      </p>
+      <p className="mt-1 text-[12.5px] text-body">{t("dropHint")}</p>
     </div>
   );
 }

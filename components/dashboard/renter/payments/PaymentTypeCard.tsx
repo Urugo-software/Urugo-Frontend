@@ -1,7 +1,18 @@
 "use client";
 
 import { Check } from "lucide-react";
-import { PaymentMethodOption } from "@/data/payment-methods-data";
+import { useTranslations } from "next-intl";
+import {
+  type PaymentMethod,
+  type PaymentMethodOption,
+} from "@/data/payment-methods-data";
+
+const METHOD_KEY_MAP: Record<PaymentMethod, { name: string; desc: string }> = {
+  "MTN Mobile Money": { name: "mtnName", desc: "mtnDesc" },
+  "AIRTEL Money": { name: "airtelName", desc: "airtelDesc" },
+  "Bank Transfer": { name: "bankName", desc: "bankDesc" },
+  Card: { name: "cardName", desc: "cardDesc" },
+};
 
 interface Props {
   method: PaymentMethodOption;
@@ -10,6 +21,9 @@ interface Props {
 }
 
 export function PaymentTypeCard({ method, isSelected, onSelect }: Props) {
+  const t = useTranslations("renter.payments.payRent.methods");
+  const keys = METHOD_KEY_MAP[method.id];
+
   return (
     <button
       type="button"
@@ -21,9 +35,11 @@ export function PaymentTypeCard({ method, isSelected, onSelect }: Props) {
       }`}
     >
       <div className="flex-1 min-w-0 pr-4">
-        <span className="text-[16px] font-bold text-ink">{method.name}</span>
+        <span className="text-[16px] font-bold text-ink">
+          {keys ? t(keys.name) : method.name}
+        </span>
         <p className="text-[13px] text-body mt-0.5 truncate">
-          {method.description}
+          {keys ? t(keys.desc) : method.description}
         </p>
       </div>
       {isSelected && (

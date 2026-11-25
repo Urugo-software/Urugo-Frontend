@@ -1,7 +1,9 @@
 "use client";
 
 import { Calendar } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
+import type { AppLocale } from "@/i18n/config";
 import { getOrdinalSuffix } from "@/utils/rent-schedule-utils";
 
 const INITIAL_MONTH_OPTIONS = [1, 2, 3, 6];
@@ -21,6 +23,8 @@ export function TenancySchedulePicker({
   onChangeInitialMonths,
   error,
 }: TenancySchedulePickerProps) {
+  const t = useTranslations("landlord.renters.wizard.schedule");
+  const locale = useLocale() as AppLocale;
   const currentDay = paymentDueDay || 1;
 
   return (
@@ -32,11 +36,11 @@ export function TenancySchedulePicker({
             htmlFor="monthly-rent-due-day"
             className="text-[12.5px] font-semibold text-ink"
           >
-            Monthly Rent Due Date{" "}
+            {t("dueDateLabel")}{" "}
             <span className="text-red-500 text-lg"> </span>
           </FieldLabel>
           <span className="text-[12.5px] font-medium text-faint">
-            Day 1 - 31
+            {t("dayRange")}
           </span>
         </div>
 
@@ -48,17 +52,17 @@ export function TenancySchedulePicker({
             className="h-10 w-full cursor-pointer rounded-none border border-line bg-white px-3 pr-10 font-mono text-[12.5px] font-medium text-ink focus:border-ink focus:outline-none focus:ring-1 focus:ring-ink"
           >
             {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => {
-              const suffix = getOrdinalSuffix(day);
-              const isMonthEnd = day >= 29;
+              const ordinal =
+                locale === "en" ? `${day}${getOrdinalSuffix(day)}` : String(day);
+              const optionText =
+                day === 31
+                  ? t("dayOfMonthShortEnd", { ordinal })
+                  : day >= 29
+                    ? t("dayOfMonthFebEnd", { ordinal })
+                    : t("dayOfMonth", { ordinal });
               return (
                 <option key={day} value={day}>
-                  {day}
-                  {suffix} of each month
-                  {isMonthEnd
-                    ? day === 31
-                      ? " (or last day of shorter months)"
-                      : " (or last day of February)"
-                    : ""}
+                  {optionText}
                 </option>
               );
             })}
@@ -69,15 +73,13 @@ export function TenancySchedulePicker({
         </div>
 
         <FieldDescription className="text-[12.5px] text-body leading-relaxed">
-          Select the day of each month when rent is expected, as agreed between
-          the landlord and renter.
+          {t("dueDateDesc")}
         </FieldDescription>
 
         {currentDay >= 29 && (
           <div className="rounded-none border border-amber-200 bg-amber-50/60 p-2 text-[12.5px] text-amber-900 leading-snug">
-            <strong>Shorter Months:</strong> In months that have fewer than{" "}
-            {currentDay} days (such as February or 30-day months), recurring
-            rent is payable on the final calendar day of that month.
+            <strong>{t("shorterMonthsTitle")}</strong>{" "}
+            {t("shorterMonthsDesc", { day: currentDay })}
           </div>
         )}
 
@@ -90,10 +92,10 @@ export function TenancySchedulePicker({
       <Field className="space-y-2">
         <div className="flex items-center justify-between">
           <FieldLabel className="text-[12.5px] font-semibold text-ink">
-            Initial Advance Rent
+            {t("initialAdvanceLabel")}
           </FieldLabel>
           <span className="text-[12.5px] font-medium text-faint">
-            Move-in payment
+            {t("moveInPayment")}
           </span>
         </div>
 
@@ -111,13 +113,15 @@ export function TenancySchedulePicker({
                     : "border-line bg-white text-ink hover:border-neutral-400 hover:bg-surface/50"
                 }`}
               >
-                {months} {months === 1 ? "Mo" : "Mos"}
+                {t(months === 1 ? "monthShortSingle" : "monthShortPlural", {
+                  count: months,
+                })}
               </button>
             );
           })}
         </div>
         <FieldDescription className="text-[12.5px] text-body leading-relaxed">
-          Advance rent collected prior to tenancy commencement.
+          {t("initialAdvanceDesc")}
         </FieldDescription>
       </Field>
     </div>

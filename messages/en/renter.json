@@ -1,0 +1,714 @@
+{
+  "workspace": {
+    "loadingWorkspace": "Loading renter workspace...",
+    "errorTitle": "Something went wrong",
+    "errorFallback": "We could not load this renter view. Please try again.",
+    "backToOverview": "Back to overview",
+    "unitLabel": "Unit {unit}",
+    "justNow": "Just now",
+    "unread": "Unread"
+  },
+  "overview": {
+    "loading": "Loading dashboard...",
+    "loadError": "Unable to load renter overview.",
+    "greeting": {
+      "morning": "Good morning, {name}",
+      "afternoon": "Good afternoon, {name}",
+      "evening": "Good evening, {name}"
+    },
+    "payRentNow": "Pay Rent Now",
+    "exploreHomes": "Explore Homes",
+    "rentCard": {
+      "title": "Rent Payment",
+      "paidOn": "Paid on",
+      "due": "Due",
+      "viewHistory": "View Payment History",
+      "payRentNow": "Pay Rent Now"
+    },
+    "maintenanceCard": {
+      "title": "Maintenance",
+      "allClear": "All Clear",
+      "openRequestsSingle": "{count} Open Request",
+      "openRequestsPlural": "{count} Open Requests",
+      "activeDescription": "Requests currently pending or in progress.",
+      "clearDescription": "No active maintenance issues reported.",
+      "manageRequests": "Manage Requests"
+    },
+    "updatesCard": {
+      "title": "Upcoming Reminders & Alerts",
+      "viewAll": "View all",
+      "empty": "No recent reminders right now.",
+      "rentalStanding": "Rental Standing",
+      "noticePendingSingle": "{count} Notice Pending Review",
+      "noticePendingPlural": "{count} Notices Pending Review",
+      "goodStanding": "Good Standing",
+      "standingActionDescription": "Review open landlord notices or submit payment proof within the 3-day notice window.",
+      "standingClearDescription": "No confirmed unpaid obligations on your rental history.",
+      "viewRentalHistory": "View Rental History"
+    },
+    "quickActions": {
+      "title": "Quick Access",
+      "myProperty": "My Property",
+      "leaseAgreement": "Lease Agreement",
+      "documentsAndReceipts": "Documents & Receipts",
+      "exploreHomes": "Explore Homes",
+      "inquiriesAndVisits": "Inquiries & Visits",
+      "rentalHistory": "Rental History"
+    }
+  },
+  "property": {
+    "loading": "Loading property details...",
+    "loadError": "Unable to load property details.",
+    "leaseBadge": "{status} Lease",
+    "leaseCard": {
+      "title": "Lease Information",
+      "monthlyRent": "Monthly Rent",
+      "moveInDate": "Move-in Date",
+      "leaseTerm": "Lease Term",
+      "openEnded": "Open-ended monthly lease",
+      "viewFullLease": "View Full Lease & Agreement"
+    },
+    "landlordCard": {
+      "title": "Landlord Contact",
+      "messageLandlord": "Message Landlord"
+    },
+    "specsCard": {
+      "title": "Unit Specifications & Amenities",
+      "bedrooms": "Bedrooms",
+      "bathrooms": "Bathrooms",
+      "parking": "Parking",
+      "parkingIncluded": "Included",
+      "parkingNone": "None",
+      "wifi": "Wi-Fi",
+      "wifiAvailable": "Available",
+      "wifiNotIncluded": "Not included",
+      "includedAmenities": "Included Amenities",
+      "amenities": {
+        "dedicatedParking": "Dedicated parking bay",
+        "highSpeedWifi": "High-speed Wi-Fi",
+        "gatedSecurity": "24/7 gated security",
+        "backupWaterTank": "Backup water tank",
+        "balconyView": "Balcony view"
+      }
+    }
+  },
+  "lease": {
+    "loading": "Loading lease details...",
+    "loadError": "Unable to load lease information.",
+    "title": "My Lease",
+    "subtitle": "{property} — Unit {unit}",
+    "leaseBadge": "{status} Lease",
+    "emptyTitle": "No active lease found.",
+    "emptyDescription": "Your lease details will appear here once a tenancy is set up.",
+    "termsTitle": "Lease Terms",
+    "startDate": "Lease Start Date",
+    "endDate": "Lease End Date",
+    "openEndedTenancy": "Open-ended monthly tenancy",
+    "monthlyRent": "Monthly Rent",
+    "paymentDue": "Payment Due",
+    "paymentDueValue": "{day} of each month",
+    "securityDeposit": "Security Deposit",
+    "noticePeriod": "Notice Period",
+    "noticeDays": "{days} days",
+    "propertyAndLandlord": "Property & Landlord",
+    "agreementSection": {
+      "title": "Lease Agreement",
+      "contractFallback": "Lease Contract",
+      "viewAgreement": "View Agreement",
+      "download": "Download",
+      "downloadSuccess": "Lease copy downloaded (preview).",
+      "emptyTitle": "No lease agreement uploaded yet",
+      "emptyDescription": "Your landlord will share your digital lease contract here once prepared."
+    },
+    "viewerModal": {
+      "title": "Lease Agreement · {reference}",
+      "description": "{property} — Unit {unit}",
+      "print": "Print",
+      "downloadCopy": "Download Copy",
+      "signAgreement": "Sign Agreement",
+      "monthlyRentLabel": "Monthly Rent:",
+      "depositLabel": "Deposit:",
+      "articleHeading": "Article {number}. {title}",
+      "downloadSuccess": "Agreement text copy downloaded (preview).",
+      "signSuccess": "Agreement signed electronically (preview)."
+    },
+    "agreementStatuses": {
+      "draft": "Draft",
+      "readyForReview": "Ready for Review",
+      "sent": "Sent",
+      "viewed": "Viewed",
+      "changesRequested": "Changes Requested",
+      "awaitingRenterSignature": "Awaiting Renter Signature",
+      "awaitingLandlordSignature": "Awaiting Landlord Signature",
+      "signed": "Signed",
+      "declined": "Declined",
+      "expired": "Expired",
+      "superseded": "Superseded",
+      "cancelled": "Cancelled"
+    }
+  },
+  "payments": {
+    "loading": "Loading payment details...",
+    "loadError": "Unable to load payments.",
+    "title": "Rent & Payments",
+    "subtitle": "Track monthly rent obligations, submit payments, and access receipts.",
+    "stats": {
+      "balanceDue": "Current Balance Due",
+      "totalPaid": "Total Paid Recorded",
+      "receiptsAvailable": "Receipts Available"
+    },
+    "overviewCard": {
+      "currentRent": "Current Rent ({period})",
+      "dueDate": "Due Date:",
+      "paidOn": "Paid On:",
+      "refPrefix": "Ref {reference}",
+      "payRentNow": "Pay Rent Now"
+    },
+    "history": {
+      "title": "Payment History",
+      "filterAria": "Filter payments by status",
+      "filterAll": "All",
+      "emptyTitle": "No payment records found",
+      "emptyDescription": "No payments match the selected status filter.",
+      "columns": {
+        "period": "Period",
+        "amount": "Amount",
+        "method": "Method",
+        "date": "Date",
+        "status": "Status",
+        "receipt": "Receipt"
+      },
+      "viewReceipt": "View Receipt",
+      "awaitingPayment": "Awaiting payment",
+      "paginationLabel": "payments"
+    },
+    "receiptModal": {
+      "title": "Rent Receipt — {period}",
+      "print": "Print",
+      "downloadReceipt": "Download Receipt",
+      "downloadSuccess": "Receipt copy downloaded (preview).",
+      "status": "Status",
+      "amountPaid": "Amount Paid",
+      "paymentMethod": "Payment Method",
+      "date": "Date",
+      "reference": "Reference",
+      "tenant": "Tenant",
+      "notSpecified": "Not specified",
+      "na": "N/A"
+    },
+    "payRent": {
+      "backToPayments": "Back to Payments",
+      "title": "Pay Rent",
+      "subtitle": "Complete your monthly rent payment and upload payment confirmation.",
+      "currentMonthFallback": "Current Month",
+      "selectPaymentType": "Select Payment Type",
+      "methods": {
+        "mtnName": "MTN Mobile Money",
+        "mtnDesc": "Instant mobile wallet payment",
+        "airtelName": "Airtel Money",
+        "airtelDesc": "Instant mobile wallet payment",
+        "bankName": "Bank Transfer",
+        "bankDesc": "Direct bank transfer / wire",
+        "cardName": "Debit / Credit Card",
+        "cardDesc": "Visa, Mastercard or local card"
+      },
+      "rentalPeriod": "Rental Period",
+      "amountDue": "Amount Due",
+      "amountPaidLabel": "Amount Paid (RWF) *",
+      "amountPaidLabelSimple": "Amount Paid (RWF)",
+      "amountPlaceholder": "e.g. 250000",
+      "amountError": "Enter a valid amount of at least 1,000 RWF.",
+      "momoPhoneLabel": "Mobile Money Phone Number *",
+      "phoneLabelSimple": "Mobile Phone Number",
+      "phonePlaceholder": "+250 788 123 456",
+      "phoneExamplePlaceholder": "e.g. 0788123456",
+      "phoneError": "Enter a valid Mobile Money phone number.",
+      "bankRefLabel": "Bank Transfer Reference *",
+      "bankRefPlaceholder": "e.g. BK-984210",
+      "bankRefError": "Enter your transaction reference.",
+      "momoRefLabel": "Transaction Reference (optional)",
+      "momoRefPlaceholder": "e.g. TXN-99823",
+      "refNoteLabel": "Transaction Reference / Note",
+      "refNotePlaceholder": "e.g. TXN-984210",
+      "uploadLabel": "Payment Confirmation / Receipt Upload",
+      "dropActive": "Drop receipt here...",
+      "dropIdle": "Drag & drop payment receipt here",
+      "dropHint": "or click to browse files (PNG, JPG, WEBP, or PDF)",
+      "receiptPreviewAlt": "Receipt Preview",
+      "attached": "{size} KB • Attached",
+      "previewNotice": "Preview mode: submitting records your payment locally and generates a receipt preview. Live MoMo/Airtel settlement requires backend gateway integration.",
+      "encryptedNote": "Encrypted payment confirmation",
+      "submitting": "Recording...",
+      "confirmSubmit": "Confirm & Submit Payment",
+      "modal": {
+        "title": "Pay Rent via Mobile Money",
+        "selectMethod": "Select Payment Method",
+        "processing": "Processing...",
+        "confirmPay": "Confirm & Pay"
+      }
+    }
+  },
+  "maintenance": {
+    "loading": "Loading maintenance requests...",
+    "loadError": "Unable to load maintenance records.",
+    "title": "Maintenance Requests",
+    "subtitle": "Report issues and track repairs for your apartment.",
+    "reportNew": "Report New Issue",
+    "searchPlaceholder": "Search requests by title or category...",
+    "searchLabel": "Search maintenance requests",
+    "filterAria": "Filter maintenance by status",
+    "filterAll": "All",
+    "categoryAndPriority": "{category} · Priority: {priority}",
+    "submittedDate": "Submitted {date}",
+    "viewDetails": "View Details",
+    "emptyTitle": "No maintenance requests found",
+    "emptyFiltered": "No requests match your search or status filter.",
+    "emptyDefault": "Submit a request if you encounter any issue in your apartment.",
+    "clearFilters": "Clear filters",
+    "categories": {
+      "plumbing": "Plumbing",
+      "electrical": "Electrical",
+      "structural": "Structural",
+      "appliance": "Appliance",
+      "other": "Other"
+    },
+    "createModal": {
+      "title": "Report Maintenance Issue",
+      "description": "Describe the problem in your unit so your landlord can schedule repairs.",
+      "submitting": "Submitting...",
+      "submitRequest": "Submit Request",
+      "issueTitleLabel": "Issue Title *",
+      "issueTitlePlaceholder": "e.g. Water leak under kitchen sink",
+      "issueTitleError": "Enter a short descriptive title.",
+      "categoryLabel": "Category",
+      "priorityLabel": "Priority",
+      "descriptionLabel": "Description *",
+      "descriptionPlaceholder": "Describe where the issue is located and when it started...",
+      "descriptionError": "Please add at least 10 characters of details."
+    },
+    "detailModal": {
+      "cancelRequest": "Cancel Request",
+      "cancelSuccess": "Maintenance request cancelled.",
+      "status": "Status",
+      "submittedOn": "Submitted On",
+      "issueDescription": "Issue Description",
+      "latestUpdate": "Latest Update"
+    }
+  },
+  "rentalHistory": {
+    "title": "Rental History & Obligations",
+    "subtitle": "Review your verified rental standing, respond to notices within the 3-day window, or submit payment proof.",
+    "stats": {
+      "confirmedDebt": "Confirmed Unpaid Balance",
+      "confirmedDebtHint": "Excludes disputed and notice-period items",
+      "openNotices": "Open Notices / Disputes",
+      "openNoticesHint": "Eligible for dispute proof or settlement",
+      "resolvedRecords": "Resolved Records",
+      "resolvedRecordsHint": "Closed with zero balance"
+    },
+    "tabs": {
+      "ariaLabel": "Filter rental history",
+      "all": "All Records",
+      "actionable": "Needs Response",
+      "confirmed": "Confirmed",
+      "resolved": "Resolved"
+    },
+    "emptyTitle": "No records in this view",
+    "emptyDescription": "Your rental history is clear for the selected filter.",
+    "card": {
+      "landlordLabel": "Landlord:",
+      "daysLeftSingle": "{days} day left in notice window",
+      "daysLeftPlural": "{days} days left in notice window",
+      "landlordReport": "Landlord Report ({date})",
+      "yourResponse": "Your Response",
+      "underReview": "Under review",
+      "updateDispute": "Update Dispute Proof",
+      "disputeSubmit": "Dispute / Submit Proof",
+      "recordSettlement": "Record Settlement"
+    },
+    "statusMeta": {
+      "reported": {
+        "label": "Waiting for review",
+        "description": "Submitted by landlord; awaiting renter notice response."
+      },
+      "unresolved": {
+        "label": "Unresolved (Notice period)",
+        "description": "Active 3-day notice window. Not yet confirmed as outstanding debt."
+      },
+      "disputed": {
+        "label": "Disputed by renter",
+        "description": "Renter submitted a response or receipt. Under review — not confirmed debt."
+      },
+      "confirmed": {
+        "label": "Confirmed obligation",
+        "description": "Verified unpaid obligation recorded after review window."
+      },
+      "resolved": {
+        "label": "Resolved",
+        "description": "Obligation settled or proof accepted; case closed."
+      },
+      "rejected": {
+        "label": "Dismissed / Closed",
+        "description": "Report was not substantiated and is closed without debt."
+      }
+    },
+    "disputeModal": {
+      "title": "Submit Dispute & Payment Proof",
+      "submitButton": "Submit Dispute",
+      "infoNotice": "Submitting a dispute places this notice under review. Disputed records are never marked as confirmed unpaid obligations while review is pending.",
+      "explanationLabel": "Your explanation *",
+      "explanationPlaceholder": "Explain why this charge is incorrect or share payment date and Mobile Money reference...",
+      "explanationError": "Please provide at least 12 characters of explanation.",
+      "proofLabel": "Supporting proof / receipt (optional)",
+      "attachPrompt": "Attach payment receipt image or PDF",
+      "notifTitle": "Dispute Submitted for Review",
+      "notifMessage": "Your response for \"{title}\" ({amount}) was logged.",
+      "notifAction": "View Case",
+      "toastSuccess": "Dispute response submitted. Status updated to Disputed."
+    },
+    "settleModal": {
+      "title": "Record Obligation Settlement",
+      "confirmButton": "Confirm Settlement",
+      "methodLabel": "Payment method",
+      "refLabel": "Payment transaction reference *",
+      "refPlaceholder": "e.g. TXN-782411",
+      "refError": "Enter the payment transaction reference.",
+      "notifTitle": "Obligation Settled",
+      "notifMessage": "Settlement of {amount} recorded via {method} (Ref: {reference}).",
+      "notifAction": "View History",
+      "toastSuccess": "Settlement recorded (preview). Case marked Resolved."
+    }
+  },
+  "messages": {
+    "loading": "Loading conversation...",
+    "loadError": "Unable to load messages.",
+    "inputAria": "Message to landlord",
+    "inputPlaceholder": "Type a message to your landlord...",
+    "sendAria": "Send message",
+    "onlineNow": "Online now",
+    "landlordRole": "Landlord",
+    "directContact": "Direct Contact",
+    "phoneLabel": "Phone",
+    "emailLabel": "Email",
+    "copyLabel": "Copy {label}",
+    "propertyAndUnit": "Property & Unit",
+    "callLandlord": "Call Landlord",
+    "reportMaintenance": "Report Maintenance Issue"
+  },
+  "documents": {
+    "loading": "Loading documents...",
+    "loadError": "Unable to load documents.",
+    "title": "My Documents",
+    "subtitle": "Preview and download your lease contract, rent receipts, and notices.",
+    "openLeaseDetails": "Open Lease Details",
+    "searchPlaceholder": "Search documents and receipts...",
+    "searchLabel": "Search documents",
+    "categoriesAria": "Document categories",
+    "categories": {
+      "all": "All",
+      "leaseAgreement": "Lease Agreement",
+      "paymentReceipt": "Payment Receipt",
+      "notice": "Notice"
+    },
+    "preview": "Preview",
+    "download": "Download",
+    "print": "Print",
+    "downloadCopy": "Download Copy",
+    "downloadSuccess": "Downloaded {title} (preview copy).",
+    "emptyTitle": "No documents found",
+    "emptyDescription": "No matching lease agreements, receipts, or statements were found.",
+    "clearFilters": "Clear filters"
+  },
+  "discovery": {
+    "explore": {
+      "title": "Explore Homes",
+      "subtitle": "Discover verified rentals across Kigali, send inquiries, and book viewings.",
+      "emptyTitle": "No matching properties",
+      "emptyDescription": "Try broadening your search, location, bedroom count, or monthly budget.",
+      "resetFilters": "Reset Filters",
+      "paginationLabel": "properties"
+    },
+    "filters": {
+      "searchPlaceholder": "Search by neighborhood, apartment name, or landlord...",
+      "searchLabel": "Search available properties",
+      "switchLayoutAria": "Switch property listing layout",
+      "locationAria": "Filter by location",
+      "allLocations": "All locations",
+      "bedsAria": "Filter by bedrooms",
+      "anyBedrooms": "Any bedrooms",
+      "beds1": "1+ Bedroom",
+      "beds2": "2+ Bedrooms",
+      "beds3": "3+ Bedrooms",
+      "budgetAria": "Filter by max monthly rent",
+      "anyBudget": "Any budget",
+      "upTo": "Up to {amount}",
+      "sortAria": "Sort listings",
+      "sortDefault": "Recommended",
+      "sortAsc": "Rent: Low to High",
+      "sortDesc": "Rent: High to Low"
+    },
+    "card": {
+      "bed": "{count} Bed",
+      "bath": "{count} Bath",
+      "parking": "Parking",
+      "perMonth": "/ month",
+      "requestVisit": "Request Visit",
+      "inquire": "Inquire"
+    },
+    "inquiries": {
+      "title": "Inquiries & Viewing Requests",
+      "subtitle": "Track property visit schedules and landlord responses in one place.",
+      "browseListings": "Browse Listings",
+      "tabsAria": "Filter inquiries and visits",
+      "tabAll": "All",
+      "tabViewings": "Viewing Requests",
+      "tabInquiries": "Inquiries",
+      "emptyTitle": "No inquiries or viewing requests yet",
+      "emptyDescription": "Explore available homes to send an inquiry or schedule an in-person property visit.",
+      "exploreHomes": "Explore Homes",
+      "viewingsSection": "Viewing Requests ({count})",
+      "inquiriesSection": "Property Inquiries ({count})",
+      "notePrefix": "Note:",
+      "landlordNotePrefix": "Landlord note:",
+      "requestedDate": "Requested {date}",
+      "cancelRequest": "Cancel Request",
+      "cancelViewingSuccess": "Viewing request cancelled.",
+      "sentDate": "Sent {date}",
+      "senderLandlord": "Landlord",
+      "senderYou": "You",
+      "followupPlaceholder": "Write a follow-up question...",
+      "followupSuccess": "Follow-up sent to landlord.",
+      "replyButton": "Reply"
+    },
+    "inquiryModal": {
+      "title": "Send Property Inquiry",
+      "description": "Ask the landlord about {property}.",
+      "submitButton": "Send Inquiry",
+      "phoneLabel": "Contact phone *",
+      "phoneError": "Enter a valid phone number.",
+      "questionLabel": "Your question *",
+      "questionPlaceholder": "Ask about availability, utilities, lease terms, or move-in date...",
+      "questionError": "Enter at least 8 characters.",
+      "notifTitle": "Property Inquiry Sent",
+      "notifMessage": "Your inquiry for {property} was delivered to the landlord.",
+      "notifAction": "View Inquiries",
+      "toastSuccess": "Inquiry sent to the landlord."
+    },
+    "viewingModal": {
+      "title": "Request a Property Viewing",
+      "description": "Pick a convenient date and time to visit {property}.",
+      "submitButton": "Submit Request",
+      "dateLabel": "Preferred date *",
+      "dateError": "Select a date.",
+      "timeLabel": "Preferred time *",
+      "timeError": "Select a time.",
+      "phoneLabel": "Contact phone *",
+      "phoneError": "Enter a valid phone number.",
+      "noteLabel": "Note for landlord (optional)",
+      "notePlaceholder": "Any questions or preferred arrival instructions...",
+      "notifTitle": "Viewing Request Submitted",
+      "notifMessage": "Requested a viewing for {property} on {date} at {time}.",
+      "notifAction": "Track Visit",
+      "toastSuccess": "Viewing request sent to the landlord."
+    }
+  },
+  "notifications": {
+    "loading": "Loading notifications...",
+    "loadError": "Unable to load notifications.",
+    "title": "Notifications",
+    "unreadCount": "{count} unread",
+    "subtitle": "Stay informed about rent due dates, maintenance progress, lease documents, and inquiries.",
+    "unreadOnly": "Unread only",
+    "markAllRead": "Mark all read",
+    "searchPlaceholder": "Search notifications...",
+    "searchLabel": "Search renter notifications",
+    "categoriesAria": "Notification categories",
+    "categories": {
+      "all": "All",
+      "rent": "Rent",
+      "maintenance": "Maintenance",
+      "lease": "Lease",
+      "history": "Rental History",
+      "inquiry": "Inquiries",
+      "notice": "Notice"
+    },
+    "openAction": "Open",
+    "markAsRead": "Mark as read",
+    "markAsUnread": "Mark as unread",
+    "dismissNotification": "Dismiss notification",
+    "emptyTitle": "You're all caught up",
+    "emptyFiltered": "No notifications match your current filter.",
+    "emptyDefault": "Rent reminders, maintenance updates, and lease notices will appear here.",
+    "showAll": "Show all notifications"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your personal profile, language, account security, and rental alert preferences.",
+    "sections": {
+      "profileTitle": "Personal Information",
+      "profileDesc": "Update your photo, contact details, and emergency contact information.",
+      "languageTitle": "Language",
+      "languageDesc": "Choose your preferred display language across the Urugo dashboard.",
+      "securityTitle": "Password & Security",
+      "securityDesc": "Update your account password. Use at least 8 characters.",
+      "notificationsTitle": "Notification Preferences",
+      "notificationsDesc": "Choose which alerts and reminders you want to receive for your rental activity."
+    },
+    "profile": {
+      "photoTitle": "Profile Photo",
+      "photoHint": "JPG, PNG, or WebP up to 5 MB. Stored locally in preview mode.",
+      "uploading": "Uploading...",
+      "uploadPhoto": "Upload Photo",
+      "remove": "Remove",
+      "invalidImage": "Please select a valid image file.",
+      "imageTooLarge": "Image must be 5 MB or smaller.",
+      "photoUpdated": "Profile photo updated.",
+      "photoReadError": "Unable to read image file.",
+      "photoRemoved": "Profile photo removed.",
+      "fullName": "Full Name",
+      "fullNameRequired": "Full name is required.",
+      "fullNameMin": "Enter at least 2 characters.",
+      "email": "Email Address",
+      "emailRequired": "Email address is required.",
+      "emailInvalid": "Enter a valid email address.",
+      "phone": "Phone Number",
+      "phoneRequired": "Phone number is required.",
+      "phoneInvalid": "Enter a valid phone number.",
+      "emergencyHeading": "Emergency Contact",
+      "emergencyName": "Contact Name",
+      "emergencyPhone": "Contact Phone",
+      "saving": "Saving...",
+      "saveChanges": "Save Changes",
+      "reset": "Reset"
+    },
+    "password": {
+      "currentLabel": "Current Password",
+      "currentPlaceholder": "Enter current password",
+      "currentRequired": "Current password is required.",
+      "newLabel": "New Password",
+      "newPlaceholder": "Min. 8 characters",
+      "newRequired": "New password is required.",
+      "newMin": "Password must be at least 8 characters.",
+      "confirmLabel": "Confirm New Password",
+      "confirmPlaceholder": "Repeat new password",
+      "confirmRequired": "Please confirm your new password.",
+      "confirmMismatch": "New passwords do not match.",
+      "previewNotice": "Preview mode: password changes are validated locally until backend authentication is connected.",
+      "updateButton": "Update Password",
+      "toastSuccess": "Password validated (preview mode — backend auth required to persist)."
+    },
+    "notifications": {
+      "savedToast": "Notification preferences saved.",
+      "saveButton": "Save Preferences",
+      "items": {
+        "rentDue": {
+          "label": "Rent Due Reminders",
+          "description": "Receive reminders before your monthly rent due date."
+        },
+        "maintenance": {
+          "label": "Maintenance Updates",
+          "description": "Updates when your landlord changes a repair request status."
+        },
+        "lease": {
+          "label": "Lease & History Notices",
+          "description": "Alerts about lease agreements, receipts, and notice windows."
+        }
+      }
+    }
+  },
+  "helpCenter": {
+    "title": "Renter Help Center",
+    "subtitle": "Get help with rent payments, lease documents, maintenance tickets, disputes, and home discovery.",
+    "searchPlaceholder": "Search renter guides, receipts, or dispute rules...",
+    "searchLabel": "Search renter help center",
+    "categories": {
+      "payments": {
+        "label": "Payments",
+        "desc": "Rent & receipts"
+      },
+      "leaseDocuments": {
+        "label": "Lease",
+        "desc": "Agreements & terms"
+      },
+      "maintenance": {
+        "label": "Maintenance",
+        "desc": "Repairs & status"
+      },
+      "rentalHistory": {
+        "label": "Rental History",
+        "desc": "3-day notice & disputes"
+      },
+      "discovery": {
+        "label": "Explore Homes",
+        "desc": "Visits & inquiries"
+      }
+    },
+    "faqHeading": "Frequently Asked Questions",
+    "showAllTopics": "Show all topics",
+    "emptyTitle": "No matching articles",
+    "emptyDescription": "Try a different keyword or clear the selected topic.",
+    "clearSearch": "Clear search",
+    "recentTicketsHeading": "Your Recent Support Requests ({count})",
+    "ticketStatuses": {
+      "submitted": "Submitted",
+      "inReview": "In Review"
+    },
+    "stillNeedHelp": "Still need help?",
+    "supportHours": "Our renter support team is available Monday to Saturday, 08:00 AM – 06:00 PM CAT.",
+    "contactSupport": "Contact Support",
+    "faqs": {
+      "rfaq1": {
+        "question": "How do I submit my monthly rent payment?",
+        "answer": "Open Payments and select Pay Rent Now. Choose MTN Mobile Money, Airtel Money, or Bank Transfer, enter your transaction reference or upload your confirmation screenshot, and submit."
+      },
+      "rfaq2": {
+        "question": "Where can I download my rent payment receipts?",
+        "answer": "All confirmed payment receipts appear automatically on both the Payments page (View Receipt) and the Documents page."
+      },
+      "rfaq3": {
+        "question": "How do I review or sign my lease agreement?",
+        "answer": "Go to Lease to inspect your lease terms, due date, security deposit, and open the full lease agreement document. You can preview, download, or sign pending agreements directly."
+      },
+      "rfaq4": {
+        "question": "How do I report a maintenance problem in my apartment?",
+        "answer": "Visit Maintenance and click Report New Issue. Provide a clear title, category, priority, and description so your landlord can schedule repairs."
+      },
+      "rfaq5": {
+        "question": "What happens if my landlord logs a rental obligation notice?",
+        "answer": "You receive a 3-day notice window before any obligation can be confirmed. In Rental History, you can either settle the balance or submit a dispute with payment proof for review."
+      },
+      "rfaq6": {
+        "question": "Can I browse new homes and request viewings as a renter?",
+        "answer": "Yes. Use Explore Homes to search available listings by district, budget, and bedrooms, message landlords with inquiries, and book viewing visits."
+      }
+    },
+    "supportModal": {
+      "title": "Contact Renter Support",
+      "description": "Tell us how we can assist with your tenancy, rent payment, or account.",
+      "sendRequest": "Send Request",
+      "topicLabel": "Topic",
+      "topics": {
+        "payments": "Payments & Receipts",
+        "leaseDocuments": "Lease & Documents",
+        "maintenance": "Maintenance",
+        "rentalHistory": "Rental History & Disputes",
+        "account": "Account & Settings"
+      },
+      "subjectLabel": "Subject *",
+      "subjectPlaceholder": "e.g. Question about September rent confirmation",
+      "subjectError": "Enter a short subject.",
+      "messageLabel": "Message *",
+      "messagePlaceholder": "Describe how we can help...",
+      "messageError": "Please describe your issue.",
+      "toastSuccess": "Support request submitted. Our team will respond shortly."
+    }
+  },
+  "toasts": {
+    "maintenanceSubmitted": "Maintenance request submitted.",
+    "maintenanceFailed": "Unable to submit your maintenance request.",
+    "paymentRecorded": "Rent payment recorded (preview mode). Receipt saved to Documents.",
+    "paymentFailed": "Unable to submit payment. Please try again.",
+    "profileUpdated": "Profile updated.",
+    "profileFailed": "Unable to update profile."
+  }
+}

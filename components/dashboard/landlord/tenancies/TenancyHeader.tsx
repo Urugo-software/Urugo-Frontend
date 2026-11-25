@@ -1,8 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import { Building2, MapPin, ShieldCheck } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { PropertyCover } from "@/components/dashboard/landlord/properties/PropertyCover";
+import type { AppLocale } from "@/i18n/config";
+import { formatRwfLocalized } from "@/i18n/formatting";
 import type { LandlordPropertyItem, LandlordRenter } from "@/types/landlord";
-import { formatCurrencyRwf } from "@/utils/agreement-utils";
 import { PaymentStatusBadge, TenancyStatusBadge } from "./StatusBadges";
 
 interface TenancyHeaderProps {
@@ -11,8 +15,18 @@ interface TenancyHeaderProps {
 }
 
 export function TenancyHeader({ renter, property }: TenancyHeaderProps) {
+  const t = useTranslations("landlord.tenancies.detail");
+  const tBadges = useTranslations("landlord.tenancies.badges");
+  const tTypes = useTranslations("landlord.properties.types");
+  const locale = useLocale() as AppLocale;
   const propertyTitle = property?.name ?? renter.propertyName;
   const showUnit = property ? property.hasUnits : true;
+  const tenancyBadgeLabel =
+    renter.tenancyStatus === "Active"
+      ? tBadges("activeTenancy")
+      : renter.tenancyStatus === "Ending"
+        ? tBadges("endingTenancy")
+        : tBadges("closedTenancy");
 
   return (
     <section
@@ -29,7 +43,7 @@ export function TenancyHeader({ renter, property }: TenancyHeaderProps) {
           {property?.type && (
             <span className="absolute left-3 top-3 inline-flex items-center gap-1.5 border border-line bg-white/95 px-2.5 py-1 text-xs font-semibold uppercase tracking-wider text-ink shadow-2xs">
               <Building2 aria-hidden="true" className="size-3.5 text-brand" />
-              {property.type}
+              {tTypes(property.type)}
             </span>
           )}
         </div>
@@ -38,7 +52,7 @@ export function TenancyHeader({ renter, property }: TenancyHeaderProps) {
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="min-w-0 space-y-1.5">
               <span className="block text-xs font-semibold uppercase tracking-wider text-brand">
-                Tenancy Details
+                {t("tenancyDetailsEyebrow")}
               </span>
               <h1
                 id="tenancy-details-heading"
@@ -58,7 +72,7 @@ export function TenancyHeader({ renter, property }: TenancyHeaderProps) {
                   <>
                     {" "}
                     <span className="font-normal text-faint">&mdash;</span>{" "}
-                    <span>Unit {renter.unitNumber}</span>
+                    <span>{t("unitLabel", { unit: renter.unitNumber })}</span>
                   </>
                 )}
               </h1>
@@ -72,13 +86,13 @@ export function TenancyHeader({ renter, property }: TenancyHeaderProps) {
 
               <p className="flex flex-wrap items-center gap-x-2 gap-y-1 pt-1 text-sm text-body">
                 <span>
-                  Tenant:{" "}
+                  {t("tenantLabel")}{" "}
                   <strong className="font-semibold text-ink">{renter.name}</strong>
                 </span>
                 {renter.isIdentityVerified && (
                   <span className="inline-flex items-center gap-1 text-xs font-medium text-emerald-700">
                     <ShieldCheck aria-hidden="true" className="size-3.5" />
-                    Verified
+                    {t("verified")}
                   </span>
                 )}
                 <span className="text-faint">&middot;</span>
@@ -88,14 +102,14 @@ export function TenancyHeader({ renter, property }: TenancyHeaderProps) {
 
             <TenancyStatusBadge
               status={renter.tenancyStatus}
-              label={`${renter.tenancyStatus} Tenancy`}
+              label={tenancyBadgeLabel}
             />
           </div>
 
           <div className="mt-6 grid grid-cols-1 gap-4 border-t border-line pt-5 sm:grid-cols-3">
             <div>
               <span className="block text-xs font-semibold uppercase tracking-wider text-faint">
-                Lease Started
+                {t("leaseStarted")}
               </span>
               <span className="mt-1.5 block text-sm font-semibold text-ink">
                 {renter.startDate}
@@ -103,7 +117,7 @@ export function TenancyHeader({ renter, property }: TenancyHeaderProps) {
             </div>
             <div>
               <span className="block text-xs font-semibold uppercase tracking-wider text-faint">
-                Rent Payment
+                {t("rentPayment")}
               </span>
               <div className="mt-1.5">
                 <PaymentStatusBadge status={renter.paymentStatus} />
@@ -111,10 +125,10 @@ export function TenancyHeader({ renter, property }: TenancyHeaderProps) {
             </div>
             <div>
               <span className="block text-xs font-semibold uppercase tracking-wider text-faint">
-                Monthly Rent
+                {t("monthlyRent")}
               </span>
               <span className="mt-1.5 block font-ibm text-base font-bold text-brand">
-                {formatCurrencyRwf(renter.monthlyRentRwf)}
+                {formatRwfLocalized(renter.monthlyRentRwf, locale)}
               </span>
             </div>
           </div>

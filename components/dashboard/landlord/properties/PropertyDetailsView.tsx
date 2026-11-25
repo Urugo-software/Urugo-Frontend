@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import toast from "react-hot-toast";
 import {
   Archive,
@@ -23,11 +24,13 @@ import { EmptyStateBox } from "@/components/shared/EmptyStateBox";
 import { ModalDialog } from "@/components/shared/ModalDialog";
 import { StatusBadge, type StatusTone } from "@/components/shared/StatusBadge";
 import { Button, buttonVariants } from "@/components/ui/button";
+import type { AppLocale } from "@/i18n/config";
+import { formatRwfLocalized } from "@/i18n/formatting";
 import { cn } from "@/lib/utils";
 import { useLandlordProperties } from "@/store/landlord-properties.store";
 import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
 import type { ListingStatus } from "@/types/landlord";
-import { formatPropertyRent, formatRwf } from "@/utils/format";
+import { formatPropertyRent } from "@/utils/format";
 
 const LISTING_TONE: Record<ListingStatus, StatusTone> = {
   Published: "success",
@@ -37,7 +40,26 @@ const LISTING_TONE: Record<ListingStatus, StatusTone> = {
   Archived: "neutral",
 };
 
+const AMENITY_KEYS: Record<string, string> = {
+  Parking: "parking",
+  WiFi: "wifi",
+  "24/7 Security": "security247",
+  "Water Tank": "waterTank",
+  Garden: "garden",
+  Furnished: "furnished",
+  "Solar Heater": "solarHeater",
+  "Gated Compound": "gatedCompound",
+};
+
+const SEED_PROPERTY_IDS = new Set(["prop-101", "prop-102", "prop-103"]);
+
 export function PropertyDetailsView({ propertyId }: { propertyId: string }) {
+  const t = useTranslations("landlord.properties.details");
+  const tTypes = useTranslations("landlord.properties.types");
+  const tStatuses = useTranslations("landlord.properties.statuses");
+  const tAmenities = useTranslations("landlord.properties.amenities");
+  const tSeed = useTranslations("landlord.seed.properties");
+  const locale = useLocale() as AppLocale;
   const router = useRouter();
   const { properties, groups, updatePropertyListingStatus, deleteProperty } =
     useLandlordProperties();
@@ -54,8 +76,8 @@ export function PropertyDetailsView({ propertyId }: { propertyId: string }) {
       <main className="min-h-0 flex-1 space-y-6 overflow-y-auto bg-surface/30 p-4 pb-16 sm:p-8 md:p-10">
         <EmptyStateBox
           icon={Building2}
-          title="Property not found"
-          description="This property may have been removed or the link is no longer valid."
+          title={t("notFoundTitle")}
+          description={t("notFoundDesc")}
           action={
             <Link
               href="/landlord/properties"
@@ -64,7 +86,7 @@ export function PropertyDetailsView({ propertyId }: { propertyId: string }) {
                 "rounded-none",
               )}
             >
-              Back to My Properties
+              {t("backToProperties")}
             </Link>
           }
         />
@@ -88,6 +110,8 @@ export function PropertyDetailsView({ propertyId }: { propertyId: string }) {
   const listingStatus: ListingStatus =
     property.listingStatus ??
     (property.status === "Occupied" ? "Rented" : "Published");
+  const listingStatusLabel =
+    listingStatus === "Rented" ? tStatuses("rentedBadge") : listingStatus;
   const rent = formatPropertyRent(property);
 
   const setStatus = (nextStatus: ListingStatus, message: string) => {
@@ -107,7 +131,9 @@ export function PropertyDetailsView({ propertyId }: { propertyId: string }) {
           className="inline-flex items-center gap-1.5 text-sm font-semibold text-body hover:text-ink hover:underline"
         >
           <ArrowLeft aria-hidden="true" className="size-4" />
-          <span>{group ? `Back to ${group.name}` : "Back to My Properties"}</span>
+          <span>
+            {group ? t("backToGroup", { name: group.name }) : t("backToProperties")}
+          </span>
         </Link>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -119,7 +145,7 @@ export function PropertyDetailsView({ propertyId }: { propertyId: string }) {
             )}
           >
             <Pencil aria-hidden="true" className="size-3.5" />
-            <span>Edit Property</span>
+            <span>{t("editProperty")}</span>
           </Link>
           {serviceMode === "managed" && (
             <Link
@@ -131,7 +157,7 @@ export function PropertyDetailsView({ propertyId }: { propertyId: string }) {
             >
               <Layers aria-hidden="true" className="size-3.5" />
               <span>
-                {property.hasUnits ? "Manage Units & Leases" : "Manage Lease"}
+                {property.hasUnits ? t("manageUnitsLeases") : t("manageLease")}
               </span>
             </Link>
           )}
@@ -168,7 +194,7 @@ export function PropertyDetailsView({ propertyId }: { propertyId: string }) {
                     key={`${img}-${index}`}
                     type="button"
                     onClick={() => setSelectedImage(img)}
-                    aria-label={`View photo ${index + 1}`}
+                    aria-label={t("viewPhotoAria", { index: index + 1 })}
                     className={`relative h-14 w-20 shrink-0 cursor-pointer overflow-hidden border-2 ${
                       activeCover === img
                         ? "border-brand-blue"
@@ -193,12 +219,14 @@ export function PropertyDetailsView({ propertyId }: { propertyId: string }) {
                 <div className="space-y-1.5">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="text-xs font-semibold uppercase tracking-wider text-faint">
-                      {property.type} ·{" "}
-                      {property.hasUnits ? "Multi-Unit Building" : "Standalone"}
+                      {tTypes(property.type)} ·{" "}
+                      {property.hasUnits
+                        ? t("multiUnitLabel")
+                        : t("standaloneLabel")}
                     </span>
                     <span aria-hidden="true" className="text-line">&middot;</span>
                     <StatusBadge
-                      label={listingStatus}
+                      label={listingStatusLabel}
                       tone={LISTING_TONE[listingStatus]}
                     />
                   </div>
@@ -214,10 +242,10 @@ export function PropertyDetailsView({ propertyId }: { propertyId: string }) {
                 {rent !== undefined && (
                   <div className="border border-line bg-surface/60 px-4 py-2.5 text-right">
                     <p className="text-xs font-semibold uppercase tracking-wider text-faint">
-                      {property.hasUnits ? "Expected Monthly" : "Monthly Rent"}
+                      {property.hasUnits ? t("expectedMonthly") : t("monthlyRent")}
                     </p>
                     <p className="font-ibm text-lg font-bold text-ink">
-                      {formatRwf(rent)}
+                      {formatRwfLocalized(rent, locale)}
                     </p>
                   </div>
                 )}
@@ -227,38 +255,44 @@ export function PropertyDetailsView({ propertyId }: { propertyId: string }) {
                 {property.bedrooms !== undefined && (
                   <span className="inline-flex items-center gap-1.5">
                     <BedDouble aria-hidden="true" className="size-4 text-faint" />
-                    {property.bedrooms} Bedrooms
+                    {t("bedroomsCount", { count: property.bedrooms })}
                   </span>
                 )}
                 {property.bathrooms !== undefined && (
                   <span className="inline-flex items-center gap-1.5">
                     <Bath aria-hidden="true" className="size-4 text-faint" />
-                    {property.bathrooms} Bathrooms
+                    {t("bathroomsCount", { count: property.bathrooms })}
                   </span>
                 )}
                 {property.securityDepositRwf !== undefined && (
                   <span>
-                    Deposit: <strong>{formatRwf(property.securityDepositRwf)}</strong>
+                    {t("depositLabel")}{" "}
+                    <strong>
+                      {formatRwfLocalized(property.securityDepositRwf, locale)}
+                    </strong>
                   </span>
                 )}
                 {property.availableFrom && (
                   <span>
-                    Available from: <strong>{property.availableFrom}</strong>
+                    {t("availableFromLabel")}{" "}
+                    <strong>{property.availableFrom}</strong>
                   </span>
                 )}
                 <span className="inline-flex items-center gap-1.5">
                   <Eye aria-hidden="true" className="size-4 text-faint" />
-                  {property.viewsCount ?? 0} listing views
+                  {t("listingViews", { count: property.viewsCount ?? 0 })}
                 </span>
               </div>
 
               {property.description && (
                 <div className="space-y-1.5">
                   <h3 className="text-xs font-semibold uppercase tracking-wider text-faint">
-                    Description
+                    {t("descriptionHeading")}
                   </h3>
                   <p className="text-sm leading-relaxed text-body">
-                    {property.description}
+                    {SEED_PROPERTY_IDS.has(property.id)
+                      ? tSeed(`${property.id}.description`)
+                      : property.description}
                   </p>
                 </div>
               )}
@@ -266,17 +300,20 @@ export function PropertyDetailsView({ propertyId }: { propertyId: string }) {
               {property.amenities && property.amenities.length > 0 && (
                 <div className="space-y-2">
                   <h3 className="text-xs font-semibold uppercase tracking-wider text-faint">
-                    Amenities
+                    {t("amenitiesHeading")}
                   </h3>
                   <div className="flex flex-wrap gap-2">
-                    {property.amenities.map((amenity) => (
-                      <span
-                        key={amenity}
-                        className="border border-line bg-surface px-2.5 py-1 text-xs font-medium text-ink"
-                      >
-                        {amenity}
-                      </span>
-                    ))}
+                    {property.amenities.map((amenity) => {
+                      const amenityKey = AMENITY_KEYS[amenity];
+                      return (
+                        <span
+                          key={amenity}
+                          className="border border-line bg-surface px-2.5 py-1 text-xs font-medium text-ink"
+                        >
+                          {amenityKey ? tAmenities(amenityKey) : amenity}
+                        </span>
+                      );
+                    })}
                   </div>
                 </div>
               )}
@@ -289,28 +326,20 @@ export function PropertyDetailsView({ propertyId }: { propertyId: string }) {
           <div className="space-y-4 border border-line bg-white p-5 shadow-2xs">
             <div>
               <h3 className="text-xs font-semibold uppercase tracking-wider text-faint">
-                Listing Visibility & Availability
+                {t("visibilityHeading")}
               </h3>
-              <p className="mt-1 text-xs text-body">
-                Control whether prospective tenants can see and inquire about
-                this property on Urugo.
-              </p>
+              <p className="mt-1 text-xs text-body">{t("visibilityDesc")}</p>
             </div>
 
             <div className="flex flex-col gap-2">
               {listingStatus !== "Published" && (
                 <Button
                   type="button"
-                  onClick={() =>
-                    setStatus(
-                      "Published",
-                      "Listing published and visible to tenants.",
-                    )
-                  }
+                  onClick={() => setStatus("Published", t("toastPublished"))}
                   className="w-full cursor-pointer justify-start rounded-none text-xs"
                 >
                   <CheckCircle2 aria-hidden="true" className="size-4" />
-                  <span>Publish / Mark Available</span>
+                  <span>{t("publishBtn")}</span>
                 </Button>
               )}
 
@@ -318,13 +347,11 @@ export function PropertyDetailsView({ propertyId }: { propertyId: string }) {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() =>
-                    setStatus("Paused", "Listing temporarily paused.")
-                  }
+                  onClick={() => setStatus("Paused", t("toastPaused"))}
                   className="w-full cursor-pointer justify-start rounded-none text-xs"
                 >
                   <PauseCircle aria-hidden="true" className="size-4" />
-                  <span>Temporarily Pause Listing</span>
+                  <span>{t("pauseBtn")}</span>
                 </Button>
               )}
 
@@ -332,13 +359,11 @@ export function PropertyDetailsView({ propertyId }: { propertyId: string }) {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() =>
-                    setStatus("Rented", "Property marked as rented / unavailable.")
-                  }
+                  onClick={() => setStatus("Rented", t("toastRented"))}
                   className="w-full cursor-pointer justify-start rounded-none text-xs"
                 >
                   <Building2 aria-hidden="true" className="size-4" />
-                  <span>Mark as Rented / Unavailable</span>
+                  <span>{t("markRentedBtn")}</span>
                 </Button>
               )}
 
@@ -346,13 +371,11 @@ export function PropertyDetailsView({ propertyId }: { propertyId: string }) {
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={() =>
-                    setStatus("Archived", "Listing moved to archived state.")
-                  }
+                  onClick={() => setStatus("Archived", t("toastArchived"))}
                   className="w-full cursor-pointer justify-start rounded-none text-xs"
                 >
                   <Archive aria-hidden="true" className="size-4" />
-                  <span>Archive Listing</span>
+                  <span>{t("archiveBtn")}</span>
                 </Button>
               )}
             </div>
@@ -365,14 +388,14 @@ export function PropertyDetailsView({ propertyId }: { propertyId: string }) {
                 className="w-full cursor-pointer justify-start rounded-none text-xs"
               >
                 <Trash2 aria-hidden="true" className="size-4" />
-                <span>Delete Property</span>
+                <span>{t("deletePropertyBtn")}</span>
               </Button>
             </div>
           </div>
 
           <div className="space-y-3 border border-line bg-white p-5 shadow-2xs">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-faint">
-              Tenant Leads
+              {t("tenantLeadsHeading")}
             </h3>
             <div className="flex flex-col gap-2">
               <Link
@@ -382,7 +405,7 @@ export function PropertyDetailsView({ propertyId }: { propertyId: string }) {
                   "w-full justify-start rounded-none text-xs",
                 )}
               >
-                View Inquiries
+                {t("viewInquiries")}
               </Link>
               <Link
                 href="/landlord/viewings"
@@ -391,7 +414,7 @@ export function PropertyDetailsView({ propertyId }: { propertyId: string }) {
                   "w-full justify-start rounded-none text-xs",
                 )}
               >
-                Manage Viewing Requests
+                {t("manageViewings")}
               </Link>
             </div>
           </div>
@@ -402,8 +425,8 @@ export function PropertyDetailsView({ propertyId }: { propertyId: string }) {
         open={confirmDelete}
         onClose={() => setConfirmDelete(false)}
         variant="alert"
-        title="Delete property?"
-        description={`Delete "${property.name}" permanently from your landlord portfolio? This removes its listing and any unlinked unit records.`}
+        title={t("deleteDialogTitle")}
+        description={t("deleteDialogDesc", { name: property.name })}
         footer={
           <>
             <Button
@@ -412,27 +435,29 @@ export function PropertyDetailsView({ propertyId }: { propertyId: string }) {
               onClick={() => setConfirmDelete(false)}
               className="cursor-pointer rounded-none"
             >
-              Cancel
+              {t("cancel")}
             </Button>
             <Button
               type="button"
               variant="destructive"
               onClick={() => {
                 deleteProperty(property.id);
-                toast.success(`"${property.name}" deleted.`);
+                toast.success(t("toastDeleted", { name: property.name }));
                 router.push("/landlord/properties");
               }}
               className="cursor-pointer rounded-none"
             >
-              Confirm Delete
+              {t("confirmDelete")}
             </Button>
           </>
         }
       >
         <p className="text-xs text-body">
-          If you only want to hide this listing temporarily while keeping its
-          history, use <strong>Pause</strong> or <strong>Archive</strong>{" "}
-          instead.
+          {t("deleteDialogHintBefore")}
+          <strong>{t("deleteDialogPause")}</strong>
+          {t("deleteDialogOr")}
+          <strong>{t("deleteDialogArchive")}</strong>
+          {t("deleteDialogHintAfter")}
         </p>
       </ModalDialog>
     </main>

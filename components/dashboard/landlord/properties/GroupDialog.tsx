@@ -1,5 +1,8 @@
+"use client";
+
 import { AlertDialog } from "@base-ui/react/alert-dialog";
 import { Dialog } from "@base-ui/react/dialog";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
@@ -20,13 +23,6 @@ interface GroupFields {
   cover: FileList;
 }
 
-const titles = {
-  create: "Create Group",
-  rename: "Rename group",
-  cover: "Change cover image",
-  delete: "Delete group?",
-};
-
 export function GroupDialog({
   request,
   onClose,
@@ -40,6 +36,7 @@ export function GroupDialog({
   onDeleted?: () => void;
   returnFocusId?: string;
 }) {
+  const t = useTranslations("landlord.properties.groupDialog");
   const { createGroup, updateGroup, deleteGroup } = useLandlordProperties();
   const group = request.kind === "create" ? undefined : request.group;
   const {
@@ -60,7 +57,7 @@ export function GroupDialog({
         coverImage = await readImageFile(fields.cover[0]);
       } catch {
         setError("cover", {
-          message: "This image could not be read. Choose it again.",
+          message: t("coverReadError"),
         });
         return;
       }
@@ -71,17 +68,17 @@ export function GroupDialog({
         location: fields.location.trim() || undefined,
         coverImage,
       });
-      toast.success(`Group "${created.name}" created.`);
+      toast.success(t("toastCreated", { name: created.name }));
       onCreated?.(created);
     } else if (request.kind === "rename") {
       updateGroup(request.group.id, {
         name: fields.name.trim(),
         location: fields.location.trim() || undefined,
       });
-      toast.success("Group details updated.");
+      toast.success(t("toastUpdated"));
     } else if (request.kind === "cover") {
       updateGroup(request.group.id, { coverImage });
-      toast.success("Group cover image updated.");
+      toast.success(t("toastCoverUpdated"));
     }
     onClose();
   }
@@ -104,18 +101,16 @@ export function GroupDialog({
           className="fixed left-1/2 top-1/2 z-50 max-h-[90dvh] w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 space-y-5 overflow-y-auto rounded-none border border-line bg-white p-5 shadow-lg"
         >
           <Modal.Title className="text-xl font-semibold text-ink">
-            {titles[kind]}
+            {t(`titles.${kind}`)}
           </Modal.Title>
           {request.kind === "delete" ? (
             <>
               <Modal.Description className="text-sm text-body">
-                Delete “{request.group.name}”? Its properties will become
-                ungrouped. All properties, units, renters, tenancy history,
-                agreements and payments will be kept.
+                {t("deleteDescription", { name: request.group.name })}
               </Modal.Description>
               <div className="flex justify-end gap-2">
                 <Button variant="outline" className="rounded-none" onClick={onClose}>
-                  Cancel
+                  {t("cancel")}
                 </Button>
                 <Button
                   variant="destructive"
@@ -123,12 +118,12 @@ export function GroupDialog({
                   onClick={() => {
                     const name = request.group.name;
                     deleteGroup(request.group.id);
-                    toast.success(`Group "${name}" deleted.`);
+                    toast.success(t("toastDeleted", { name }));
                     onClose();
                     onDeleted?.();
                   }}
                 >
-                  Delete Group
+                  {t("deleteGroup")}
                 </Button>
               </div>
             </>
@@ -140,7 +135,9 @@ export function GroupDialog({
             >
               {kind !== "cover" && (
                 <Field>
-                  <FieldLabel htmlFor="group-name">Group name</FieldLabel>
+                  <FieldLabel htmlFor="group-name">
+                    {t("groupNameLabel")}
+                  </FieldLabel>
                   <Input
                     id="group-name"
                     className="rounded-none"
@@ -149,7 +146,7 @@ export function GroupDialog({
                     aria-describedby={errors.name && "group-name-error"}
                     {...register("name", {
                       validate: (value) =>
-                        !!value.trim() || "Enter a group name.",
+                        !!value.trim() || t("groupNameRequired"),
                     })}
                   />
                   <FieldError id="group-name-error">
@@ -160,7 +157,7 @@ export function GroupDialog({
               {(kind === "create" || kind === "rename") && (
                 <Field>
                   <FieldLabel htmlFor="group-location">
-                    Location (optional)
+                    {t("locationLabel")}
                   </FieldLabel>
                   <Input id="group-location" className="rounded-none" {...register("location")} />
                 </Field>
@@ -168,7 +165,8 @@ export function GroupDialog({
               {kind !== "rename" && (
                 <Field>
                   <FieldLabel htmlFor="group-cover">
-                    Cover image{kind === "create" && " (optional)"}
+                    {t("coverLabel")}
+                    {kind === "create" && t("coverOptionalSuffix")}
                   </FieldLabel>
                   <Input
                     id="group-cover"
@@ -180,10 +178,10 @@ export function GroupDialog({
                     {...register("cover", {
                       validate: (files) => {
                         if (!files?.length)
-                          return kind === "create" || "Choose a cover image.";
+                          return kind === "create" || t("coverRequired");
                         return (
                           files[0].type.startsWith("image/") ||
-                          "Choose an image file."
+                          t("coverInvalidType")
                         );
                       },
                     })}
@@ -202,7 +200,7 @@ export function GroupDialog({
                         onClose();
                       }}
                     >
-                      Remove current cover
+                      {t("removeCurrentCover")}
                     </Button>
                   )}
                 </Field>
@@ -215,14 +213,14 @@ export function GroupDialog({
                   onClick={onClose}
                   disabled={isSubmitting}
                 >
-                  Cancel
+                  {t("cancel")}
                 </Button>
                 <Button
                   type="submit"
                   className="rounded-none "
                   disabled={isSubmitting}
                 >
-                  {kind === "create" ? "Create Group" : "Apply changes"}
+                  {kind === "create" ? t("createSubmit") : t("applyChanges")}
                 </Button>
               </div>
             </form>

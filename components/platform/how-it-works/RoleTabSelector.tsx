@@ -1,57 +1,56 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
-import { RoleType } from "@/types";
+import type { RoleType } from "@/types";
 
 interface RoleTabSelectorProps {
   activeRole: RoleType;
   onRoleChange: (role: RoleType) => void;
 }
 
-const ROLES: { id: RoleType; label: string }[] = [
-  { id: "home_seeker", label: "For Home Seekers" },
-  { id: "landlord", label: "For Landlords" },
-  { id: "renter", label: "For Renters" },
-];
+const ROLE_IDS: readonly RoleType[] = ["home_seeker", "landlord", "renter"];
 
 export default function RoleTabSelector({
   activeRole,
   onRoleChange,
 }: RoleTabSelectorProps) {
+  const t = useTranslations("public.howItWorks.roles");
+
   return (
-    <div className="flex justify-center items-center gap-2 sm:gap-3 flex-wrap mb-12 px-4">
-      {ROLES.map((role) => {
-        const isActive = activeRole === role.id;
+    <div className="mb-12 flex flex-wrap items-center justify-center gap-2 px-4 sm:gap-3">
+      {ROLE_IDS.map((roleId) => {
+        const isActive = activeRole === roleId;
 
         return (
           <button
-            key={role.id}
+            key={roleId}
             type="button"
-            onClick={() => onRoleChange(role.id)}
-            className="relative px-5 py-3 rounded-full text-sm font-semibold cursor-pointer transition-colors duration-200 outline-none select-none flex items-center gap-2 z-10"
+            onClick={() => onRoleChange(roleId)}
+            className="relative z-10 flex cursor-pointer select-none items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold outline-none transition-colors duration-200"
           >
             {/* Sliding Pill Background for Active Tab */}
             {isActive && (
               <motion.div
                 layoutId="activeRolePill"
-                className="absolute inset-0 bg-brand rounded-full shadow-md z-0"
+                className="absolute inset-0 z-0 rounded-full bg-brand shadow-md"
                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
               />
             )}
 
             {/* Inactive Tab Border/Background hover */}
             {!isActive && (
-              <div className="absolute inset-0 rounded-full border border-line bg-white hover:bg-surface/80 hover:border-brand/30 transition-colors z-0" />
+              <div className="absolute inset-0 z-0 rounded-full border border-line bg-white transition-colors hover:border-brand/30 hover:bg-surface/80" />
             )}
 
             {/* Content inside button */}
             <span
               className={`relative z-10 flex items-center gap-2 transition-colors duration-200 ${
-                isActive ? "text-white font-bold" : "text-ink hover:text-brand"
+                isActive ? "font-bold text-white" : "text-ink hover:text-brand"
               }`}
             >
-              <span>{role.label}</span>
+              <span>{t(`${roleId}.tabLabel`)}</span>
             </span>
           </button>
         );

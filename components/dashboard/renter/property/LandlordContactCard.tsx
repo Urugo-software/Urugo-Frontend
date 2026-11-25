@@ -1,6 +1,12 @@
-import { User, Phone, Mail } from "lucide-react";
-import CardHeader from "./CardHeader";
+"use client";
+
 import Link from "next/link";
+import { Mail, MessageSquare, Phone } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { UserAvatar } from "@/components/shared/UserAvatar";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import CardHeader from "./CardHeader";
 
 interface Props {
   name: string;
@@ -9,28 +15,45 @@ interface Props {
 }
 
 export function LandlordContactCard({ name, phone, email }: Props) {
+  const t = useTranslations("renter.property.landlordCard");
+
   return (
-    <div className=" border border-line bg-white p-5 shadow-xs">
-      <CardHeader title="Landlord Contact" />
-      <div className="flex items-start gap-4">
-        <div className="grid size-11 place-items-center rounded-full bg-brand-tint text-brand">
-          <User className="size-6" />
+    <div className="flex flex-col justify-between border border-line bg-white p-5 shadow-2xs">
+      <div>
+        <CardHeader title={t("title")} />
+        <div className="flex items-start gap-4">
+          <UserAvatar name={name} className="size-12 text-sm" />
+          <div className="min-w-0 space-y-2">
+            <div className="text-base font-bold text-ink">{name}</div>
+            <a
+              href={`tel:${phone.replace(/\s+/g, "")}`}
+              className="flex items-center gap-2 text-sm text-body hover:text-ink hover:underline"
+            >
+              <Phone aria-hidden="true" className="size-4 text-faint" />
+              <span>{phone}</span>
+            </a>
+            <a
+              href={`mailto:${email}`}
+              className="flex items-center gap-2 text-sm text-body hover:text-ink hover:underline"
+            >
+              <Mail aria-hidden="true" className="size-4 text-faint" />
+              <span className="truncate">{email}</span>
+            </a>
+          </div>
         </div>
-        <div>
-          <div className="text-sm font-bold tracking-[0.5px] text-ink">
-            {name}
-          </div>
-          <div className="flex items-center mt-2 gap-1.5 text-[12.5px] text-body ">
-            <Phone className="size-3.5 text-faint" />
-            <span className="tracking-[0.5px]">{phone}</span>
-          </div>
-          <div className="flex items-center mt-2 gap-1.5 text-[12.5px] text-body ">
-            <Mail className="size-3.5 text-faint" />
-            <Link className="tracking-[0.5px]" href={"mailto:" + email}>
-              {email}
-            </Link>
-          </div>
-        </div>
+      </div>
+
+      <div className="mt-5 border-t border-line pt-4">
+        <Link
+          href="/renter/messages"
+          className={cn(
+            buttonVariants({ variant: "outline" }),
+            "h-9 w-full rounded-none text-xs font-semibold",
+          )}
+        >
+          <MessageSquare aria-hidden="true" className="size-4" />
+          {t("messageLandlord")}
+        </Link>
       </div>
     </div>
   );

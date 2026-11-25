@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { mockAgreements } from "@/data/mock-agreements";
 import { AgreementDetailView } from "@/components/dashboard/landlord/agreements/AgreementDetailView";
 
@@ -7,15 +8,22 @@ interface Props {
 
 export async function generateMetadata({ params }: Props) {
   const { id } = await params;
+  const t = await getTranslations("landlord.pages.agreements");
   const agreement = mockAgreements.find((a) => a.id === id);
 
   return {
     title: agreement
-      ? `${agreement.referenceNumber} — ${agreement.renter.name} | Lease Agreement`
-      : "Lease Agreement Details | Urugo Landlord",
+      ? t("detailTitle", {
+          referenceNumber: agreement.referenceNumber,
+          renterName: agreement.renter.name,
+        })
+      : t("detailFallbackTitle"),
     description: agreement
-      ? `Review and manage residential lease agreement ${agreement.referenceNumber} with ${agreement.renter.name}.`
-      : "Residential tenancy contract details and digital signing workspace.",
+      ? t("detailDescription", {
+          referenceNumber: agreement.referenceNumber,
+          renterName: agreement.renter.name,
+        })
+      : t("detailFallbackDescription"),
   };
 }
 

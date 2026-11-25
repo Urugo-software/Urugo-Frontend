@@ -1,56 +1,76 @@
 "use client";
 
 import Image from "next/image";
-import {  Heart,  } from "lucide-react";
-import { useState } from "react";
-import { PropertyCardImageProps } from "@/types";
+import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { ShieldCheck } from "lucide-react";
+
+import type { PropertyCardImageProps } from "@/types";
 
 function PropertyCardImage({
+  propertyId,
   viewMode = "list",
   image,
   headline,
-
+  isVerified,
   availabilityStatus,
 }: PropertyCardImageProps & { viewMode?: "grid" | "list" }) {
-  const [isLiked, setIsLiked] = useState(false);
+  const tCard = useTranslations("properties.card");
+  const tStatuses = useTranslations("common.statuses");
+  const isAvailable = availabilityStatus.toLowerCase() === "available";
 
-  return (
-    <div className={`relative w-full h-48 ${viewMode === "list" ? "sm:w-52 sm:h-40" : "sm:h-52"} shrink-0 overflow-hidden rounded-xl bg-surface`}>
+  const imageContent = (
+    <>
       <Image
         fill
         src={image}
         alt={headline}
-        sizes={viewMode === "grid" ? "(max-width: 767px) 100vw, (max-width: 1279px) 50vw, 33vw" : "(max-width: 640px) 100vw, 210px"}
+        sizes={
+          viewMode === "grid"
+            ? "(max-width: 767px) 100vw, (max-width: 1279px) 50vw, 33vw"
+            : "(max-width: 640px) 100vw, 210px"
+        }
         className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
       />
 
-      {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60 sm:opacity-40 transition-opacity group-hover:opacity-70" />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60 transition-opacity group-hover:opacity-70 sm:opacity-40" />
 
-      {/* Favorite Heart Button */}
-      <button
-        type="button"
-        onClick={() => setIsLiked(!isLiked)}
-        aria-label="Save property"
-        className="absolute top-2.5 right-2.5 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/85 backdrop-blur-md text-ink transition-transform duration-200 hover:scale-110 active:scale-95 cursor-pointer shadow-xs"
-      >
-        <Heart
-          className={`h-4 w-4 transition-colors ${
-            isLiked
-              ? "fill-red-500 text-red-500"
-              : "text-body hover:text-red-500"
-          }`}
-        />
-      </button>
+      {isVerified && (
+        <span className="absolute right-2.5 top-2.5 z-10 inline-flex items-center gap-1 rounded-sm bg-white/95 px-2 py-1 text-[12.5px] font-semibold text-brand shadow-xs">
+          <ShieldCheck aria-hidden="true" className="size-3.5" />
+          {tStatuses("verified")}
+        </span>
+      )}
 
-      {/* Availability Pill */}
       <div className="absolute bottom-2.5 left-2.5 z-10">
-        <span className="inline-flex items-center gap-1 py-1 px-2 bg-brand backdrop-blur-sm text-[12.5px] font-medium rounded-sm uppercase tracking-wide text-white shadow-xs">
-          {availabilityStatus}
+        <span
+          className={`inline-flex items-center gap-1 rounded-sm px-2 py-1 text-[12.5px] font-medium uppercase tracking-wide text-white shadow-xs backdrop-blur-sm ${
+            isAvailable ? "bg-brand" : "bg-ink/80"
+          }`}
+        >
+          {isAvailable ? tStatuses("available") : tStatuses("occupied")}
         </span>
       </div>
-    </div>
+    </>
   );
+
+  const containerClass = `relative block h-48 w-full ${
+    viewMode === "list" ? "sm:h-40 sm:w-52" : "sm:h-52"
+  } shrink-0 overflow-hidden rounded-xl bg-surface`;
+
+  if (propertyId) {
+    return (
+      <Link
+        href={`/properties/${propertyId}`}
+        aria-label={tCard("viewDetailsAria", { headline })}
+        className={containerClass}
+      >
+        {imageContent}
+      </Link>
+    );
+  }
+
+  return <div className={containerClass}>{imageContent}</div>;
 }
 
 export default PropertyCardImage;

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { ArrowLeft, FileText, ScrollText, UserX } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { EmptyStateBox } from "@/components/shared/EmptyStateBox";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -10,6 +11,7 @@ import { RenterDetailHeader } from "./RenterDetailHeader";
 import { RenterHistorySummary } from "./RenterHistorySummary";
 
 export function RenterDetailView({ renterId }: { renterId: string }) {
+  const t = useTranslations("landlord.renters");
   const { renters, issues } = useLandlordWorkspace();
   const renter = renters.find((r) => r.id === renterId);
 
@@ -18,14 +20,14 @@ export function RenterDetailView({ renterId }: { renterId: string }) {
       <main className="min-h-0 flex-1 space-y-6 overflow-y-auto bg-surface/30 p-4 pb-16 sm:p-8 md:p-10">
         <EmptyStateBox
           icon={UserX}
-          title="Renter not found"
-          description="We could not find a renter with this ID in your portfolio."
+          title={t("detail.notFoundTitle")}
+          description={t("detail.notFoundDesc")}
           action={
             <Link
               href="/landlord/renters"
               className={cn(buttonVariants({ variant: "outline" }), "rounded-none")}
             >
-              Back to Renters
+              {t("backToRenters")}
             </Link>
           }
         />
@@ -45,7 +47,7 @@ export function RenterDetailView({ renterId }: { renterId: string }) {
           className="inline-flex items-center gap-2 text-sm font-semibold text-body transition-colors hover:text-ink"
         >
           <ArrowLeft aria-hidden="true" className="size-4" />
-          <span>Back to Renters</span>
+          <span>{t("backToRenters")}</span>
         </Link>
 
         <div className="flex flex-wrap items-center gap-2">
@@ -57,7 +59,7 @@ export function RenterDetailView({ renterId }: { renterId: string }) {
             )}
           >
             <ScrollText aria-hidden="true" className="size-3.5" />
-            <span>View Tenancy</span>
+            <span>{t("detail.viewTenancy")}</span>
           </Link>
           {renter.agreementId && (
             <Link
@@ -68,7 +70,7 @@ export function RenterDetailView({ renterId }: { renterId: string }) {
               )}
             >
               <FileText aria-hidden="true" className="size-3.5" />
-              <span>Lease Agreement</span>
+              <span>{t("detail.leaseAgreement")}</span>
             </Link>
           )}
         </div>

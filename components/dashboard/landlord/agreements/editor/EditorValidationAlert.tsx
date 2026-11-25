@@ -1,6 +1,7 @@
 "use client";
 
 import { AlertTriangle, Info } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface Props {
   errors: string[];
@@ -8,6 +9,8 @@ interface Props {
 }
 
 export function EditorValidationAlert({ errors, warnings = [] }: Props) {
+  const t = useTranslations("landlord.agreements.editor.validation");
+
   if (errors.length === 0 && warnings.length === 0) return null;
 
   return (
@@ -19,7 +22,7 @@ export function EditorValidationAlert({ errors, warnings = [] }: Props) {
         >
           <div className="flex items-center gap-1.5 font-semibold">
             <AlertTriangle className="size-4 shrink-0 text-red-700" />
-            <span>Please complete required fields before continuing:</span>
+            <span>{t("errorsTitle")}</span>
           </div>
           <ul className="list-inside list-disc space-y-0.5 pl-1 text-[12.5px]">
             {errors.map((err, i) => (
@@ -36,16 +39,14 @@ export function EditorValidationAlert({ errors, warnings = [] }: Props) {
         >
           <div className="flex items-center gap-1.5 font-semibold">
             <Info className="size-4 shrink-0 text-amber-700" />
-            <span>
-              Recommended statutory clauses omitted ({warnings.length}):
-            </span>
+            <span>{t("warningsTitle", { count: warnings.length })}</span>
           </div>
           <ul className="list-inside list-disc space-y-0.5 pl-1 text-[12.5px]">
             {warnings.slice(0, 4).map((warn, i) => (
               <li key={i}>{warn}</li>
             ))}
             {warnings.length > 4 && (
-              <li>and {warnings.length - 4} more recommended clause(s).</li>
+              <li>{t("moreWarnings", { count: warnings.length - 4 })}</li>
             )}
           </ul>
         </div>

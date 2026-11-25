@@ -1,6 +1,7 @@
 "use client";
 
 import { Building, Calendar, DollarSign } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -25,14 +26,13 @@ export function Step1TenancyConfig({
   onCancel,
   onContinue,
 }: Step1TenancyConfigProps) {
+  const t = useTranslations("landlord.renters.wizard.step1");
+
   return (
     <div className="space-y-8 sm:space-y-9 text-[12.5px]">
       <div>
-        <h3 className="text-lg font-bold text-ink">Tenancy Configurations</h3>
-        <p className="text-body text-[12.5px] mt-1">
-          Specify property, unit, rental rates, commencement date, and payment
-          schedule.
-        </p>
+        <h3 className="text-lg font-bold text-ink">{t("title")}</h3>
+        <p className="text-body text-[12.5px] mt-1">{t("subtitle")}</p>
       </div>
 
       <div className="space-y-8 sm:space-y-9">
@@ -41,7 +41,7 @@ export function Step1TenancyConfig({
           <div className="flex items-center gap-2 border-b border-line pb-3">
             <Building className="size-4 text-ink" />
             <h4 className="text-[12.5px] font-semibold text-ink uppercase tracking-wider">
-              1. Property & Pricing
+              {t("section1Title")}
             </h4>
           </div>
 
@@ -49,13 +49,13 @@ export function Step1TenancyConfig({
             {/* Property Selector */}
             <Field className="space-y-1.5">
               <FieldLabel className="text-[12.5px] font-semibold uppercase tracking-wider text-faint">
-                Select Leased Property <span className="text-red-500">*</span>
+                {t("selectPropertyLabel")} <span className="text-red-500">*</span>
               </FieldLabel>
               <RenterPropertySelect
                 properties={properties}
                 selectedPropertyId={draft.propertyId}
                 onSelect={onSelectProperty}
-                emptyLabel="Choose a property from your portfolio..."
+                emptyLabel={t("selectPropertyEmpty")}
               />
               {errors.propertyId && (
                 <FieldError className="text-[12.5px] text-red-600 font-medium">
@@ -68,14 +68,14 @@ export function Step1TenancyConfig({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Field className="space-y-1.5">
                 <FieldLabel className="text-[12.5px] font-semibold uppercase tracking-wider text-faint">
-                  Monthly Rent (RWF) <span className="text-red-500">*</span>
+                  {t("monthlyRentLabel")} <span className="text-red-500">*</span>
                 </FieldLabel>
                 <div className="relative">
                   <Input
                     type="number"
                     min={0}
                     step={5000}
-                    placeholder="e.g. 150000"
+                    placeholder={t("monthlyRentPlaceholder")}
                     value={
                       draft.monthlyRentRwf === "" ? "" : draft.monthlyRentRwf
                     }
@@ -101,14 +101,14 @@ export function Step1TenancyConfig({
               {/* Security Deposit */}
               <Field className="space-y-1.5">
                 <FieldLabel className="text-[12.5px] font-semibold uppercase tracking-wider text-faint">
-                  Security Deposit (RWF)
+                  {t("securityDepositLabel")}
                 </FieldLabel>
                 <div className="relative">
                   <Input
                     type="number"
                     min={0}
                     step={5000}
-                    placeholder="e.g. 150000"
+                    placeholder={t("securityDepositPlaceholder")}
                     value={
                       draft.securityDepositRwf === ""
                         ? ""
@@ -136,7 +136,7 @@ export function Step1TenancyConfig({
           <div className="flex items-center gap-2 border-b border-line pb-3">
             <Calendar className="size-4 text-ink" />
             <h4 className="text-[12.5px] font-semibold text-ink uppercase tracking-wider">
-              2. Lease Term & Commencement
+              {t("section2Title")}
             </h4>
           </div>
 
@@ -156,12 +156,10 @@ export function Step1TenancyConfig({
               />
               <div className="space-y-1">
                 <span className="text-[13px] font-semibold text-ink block">
-                  Use First Rent Payment Date as Tenancy Commencement Date
+                  {t("firstPaymentToggleTitle")}
                 </span>
                 <p className="text-[12.5px] text-body leading-relaxed">
-                  When enabled, the tenancy commencement date will be based on
-                  the date the first rent payment is successfully received and
-                  recorded.
+                  {t("firstPaymentToggleDesc")}
                 </p>
               </div>
             </label>
@@ -169,13 +167,10 @@ export function Step1TenancyConfig({
             {draft.useFirstPaymentAsCommencement ? (
               <div className=" flex-col mt-2 border-t border-line/80 pt-3 flex items-start gap-2.5 text-[12.5px] text-body">
                 <div className=" rounded-lg shrink-0 items-center px-2 py-0.5 font-semibold text-[12.5px] bg-amber-100 text-amber-900 border border-amber-300">
-                  Pending First Payment
+                  {t("pendingFirstPaymentBadge")}
                 </div>
                 <div className="leading-snug">
-                  The commencement date will remain in a pending state until
-                  verified confirmation of the first rent payment. Once
-                  confirmed, the actual confirmation date will be recorded as
-                  the official commencement date.
+                  {t("pendingFirstPaymentNote")}
                 </div>
               </div>
             ) : null}
@@ -185,7 +180,7 @@ export function Step1TenancyConfig({
           {!draft.useFirstPaymentAsCommencement ? (
             <Field className="space-y-1.5">
               <FieldLabel className="text-[12.5px] font-semibold uppercase tracking-wider text-faint">
-                Tenancy Commencement Date{" "}
+                {t("commencementDateLabel")}{" "}
                 <span className="text-red-500">*</span>
               </FieldLabel>
               <Input
@@ -195,7 +190,7 @@ export function Step1TenancyConfig({
                 className="h-10 text-[12.5px] font-medium rounded-none border-line max-w-xs"
               />
               <p className="text-[12.5px] text-body">
-                Official commencement date agreed upon with the renter.
+                {t("commencementDateHint")}
               </p>
               {errors.startDate && (
                 <FieldError className="text-[12.5px] text-red-600 font-medium">
@@ -206,11 +201,9 @@ export function Step1TenancyConfig({
           ) : (
             <div className="rounded-none border border-line bg-surface p-3 text-[12.5px] text-body">
               <span className="font-semibold text-ink">
-                Commencement Schedule:
+                {t("commencementScheduleLabel")}
               </span>{" "}
-              Official lease start date will be automatically established upon
-              receipt and recording of the first rent payment. The recurring
-              monthly rent due date remains on the agreed day of each month.
+              {t("commencementScheduleDesc")}
             </div>
           )}
 
@@ -230,7 +223,7 @@ export function Step1TenancyConfig({
           <div className="flex items-center gap-2 border-b border-line pb-3">
             <DollarSign className="size-4 text-ink" />
             <h4 className="text-[12.5px] font-semibold text-ink uppercase tracking-wider">
-              3. Payment Schedule & Initial Settlement
+              {t("section3Title")}
             </h4>
           </div>
 
@@ -257,7 +250,7 @@ export function Step1TenancyConfig({
           onClick={onCancel}
           className="h-10 rounded-none border-line text-[12.5px] font-medium px-4"
         >
-          Cancel
+          {t("cancel")}
         </Button>
 
         <Button
@@ -265,7 +258,7 @@ export function Step1TenancyConfig({
           onClick={onContinue}
           className="h-10 rounded-none bg-ink text-white hover:bg-black text-[12.5px] font-semibold px-6 cursor-pointer"
         >
-          Continue to Renter Details &rarr;
+          {t("continueBtn")} &rarr;
         </Button>
       </div>
     </div>

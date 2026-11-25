@@ -1,6 +1,7 @@
 "use client";
 
 import { ShieldCheck } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { ModalDialog } from "@/components/shared/ModalDialog";
 import { StandardArticleDefinition } from "@/data/agreement-templates";
@@ -22,12 +23,15 @@ export function RestoreArticlesModal({
   onRestore,
   onRestoreAll,
 }: Props) {
+  const t = useTranslations("landlord.agreements.editor.restoreModal");
+  const tCommon = useTranslations("common");
+
   return (
     <ModalDialog
       open={isOpen}
       onClose={onClose}
-      title="Restore Standard Rwandan Tenancy Articles"
-      description={`${deletedArticles.length} standard clause${deletedArticles.length === 1 ? "" : "s"} currently omitted.`}
+      title={t("title")}
+      description={t("description", { count: deletedArticles.length })}
       maxWidthClassName="max-w-xl"
       footer={
         <Button
@@ -35,7 +39,7 @@ export function RestoreArticlesModal({
           onClick={onClose}
           className="h-9 cursor-pointer rounded-none bg-ink px-4 text-[12.5px] font-semibold text-white hover:bg-black"
         >
-          Close
+          {tCommon("actions.close")}
         </Button>
       }
     >
@@ -44,22 +48,19 @@ export function RestoreArticlesModal({
           <div className="flex flex-col items-center justify-center border border-dashed border-line p-8 text-center">
             <ShieldCheck className="mb-2 size-8 text-ink" />
             <p className="text-[12.5px] font-medium text-ink">
-              All 18 standard Rwandan tenancy articles are currently present in
-              your agreement.
+              {t("allPresent")}
             </p>
           </div>
         ) : (
           <div className="space-y-4">
             <div className="flex items-center justify-between border-b border-line pb-2">
-              <span className="text-[12.5px] text-faint">
-                Restore any omitted clause without losing custom clause order.
-              </span>
+              <span className="text-[12.5px] text-faint">{t("hint")}</span>
               <button
                 type="button"
                 onClick={onRestoreAll}
                 className="cursor-pointer text-[12.5px] font-semibold text-ink underline hover:text-black"
               >
-                Restore All ({deletedArticles.length})
+                {t("restoreAll", { count: deletedArticles.length })}
               </button>
             </div>
 
@@ -77,11 +78,11 @@ export function RestoreArticlesModal({
                     <div>
                       <div className="flex items-center gap-2">
                         <span className="font-mono text-[12.5px] font-semibold text-ink">
-                          Standard #{def.standardNumber}
+                          {t("standardNumber", { number: def.standardNumber })}
                         </span>
                         {def.isMandatory && (
                           <span className="text-[12.5px] text-faint">
-                            (recommended)
+                            {t("recommended")}
                           </span>
                         )}
                       </div>
@@ -99,7 +100,7 @@ export function RestoreArticlesModal({
                       onClick={() => onRestore(def.standardNumber)}
                       className="h-8 shrink-0 cursor-pointer rounded-none border-line px-3 text-[12.5px] font-medium hover:bg-surface"
                     >
-                      Restore
+                      {t("restore")}
                     </Button>
                   </div>
                 );

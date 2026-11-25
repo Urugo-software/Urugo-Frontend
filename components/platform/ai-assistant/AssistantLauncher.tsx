@@ -1,4 +1,7 @@
+"use client";
+
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 interface AssistantLauncherProps {
   onOpen: () => void;
@@ -6,20 +9,26 @@ interface AssistantLauncherProps {
 }
 
 export function AssistantLauncher({ onOpen, visual }: AssistantLauncherProps) {
+  const t = useTranslations("public.zoe");
+
   return (
     <motion.button
       type="button"
-      aria-label="Open Urugo AI assistant"
-      className="fixed bottom-3 right-6 z-50 size-18 overflow-hidden rounded-full border border-brand/20 bg-white shadow-xl  sm:bottom-6 sm:right-6 sm:size-[5.5rem]"
-      initial={{ opacity: 0, scale: 0.8 }}
+      aria-label={t("openAria")}
+      title={t("askTitle")}
+      className="fixed bottom-4 right-4 z-40 size-16 cursor-pointer overflow-hidden rounded-full border border-brand/25 bg-white shadow-xl transition-shadow hover:shadow-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 sm:bottom-6 sm:right-6 sm:size-20"
+      initial={{ opacity: 0, scale: 0.85 }}
       animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.8 }}
-      whileHover={{ scale: 1.06 }}
-      whileTap={{ scale: 0.94 }}
+      exit={{ opacity: 0, scale: 0.85 }}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
       onClick={onOpen}
     >
       {visual}
-      <span className="absolute bottom-1 right-1 size-3 rounded-full border-2 border-white bg-success" />
+      <span
+        aria-hidden="true"
+        className="absolute bottom-1.5 right-1.5 size-3 rounded-full border-2 border-white bg-success"
+      />
     </motion.button>
   );
 }

@@ -1,109 +1,141 @@
 "use client";
 
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { ArrowUpRight, MapPin, ShieldCheck } from "lucide-react";
+
+import { listed_properties } from "@/data/properties";
 
 export interface PropertyMatchItem {
   id?: string;
-  image: string;
+  image: string | StaticImageData;
   name: string;
   location?: string;
   details: string;
   price: string;
   badge?: string;
+  isVerified?: boolean;
 }
-
-const defaultProperties: PropertyMatchItem[] = [
-  {
-    id: "prop-1",
-    image: "/assets/home/prop1.jpg",
-    name: "2BR Modern Apartment — Kimironko",
-    location: "Kimironko, Kigali",
-    details: "★ 4.8 · Parking · High-speed WiFi",
-    price: "150,000 RWF",
-    badge: "Verified"
-  },
-  {
-    id: "prop-2",
-    image: "/assets/home/prop2.jpg",
-    name: "2BR Cozy Serviced Flat — Kabeza",
-    location: "Kabeza, Kigali",
-    details: "★ 4.6 · Dedicated Parking · Water included",
-    price: "180,000 RWF",
-    badge: "Instant Tour"
-  },
-  {
-    id: "prop-3",
-    image: "/assets/home/prop3.jpg",
-    name: "2BR Premium Residence — Kacyiru",
-    location: "Kacyiru, Kigali",
-    details: "★ 4.9 · Secured Parking · Fully Furnished",
-    price: "195,000 RWF",
-    badge: "Verified"
-  },
-];
 
 interface PropertyMatchesProps {
   items?: PropertyMatchItem[];
+  compact?: boolean;
+  onNavigate?: () => void;
   onSelectProperty?: (name: string) => void;
 }
 
-export function PropertyMatches({ items = defaultProperties, onSelectProperty }: PropertyMatchesProps) {
+export function PropertyMatches({
+  items,
+  compact = true,
+  onNavigate,
+  onSelectProperty,
+}: PropertyMatchesProps) {
+  const t = useTranslations("public.zoe.matches");
+  const tStatuses = useTranslations("common.statuses");
+
+  const resolvedItems: PropertyMatchItem[] =
+    items ??
+    listed_properties.slice(0, 3).map((item) => ({
+      id: item.id,
+      image: item.image,
+      name: item.headline,
+      location: item.location,
+      details: `${t("beds", { count: item.beds })} · ${t("baths", { count: item.baths })}${item.parking ? ` · ${t("parking")}` : ""}`,
+      price: `${item.price} ${item.currency}`,
+      isVerified: item.isVerified,
+    }));
+
   return (
     <div className="mt-2 flex w-full flex-col gap-3">
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((prop) => (
-          <div
-            key={prop.name}
-            className="group relative flex flex-col overflow-hidden rounded-2xl border border-line bg-white p-3 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-md hover:shadow-brand/5"
-          >
-            <div className="relative h-32 w-full overflow-hidden rounded-xl bg-surface">
-              <Image
-                src={prop.image}
-                alt={prop.name}
-                fill
-                className="object-cover transition-transform duration-300 group-hover:scale-105"
-              />
-              {prop.badge && (
-                <span className="absolute top-2.5 left-2.5 inline-flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-[12.5px] font-bold text-brand shadow-sm backdrop-blur">
-                  <ShieldCheck className="size-3 text-brand" />
-                  {prop.badge}
-                </span>
-              )}
-            </div>
+      <div
+        className={
+          compact
+            ? "grid grid-cols-1 gap-3"
+            : "grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"
+        }
+      >
+        {resolvedItems.map((prop) => {
+          const href = prop.id ? `/properties/${prop.id}` : "/properties";
+          const handleClick = () => {
+            onSelectProperty?.(prop.name);
+            onNavigate?.();
+          };
 
-            <div className="mt-3 flex flex-1 flex-col justify-between">
-              <div>
-                <h3 className="line-clamp-1 text-sm font-bold text-ink group-hover:text-brand transition-colors">
-                  {prop.name}
-                </h3>
-                {prop.location && (
-                  <p className="mt-0.5 flex items-center gap-1 text-xs text-body">
-                    <MapPin className="size-3 text-faint" />
-                    {prop.location}
-                  </p>
+          return (
+            <div
+              key={prop.id ?? prop.name}
+              className="group relative flex flex-col overflow-hidden rounded-xl border border-line bg-white p-3 shadow-2xs transition-all duration-200 hover:border-brand/40 hover:shadow-sm"
+            >
+              <Link
+                href={href}
+                onClick={handleClick}
+                className="relative block h-28 w-full overflow-hidden rounded-lg bg-surface"
+              >
+                <Image
+                  src={prop.image}
+                  alt={prop.name}
+                  fill
+                  sizes={
+                    compact ? "360px" : "(min-width: 1024px) 280px, 100vw"
+                  }
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+                {(prop.isVerified || prop.badge) && (
+                  <span className="absolute left-2 top-2 inline-flex items-center gap-1 rounded-full bg-white/95 px-2 py-0.5 text-[12.5px] font-semibold text-brand shadow-xs">
+                    <ShieldCheck
+                      aria-hidden="true"
+                      className="size-3 text-brand"
+                    />
+                    {prop.badge ?? tStatuses("verified")}
+                  </span>
                 )}
-                <p className="mt-1 text-[12.5px] text-body">{prop.details}</p>
-              </div>
+              </Link>
 
-              <div className="mt-3 flex items-center justify-between border-t border-line/60 pt-2.5">
+              <div className="mt-2.5 flex flex-1 flex-col justify-between">
                 <div>
-                  <span className="text-[12.5px] font-medium text-faint uppercase tracking-wider block">Monthly rent</span>
-                  <span className="font-mono text-sm font-bold text-brand">{prop.price}</span>
+                  <Link
+                    href={href}
+                    onClick={handleClick}
+                    className="line-clamp-1 text-sm font-bold text-ink transition-colors group-hover:text-brand"
+                  >
+                    {prop.name}
+                  </Link>
+                  {prop.location && (
+                    <p className="mt-0.5 flex items-center gap-1 text-xs text-body">
+                      <MapPin
+                        aria-hidden="true"
+                        className="size-3 shrink-0 text-faint"
+                      />
+                      <span className="truncate">{prop.location}</span>
+                    </p>
+                  )}
+                  <p className="mt-1 text-xs text-faint">{prop.details}</p>
                 </div>
 
-                <Link
-                  href="/properties"
-                  onClick={() => onSelectProperty?.(prop.name)}
-                  className="inline-flex items-center gap-1 rounded-xl bg-brand-tint px-3 py-1.5 text-xs font-bold text-brand transition-all hover:bg-brand hover:text-white"
-                >
-                  View <ArrowUpRight className="size-3.5" />
-                </Link>
+                <div className="mt-2.5 flex items-center justify-between border-t border-line/60 pt-2">
+                  <div>
+                    <span className="block text-[12.5px] text-faint">
+                      {t("monthlyRent")}
+                    </span>
+                    <span className="font-mono text-sm font-bold text-brand">
+                      {prop.price}
+                    </span>
+                  </div>
+
+                  <Link
+                    href={href}
+                    onClick={handleClick}
+                    className="inline-flex items-center gap-1 rounded-lg bg-brand-tint px-3 py-1.5 text-xs font-bold text-brand transition-colors hover:bg-brand hover:text-white"
+                  >
+                    <span>{t("view")}</span>
+                    <ArrowUpRight aria-hidden="true" className="size-3.5" />
+                  </Link>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import {
@@ -29,33 +30,14 @@ interface SupportFormValues {
 }
 
 const CATEGORIES = [
-  {
-    key: "Listings",
-    title: "Listings & Viewings",
-    desc: "Publishing, pausing & tenant leads",
-    icon: Building2,
-  },
-  {
-    key: "Tenancies",
-    title: "Tenancy Management",
-    desc: "Onboarding, renewing & closing leases",
-    icon: FileText,
-  },
-  {
-    key: "Payments",
-    title: "Rent Collection",
-    desc: "Mobile Money & payment verification",
-    icon: DollarSign,
-  },
-  {
-    key: "Rental History",
-    title: "Rental History & Disputes",
-    desc: "3-day notice window & dispute proof",
-    icon: ShieldCheck,
-  },
-];
+  { key: "Listings", icon: Building2 },
+  { key: "Tenancies", icon: FileText },
+  { key: "Payments", icon: DollarSign },
+  { key: "Rental History", icon: ShieldCheck },
+] as const;
 
 export function LandlordHelpCenterView() {
+  const t = useTranslations("landlord.helpCenter");
   const serviceMode = useLandlordWorkspace((s) => s.serviceMode);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -66,12 +48,18 @@ export function LandlordHelpCenterView() {
     defaultValues: { subject: "", message: "" },
   });
 
-  const scopedFaqs = mockLandlordFaqs.filter(
-    (faq) =>
-      serviceMode === "managed" ||
-      faq.serviceScope === "all" ||
-      faq.serviceScope === "listing_only",
-  );
+  const scopedFaqs = mockLandlordFaqs
+    .filter(
+      (faq) =>
+        serviceMode === "managed" ||
+        faq.serviceScope === "all" ||
+        faq.serviceScope === "listing_only",
+    )
+    .map((faq) => ({
+      ...faq,
+      localizedQuestion: t(`faqs.${faq.id}.question`),
+      localizedAnswer: t(`faqs.${faq.id}.answer`),
+    }));
 
   const filteredFaqs = scopedFaqs.filter((faq) => {
     const matchesCategory =
@@ -79,8 +67,8 @@ export function LandlordHelpCenterView() {
     const q = searchTerm.trim().toLowerCase();
     const matchesQuery =
       !q ||
-      faq.question.toLowerCase().includes(q) ||
-      faq.answer.toLowerCase().includes(q) ||
+      faq.localizedQuestion.toLowerCase().includes(q) ||
+      faq.localizedAnswer.toLowerCase().includes(q) ||
       faq.category.toLowerCase().includes(q);
     return matchesCategory && matchesQuery;
   });
@@ -90,26 +78,23 @@ export function LandlordHelpCenterView() {
       <div className="space-y-4 border border-line bg-white p-5 shadow-2xs sm:p-8">
         <div>
           <h2 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">
-            Landlord Help Center
+            {t("title")}
           </h2>
-          <p className="mt-1 text-sm text-body">
-            Find answers on publishing listings, handling viewings, managing
-            tenancies, verifying rent, and resolving rental history notices.
-          </p>
+          <p className="mt-1 text-sm text-body">{t("subtitle")}</p>
         </div>
 
         <DashboardSearchInput
           value={searchTerm}
           onChange={setSearchTerm}
-          placeholder="Search landlord guides, payment help, or 3-day notice rules..."
-          label="Search landlord help center"
+          placeholder={t("searchPlaceholder")}
+          label={t("searchAria")}
           className="max-w-2xl"
         />
       </div>
 
       {/* Interactive Category Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {CATEGORIES.map(({ key, title, desc, icon: Icon }) => {
+        {CATEGORIES.map(({ key, icon: Icon }) => {
           const active = selectedCategory === key;
           return (
             <button
@@ -127,8 +112,12 @@ export function LandlordHelpCenterView() {
                 <Icon aria-hidden="true" className="size-5" />
               </div>
               <div>
-                <h3 className="text-sm font-bold text-ink">{title}</h3>
-                <p className="mt-0.5 text-xs text-body">{desc}</p>
+                <h3 className="text-sm font-bold text-ink">
+                  {t(`categories.${key}.title`)}
+                </h3>
+                <p className="mt-0.5 text-xs text-body">
+                  {t(`categories.${key}.desc`)}
+                </p>
               </div>
             </button>
           );
@@ -140,9 +129,7 @@ export function LandlordHelpCenterView() {
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <BookOpen aria-hidden="true" className="size-4 text-faint" />
-            <h3 className="text-base font-bold text-ink">
-              Frequently Asked Questions
-            </h3>
+            <h3 className="text-base font-bold text-ink">{t("faqHeading")}</h3>
           </div>
           {selectedCategory && (
             <button
@@ -150,7 +137,7 @@ export function LandlordHelpCenterView() {
               onClick={() => setSelectedCategory(null)}
               className="cursor-pointer text-xs font-semibold text-brand-blue hover:underline"
             >
-              Show all categories
+              {t("showAllCategories")}
             </button>
           )}
         </div>
@@ -158,8 +145,8 @@ export function LandlordHelpCenterView() {
         {filteredFaqs.length === 0 ? (
           <EmptyStateBox
             icon={HelpCircle}
-            title="No matching help articles"
-            description="Try a different search term or clear your category filter."
+            title={t("emptyTitle")}
+            description={t("emptyDesc")}
             action={
               <Button
                 type="button"
@@ -170,7 +157,7 @@ export function LandlordHelpCenterView() {
                   setSelectedCategory(null);
                 }}
               >
-                Clear search
+                {t("clearSearch")}
               </Button>
             }
           />
@@ -189,7 +176,7 @@ export function LandlordHelpCenterView() {
                     onClick={() => setOpenFaqId(isOpen ? null : faq.id)}
                     className="flex w-full cursor-pointer items-center justify-between gap-4 p-4 text-left text-sm font-bold text-ink hover:text-brand-blue"
                   >
-                    <span className="text-[15px]">{faq.question}</span>
+                    <span className="text-[15px]">{faq.localizedQuestion}</span>
                     {isOpen ? (
                       <ChevronUp
                         aria-hidden="true"
@@ -205,7 +192,7 @@ export function LandlordHelpCenterView() {
 
                   {isOpen && (
                     <div className="border-t border-line/60 px-4 pb-4 pt-3 text-sm leading-relaxed text-body">
-                      {faq.answer}
+                      {faq.localizedAnswer}
                     </div>
                   )}
                 </div>
@@ -219,12 +206,9 @@ export function LandlordHelpCenterView() {
       <div className="flex flex-col items-center justify-between gap-4 border border-line bg-white p-5 shadow-2xs sm:flex-row sm:p-8">
         <div className="space-y-1 text-center sm:text-left">
           <h3 className="text-[15px] font-bold text-ink">
-            Still need assistance?
+            {t("stillNeedHelp")}
           </h3>
-          <p className="text-sm text-body">
-            Our landlord support team is available Monday to Saturday, 08:00 AM
-            – 06:00 PM CAT.
-          </p>
+          <p className="text-sm text-body">{t("supportHours")}</p>
         </div>
 
         <Button
@@ -233,15 +217,15 @@ export function LandlordHelpCenterView() {
           className="cursor-pointer rounded-none"
         >
           <Mail aria-hidden="true" className="size-4" />
-          <span>Contact Support</span>
+          <span>{t("contactSupportBtn")}</span>
         </Button>
       </div>
 
       <ModalDialog
         open={supportOpen}
         onClose={() => setSupportOpen(false)}
-        title="Contact Landlord Support"
-        description="Send a message to the Urugo team and we will respond by email or phone."
+        title={t("supportModal.title")}
+        description={t("supportModal.description")}
         footer={
           <>
             <Button
@@ -250,14 +234,14 @@ export function LandlordHelpCenterView() {
               onClick={() => setSupportOpen(false)}
               className="cursor-pointer rounded-none"
             >
-              Cancel
+              {t("supportModal.cancel")}
             </Button>
             <Button
               type="submit"
               form="landlord-support-form"
               className="cursor-pointer rounded-none"
             >
-              Send Request
+              {t("supportModal.sendBtn")}
             </Button>
           </>
         }
@@ -266,7 +250,7 @@ export function LandlordHelpCenterView() {
           id="landlord-support-form"
           noValidate
           onSubmit={supportForm.handleSubmit(() => {
-            toast.success("Support request sent. Our team will respond shortly.");
+            toast.success(t("supportModal.toastSent"));
             supportForm.reset();
             setSupportOpen(false);
           })}
@@ -274,15 +258,16 @@ export function LandlordHelpCenterView() {
         >
           <Field>
             <FieldLabel htmlFor="support-subject">
-              Subject <span className="text-rose-600">*</span>
+              {t("supportModal.subjectLabel")}{" "}
+              <span className="text-rose-600">*</span>
             </FieldLabel>
             <Input
               id="support-subject"
-              placeholder="e.g., Question about lease renewal or payment proof"
+              placeholder={t("supportModal.subjectPlaceholder")}
               className="h-10 rounded-none"
               {...supportForm.register("subject", {
                 validate: (v) =>
-                  v.trim().length >= 4 || "Enter a short subject.",
+                  v.trim().length >= 4 || t("supportModal.subjectRequired"),
               })}
             />
             <FieldError>
@@ -291,16 +276,17 @@ export function LandlordHelpCenterView() {
           </Field>
           <Field>
             <FieldLabel htmlFor="support-message">
-              Message <span className="text-rose-600">*</span>
+              {t("supportModal.messageLabel")}{" "}
+              <span className="text-rose-600">*</span>
             </FieldLabel>
             <textarea
               id="support-message"
               rows={4}
-              placeholder="Describe how we can help..."
+              placeholder={t("supportModal.messagePlaceholder")}
               className="w-full rounded-none border border-input bg-white p-3 text-sm"
               {...supportForm.register("message", {
                 validate: (v) =>
-                  v.trim().length >= 10 || "Please describe your issue.",
+                  v.trim().length >= 10 || t("supportModal.messageRequired"),
               })}
             />
             <FieldError>

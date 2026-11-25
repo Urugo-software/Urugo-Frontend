@@ -1,6 +1,10 @@
+"use client";
+
 import Link from "next/link";
+import { useLocale, useTranslations } from "next-intl";
+import type { AppLocale } from "@/i18n/config";
+import { formatDateLocalized } from "@/i18n/formatting";
 import type { Agreement } from "@/types/agreement.types";
-import { formatDate } from "@/utils/agreement-utils";
 import { AgreementStatusBadge } from "../AgreementStatusBadge";
 import { AgreementRowActions } from "./AgreementRowActions";
 
@@ -9,6 +13,9 @@ interface AgreementMobileListProps {
 }
 
 export function AgreementMobileList({ agreements }: AgreementMobileListProps) {
+  const t = useTranslations("landlord.agreements.list");
+  const locale = useLocale() as AppLocale;
+
   return (
     <div className="divide-y divide-line border border-line bg-white shadow-2xs md:hidden">
       {agreements.map((agreement) => (
@@ -38,14 +45,16 @@ export function AgreementMobileList({ agreements }: AgreementMobileListProps) {
               {agreement.property.name}
             </p>
             <p className="mt-0.5 text-[13.5px] text-body">
-              Unit {agreement.property.unitNumber} &middot;{" "}
+              {t("unitLabel", { unit: agreement.property.unitNumber })} &middot;{" "}
               {agreement.property.district}
             </p>
           </div>
 
           <div className="flex items-center justify-between border-t border-line/70 pt-3">
             <span className="text-sm font-medium text-body">
-              Updated {formatDate(agreement.updatedAt)}
+              {t("updatedPrefix", {
+                date: formatDateLocalized(agreement.updatedAt, locale),
+              })}
             </span>
             <AgreementRowActions agreement={agreement} />
           </div>

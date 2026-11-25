@@ -1,12 +1,16 @@
+"use client";
+
 import { useState } from "react";
 import { FolderInput, FolderMinus, FolderPlus } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { useLandlordProperties } from "@/store/landlord-properties.store";
 import type { LandlordPropertyItem, PropertyGroup } from "@/types/landlord";
-import { MembershipDialog, membershipLabels, type MembershipRequest } from "./MembershipDialog";
+import { MembershipDialog, type MembershipRequest } from "./MembershipDialog";
 
 export function useMembershipControls() {
+  const t = useTranslations("landlord.properties.membership");
   const groups = useLandlordProperties((state) => state.groups);
   const [request, open] = useState<MembershipRequest | null>(null);
 
@@ -14,10 +18,10 @@ export function useMembershipControls() {
     const source = { fromGroupId, propertyId, returnFocusId };
     return <>
       <DropdownMenuItem className="cursor-pointer" onClick={() => open({ kind: "move", ...source })}>
-        <FolderInput /> {membershipLabels.move}
+        <FolderInput /> {t("labels.move")}
       </DropdownMenuItem>
       <DropdownMenuItem className="cursor-pointer" onClick={() => open({ kind: "remove", ...source })}>
-        <FolderMinus /> {membershipLabels.remove}
+        <FolderMinus /> {t("labels.remove")}
       </DropdownMenuItem>
     </>;
   }
@@ -26,9 +30,9 @@ export function useMembershipControls() {
     const returnFocusId = `group-menu-${group.id}`;
     return <>
       <DropdownMenuGroup>
-        <DropdownMenuLabel>Properties</DropdownMenuLabel>
+        <DropdownMenuLabel>{t("propertiesMenuLabel")}</DropdownMenuLabel>
         <DropdownMenuItem className="cursor-pointer" onClick={() => open({ kind: "add", toGroupId: group.id, returnFocusId })}>
-          <FolderPlus /> {membershipLabels.add}
+          <FolderPlus /> {t("labels.add")}
         </DropdownMenuItem>
         {memberCount > 0 && memberItems(group.id, returnFocusId)}
       </DropdownMenuGroup>
@@ -43,7 +47,7 @@ export function useMembershipControls() {
     if (!groups.length) return undefined;
     return (
       <DropdownMenuItem className="cursor-pointer" onClick={() => open({ kind: "add", propertyId: property.id, returnFocusId })}>
-        <FolderPlus /> Add to Group
+        <FolderPlus /> {t("addToGroup")}
       </DropdownMenuItem>
     );
   }
@@ -52,7 +56,7 @@ export function useMembershipControls() {
     const id = `add-properties-${group.id}`;
     return (
       <Button id={id} variant="outline" className="cursor-pointer rounded-none" onClick={() => open({ kind: "add", toGroupId: group.id, returnFocusId: id })}>
-        <FolderPlus /> {membershipLabels.add}
+        <FolderPlus /> {t("labels.add")}
       </Button>
     );
   }

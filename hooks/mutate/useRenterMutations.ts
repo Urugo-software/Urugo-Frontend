@@ -1,67 +1,82 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import toast from "react-hot-toast";
+
+import { useRenterWorkspace } from "@/store/renter-workspace.store";
+import type { RenterMaintenance, RenterProfile } from "@/types/renter";
 
 export function useCreateMaintenanceRequest() {
   const queryClient = useQueryClient();
+  const t = useTranslations("renter.toasts");
 
   return useMutation({
     mutationFn: async (data: {
       title: string;
       category: string;
       description: string;
-      priority: string;
+      priority: RenterMaintenance["priority"];
     }) => {
-      await new Promise((r) => setTimeout(r, 200));
-      return data;
+      await new Promise((r) => setTimeout(r, 150));
+      return useRenterWorkspace.getState().addMaintenanceRequest(data);
     },
     onSuccess: () => {
-      toast.success("Maintenance request submitted successfully.");
+      toast.success(t("maintenanceSubmitted"));
       queryClient.invalidateQueries({ queryKey: ["renter-maintenance"] });
       queryClient.invalidateQueries({ queryKey: ["renter-overview"] });
+      queryClient.invalidateQueries({ queryKey: ["renter-notifications"] });
     },
     onError: () => {
-      toast.error("Unable to submit maintenance request.");
+      toast.error(t("maintenanceFailed"));
     },
   });
 }
 
 export function usePayRent() {
   const queryClient = useQueryClient();
+  const t = useTranslations("renter.toasts");
 
   return useMutation({
     mutationFn: async (data: {
+      paymentId?: string;
       paymentMethod: string;
-      phone: string;
+      phone?: string;
       amountRwf: number;
+      referenceNumber?: string;
+      receiptName?: string;
+      period?: string;
     }) => {
-      await new Promise((r) => setTimeout(r, 300));
-      return data;
+      await new Promise((r) => setTimeout(r, 200));
+      return useRenterWorkspace.getState().recordRentPayment(data);
     },
     onSuccess: () => {
-      toast.success("Rent payment initiated successfully!");
+      toast.success(t("paymentRecorded"));
       queryClient.invalidateQueries({ queryKey: ["renter-payments"] });
+      queryClient.invalidateQueries({ queryKey: ["renter-documents"] });
       queryClient.invalidateQueries({ queryKey: ["renter-overview"] });
+      queryClient.invalidateQueries({ queryKey: ["renter-notifications"] });
     },
     onError: () => {
-      toast.error("Payment failed. Please try again.");
+      toast.error(t("paymentFailed"));
     },
   });
 }
 
 export function useUpdateRenterProfile() {
   const queryClient = useQueryClient();
+  const t = useTranslations("renter.toasts");
 
   return useMutation({
-    mutationFn: async (data: { name: string; email: string; phone: string }) => {
-      await new Promise((r) => setTimeout(r, 200));
+    mutationFn: async (data: Partial<RenterProfile>) => {
+      await new Promise((r) => setTimeout(r, 150));
+      useRenterWorkspace.getState().updateProfile(data);
       return data;
     },
     onSuccess: () => {
-      toast.success("Profile updated successfully.");
+      toast.success(t("profileUpdated"));
       queryClient.invalidateQueries({ queryKey: ["renter-overview"] });
     },
     onError: () => {
-      toast.error("Unable to update profile.");
+      toast.error(t("profileFailed"));
     },
   });
 }

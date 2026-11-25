@@ -1,10 +1,14 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight, MapPin } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import type { ViewMode } from "@/components/dashboard/landlord/properties/PortfolioCard";
 import { PropertyCover } from "@/components/dashboard/landlord/properties/PropertyCover";
+import type { AppLocale } from "@/i18n/config";
+import { formatRwfLocalized } from "@/i18n/formatting";
 import { cn } from "@/lib/utils";
 import type { LandlordPropertyItem, LandlordRenter } from "@/types/landlord";
-import { formatCurrencyRwf } from "@/utils/agreement-utils";
 import { PaymentStatusBadge, TenancyStatusBadge } from "./StatusBadges";
 
 interface TenancyListCardProps {
@@ -18,10 +22,14 @@ export function TenancyListCard({
   property,
   viewMode = "grid",
 }: TenancyListCardProps) {
+  const t = useTranslations("landlord.tenancies.portfolio");
+  const locale = useLocale() as AppLocale;
   const isList = viewMode === "list";
   const propertyName = property?.name ?? renter.propertyName;
   const heading =
-    property && !property.hasUnits ? propertyName : `Unit ${renter.unitNumber}`;
+    property && !property.hasUnits
+      ? propertyName
+      : t("unitHeading", { unit: renter.unitNumber });
 
   return (
     <article
@@ -102,7 +110,7 @@ export function TenancyListCard({
               <span className="shrink-0 text-sm text-body">{renter.phone}</span>
             </div>
             <p className={cn("mt-1.5 text-sm text-body", isList && "md:mt-0")}>
-              Started{" "}
+              {t("startedLabel")}{" "}
               <strong className="font-semibold text-ink">{renter.startDate}</strong>
             </p>
           </div>
@@ -117,17 +125,17 @@ export function TenancyListCard({
         >
           <div className={isList ? "md:text-right" : undefined}>
             <span className="block text-[12.5px] font-medium text-faint">
-              Monthly Rent
+              {t("monthlyRentLabel")}
             </span>
             <span className="block font-ibm text-base font-bold text-brand">
-              {formatCurrencyRwf(renter.monthlyRentRwf)}
+              {formatRwfLocalized(renter.monthlyRentRwf, locale)}
             </span>
           </div>
           <Link
             href={`/landlord/tenancies/${encodeURIComponent(renter.id)}`}
             className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand hover:underline"
           >
-            <span>Manage Tenancy</span>
+            <span>{t("manageTenancy")}</span>
             <ArrowRight aria-hidden="true" className="size-4" />
           </Link>
         </div>

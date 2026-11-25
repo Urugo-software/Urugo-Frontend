@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import toast from "react-hot-toast";
 import { Building2, Check, ShieldCheck } from "lucide-react";
 import { ModalDialog } from "@/components/shared/ModalDialog";
@@ -9,55 +10,42 @@ import { Button } from "@/components/ui/button";
 import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
 import type { LandlordServiceMode } from "@/types/landlord";
 
-const SERVICE_PLANS: Array<{
-  mode: LandlordServiceMode;
-  title: string;
-  subtitle: string;
-  features: string[];
-  icon: typeof Building2;
-}> = [
-  {
-    mode: "listing_only",
-    title: "Listing-Only Landlord",
-    subtitle:
-      "Advertise properties and connect with prospective tenants independently.",
-    icon: Building2,
-    features: [
-      "Publish, pause, mark rented, or archive property listings",
-      "Photo galleries, amenities, and public contact visibility controls",
-      "Receive and reply to prospective tenant inquiries",
-      "Confirm, reschedule, or decline viewing requests",
-      "Zero rental-management clutter in your dashboard",
-    ],
-  },
-  {
-    mode: "managed",
-    title: "Urugo Full Rental Management",
-    subtitle:
-      "Everything in Listing-Only plus complete tenant, lease, payment, and rental history tools.",
-    icon: ShieldCheck,
-    features: [
-      "Everything included in Listing-Only",
-      "Property groups, multi-unit tracking, and occupancy metrics",
-      "Renter onboarding wizard and bilingual digital lease agreements",
-      "Rent payment verification ledger with monthly & YTD summaries",
-      "3-day notice rental history, dispute resolution, and End Tenancy",
-    ],
-  },
-];
+const FEATURE_KEYS = ["f1", "f2", "f3", "f4", "f5"] as const;
 
 export function ServiceTab({ onSave }: { onSave: () => void }) {
+  const t = useTranslations("landlord.settings.service");
   const { serviceMode, setServiceMode } = useLandlordWorkspace();
   const [pendingMode, setPendingMode] = useState<LandlordServiceMode | null>(
     null,
   );
 
+  const servicePlans: Array<{
+    mode: LandlordServiceMode;
+    title: string;
+    subtitle: string;
+    features: string[];
+    icon: typeof Building2;
+  }> = [
+    {
+      mode: "listing_only",
+      title: t("listingOnlyTitle"),
+      subtitle: t("listingOnlySubtitle"),
+      icon: Building2,
+      features: FEATURE_KEYS.map((k) => t(`listingOnlyFeatures.${k}`)),
+    },
+    {
+      mode: "managed",
+      title: t("managedTitle"),
+      subtitle: t("managedSubtitle"),
+      icon: ShieldCheck,
+      features: FEATURE_KEYS.map((k) => t(`managedFeatures.${k}`)),
+    },
+  ];
+
   const applyMode = (mode: LandlordServiceMode) => {
     setServiceMode(mode);
     toast.success(
-      mode === "managed"
-        ? "Upgraded to Urugo Full Rental Management."
-        : "Switched workspace to Listing-Only mode.",
+      mode === "managed" ? t("toastUpgraded") : t("toastSwitchedListingOnly"),
     );
     onSave();
     setPendingMode(null);
@@ -66,18 +54,12 @@ export function ServiceTab({ onSave }: { onSave: () => void }) {
   return (
     <div className="space-y-6">
       <div>
-        <h3 className="text-lg font-bold text-ink">
-          Landlord Service Path
-        </h3>
-        <p className="mt-1 text-xs text-body">
-          Urugo uses one landlord account and one dashboard for both service
-          modes. Switch or upgrade anytime without recreating properties or
-          losing data.
-        </p>
+        <h3 className="text-lg font-bold text-ink">{t("title")}</h3>
+        <p className="mt-1 text-xs text-body">{t("subtitle")}</p>
       </div>
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-        {SERVICE_PLANS.map(({ mode, title, subtitle, features, icon: Icon }) => {
+        {servicePlans.map(({ mode, title, subtitle, features, icon: Icon }) => {
           const isCurrent = serviceMode === mode;
           return (
             <div
@@ -97,7 +79,7 @@ export function ServiceTab({ onSave }: { onSave: () => void }) {
                     <h4 className="text-sm font-bold text-ink">{title}</h4>
                   </div>
                   {isCurrent && (
-                    <StatusBadge label="Active Plan" tone="success" />
+                    <StatusBadge label={t("activePlanBadge")} tone="success" />
                   )}
                 </div>
 
@@ -127,10 +109,10 @@ export function ServiceTab({ onSave }: { onSave: () => void }) {
                 className="w-full cursor-pointer rounded-none text-xs"
               >
                 {isCurrent
-                  ? "Currently Active"
+                  ? t("currentlyActive")
                   : mode === "managed"
-                    ? "Upgrade to Full Rental Management"
-                    : "Switch to Listing-Only Mode"}
+                    ? t("upgradeBtn")
+                    : t("switchListingOnlyBtn")}
               </Button>
             </div>
           );
@@ -142,13 +124,13 @@ export function ServiceTab({ onSave }: { onSave: () => void }) {
         onClose={() => setPendingMode(null)}
         title={
           pendingMode === "managed"
-            ? "Upgrade to Full Rental Management?"
-            : "Switch to Listing-Only Mode?"
+            ? t("upgradeModalTitle")
+            : t("switchModalTitle")
         }
         description={
           pendingMode === "managed"
-            ? "This immediately unlocks Renters, Agreements, Tenancies, Payments, and Rental History in your sidebar while keeping all existing listings intact."
-            : "Management links will be hidden from your sidebar and overview so you can focus purely on advertising, inquiries, and viewings. Your existing data stays preserved."
+            ? t("upgradeModalDesc")
+            : t("switchModalDesc")
         }
         footer={
           <>
@@ -158,21 +140,19 @@ export function ServiceTab({ onSave }: { onSave: () => void }) {
               onClick={() => setPendingMode(null)}
               className="cursor-pointer rounded-none"
             >
-              Cancel
+              {t("cancel")}
             </Button>
             <Button
               type="button"
               onClick={() => pendingMode && applyMode(pendingMode)}
               className="cursor-pointer rounded-none"
             >
-              Confirm Change
+              {t("confirmChange")}
             </Button>
           </>
         }
       >
-        <p className="text-xs text-body">
-          You can change your landlord service path again anytime from Settings.
-        </p>
+        <p className="text-xs text-body">{t("modalNote")}</p>
       </ModalDialog>
     </div>
   );

@@ -1,30 +1,47 @@
+"use client";
+
 import { ArrowRight } from "lucide-react";
+import { useTranslations } from "next-intl";
+import type { FieldErrors, UseFormRegister } from "react-hook-form";
 
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 
-import { SignUpWizardField, type SignUpField, type SignUpValues } from "./SignUpWizardField";
+import { AUTH_PRIMARY_BUTTON_CLASS } from "../auth-styles";
+import {
+  getSignUpFieldRules,
+  SignUpWizardField,
+  type SignUpField,
+  type SignUpValues,
+} from "./SignUpWizardField";
 
 type FirstStepProps = {
   fields: readonly SignUpField[];
-  values: SignUpValues;
-  onChange: (id: keyof SignUpValues, value: string) => void;
+  register: UseFormRegister<SignUpValues>;
+  errors: FieldErrors<SignUpValues>;
 };
 
-function FirstStep({ fields, values, onChange }: FirstStepProps) {
+function FirstStep({ fields, register, errors }: FirstStepProps) {
+  const tActions = useTranslations("common.actions");
+  const tValidation = useTranslations("auth.signUp.validation");
+
   return (
     <>
       {fields.map((field) => (
         <SignUpWizardField
           key={field.id}
           {...field}
-          value={values[field.id]}
-          onChange={(event) => onChange(field.id, event.target.value)}
+          registration={register(
+            field.id,
+            getSignUpFieldRules(field.id, (key) => tValidation(key)),
+          )}
+          error={errors[field.id]?.message}
         />
       ))}
-      <Field>
-        <Button type="submit" className="h-11 w-full cursor-pointer rounded-xl bg-brand text-white hover:bg-brand/80">
-          Continue <ArrowRight aria-hidden="true" />
+      <Field className="pt-1">
+        <Button type="submit" className={AUTH_PRIMARY_BUTTON_CLASS}>
+          <span>{tActions("continue")}</span>
+          <ArrowRight aria-hidden="true" className="size-4" />
         </Button>
       </Field>
     </>

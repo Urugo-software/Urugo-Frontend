@@ -1,7 +1,9 @@
 "use client";
 
-import { Step } from "@/types";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
+
+import type { Step } from "@/types";
 
 interface StepCardProps {
   step: Step;
@@ -10,6 +12,8 @@ interface StepCardProps {
 }
 
 export default function StepCard({ step, index }: StepCardProps) {
+  const t = useTranslations("public.howItWorks");
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 25 }}
@@ -21,38 +25,42 @@ export default function StepCard({ step, index }: StepCardProps) {
         ease: [0.25, 0.46, 0.45, 0.94],
       }}
       whileHover={{ y: -6, transition: { duration: 0.2 } }}
-      className="group relative z-10 flex flex-col p-6 rounded-2xl bg-white border border-line hover:border-brand/30 hover:shadow-lg transition-all duration-300 h-full"
+      className="group relative z-10 flex h-full flex-col rounded-2xl border border-line bg-white p-6 transition-all duration-300 hover:border-brand/30 hover:shadow-lg"
     >
       {/* Subtle background glow effect on hover */}
-      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-brand/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+      <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-brand/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
-      {/* Top Header Row with Animated Step Number Badge and Step Icon */}
-      <div className="flex items-center justify-between mb-5">
+      {/* Top Header Row with Animated Step Number Badge */}
+      <div className="mb-5 flex items-center justify-between">
         <div className="relative">
           {/* Pulsing ring on hover */}
-          <div className="absolute -inset-1 rounded-full bg-brand/20 opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300 blur-xs" />
+          <div className="absolute -inset-1 rounded-full bg-brand/20 opacity-0 blur-xs transition-all duration-300 group-hover:scale-110 group-hover:opacity-100" />
 
           {/* Number Circle */}
-          <div className="relative w-14 h-14 rounded-full bg-white border border-brand/15 text-brand flex items-center justify-center font-black text-xl shadow-sm   group-hover:scale-105 transition-transform duration-300">
+          <div className="relative flex h-14 w-14 items-center justify-center rounded-full border border-brand/15 bg-white text-xl font-black text-brand shadow-sm transition-transform duration-300 group-hover:scale-105">
             {step.stepNumber}
           </div>
         </div>
       </div>
 
       {/* Title */}
-      <h3 className="text-lg font-extrabold text-ink group-hover:text-brand transition-colors duration-200 mb-2 tracking-tight">
+      <h3 className="mb-2 text-lg font-extrabold tracking-tight text-ink transition-colors duration-200 group-hover:text-brand">
         {step.title}
       </h3>
 
       {/* Description */}
-      <p className="text-sm text-body leading-relaxed flex-grow font-normal">
+      <p className="flex-grow text-sm font-normal leading-relaxed text-body">
         {step.description}
       </p>
 
       {/* Step Indicator footer accent */}
-      <div className="mt-4 pt-3 border-t border-line/60 flex items-center justify-between text-xs text-body/60 font-medium">
-        <span>Step 0{step.stepNumber}</span>
-        <div className="w-1.5 h-1.5 rounded-full bg-brand/40 group-hover:bg-brand group-hover:scale-125 transition-all" />
+      <div className="mt-4 flex items-center justify-between border-t border-line/60 pt-3 text-xs font-medium text-body/60">
+        <span>
+          {t("stepLabel", {
+            number: String(step.stepNumber).padStart(2, "0"),
+          })}
+        </span>
+        <div className="h-1.5 w-1.5 rounded-full bg-brand/40 transition-all group-hover:scale-125 group-hover:bg-brand" />
       </div>
     </motion.div>
   );

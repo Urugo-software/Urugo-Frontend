@@ -16,7 +16,7 @@ export const mockInitialMessages: ChatMessage[] = [
     senderId: "landlord-1",
     senderName: "Emmanuel Ntaganda",
     senderRole: "landlord",
-    text: "Hello Jean, just confirming the electricity sub-meter reading for September has been recorded.",
+    text: "Hello Jean, just a quick reminder that September rent is due by the 10th. Let me know if you need anything for Apartment A-03.",
     timestamp: "10:15 AM",
   },
   {

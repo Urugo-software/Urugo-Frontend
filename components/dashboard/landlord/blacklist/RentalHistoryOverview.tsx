@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { ArrowRight, Clock, FileCheck, Plus } from "lucide-react";
@@ -13,11 +14,15 @@ import { StatusBadge } from "@/components/shared/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import type { AppLocale } from "@/i18n/config";
+import { localizeDisplayDate } from "@/i18n/display-format";
+import { formatDateLocalized, formatRwfLocalized } from "@/i18n/formatting";
 import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
 import type { IssueStatus, RentalIssue } from "@/types/landlord";
-import { formatRwf } from "@/utils/format";
 import { paginateItems } from "@/utils/pagination";
 import { getIssueStatusMeta } from "@/utils/rental-debt";
+
+const SEED_ISSUE_IDS = new Set(["iss-501", "iss-502"]);
 
 const ITEMS_PER_PAGE = 6;
 const STATUS_FILTERS: Array<"All" | IssueStatus> = [
@@ -45,6 +50,10 @@ interface RentalHistoryOverviewProps {
 export function RentalHistoryOverview({
   issues: fallbackIssues,
 }: RentalHistoryOverviewProps) {
+  const t = useTranslations("landlord.renterHistory");
+  const tSeed = useTranslations("landlord.seed.issues");
+  const tStatuses = useTranslations("common.statuses");
+  const locale = useLocale() as AppLocale;
   const containerRef = useRef<HTMLDivElement>(null);
   const {
     profile,
@@ -92,6 +101,16 @@ export function RentalHistoryOverview({
     totalItems,
   } = paginateItems(filtered, currentPage, ITEMS_PER_PAGE);
 
+  const tabLabel = (tab: "All" | IssueStatus) => {
+    if (tab === "All") return t("tabAll");
+    if (tab === "Unresolved") return tStatuses("unresolved");
+    if (tab === "Disputed") return tStatuses("disputed");
+    if (tab === "Reported") return tStatuses("reported");
+    if (tab === "Confirmed") return tStatuses("confirmed");
+    if (tab === "Resolved") return tStatuses("resolved");
+    return tStatuses("rejected");
+  };
+
   const onReportSubmit = (vals: ReportIssueFormValues) => {
     const renter = renters.find((r) => r.id === vals.renterId);
     if (!renter) return;
@@ -106,26 +125,16 @@ export function RentalHistoryOverview({
       issueTitle: vals.issueTitle.trim(),
       amountRwf: Math.round(Number(vals.amountRwf)),
       propertyName: `${renter.propertyName} — ${renter.unitNumber}`,
-      tenancyPeriod: `${renter.startDate} - ${renter.endDate ?? "Ongoing"}`,
+      tenancyPeriod: `${renter.startDate} - ${renter.endDate ?? t("ongoingPeriod")}`,
       landlordName: profile.fullName,
       renterName: renter.name,
-      createdDate: today.toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      }),
-      noticeDeadlineDate: deadline.toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      }),
+      createdDate: formatDateLocalized(today, locale),
+      noticeDeadlineDate: formatDateLocalized(deadline, locale),
       daysRemaining: 3,
       status: "Unresolved",
       landlordReport: vals.landlordReport.trim(),
     });
-    toast.success(
-      "Obligation submitted under a 3-day notice window (Unresolved).",
-    );
+    toast.success(t("reportModal.toastSubmitted"));
     reportForm.reset();
     setReportOpen(false);
   };
@@ -135,13 +144,9 @@ export function RentalHistoryOverview({
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">
-            Renter History & Obligations
+            {t("title")}
           </h2>
-          <p className="mt-1 text-sm text-body">
-            Review verified tenancy obligations, active 3-day notice cases, and
-            renter dispute responses. Unresolved and disputed records are never
-            classified as confirmed debt.
-          </p>
+          <p className="mt-1 text-sm text-body">{t("subtitle")}</p>
         </div>
 
         <Button
@@ -150,7 +155,7 @@ export function RentalHistoryOverview({
           className="h-10 cursor-pointer rounded-none text-xs font-semibold"
         >
           <Plus aria-hidden="true" className="size-4" />
-          <span>Report Rental Obligation</span>
+          <span>{t("reportBtn")}</span>
         </Button>
       </div>
 
@@ -162,14 +167,14 @@ export function RentalHistoryOverview({
             setSearch(val);
             setCurrentPage(1);
           }}
-          placeholder="Search renter name, property, or obligation..."
-          label="Search rental history records"
+          placeholder={t("searchPlaceholder")}
+          label={t("searchAria")}
           className="w-full lg:max-w-md"
         />
 
         <div
           role="tablist"
-          aria-label="Filter rental history by status"
+          aria-label={t("filterAria")}
           className="flex flex-wrap gap-1.5"
         >
           {STATUS_FILTERS.map((tab) => {
@@ -190,7 +195,7 @@ export function RentalHistoryOverview({
                     : "border-line bg-white text-body hover:bg-surface hover:text-ink"
                 }`}
               >
-                {tab}
+                {tabLabel(tab)}
               </button>
             );
           })}
@@ -200,11 +205,11 @@ export function RentalHistoryOverview({
       {paginated.length === 0 ? (
         <EmptyStateBox
           icon={FileCheck}
-          title="No rental history records found"
+          title={t("emptyTitle")}
           description={
             search || statusFilter !== "All"
-              ? "No records match your current search or status filter."
-              : "No unpaid rental obligations or disputes have been reported."
+              ? t("emptyFilteredDesc")
+              : t("emptyDefaultDesc")
           }
           action={
             search || statusFilter !== "All" ? (
@@ -218,7 +223,7 @@ export function RentalHistoryOverview({
                   setCurrentPage(1);
                 }}
               >
-                Clear filters
+                {t("clearFilters")}
               </Button>
             ) : undefined
           }
@@ -228,12 +233,22 @@ export function RentalHistoryOverview({
           <div className="space-y-4">
             {paginated.map((issue) => {
               const meta = getIssueStatusMeta(issue.status);
+              const isSeed = SEED_ISSUE_IDS.has(issue.id);
+              const issueTitle = isSeed
+                ? tSeed(`${issue.id}.issueTitle`)
+                : issue.issueTitle;
+              const landlordReport = isSeed
+                ? tSeed(`${issue.id}.landlordReport`)
+                : issue.landlordReport;
+              const renterResponse = isSeed
+                ? tSeed(`${issue.id}.renterResponse`)
+                : issue.renterResponse;
               const summaryText =
-                issue.status === "Disputed" && issue.renterResponse
-                  ? issue.renterResponse
+                issue.status === "Disputed" && renterResponse
+                  ? renterResponse
                   : issue.status === "Resolved"
-                    ? "Obligation settled or proof accepted; case closed."
-                    : issue.landlordReport;
+                    ? t("resolvedSummary")
+                    : landlordReport;
 
               return (
                 <div
@@ -244,29 +259,38 @@ export function RentalHistoryOverview({
                     <div className="space-y-1">
                       <div className="flex flex-wrap items-center gap-2">
                         <h3 className="text-base font-bold text-ink">
-                          {issue.issueTitle}
+                          {issueTitle}
                         </h3>
                         <span aria-hidden="true" className="text-line">&middot;</span>
-                        <StatusBadge label={meta.label} tone={meta.tone} />
+                        <StatusBadge
+                          label={t(`statusMeta.${issue.status}.label`)}
+                          tone={meta.tone}
+                        />
                       </div>
                       <p className="text-xs text-body">
                         <strong className="text-ink">{issue.renterName}</strong>{" "}
-                        · {issue.propertyName} · Reported {issue.createdDate}
+                        · {issue.propertyName} ·{" "}
+                        {t("reportedDate", {
+                          date: localizeDisplayDate(issue.createdDate, locale),
+                        })}
                       </p>
                     </div>
 
                     <div className="text-left sm:text-right">
                       <span className="font-ibm text-lg font-bold text-ink">
-                        {formatRwf(issue.amountRwf)}
+                        {formatRwfLocalized(issue.amountRwf, locale)}
                       </span>
                       {issue.daysRemaining !== undefined &&
                         issue.daysRemaining > 0 && (
                           <p className="mt-0.5 inline-flex items-center gap-1 text-xs font-medium text-amber-800 sm:justify-end">
                             <Clock aria-hidden="true" className="size-3.5" />
                             <span>
-                              {issue.daysRemaining} day
-                              {issue.daysRemaining === 1 ? "" : "s"} left in
-                              notice window
+                              {t(
+                                issue.daysRemaining === 1
+                                  ? "daysLeftSingle"
+                                  : "daysLeftPlural",
+                                { count: issue.daysRemaining },
+                              )}
                             </span>
                           </p>
                         )}
@@ -279,13 +303,13 @@ export function RentalHistoryOverview({
 
                   <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line pt-3">
                     <span className="text-xs text-faint">
-                      {meta.description}
+                      {t(`statusMeta.${issue.status}.description`)}
                     </span>
                     <Link
                       href={`/landlord/renter-history/${issue.id}`}
                       className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-blue hover:underline"
                     >
-                      <span>View Case Details</span>
+                      <span>{t("viewCaseDetails")}</span>
                       <ArrowRight aria-hidden="true" className="size-3.5" />
                     </Link>
                   </div>
@@ -299,7 +323,7 @@ export function RentalHistoryOverview({
             totalPages={totalPages}
             totalItems={totalItems}
             itemsPerPage={ITEMS_PER_PAGE}
-            itemLabel="records"
+            itemLabel={t("paginationLabel")}
             onPageChange={(nextPage) => {
               setCurrentPage(nextPage);
               containerRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -312,8 +336,8 @@ export function RentalHistoryOverview({
       <ModalDialog
         open={reportOpen}
         onClose={() => setReportOpen(false)}
-        title="Report Unresolved Rental Obligation"
-        description="Record an unpaid rent or utility balance tied to a verified tenancy. The renter automatically receives a 3-day notice to pay or submit proof before confirmation."
+        title={t("reportModal.title")}
+        description={t("reportModal.description")}
         footer={
           <>
             <Button
@@ -322,14 +346,14 @@ export function RentalHistoryOverview({
               onClick={() => setReportOpen(false)}
               className="cursor-pointer rounded-none"
             >
-              Cancel
+              {t("reportModal.cancel")}
             </Button>
             <Button
               type="submit"
               form="report-obligation-form"
               className="cursor-pointer rounded-none"
             >
-              Submit Notice
+              {t("reportModal.submit")}
             </Button>
           </>
         }
@@ -342,13 +366,14 @@ export function RentalHistoryOverview({
         >
           <Field>
             <FieldLabel htmlFor="issue-renter">
-              Verified tenant <span className="text-rose-600">*</span>
+              {t("reportModal.tenantLabel")}{" "}
+              <span className="text-rose-600">*</span>
             </FieldLabel>
             <select
               id="issue-renter"
               className="h-10 w-full rounded-none border border-input bg-white px-3 text-sm"
               {...reportForm.register("renterId", {
-                required: "Select a tenant.",
+                required: t("reportModal.tenantRequired"),
               })}
             >
               {renters.map((r) => (
@@ -361,21 +386,26 @@ export function RentalHistoryOverview({
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field>
-              <FieldLabel htmlFor="issue-type">Obligation type</FieldLabel>
+              <FieldLabel htmlFor="issue-type">
+                {t("reportModal.typeLabel")}
+              </FieldLabel>
               <select
                 id="issue-type"
                 className="h-10 w-full rounded-none border border-input bg-white px-3 text-sm"
                 {...reportForm.register("obligationType")}
               >
-                <option value="rent">Unpaid Rent</option>
-                <option value="water">Water Bill (WASAC)</option>
-                <option value="electricity">Electricity (EUCL)</option>
-                <option value="other">Other Agreed Charge</option>
+                <option value="rent">{t("reportModal.typeRent")}</option>
+                <option value="water">{t("reportModal.typeWater")}</option>
+                <option value="electricity">
+                  {t("reportModal.typeElectricity")}
+                </option>
+                <option value="other">{t("reportModal.typeOther")}</option>
               </select>
             </Field>
             <Field>
               <FieldLabel htmlFor="issue-amount">
-                Remaining amount (RWF) <span className="text-rose-600">*</span>
+                {t("reportModal.amountLabel")}{" "}
+                <span className="text-rose-600">*</span>
               </FieldLabel>
               <Input
                 id="issue-amount"
@@ -386,7 +416,7 @@ export function RentalHistoryOverview({
                 className="h-10 rounded-none"
                 {...reportForm.register("amountRwf", {
                   validate: (v) =>
-                    Number(v) > 0 || "Enter a positive amount in RWF.",
+                    Number(v) > 0 || t("reportModal.amountPositive"),
                 })}
               />
               <FieldError>
@@ -397,15 +427,16 @@ export function RentalHistoryOverview({
 
           <Field>
             <FieldLabel htmlFor="issue-title">
-              Summary title <span className="text-rose-600">*</span>
+              {t("reportModal.titleLabel")}{" "}
+              <span className="text-rose-600">*</span>
             </FieldLabel>
             <Input
               id="issue-title"
-              placeholder="e.g., Unpaid August Water Utility Balance"
+              placeholder={t("reportModal.titlePlaceholder")}
               className="h-10 rounded-none"
               {...reportForm.register("issueTitle", {
                 validate: (v) =>
-                  v.trim().length >= 5 || "Enter a clear summary title.",
+                  v.trim().length >= 5 || t("reportModal.titleRequired"),
               })}
             />
             <FieldError>
@@ -415,17 +446,17 @@ export function RentalHistoryOverview({
 
           <Field>
             <FieldLabel htmlFor="issue-notes">
-              Supporting details <span className="text-rose-600">*</span>
+              {t("reportModal.notesLabel")}{" "}
+              <span className="text-rose-600">*</span>
             </FieldLabel>
             <textarea
               id="issue-notes"
               rows={3}
-              placeholder="Describe the billing period, meter reading, or agreed lease obligation..."
+              placeholder={t("reportModal.notesPlaceholder")}
               className="w-full rounded-none border border-input bg-white p-3 text-sm"
               {...reportForm.register("landlordReport", {
                 validate: (v) =>
-                  v.trim().length >= 10 ||
-                  "Provide factual supporting details.",
+                  v.trim().length >= 10 || t("reportModal.notesRequired"),
               })}
             />
             <FieldError>
