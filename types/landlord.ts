@@ -1,5 +1,21 @@
+export type LandlordServiceMode = "listing_only" | "managed";
+
+export type ListingStatus =
+  | "Draft"
+  | "Published"
+  | "Paused"
+  | "Rented"
+  | "Archived";
+
 export type TenancyStatus = "Active" | "Ending" | "Closed";
 export type PaymentStatus = "Pending" | "Approved" | "Rejected" | "Disputed";
+export type PaymentRejectionCategory =
+  | "money_not_received"
+  | "wrong_amount"
+  | "duplicate_payment"
+  | "invalid_receipt"
+  | "other";
+
 export type IssueStatus =
   | "Reported"
   | "Unresolved"
@@ -8,16 +24,22 @@ export type IssueStatus =
   | "Resolved"
   | "Rejected";
 
+export type InquiryStatus = "New" | "Replied" | "Archived";
+export type ViewingStatus = "Pending" | "Confirmed" | "Rescheduled" | "Rejected";
+
+export interface ContactVisibilitySettings {
+  showPhone: boolean;
+  showWhatsApp: boolean;
+  showEmail: boolean;
+}
+
 export interface LandlordMetric {
-  // Operational Top 5 KPIs
   activeRentersCount: number;
   currentMonthRentCollectedRwf: number;
   targetMonthRentRwf: number;
   remainingRentBalanceRwf: number;
   activeDisputesCount: number;
   tenanciesEndingSoonCount: number;
-
-  // Additional detail fields
   activeTenants: number;
   activeProperties: number;
   pendingPaymentsCount: number;
@@ -55,12 +77,15 @@ export interface RecentActivityItem {
     | "tenancy_ending"
     | "issue_reported"
     | "dispute_submitted"
-    | "issue_resolved";
+    | "issue_resolved"
+    | "inquiry_received"
+    | "viewing_requested";
   title: string;
   description: string;
   timestamp: string;
   renterName: string;
   propertyTitle: string;
+  href?: string;
 }
 
 export interface AttentionItem {
@@ -69,22 +94,31 @@ export interface AttentionItem {
   count: number;
   actionText: string;
   href: string;
-  type: "pending_payment" | "ending_tenancy" | "disputed_issue";
+  type:
+    | "pending_payment"
+    | "ending_tenancy"
+    | "disputed_issue"
+    | "pending_inquiry"
+    | "pending_viewing";
 }
 
 export interface LandlordRenter {
   id: string;
   propertyId?: string;
   name: string;
+  email?: string;
   avatar?: string;
   isIdentityVerified: boolean;
   propertyName: string;
   unitNumber: string;
   tenancyStatus: TenancyStatus;
   monthlyRentRwf: number;
+  securityDepositRwf?: number;
   paymentStatus: "Paid" | "Pending" | "Overdue";
   startDate: string;
+  endDate?: string;
   phone: string;
+  agreementId?: string;
 }
 
 export type PropertyUnitStatus = "Occupied" | "Vacant" | "Maintenance";
@@ -104,24 +138,37 @@ export interface PropertyUnit {
 
 export interface TenancyPayment {
   id: string;
+  renterId?: string;
+  renterName?: string;
+  propertyId?: string;
+  propertyName?: string;
+  unitNumber?: string;
   amountRwf: number;
   dueDate: string;
   period: string;
   status: PaymentStatus;
   paymentMethod?: string;
+  reference?: string;
+  rejectionCategory?: PaymentRejectionCategory;
   rejectionReason?: string;
+  createsUnpaidBalance?: boolean;
   paidAt?: string;
 }
 
 export interface RentalIssue {
   id: string;
+  renterId?: string;
+  propertyId?: string;
   issueTitle: string;
+  obligationType?: "rent" | "water" | "electricity" | "other";
   amountRwf: number;
   propertyName: string;
   tenancyPeriod: string;
   landlordName: string;
   renterName: string;
   createdDate: string;
+  noticeDeadlineDate?: string;
+  daysRemaining?: number;
   status: IssueStatus;
   landlordReport: string;
   renterResponse?: string;
@@ -132,12 +179,53 @@ export interface RentalIssue {
   };
 }
 
+export interface LandlordInquiryReply {
+  id: string;
+  sender: "landlord" | "seeker";
+  text: string;
+  timestamp: string;
+}
+
+export interface LandlordInquiry {
+  id: string;
+  propertyId: string;
+  propertyName: string;
+  senderName: string;
+  senderPhone: string;
+  senderEmail: string;
+  message: string;
+  createdAt: string;
+  status: InquiryStatus;
+  replies: LandlordInquiryReply[];
+}
+
+export interface ViewingRequest {
+  id: string;
+  propertyId: string;
+  propertyName: string;
+  requesterName: string;
+  requesterPhone: string;
+  requesterEmail: string;
+  preferredDate: string;
+  preferredTime: string;
+  note?: string;
+  status: ViewingStatus;
+  rejectionReason?: string;
+  createdAt: string;
+}
+
 export interface LandlordNotificationItem {
   id: string;
   title: string;
   message: string;
   timestamp: string;
-  category: "payment" | "tenancy" | "dispute" | "system";
+  category:
+    | "payment"
+    | "tenancy"
+    | "dispute"
+    | "inquiry"
+    | "viewing"
+    | "system";
   isUnread: boolean;
   actionHref?: string;
   actionLabel?: string;
@@ -148,6 +236,7 @@ export interface LandlordFAQItem {
   question: string;
   answer: string;
   category: string;
+  serviceScope?: "all" | LandlordServiceMode;
 }
 
 export interface PropertyGroup {
@@ -169,6 +258,15 @@ export interface LandlordPropertyItem {
   groupId?: PropertyGroup["id"] | null;
   location: string;
   image?: string;
+  gallery?: string[];
+  description?: string;
+  bedrooms?: number;
+  bathrooms?: number;
+  amenities?: string[];
+  securityDepositRwf?: number;
+  availableFrom?: string;
+  listingStatus?: ListingStatus;
+  viewsCount?: number;
   totalUnits?: number;
   occupiedUnits?: number;
   monthlyRevenueRwf?: number;
@@ -177,24 +275,6 @@ export interface LandlordPropertyItem {
   hasUnits: boolean;
   status?: "Occupied" | "Partial" | "Vacant";
   type: "APARTMENT" | "HOUSE" | "COMMERCIAL";
-}
-
-export interface LandlordNotificationItem {
-  id: string;
-  title: string;
-  message: string;
-  timestamp: string;
-  category: "payment" | "tenancy" | "dispute" | "system";
-  isUnread: boolean;
-  actionHref?: string;
-  actionLabel?: string;
-}
-
-export interface LandlordFAQItem {
-  id: string;
-  question: string;
-  answer: string;
-  category: string;
 }
 
 export interface LandlordProfileSettings {
