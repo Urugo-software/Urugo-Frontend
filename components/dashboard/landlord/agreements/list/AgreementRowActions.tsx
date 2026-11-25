@@ -1,8 +1,16 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Check, Copy, FileEdit, MoreHorizontal } from "lucide-react";
+import {
+  Check,
+  Copy,
+  FileEdit,
+  MoreHorizontal,
+  RefreshCw,
+  XCircle,
+} from "lucide-react";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,25 +19,75 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
 import type { Agreement } from "@/types/agreement.types";
+import { createSafeId } from "@/utils/format";
 import { isAgreementEditable } from "./agreement-list.config";
 
 interface AgreementRowActionsProps {
   agreement: Agreement;
 }
 
+const CANCELLABLE_STATUSES = new Set([
+  "Draft",
+  "Ready for Review",
+  "Sent",
+  "Viewed",
+  "Changes Requested",
+]);
+
 export function AgreementRowActions({ agreement }: AgreementRowActionsProps) {
+  const router = useRouter();
   const [copied, setCopied] = useState(false);
+  const updateAgreementStatus = useLandlordWorkspace(
+    (s) => s.updateAgreementStatus,
+  );
+  const upsertAgreement = useLandlordWorkspace((s) => s.upsertAgreement);
+
   const editable = isAgreementEditable(agreement.status);
+  const cancellable = CANCELLABLE_STATUSES.has(agreement.status);
   const editLabel =
     agreement.status === "Changes Requested" ? "Revise clauses" : "Edit clauses";
 
-  function handleCopyReference() {
-    if (!navigator?.clipboard) return;
-    void navigator.clipboard.writeText(agreement.referenceNumber);
-    setCopied(true);
-    toast.success(`Copied ${agreement.referenceNumber}`);
-    setTimeout(() => setCopied(false), 2000);
+  async function handleCopyReference() {
+    if (!navigator?.clipboard) {
+      toast.error("Clipboard unavailable in this browser.");
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(agreement.referenceNumber);
+      setCopied(true);
+      toast.success(`Copied ${agreement.referenceNumber}`);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error("Could not copy reference number.");
+    }
+  }
+
+  function handleRenewAgreement() {
+    const now = new Date().toISOString();
+    const newId = createSafeId("agr");
+    upsertAgreement({
+      ...agreement,
+      id: newId,
+      referenceNumber: `${agreement.referenceNumber.replace(/-R\d+$/, "")}-R${agreement.version + 1}`,
+      status: "Draft",
+      version: agreement.version + 1,
+      createdAt: now,
+      updatedAt: now,
+      renterSignature: undefined,
+      landlordSignature: undefined,
+      changeRequests: [],
+      supersedes: agreement.id,
+      tenancyStartDate: agreement.tenancyEndDate || now.slice(0, 10),
+    });
+    toast.success("Renewal draft created.");
+    router.push(`/landlord/agreements/${newId}/edit`);
+  }
+
+  function handleCancel() {
+    updateAgreementStatus(agreement.id, "Cancelled");
+    toast.success(`Agreement ${agreement.referenceNumber} cancelled.`);
   }
 
   return (
@@ -55,19 +113,30 @@ export function AgreementRowActions({ agreement }: AgreementRowActionsProps) {
             </Button>
           }
         />
-        <DropdownMenuContent align="end" className="w-48 rounded-none">
+        <DropdownMenuContent align="end" className="w-52 rounded-none">
           {editable && (
             <DropdownMenuItem
               className="cursor-pointer py-2 text-sm font-medium"
-              render={<Link href={`/landlord/agreements/${agreement.id}/edit`} />}
+              render={
+                <Link href={`/landlord/agreements/${agreement.id}/edit`} />
+              }
             >
               <FileEdit className="size-4 text-faint" />
               <span>{editLabel}</span>
             </DropdownMenuItem>
           )}
+          {agreement.status === "Signed" && (
+            <DropdownMenuItem
+              className="cursor-pointer py-2 text-sm font-medium"
+              onClick={handleRenewAgreement}
+            >
+              <RefreshCw className="size-4 text-faint" />
+              <span>Create renewal draft</span>
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem
             className="cursor-pointer py-2 text-sm font-medium"
-            onClick={handleCopyReference}
+            onClick={() => void handleCopyReference()}
           >
             {copied ? (
               <>
@@ -81,6 +150,15 @@ export function AgreementRowActions({ agreement }: AgreementRowActionsProps) {
               </>
             )}
           </DropdownMenuItem>
+          {cancellable && (
+            <DropdownMenuItem
+              className="cursor-pointer py-2 text-sm font-medium text-red-700"
+              onClick={handleCancel}
+            >
+              <XCircle className="size-4 text-red-600" />
+              <span>Cancel agreement</span>
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
