@@ -1,6 +1,6 @@
 import { Property } from "@/types/properties";
 import LandlordCard from "./LandlordCard";
-import CustomButton from "@/components/shared/CustomButton";
+import { PropertyLeadActions } from "./PropertyLeadActions";
 
 interface PropertySidebarProps {
   property: Property;
@@ -24,16 +24,10 @@ export default function PropertySidebar({ property }: PropertySidebarProps) {
         </div>
 
         {/* Actions */}
-        <CustomButton
-          title="Request a visit"
-          variant="colored"
-          className="bg-brand rounded-none w-full py-6 mb-3.5"
-        />
-
-        <CustomButton
-          title="Contact landlord on WhatsApp"
-          variant="light"
-          className="w-full mb-1 rounded-none py-6"
+        <PropertyLeadActions
+          propertyId={property.id}
+          propertyTitle={property.headline}
+          landlordPhone={property.landlord?.phone}
         />
 
         {/* Property information */}
