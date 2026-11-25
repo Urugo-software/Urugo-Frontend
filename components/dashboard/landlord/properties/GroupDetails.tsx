@@ -1,6 +1,11 @@
 "use client";
 
+import { useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Pagination } from "@/components/shared/Pagination";
 import { useGroupDetails } from "@/hooks/useGroupDetails";
+import { formatPropertyRent } from "@/utils/format";
+import { paginateItems } from "@/utils/pagination";
 import {
   GroupBreadcrumb,
   GroupEmptyState,
@@ -8,12 +13,22 @@ import {
   GroupSummaryStats,
 } from "./group-details";
 import { GroupDialog } from "./GroupDialog";
-import { PropertiesToolbar } from "./PropertiesToolbar";
+import {
+  PropertiesToolbar,
+  type PropertySortOrder,
+} from "./PropertiesToolbar";
 import { EagerCoverContext } from "./PropertyCover";
 import { PropertyList } from "./PropertyList";
 import { useMembershipControls } from "./membership/useMembershipControls";
 
+const ITEMS_PER_PAGE = 6;
+
 export function GroupDetails({ id }: { id: string }) {
+  const router = useRouter();
+  const mainRef = useRef<HTMLElement>(null);
+  const [sortBy, setSortBy] = useState<PropertySortOrder>("default");
+  const [currentPage, setCurrentPage] = useState(1);
+
   const {
     group,
     allMembers,
@@ -33,6 +48,23 @@ export function GroupDetails({ id }: { id: string }) {
 
   const membership = useMembershipControls();
 
+  const sortedMembers = useMemo(() => {
+    if (sortBy === "default") return filteredMembers;
+    return [...filteredMembers].sort((a, b) => {
+      if (sortBy === "name") return a.name.localeCompare(b.name);
+      const rentA = formatPropertyRent(a) ?? 0;
+      const rentB = formatPropertyRent(b) ?? 0;
+      return sortBy === "rent-desc" ? rentB - rentA : rentA - rentB;
+    });
+  }, [filteredMembers, sortBy]);
+
+  const {
+    items: paginatedMembers,
+    page,
+    totalPages,
+    totalItems,
+  } = paginateItems(sortedMembers, currentPage, ITEMS_PER_PAGE);
+
   if (!group) {
     return (
       <main className="min-h-0 flex-1 space-y-6 overflow-y-auto bg-surface/30 p-4 pb-16 sm:p-8 md:p-10">
@@ -43,7 +75,10 @@ export function GroupDetails({ id }: { id: string }) {
   }
 
   return (
-    <main className="min-h-0 flex-1 space-y-6 overflow-y-auto bg-surface/30 p-4 pb-16 sm:p-8 md:p-10">
+    <main
+      ref={mainRef}
+      className="min-h-0 flex-1 space-y-6 overflow-y-auto bg-surface/30 p-4 pb-16 sm:p-8 md:p-10"
+    >
       <GroupBreadcrumb currentLabel={group.name} />
 
       <GroupHeroHeader
@@ -81,9 +116,21 @@ export function GroupDetails({ id }: { id: string }) {
         {allMembers.length > 0 && (
           <PropertiesToolbar
             searchTerm={searchTerm}
-            onSearchChange={setSearchTerm}
+            onSearchChange={(val) => {
+              setSearchTerm(val);
+              setCurrentPage(1);
+            }}
+            searchLabel="Search properties in this group"
             filterStatus={filterStatus}
-            onFilterChange={setFilterStatus}
+            onFilterChange={(val) => {
+              setFilterStatus(val);
+              setCurrentPage(1);
+            }}
+            sortBy={sortBy}
+            onSortChange={(val) => {
+              setSortBy(val);
+              setCurrentPage(1);
+            }}
             viewMode={viewMode}
             onViewModeChange={setViewMode}
             groupOrder="custom"
@@ -100,30 +147,43 @@ export function GroupDetails({ id }: { id: string }) {
         ) : filteredMembers.length === 0 ? (
           <GroupEmptyState
             variant="no-matches"
-            onClearFilters={clearFilters}
+            onClearFilters={() => {
+              clearFilters();
+              setSortBy("default");
+              setCurrentPage(1);
+            }}
           />
         ) : (
-          <EagerCoverContext.Provider
-            value={filteredMembers.find((property) => property.image)?.image}
-          >
+          <EagerCoverContext.Provider value={paginatedMembers[0]?.image}>
             <PropertyList
-              properties={filteredMembers}
+              properties={paginatedMembers}
               mode={viewMode}
               renderMembershipActions={membership.propertyMenu}
+            />
+            <Pagination
+              currentPage={page}
+              totalPages={totalPages}
+              totalItems={totalItems}
+              itemsPerPage={ITEMS_PER_PAGE}
+              itemLabel="properties"
+              onPageChange={(nextPage) => {
+                setCurrentPage(nextPage);
+                mainRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+              }}
             />
           </EagerCoverContext.Provider>
         )}
       </section>
 
-      {membership.dialog}
-
       {dialogRequest && (
         <GroupDialog
           request={dialogRequest}
-          onClose={() => setDialogRequest(null)}
           returnFocusId={`group-details-menu-${group.id}`}
+          onClose={() => setDialogRequest(null)}
+          onDeleted={() => router.push("/landlord/properties")}
         />
       )}
+      {membership.dialog}
     </main>
   );
 }

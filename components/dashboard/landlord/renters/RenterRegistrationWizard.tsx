@@ -1,17 +1,24 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { AnimatePresence, motion, useReducedMotion, type Variants } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useReducedMotion,
+  type Variants,
+} from "framer-motion";
 import { useRenterWizard } from "@/hooks/mutate/useManualRenterRegistration";
-import { RenterRegistrationWizardProps, WizardStep } from "@/types/renter-wizard.types";
-import { mockLandlordRenters } from "@/data/landlord-data";
+import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
+import {
+  RenterRegistrationWizardProps,
+  WizardStep,
+} from "@/types/renter-wizard.types";
+import { AgreementEditor } from "../agreements/editor/AgreementEditor";
 import { Step1TenancyConfig } from "./wizard/Step1TenancyConfig";
 import { Step2RenterDetails } from "./wizard/Step2RenterDetails";
 import { Step3AgreementLanguage } from "./wizard/Step3AgreementLanguage";
-import { AgreementEditor } from "../agreements/editor/AgreementEditor";
 import { WizardCompletionView } from "./wizard/WizardCompletionView";
 import { WizardProgressIndicator } from "./wizard/WizardProgressIndicator";
-import { WizardReviewView } from "./wizard/WizardReviewView";
 
 const stepVariants: Variants = {
   enter: (direction: number) => ({
@@ -21,18 +28,12 @@ const stepVariants: Variants = {
   center: {
     x: 0,
     opacity: 1,
-    transition: {
-      duration: 0.22,
-      ease: "easeOut",
-    },
+    transition: { duration: 0.22, ease: "easeOut" },
   },
   exit: (direction: number) => ({
     x: direction > 0 ? -16 : 16,
     opacity: 0,
-    transition: {
-      duration: 0.18,
-      ease: "easeOut",
-    },
+    transition: { duration: 0.18, ease: "easeOut" },
   }),
 };
 
@@ -47,12 +48,12 @@ export function RenterRegistrationWizard({
   initialMode = "manual",
 }: RenterRegistrationWizardProps) {
   const router = useRouter();
+  const existingRenters = useLandlordWorkspace((s) => s.renters);
   const shouldReduceMotion = useReducedMotion();
 
   const {
     step,
     stepDirection,
-    isReviewing,
     isSubmitted,
     mode,
     setMode,
@@ -76,43 +77,34 @@ export function RenterRegistrationWizard({
     goToStep4,
     handleAgreementSaved,
     handleAgreementConfirmed,
-    backFromReview,
-    confirmSubmission,
     resetWizard,
   } = useRenterWizard(properties, initialMode);
 
-  const handleCancel = () => {
-    router.push("/landlord/renters");
-  };
+  const handleCancel = () => router.push("/landlord/renters");
 
   const handleStepIndicatorClick = (targetStep: WizardStep) => {
-    if (isSubmitted) return;
-    if (targetStep === 1) {
-      goToStep1();
-    } else if (targetStep === 2) {
-      goToStep2();
-    } else if (targetStep === 3) {
-      goToStep3();
-    } else if (targetStep === 4) {
-      goToStep4();
-    }
+    if (isSubmitted || targetStep === step) return;
+    if (targetStep === 1) goToStep1();
+    else if (targetStep === 2) goToStep2();
+    else if (targetStep === 3) goToStep3();
+    else if (targetStep === 4) goToStep4();
   };
 
-  const activeVariants = shouldReduceMotion ? reducedMotionVariants : stepVariants;
+  const activeVariants = shouldReduceMotion
+    ? reducedMotionVariants
+    : stepVariants;
 
   return (
     <div className="border border-line bg-white shadow-2xs">
-      {/* Step Progress Bar */}
       {!isSubmitted && (
         <WizardProgressIndicator
           currentStep={step}
-          isReviewing={isReviewing}
+          isReviewing={false}
           onStepClick={handleStepIndicatorClick}
         />
       )}
 
-      {/* Animated Step Content */}
-      <div className={step === 4 ? "p-0" : "p-6 sm:p-8 md:p-10"}>
+      <div className={step === 4 ? "p-0" : "p-5 sm:p-8 md:p-10"}>
         <AnimatePresence mode="wait" custom={stepDirection}>
           {isSubmitted && submission ? (
             <motion.div
@@ -127,26 +119,6 @@ export function RenterRegistrationWizard({
                 submission={submission}
                 onRegisterAnother={resetWizard}
                 onDone={handleCancel}
-              />
-            </motion.div>
-          ) : isReviewing ? (
-            <motion.div
-              key="review"
-              custom={stepDirection}
-              variants={activeVariants}
-              initial="enter"
-              animate="center"
-              exit="exit"
-            >
-              <WizardReviewView
-                mode={mode}
-                identity={identityDraft}
-                tenancy={tenancyDraft}
-                properties={properties}
-                paymentSummary={paymentSummary}
-                simulatedLink={linkState.generatedLink}
-                onBackToEdit={(targetStep) => backFromReview(targetStep)}
-                onConfirm={confirmSubmission}
               />
             </motion.div>
           ) : step === 1 ? (
@@ -185,7 +157,7 @@ export function RenterRegistrationWizard({
                 errors={identityErrors}
                 onFieldChange={updateIdentityField}
                 onSelectExistingRenter={selectExistingRenter}
-                existingRenters={mockLandlordRenters}
+                existingRenters={existingRenters}
                 onBack={goToStep1}
                 onContinue={goToStep3}
                 generatedLink={linkState.generatedLink}
@@ -219,11 +191,11 @@ export function RenterRegistrationWizard({
               initial="enter"
               animate="center"
               exit="exit"
-              className="min-h-[600px] flex flex-col"
+              className="flex min-h-[600px] flex-col"
             >
               {agreementDraft && (
                 <AgreementEditor
-                  key={`${agreementDraft.id}-${selectedLanguage}-${agreementDraft.financials.monthlyRentRwf}`}
+                  key={`${agreementDraft.id}-${selectedLanguage}-${agreementDraft.financials.monthlyRentRwf}-${agreementDraft.tenancyStartDate ?? ""}-${agreementDraft.renter.name}`}
                   initialAgreement={agreementDraft}
                   onEditTenancy={goToStep1}
                   onBackToTenancy={goToStep3}

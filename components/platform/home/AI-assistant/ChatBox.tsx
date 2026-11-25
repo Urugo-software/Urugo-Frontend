@@ -1,3 +1,5 @@
+import { Bot } from "lucide-react";
+
 function ChatBox() {
   return (
     <div className="w-full max-w-xl overflow-hidden rounded-2xl border border-line bg-white shadow-xl shadow-brand/5">
@@ -6,9 +8,10 @@ function ChatBox() {
         <div className="flex items-center gap-3">
           {/* Avatar */}
 
-          <div>
-            <p className="text-[13px] uppercase font-bold text-ink leading-none mb-0.5 py-2">
-              Zoe BOT
+          <div className="flex items-center gap-1">
+            <Bot />
+            <p className="text-[14px] translate-y-0.5 uppercase  font-bold text-ink leading-none  ">
+              Zoe
             </p>
           </div>
         </div>

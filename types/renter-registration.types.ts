@@ -1,21 +1,5 @@
 import { LandlordPropertyItem } from "@/types/landlord";
-
-export type AddRenterMode = "manual" | "link";
-
-export interface ManualRenterRegistrationDraft {
-  fullName: string;
-  email: string;
-  phoneNumber: string;
-  nationalId: string;
-  propertyId: string;
-}
-
-export interface ManualRenterFormErrors {
-  fullName?: string;
-  email?: string;
-  phoneNumber?: string;
-  nationalId?: string;
-}
+import type { AddRenterMode } from "./renter-wizard.types";
 
 export interface SimulatedRenterInvitationLink {
   id: string;
@@ -34,26 +18,9 @@ export interface RenterPropertySelectProps {
   onSelect: (propertyId: string) => void;
 }
 
-export interface ManualRenterRegistrationFormProps {
-  properties: LandlordPropertyItem[];
-  onCancel?: () => void;
-}
-
-export interface ManualRenterPreviewCardProps {
-  draft: ManualRenterRegistrationDraft;
-  propertyName?: string;
-  onReset: () => void;
-  onDone?: () => void;
-}
-
 export interface CopyStatusMessage {
   type: "success" | "error";
   text: string;
-}
-
-export interface RenterRegistrationLinkPanelProps {
-  properties: LandlordPropertyItem[];
-  onCancel?: () => void;
 }
 
 export interface AddRenterPageViewProps {

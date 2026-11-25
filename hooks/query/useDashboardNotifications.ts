@@ -3,18 +3,39 @@
 import { useMemo } from "react";
 import { adminDirectories } from "@/data/admin-dashboard-data";
 import { notificationsData } from "@/data/home-seeker-data";
-import { mockLandlordNotifications } from "@/data/landlord-data";
 import { mockRenterNotifications } from "@/data/renter-extra-data";
+import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
 import { HeaderNotificationPreviewItem } from "@/types/dashboard-notifications.types";
 
 export function useDashboardNotifications(pathname: string) {
+  const landlordNotifications = useLandlordWorkspace((s) => s.notifications);
+  const serviceMode = useLandlordWorkspace((s) => s.serviceMode);
+  const markLandlordRead = useLandlordWorkspace((s) => s.markNotificationRead);
+  const markAllLandlordRead = useLandlordWorkspace(
+    (s) => s.markAllNotificationsRead,
+  );
+
+  const isLandlord = pathname.startsWith("/landlord");
+
   return useMemo(() => {
     let viewAllHref = "/home-seeker/notifications";
     let items: HeaderNotificationPreviewItem[] = [];
+    let unreadCount = 0;
 
-    if (pathname.startsWith("/landlord")) {
+    if (isLandlord) {
       viewAllHref = "/landlord/notifications";
-      items = mockLandlordNotifications.slice(0, 4).map((n) => ({
+      const scoped =
+        serviceMode === "listing_only"
+          ? landlordNotifications.filter(
+              (n) =>
+                n.category === "inquiry" ||
+                n.category === "viewing" ||
+                n.category === "system",
+            )
+          : landlordNotifications;
+
+      unreadCount = scoped.filter((n) => n.isUnread).length;
+      items = scoped.slice(0, 5).map((n) => ({
         id: n.id,
         title: n.title,
         message: n.message,
@@ -25,6 +46,7 @@ export function useDashboardNotifications(pathname: string) {
       }));
     } else if (pathname.startsWith("/renter")) {
       viewAllHref = "/renter/notifications";
+      unreadCount = mockRenterNotifications.filter((n) => !n.read).length;
       items = mockRenterNotifications.slice(0, 4).map((n) => ({
         id: n.id,
         title: n.title,
@@ -37,6 +59,7 @@ export function useDashboardNotifications(pathname: string) {
     } else if (pathname.startsWith("/admin")) {
       viewAllHref = "/admin/notifications";
       const adminRows = adminDirectories.notifications?.rows || [];
+      unreadCount = adminRows.filter((r) => r.delivery !== "Delivered").length;
       items = adminRows.slice(0, 4).map((row, idx) => ({
         id: `admin-notif-${idx}`,
         title: row.title || "Admin Notification",
@@ -48,6 +71,7 @@ export function useDashboardNotifications(pathname: string) {
       }));
     } else {
       viewAllHref = "/home-seeker/notifications";
+      unreadCount = notificationsData.filter((n) => n.unread).length;
       items = notificationsData.slice(0, 4).map((n, idx) => ({
         id: `seeker-notif-${idx}`,
         title: n.title,
@@ -59,14 +83,20 @@ export function useDashboardNotifications(pathname: string) {
       }));
     }
 
-    const unreadCount = items.filter((item) => item.isUnread).length;
-    const hasUnread = unreadCount > 0;
-
     return {
       items,
       unreadCount,
-      hasUnread,
+      hasUnread: unreadCount > 0,
       viewAllHref,
+      onMarkRead: isLandlord ? markLandlordRead : undefined,
+      onMarkAllRead: isLandlord ? markAllLandlordRead : undefined,
     };
-  }, [pathname]);
+  }, [
+    isLandlord,
+    landlordNotifications,
+    markAllLandlordRead,
+    markLandlordRead,
+    pathname,
+    serviceMode,
+  ]);
 }

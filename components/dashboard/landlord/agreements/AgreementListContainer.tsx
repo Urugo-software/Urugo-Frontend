@@ -3,8 +3,13 @@
 import { useMemo, useState } from "react";
 import { FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { EmptyStateBox } from "@/components/dashboard/landlord/tenancies/EmptyStateBox";
-import type { Agreement, AgreementFilterTab } from "@/types/agreement.types";
+import { EmptyStateBox } from "@/components/shared/EmptyStateBox";
+import { Pagination } from "@/components/shared/Pagination";
+import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
+import type { AgreementFilterTab } from "@/types/agreement.types";
+import { paginateItems } from "@/utils/pagination";
+import { AgreementsPageHeader } from "./AgreementsPageHeader";
+import { CreateAgreementModal } from "./CreateAgreementModal";
 import {
   AgreementListToolbar,
   AgreementMobileList,
@@ -12,38 +17,53 @@ import {
   filterAgreements,
 } from "./list";
 
-interface Props {
-  initialAgreements: Agreement[];
-  newAgreementHref: string;
-}
+const AGREEMENTS_PER_PAGE = 6;
 
-export function AgreementListContainer({
-  initialAgreements,
-  newAgreementHref,
-}: Props) {
+export function AgreementListContainer() {
+  const agreements = useLandlordWorkspace((s) => s.agreements);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState<AgreementFilterTab>("all");
+  const [page, setPage] = useState(1);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   const filteredAgreements = useMemo(
-    () => filterAgreements(initialAgreements, activeTab, searchQuery),
-    [initialAgreements, activeTab, searchQuery],
+    () => filterAgreements(agreements, activeTab, searchQuery),
+    [agreements, activeTab, searchQuery],
+  );
+
+  const paginated = useMemo(
+    () => paginateItems(filteredAgreements, page, AGREEMENTS_PER_PAGE),
+    [filteredAgreements, page],
   );
 
   const hasActiveFilters = activeTab !== "all" || searchQuery.trim() !== "";
 
+  function handleSearchChange(val: string) {
+    setSearchQuery(val);
+    setPage(1);
+  }
+
+  function handleTabChange(tab: AgreementFilterTab) {
+    setActiveTab(tab);
+    setPage(1);
+  }
+
   function clearFilters() {
     setActiveTab("all");
     setSearchQuery("");
+    setPage(1);
   }
 
   return (
     <div className="space-y-6">
+      <AgreementsPageHeader onNewAgreement={() => setIsCreateOpen(true)} />
+
       <AgreementListToolbar
         searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
+        onSearchChange={handleSearchChange}
         activeTab={activeTab}
-        onTabChange={setActiveTab}
-        newAgreementHref={newAgreementHref}
+        onTabChange={handleTabChange}
+        onNewAgreement={() => setIsCreateOpen(true)}
       />
 
       {filteredAgreements.length === 0 ? (
@@ -65,15 +85,36 @@ export function AgreementListContainer({
               >
                 Clear filters
               </Button>
-            ) : undefined
+            ) : (
+              <Button
+                type="button"
+                onClick={() => setIsCreateOpen(true)}
+                className="cursor-pointer rounded-none bg-ink text-white hover:bg-black"
+              >
+                New Agreement
+              </Button>
+            )
           }
         />
       ) : (
         <>
-          <AgreementTable agreements={filteredAgreements} />
-          <AgreementMobileList agreements={filteredAgreements} />
+          <AgreementTable agreements={paginated.items} />
+          <AgreementMobileList agreements={paginated.items} />
+          <Pagination
+            currentPage={paginated.page}
+            totalPages={paginated.totalPages}
+            totalItems={paginated.totalItems}
+            itemsPerPage={AGREEMENTS_PER_PAGE}
+            itemLabel="agreements"
+            onPageChange={setPage}
+          />
         </>
       )}
+
+      <CreateAgreementModal
+        open={isCreateOpen}
+        onClose={() => setIsCreateOpen(false)}
+      />
     </div>
   );
 }

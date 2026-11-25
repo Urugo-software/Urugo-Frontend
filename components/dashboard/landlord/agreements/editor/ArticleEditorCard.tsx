@@ -38,12 +38,17 @@ export function ArticleEditorCard({
   const isFirst = index === 0;
   const isLast = index === totalArticles - 1;
 
-  // Check if standard article was modified from default
   const standardDef = article.standardNumber
     ? CANONICAL_18_ARTICLES.find(
         (d) => d.standardNumber === article.standardNumber,
       )
     : null;
+
+  const defaultTitle = standardDef
+    ? language === "rw"
+      ? standardDef.titleRw
+      : standardDef.titleEn
+    : "";
 
   const defaultContent = standardDef
     ? language === "rw"
@@ -51,61 +56,57 @@ export function ArticleEditorCard({
       : standardDef.contentEn
     : "";
 
-  const isModifiedFromDefault =
-    standardDef && article.content.trim() !== defaultContent.trim();
+  const isModifiedFromDefault = Boolean(
+    standardDef &&
+      (article.title.trim() !== defaultTitle.trim() ||
+        article.content.trim() !== defaultContent.trim()),
+  );
 
-  const handleResetToStandardDefault = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const handleResetToStandardDefault = () => {
     if (!standardDef) return;
     onUpdate(article.id, {
-      title: language === "rw" ? standardDef.titleRw : standardDef.titleEn,
+      title: defaultTitle,
       content: defaultContent,
     });
   };
 
   return (
     <div className="border border-line bg-white transition-colors">
-      {/* Collapsed Header / Accordion Trigger */}
-      <div
-        onClick={onToggleExpand}
-        className="flex items-center justify-between gap-3 px-4 py-3.5 cursor-pointer select-none hover:bg-surface/50 transition-colors"
-      >
-        {/* Left: Number and Heading */}
-        <div className="flex items-center gap-3 min-w-0">
-          <span className="font-mono text-[13px] font-semibold text-faint w-6 shrink-0">
+      <div className="flex items-center justify-between gap-2 px-4 py-2 transition-colors hover:bg-surface/50">
+        <button
+          type="button"
+          aria-expanded={isExpanded}
+          onClick={onToggleExpand}
+          className="flex min-w-0 flex-1 cursor-pointer items-center gap-3 py-1.5 text-left"
+        >
+          <span className="w-6 shrink-0 font-mono text-[13px] font-semibold text-faint">
             {article.number}.
           </span>
 
-          <span className="text-[13px] sm:text-sm font-medium text-ink truncate">
+          <span className="truncate text-[13px] font-medium text-ink sm:text-sm">
             {article.title || `Article ${article.number}`}
           </span>
 
-          {/* Subtle Custom Indicator */}
           {article.isCustom && (
-            <span className="text-[12.5px] text-faint lowercase font-normal shrink-0">
+            <span className="shrink-0 text-[12.5px] font-normal lowercase text-faint">
               (custom)
             </span>
           )}
 
-          {/* Subtle Modified Indicator */}
           {isModifiedFromDefault && (
-            <span className="text-[12.5px] text-amber-700 font-normal shrink-0">
+            <span className="shrink-0 text-[12.5px] font-normal text-amber-700">
               (edited)
             </span>
           )}
-        </div>
+        </button>
 
-        {/* Right: Controls & Chevron */}
-        <div className="flex items-center gap-1 shrink-0">
-          {/* Reordering Controls */}
+        <div className="flex shrink-0 items-center gap-1">
           <button
             type="button"
             disabled={isFirst}
-            onClick={(e) => {
-              e.stopPropagation();
-              onMoveUp(index);
-            }}
-            className="p-1.5 text-faint hover:text-ink disabled:opacity-20 disabled:cursor-not-allowed cursor-pointer"
+            onClick={() => onMoveUp(index)}
+            aria-label={`Move article ${article.number} up`}
+            className="cursor-pointer p-1.5 text-faint hover:text-ink disabled:cursor-not-allowed disabled:opacity-20"
             title="Move up"
           >
             <ArrowUp className="size-3.5" />
@@ -113,68 +114,74 @@ export function ArticleEditorCard({
           <button
             type="button"
             disabled={isLast}
-            onClick={(e) => {
-              e.stopPropagation();
-              onMoveDown(index);
-            }}
-            className="p-1.5 text-faint hover:text-ink disabled:opacity-20 disabled:cursor-not-allowed cursor-pointer"
+            onClick={() => onMoveDown(index)}
+            aria-label={`Move article ${article.number} down`}
+            className="cursor-pointer p-1.5 text-faint hover:text-ink disabled:cursor-not-allowed disabled:opacity-20"
             title="Move down"
           >
             <ArrowDown className="size-3.5" />
           </button>
-
-          {/* Delete Action */}
           <button
             type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete(article.id);
-            }}
-            className="p-1.5 text-faint hover:text-red-600 cursor-pointer ml-0.5"
+            onClick={() => onDelete(article.id)}
+            aria-label={`Delete article ${article.number}`}
+            className="ml-0.5 cursor-pointer p-1.5 text-faint hover:text-red-600"
             title="Delete article"
           >
             <Trash2 className="size-3.5" />
           </button>
-
-          {/* Expand / Collapse Chevron */}
-          <div className="p-1 text-faint ml-1">
+          <button
+            type="button"
+            aria-expanded={isExpanded}
+            aria-label={
+              isExpanded
+                ? `Collapse article ${article.number}`
+                : `Expand article ${article.number}`
+            }
+            onClick={onToggleExpand}
+            className="ml-1 cursor-pointer p-1 text-faint hover:text-ink"
+          >
             <ChevronDown
               className={`size-4 transition-transform duration-200 ${
                 isExpanded ? "rotate-180 text-ink" : ""
               }`}
             />
-          </div>
+          </button>
         </div>
       </div>
 
-      {/* Expanded Editor Body */}
       {isExpanded && (
-        <div className="border-t border-line p-4 sm:p-5 bg-surface/10 space-y-4">
-          {/* Editable Title */}
+        <div className="space-y-4 border-t border-line bg-surface/10 p-4 sm:p-5">
           <div>
-            <label className="block text-[12.5px] font-medium text-faint mb-1.5">
+            <label
+              htmlFor={`article-title-${article.id}`}
+              className="mb-1.5 block text-[12.5px] font-medium text-faint"
+            >
               Heading
             </label>
             <input
+              id={`article-title-${article.id}`}
               type="text"
               value={article.title}
               onChange={(e) => onUpdate(article.id, { title: e.target.value })}
               placeholder="Article heading..."
-              className="w-full border border-line bg-white px-3 py-2 text-[13px] sm:text-sm font-medium text-ink placeholder:text-faint focus:border-ink focus:outline-none"
+              className="w-full border border-line bg-white px-3 py-2 text-[13px] font-medium text-ink placeholder:text-faint focus:border-ink focus:outline-none sm:text-sm"
             />
           </div>
 
-          {/* Editable Content */}
           <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <label className="block text-[12.5px] font-medium text-faint">
+            <div className="mb-1.5 flex items-center justify-between gap-2">
+              <label
+                htmlFor={`article-content-${article.id}`}
+                className="block text-[12.5px] font-medium text-faint"
+              >
                 Content
               </label>
               {isModifiedFromDefault && (
                 <button
                   type="button"
                   onClick={handleResetToStandardDefault}
-                  className="inline-flex items-center gap-1 text-[12.5px] text-faint hover:text-ink cursor-pointer"
+                  className="inline-flex cursor-pointer items-center gap-1 text-[12.5px] text-faint hover:text-ink"
                   title="Reset to canonical Rwandan standard text"
                 >
                   <RotateCcw className="size-3" />
@@ -183,13 +190,14 @@ export function ArticleEditorCard({
               )}
             </div>
             <textarea
+              id={`article-content-${article.id}`}
               rows={6}
               value={article.content}
               onChange={(e) =>
                 onUpdate(article.id, { content: e.target.value })
               }
               placeholder="Enter agreement terms for this clause..."
-              className="w-full border border-line bg-white p-3 text-[13px] sm:text-sm leading-relaxed text-ink placeholder:text-faint focus:border-ink focus:outline-none font-sans"
+              className="w-full border border-line bg-white p-3 font-sans text-[13px] leading-relaxed text-ink placeholder:text-faint focus:border-ink focus:outline-none sm:text-sm"
             />
           </div>
         </div>

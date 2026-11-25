@@ -19,10 +19,11 @@ export function DashboardNotificationsDropdown({
   pathname,
 }: DashboardNotificationsDropdownProps) {
   const router = useRouter();
-  const { items, unreadCount, hasUnread, viewAllHref } =
+  const { items, unreadCount, hasUnread, viewAllHref, onMarkRead, onMarkAllRead } =
     useDashboardNotifications(pathname);
 
-  const handleSelect = (href: string) => {
+  const handleSelect = (id: string, href: string) => {
+    onMarkRead?.(id);
     router.push(href);
   };
 
@@ -55,17 +56,28 @@ export function DashboardNotificationsDropdown({
                 Notifications
               </DropdownMenuLabel>
               {unreadCount > 0 && (
-                <span className="inline-flex items-center border border-blue-200 bg-brand-tint px-2 py-0.5 text-[12.5px] font-semibold text-brand-blue">
+                <span className="text-[12.5px] font-semibold text-brand-blue">
                   {unreadCount} new
                 </span>
               )}
             </div>
-            <Link
-              href={viewAllHref}
-              className="text-xs font-semibold text-brand-blue hover:underline"
-            >
-              View all
-            </Link>
+            <div className="flex items-center gap-3">
+              {onMarkAllRead && unreadCount > 0 && (
+                <button
+                  type="button"
+                  onClick={onMarkAllRead}
+                  className="cursor-pointer text-xs font-semibold text-body hover:text-ink"
+                >
+                  Mark all read
+                </button>
+              )}
+              <Link
+                href={viewAllHref}
+                className="text-xs font-semibold text-brand-blue hover:underline"
+              >
+                View all
+              </Link>
+            </div>
           </div>
 
           <div className="max-h-80 overflow-y-auto divide-y divide-line">
@@ -77,7 +89,7 @@ export function DashboardNotificationsDropdown({
               items.map((item) => (
                 <DropdownMenuItem
                   key={item.id}
-                  onClick={() => handleSelect(item.href)}
+                  onClick={() => handleSelect(item.id, item.href)}
                   className={`flex cursor-pointer items-start gap-3 rounded-none p-3.5 focus:bg-surface ${
                     item.isUnread ? "bg-brand-tint/20" : "bg-white"
                   }`}

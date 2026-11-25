@@ -1,7 +1,9 @@
 "use client";
 
-import { Agreement } from "@/types/agreement.types";
+import { Agreement, AgreementStatus } from "@/types/agreement.types";
 import { useAgreementPreview } from "@/hooks/useAgreementPreview";
+import { Button } from "@/components/ui/button";
+import { ModalDialog } from "@/components/shared/ModalDialog";
 import { AgreementPreviewHeader } from "./AgreementPreviewHeader";
 import { RenterChangeRequestBanner } from "./RenterChangeRequestBanner";
 import { AgreementDocumentView } from "./AgreementDocumentView";
@@ -13,32 +15,52 @@ interface Props {
   initialAgreement: Agreement;
 }
 
+const SIMULATABLE_STATUSES: AgreementStatus[] = [
+  "Sent",
+  "Viewed",
+  "Awaiting Renter Signature",
+  "Changes Requested",
+];
+
+const IS_DEV = process.env.NODE_ENV === "development";
+
 export function AgreementPreviewContainer({ initialAgreement }: Props) {
   const {
     agreement,
     activeLanguage,
     isSimulatorOpen,
     isLandlordSignOpen,
+    isCancelConfirmOpen,
     setActiveLanguage,
     setIsSimulatorOpen,
     setIsLandlordSignOpen,
+    setIsCancelConfirmOpen,
     handleSubmitChangeRequest,
     handleLandlordSign,
+    handleSendDraft,
+    handleCancelAgreement,
+    handleCreateRenewalDraft,
     handleSignFromSimulator,
   } = useAgreementPreview(initialAgreement);
 
+  const canSimulateRenter =
+    IS_DEV && SIMULATABLE_STATUSES.includes(agreement.status);
+
   return (
     <div className="space-y-6">
-      {/* 1. Minimal Agreement Header */}
       <AgreementPreviewHeader
         agreement={agreement}
         activeLanguage={activeLanguage}
         onLanguageChange={setActiveLanguage}
         onOpenLandlordSign={() => setIsLandlordSignOpen(true)}
-        onOpenRenterSimulator={() => setIsSimulatorOpen(true)}
+        onSendDraft={handleSendDraft}
+        onCancelAgreement={() => setIsCancelConfirmOpen(true)}
+        onCreateRenewalDraft={handleCreateRenewalDraft}
+        onOpenRenterSimulator={
+          canSimulateRenter ? () => setIsSimulatorOpen(true) : undefined
+        }
       />
 
-      {/* 2. Renter Change Request Notice Banner (if revisions requested) */}
       {agreement.status === "Changes Requested" &&
         agreement.changeRequests &&
         agreement.changeRequests.length > 0 && (
@@ -48,29 +70,27 @@ export function AgreementPreviewContainer({ initialAgreement }: Props) {
           />
         )}
 
-      {/* 3. Main Workspace: Document Focus (left) + Compact Sidebar (right) */}
-      <div className="flex flex-col lg:flex-row items-start gap-8 print:block">
-        {/* Main Document Area */}
-        <main className="w-full lg:flex-1 min-w-0 print:block print:w-full">
+      <div className="flex flex-col items-start gap-8 lg:flex-row print:block">
+        <div className="w-full min-w-0 lg:flex-1 print:block print:w-full">
           <AgreementDocumentView
             agreement={agreement}
             displayLanguage={activeLanguage}
             onLanguageChange={setActiveLanguage}
           />
-        </main>
+        </div>
 
-        {/* Agreement Information & Activity Sidebar */}
-        <div className="w-full lg:w-80 xl:w-96 shrink-0 print:hidden">
+        <div className="w-full shrink-0 lg:w-80 xl:w-96 print:hidden">
           <div className="lg:sticky lg:top-4">
             <AgreementDetailsSidebar
               agreement={agreement}
               onOpenLandlordSign={() => setIsLandlordSignOpen(true)}
+              onSendDraft={handleSendDraft}
+              onCreateRenewalDraft={handleCreateRenewalDraft}
             />
           </div>
         </div>
       </div>
 
-      {/* 4. Modals */}
       <LandlordSignModal
         agreement={agreement}
         isOpen={isLandlordSignOpen}
@@ -78,13 +98,48 @@ export function AgreementPreviewContainer({ initialAgreement }: Props) {
         onSign={handleLandlordSign}
       />
 
-      <RenterReviewSimulatorModal
-        agreement={agreement}
-        isOpen={isSimulatorOpen}
-        onClose={() => setIsSimulatorOpen(false)}
-        onSubmitChangeRequest={handleSubmitChangeRequest}
-        onSignAgreement={handleSignFromSimulator}
-      />
+      {canSimulateRenter && (
+        <RenterReviewSimulatorModal
+          agreement={agreement}
+          isOpen={isSimulatorOpen}
+          onClose={() => setIsSimulatorOpen(false)}
+          onSubmitChangeRequest={handleSubmitChangeRequest}
+          onSignAgreement={handleSignFromSimulator}
+        />
+      )}
+
+      <ModalDialog
+        open={isCancelConfirmOpen}
+        onClose={() => setIsCancelConfirmOpen(false)}
+        variant="alert"
+        maxWidthClassName="max-w-md"
+        title="Cancel Lease Agreement?"
+        description={`Agreement ${agreement.referenceNumber} will be marked as Cancelled and locked from further editing or signing.`}
+        footer={
+          <>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsCancelConfirmOpen(false)}
+              className="h-9 cursor-pointer rounded-none border-line px-4 text-xs"
+            >
+              Keep Agreement
+            </Button>
+            <Button
+              type="button"
+              onClick={handleCancelAgreement}
+              className="h-9 cursor-pointer rounded-none bg-red-600 px-4 text-xs font-semibold text-white hover:bg-red-700"
+            >
+              Cancel Agreement
+            </Button>
+          </>
+        }
+      >
+        <p className="text-xs leading-relaxed text-body">
+          This updates the agreement status to <strong>Cancelled</strong> in
+          your workspace. You can always create a new draft later if needed.
+        </p>
+      </ModalDialog>
     </div>
   );
 }

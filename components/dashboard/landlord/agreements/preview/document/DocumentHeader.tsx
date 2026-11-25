@@ -16,48 +16,48 @@ export function DocumentHeader({
   isKinyarwanda,
 }: Props) {
   return (
-    <div className="border-b border-zinc-200 pb-6 mb-8 text-[12.5px]">
-      {/* Top Formal Branding & Document Metadata */}
-      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 pb-4 border-b border-zinc-100">
+    <div className="mb-8 border-b border-zinc-200 pb-6 text-[12.5px]">
+      <div className="flex flex-col justify-between gap-4 border-b border-zinc-100 pb-4 sm:flex-row sm:items-start">
         <div>
-          <div className="flex items-center gap-2">
-            <span className="font-extrabold text-base tracking-tight text-ink uppercase">
-              URUGO
-            </span>
-          </div>
-          <p className="text-[12.5px] text-faint mt-0.5">
-            Kigali, Republic of Rwanda
+          <span className="text-base font-extrabold uppercase tracking-tight text-ink">
+            URUGO
+          </span>
+          <p className="mt-0.5 text-[12.5px] text-faint">
+            {isKinyarwanda
+              ? "Kigali, Repubulika y'u Rwanda"
+              : "Kigali, Republic of Rwanda"}
           </p>
         </div>
 
-        <div className="text-left font-ibm text-[12.5px] text-body space-y-0.5">
+        <div className="space-y-0.5 text-left font-ibm text-[12.5px] text-body">
           <p>
             <span className="text-faint">REF: </span>
-            <strong className="text-ink font-semibold">
-              {referenceNumber}
-            </strong>
+            <strong className="font-semibold text-ink">{referenceNumber}</strong>
           </p>
           <p>
             <span className="text-faint">
               {isKinyarwanda ? "Itariki: " : "Date: "}
             </span>
-            <span className="text-ink">{formatDate(updatedAt)}</span>
+            <span className="text-ink">
+              {formatDate(updatedAt, isKinyarwanda ? "rw" : "en")}
+            </span>
           </p>
           <p>
-            <span className="text-faint">Version: </span>
+            <span className="text-faint">
+              {isKinyarwanda ? "Inyandiko ya: " : "Version: "}
+            </span>
             <span className="text-ink">{version}.0</span>
           </p>
         </div>
       </div>
 
-      {/* Main Document Title */}
-      <div className="text-center pt-6">
-        <h1 className="text-lg sm:text-xl tracking-wide font-bold  text-ink font-heading uppercase">
+      <div className="pt-6 text-center">
+        <h1 className="font-heading text-lg font-bold uppercase tracking-wide text-ink sm:text-xl">
           {isKinyarwanda
             ? "Amasezerano y'Ubukode bw'Inzu yo Guturamo"
             : "Residential Lease Agreement"}
         </h1>
-        <p className="text-[13px] text-body mt-1">
+        <p className="mt-1 text-[13px] text-body">
           {isKinyarwanda
             ? "Yateguwe hakurikijwe amategeko n'amabwiriza agenga ubutaka n'ubukode mu Rwanda"
             : "Governed by the statutory residential tenancy regulations of the Republic of Rwanda"}

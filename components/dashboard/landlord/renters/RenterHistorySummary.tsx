@@ -1,73 +1,111 @@
 import Link from "next/link";
-import { RentalIssue } from "@/types/landlord";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { StatusBadge } from "@/components/shared/StatusBadge";
+import type { RentalIssue } from "@/types/landlord";
+import { formatRwf } from "@/utils/format";
+import { getIssueStatusMeta } from "@/utils/rental-debt";
 
 interface RenterHistorySummaryProps {
   issues: RentalIssue[];
+  completedTenanciesCount?: number;
 }
 
-export function RenterHistorySummary({ issues }: RenterHistorySummaryProps) {
-  const previousLeasesCount = 3;
-  const completedCleanCount = 2;
-  const issueCount = issues.length;
-  const disputedCount = issues.filter((i) => i.status === "Disputed").length;
+export function RenterHistorySummary({
+  issues,
+  completedTenanciesCount = 1,
+}: RenterHistorySummaryProps) {
+  const confirmedCount = issues.filter(
+    (i) => getIssueStatusMeta(i.status).isConfirmedObligation,
+  ).length;
+  const openCount = issues.filter(
+    (i) =>
+      i.status === "Reported" ||
+      i.status === "Unresolved" ||
+      i.status === "Disputed",
+  ).length;
 
   return (
-    <div className="border border-line bg-white shadow-2xs space-y-4">
-      <div className="flex items-center justify-between border-b border-line px-6 py-4">
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-faint">
-          Renter History Summary
-        </h3>
+    <section className="space-y-5 border border-line bg-white p-5 shadow-2xs sm:p-6">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-faint">
+            Rental History Summary
+          </h3>
+          <p className="mt-1 text-sm font-semibold text-ink">
+            Verified tenancy record & rental obligations
+          </p>
+        </div>
+
         <Link
-          href="/landlord/blacklist-check"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-brand hover:underline"
+          href="/landlord/renter-history"
+          className="inline-flex items-center gap-1 text-xs font-semibold text-brand-blue hover:underline"
         >
-          <span>View Renter History</span>
-          <ArrowRight className="h-3.5 w-3.5" />
+          <span>Open Rental History</span>
+          <ArrowRight aria-hidden="true" className="size-3.5" />
         </Link>
       </div>
 
-      <div className="grid grid-cols-2 gap-px bg-line lg:grid-cols-4">
-        {[
-          { label: "Previous Leases", value: previousLeasesCount, color: "text-ink" },
-          { label: "Completed Clean", value: completedCleanCount, color: "text-brand" },
-          { label: "Reported Issues", value: issueCount, color: "text-amber-700" },
-          { label: "Renter Disagrees", value: disputedCount, color: "text-rose-600" },
-        ].map(({ label, value, color }) => (
-          <div key={label} className="bg-white px-6 py-5">
-            <span className="text-xs font-semibold uppercase tracking-wider text-faint block">
-              {label}
-            </span>
-            <span className={`mt-2 text-2xl sm:text-3xl font-bold block ${color}`}>{value}</span>
-          </div>
-        ))}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div className="border border-line bg-surface/40 p-4">
+          <p className="text-xs font-semibold uppercase tracking-wider text-faint">
+            Recorded Tenancies
+          </p>
+          <p className="mt-1 font-ibm text-xl font-bold text-ink">
+            {completedTenanciesCount}
+          </p>
+        </div>
+        <div className="border border-line bg-surface/40 p-4">
+          <p className="text-xs font-semibold uppercase tracking-wider text-faint">
+            Open / Under Review
+          </p>
+          <p className="mt-1 font-ibm text-xl font-bold text-amber-700">
+            {openCount}
+          </p>
+        </div>
+        <div className="border border-line bg-surface/40 p-4">
+          <p className="text-xs font-semibold uppercase tracking-wider text-faint">
+            Confirmed Obligations
+          </p>
+          <p className="mt-1 font-ibm text-xl font-bold text-rose-700">
+            {confirmedCount}
+          </p>
+        </div>
       </div>
 
-      {issues.length > 0 && (
-        <div className="border-t border-line">
-          <div className="px-6 py-4 bg-surface/50 border-b border-line/60">
-            <span className="text-xs font-semibold uppercase tracking-wider text-faint block">
-              Past Reported Issues
-            </span>
-          </div>
-          <div className="divide-y divide-line">
-            {issues.map((issue) => (
-              <div key={issue.id} className="flex flex-wrap items-center justify-between gap-3 px-6 py-4">
-                <div>
-                  <h4 className="text-sm font-bold text-ink">{issue.issueTitle}</h4>
-                  <p className="mt-1 text-sm text-body">
-                    {issue.propertyName} &middot;{" "}
-                    <span className="font-bold text-brand">{issue.amountRwf.toLocaleString()} RWF</span>
+      {issues.length === 0 ? (
+        <div className="flex items-center gap-2.5 border border-emerald-200 bg-emerald-50/70 p-4 text-xs font-medium text-emerald-900">
+          <CheckCircle2 aria-hidden="true" className="size-4 shrink-0 text-emerald-600" />
+          <span>No rental history issues or unpaid obligations on record.</span>
+        </div>
+      ) : (
+        <div className="divide-y divide-line border border-line">
+          {issues.map((issue) => {
+            const meta = getIssueStatusMeta(issue.status);
+            return (
+              <Link
+                key={issue.id}
+                href={`/landlord/renter-history/${issue.id}`}
+                className="flex flex-wrap items-center justify-between gap-3 p-4 transition-colors hover:bg-surface/40"
+              >
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-ink">
+                    {issue.issueTitle}
+                  </p>
+                  <p className="mt-0.5 text-xs text-faint">
+                    {issue.propertyName} · {issue.createdDate}
                   </p>
                 </div>
-                <span className="px-2.5 py-1 text-xs font-semibold border bg-amber-50 text-amber-700 border-amber-200">
-                  {issue.status === "Disputed" ? "Renter disagrees" : issue.status}
-                </span>
-              </div>
-            ))}
-          </div>
+                <div className="flex items-center gap-3">
+                  <span className="font-ibm text-sm font-bold text-ink">
+                    {formatRwf(issue.amountRwf)}
+                  </span>
+                  <StatusBadge label={meta.label} tone={meta.tone} />
+                </div>
+              </Link>
+            );
+          })}
         </div>
       )}
-    </div>
+    </section>
   );
 }
