@@ -179,9 +179,9 @@ export const CANONICAL_18_ARTICLES: StandardArticleDefinition[] = [
     titleEn: "Dispute Resolution and Governing Law",
     titleRw: "Gukemura Amakimbirane n'Amategeko Akurikizwa",
     contentEn:
-      "This agreement is governed by the laws of the Republic of Rwanda, notably Law No. 59/2011 on Land and housing rental. Any disputes arising between the parties shall first be addressed amicably through mediation. Where mediation fails, disputes shall be submitted to the competent courts of Kigali, Rwanda.",
+      "This agreement is governed by the laws of the Republic of Rwanda, notably Law No. 27/2021 on Land and applicable housing rental regulations. Any disputes arising between the parties shall first be addressed amicably through mediation. Where mediation fails, disputes shall be submitted to the competent courts of Kigali, Rwanda.",
     contentRw:
-      "Aya masezerano agengwa n'amategeko ya Repubulika y'u Rwanda, by'umwihariko Itegeko No 59/2011 rigenga ubutaka n'ubukode bw'amazu. Amakimbirane yose avutse azabanza gukemurwa mu bwumvikane no mu bunzi. Iyo bitunze, amakimbirane ashyikirizwa inkiko zibifitiye ububasha i Kigali mu Rwanda.",
+      "Aya masezerano agengwa n'amategeko ya Repubulika y'u Rwanda, by'umwihariko Itegeko No 27/2021 rigenga ubutaka n'amabwiriza agenga ubukode bw'amazu. Amakimbirane yose avutse azabanza gukemurwa mu bwumvikane no mu bunzi. Iyo bitunze, amakimbirane ashyikirizwa inkiko zibifitiye ububasha i Kigali mu Rwanda.",
     isMandatory: true,
   },
   {
