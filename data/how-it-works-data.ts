@@ -76,7 +76,7 @@ export const howItWorksData: Record<
       description:
         "Urugo helps you manage your properties, renters, payments, leases, and rental information from one dashboard.",
       ctaText: "See the Dashboard →",
-      ctaHref: "/dashboard",
+      ctaHref: "/landlord",
     },
   },
 
@@ -114,7 +114,7 @@ export const howItWorksData: Record<
       description:
         "Keep your lease, payments, and important rental information organized in one place.",
       ctaText: "Go to Dashboard →",
-      ctaHref: "/dashboard",
+      ctaHref: "/renter",
     },
   },
 };
