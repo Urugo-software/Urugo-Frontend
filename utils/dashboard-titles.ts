@@ -13,8 +13,11 @@ export const DASHBOARD_EXACT_TITLES: Record<string, string> = {
 
   // Landlord
   "/landlord": "Dashboard",
-  "/landlord/properties": "Properties",
+  "/landlord/properties": "My Properties",
   "/landlord/properties/new": "Add Property",
+  "/landlord/inquiries": "Inquiries",
+  "/landlord/viewings": "Viewing Requests",
+  "/landlord/payments": "Payments",
   "/landlord/renters": "Renters",
   "/landlord/renters/add": "Add Renter",
   "/landlord/agreements": "Agreements",
@@ -58,6 +61,7 @@ export const DASHBOARD_EXACT_TITLES: Record<string, string> = {
 const DASHBOARD_PATTERN_TITLES: Array<{ pattern: RegExp; title: string }> = [
   { pattern: /^\/landlord\/properties\/groups\/[^/]+$/, title: "Property Group" },
   { pattern: /^\/landlord\/properties\/[^/]+\/edit$/, title: "Edit Property" },
+  { pattern: /^\/landlord\/properties\/[^/]+$/, title: "Property Details" },
   { pattern: /^\/landlord\/renters\/[^/]+$/, title: "Renter Details" },
   { pattern: /^\/landlord\/agreements\/[^/]+\/edit$/, title: "Edit Agreement" },
   { pattern: /^\/landlord\/agreements\/[^/]+$/, title: "Agreement Details" },
