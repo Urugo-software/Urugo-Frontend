@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FileEdit, PenTool } from "lucide-react";
+import { FileEdit, PenTool, RefreshCw, Send } from "lucide-react";
 import { Agreement } from "@/types/agreement.types";
 import { AgreementStatusBadge } from "../../AgreementStatusBadge";
 import { Button } from "@/components/ui/button";
@@ -9,35 +9,35 @@ import { Button } from "@/components/ui/button";
 interface Props {
   agreement: Agreement;
   onOpenLandlordSign?: () => void;
+  onSendDraft?: () => void;
+  onCreateRenewalDraft?: () => void;
 }
 
 export function SidebarStatusCard({
   agreement,
   onOpenLandlordSign,
+  onSendDraft,
+  onCreateRenewalDraft,
 }: Props) {
-  const isAwaitingLandlord = agreement.status === "Awaiting Landlord Signature";
-  const isChangesRequested = agreement.status === "Changes Requested";
-  const isDraft =
-    agreement.status === "Draft" || agreement.status === "Ready for Review";
-  const isSigned = agreement.status === "Signed";
+  const { status } = agreement;
 
   return (
-    <div className="border border-line bg-white p-5 space-y-3.5 text-[12.5px]">
-      <div className="flex items-center justify-between pb-3 border-b border-line">
+    <div className="space-y-3.5 border border-line bg-white p-5 text-[12.5px]">
+      <div className="flex items-center justify-between border-b border-line pb-3">
         <span className="font-semibold uppercase tracking-wider text-faint">
           Agreement Status
         </span>
-        <AgreementStatusBadge status={agreement.status} />
+        <AgreementStatusBadge status={status} />
       </div>
 
       <div className="space-y-2">
-        <span className="font-semibold uppercase tracking-wider text-faint block">
+        <span className="block font-semibold uppercase tracking-wider text-faint">
           Next Action
         </span>
 
-        {isAwaitingLandlord && (
+        {status === "Awaiting Landlord Signature" && (
           <div className="space-y-2.5">
-            <p className="text-[13px] text-body leading-relaxed">
+            <p className="text-[13px] leading-relaxed text-body">
               The renter has signed. Your digital endorsement is required to
               finalize and execute this contract.
             </p>
@@ -45,7 +45,7 @@ export function SidebarStatusCard({
               <Button
                 type="button"
                 onClick={onOpenLandlordSign}
-                className="w-full rounded-none bg-ink text-white hover:bg-black text-[12.5px] font-semibold h-9 flex items-center justify-center gap-1.5 cursor-pointer"
+                className="flex h-9 w-full cursor-pointer items-center justify-center gap-1.5 rounded-none bg-ink text-[12.5px] font-semibold text-white hover:bg-black"
               >
                 <PenTool className="size-3.5" />
                 <span>Sign Agreement Now</span>
@@ -54,9 +54,9 @@ export function SidebarStatusCard({
           </div>
         )}
 
-        {isChangesRequested && (
+        {status === "Changes Requested" && (
           <div className="space-y-2.5">
-            <p className="text-[13px] text-body leading-relaxed">
+            <p className="text-[13px] leading-relaxed text-body">
               The renter proposed changes to{" "}
               <strong className="text-ink">
                 {agreement.changeRequests?.length ?? 1} clause(s)
@@ -65,7 +65,7 @@ export function SidebarStatusCard({
             </p>
             <Link
               href={`/landlord/agreements/${agreement.id}/edit`}
-              className="w-full inline-flex items-center justify-center gap-1.5 rounded-none bg-ink text-white hover:bg-black text-[12.5px] font-semibold h-9 cursor-pointer transition-colors"
+              className="inline-flex h-9 w-full cursor-pointer items-center justify-center gap-1.5 rounded-none bg-ink text-[12.5px] font-semibold text-white transition-colors hover:bg-black"
             >
               <FileEdit className="size-3.5" />
               <span>Open Clause Editor</span>
@@ -73,48 +73,107 @@ export function SidebarStatusCard({
           </div>
         )}
 
-        {isDraft && (
+        {(status === "Draft" || status === "Ready for Review") && (
           <div className="space-y-2.5">
-            <p className="text-[13px] text-body leading-relaxed">
-              This agreement is currently in draft. You can customize the 18
-              statutory clauses before sending to the renter.
+            <p className="text-[13px] leading-relaxed text-body">
+              This agreement is currently in draft. Customize the statutory
+              clauses or send it directly to the renter for review.
             </p>
-            <Link
-              href={`/landlord/agreements/${agreement.id}/edit`}
-              className="w-full inline-flex items-center justify-center gap-1.5 rounded-none bg-ink text-white hover:bg-black text-[12.5px] font-semibold h-9 cursor-pointer transition-colors"
-            >
-              <FileEdit className="size-3.5" />
-              <span>Edit Clauses</span>
-            </Link>
+            <div className="flex flex-col gap-2">
+              <Link
+                href={`/landlord/agreements/${agreement.id}/edit`}
+                className="inline-flex h-9 w-full cursor-pointer items-center justify-center gap-1.5 rounded-none bg-ink text-[12.5px] font-semibold text-white transition-colors hover:bg-black"
+              >
+                <FileEdit className="size-3.5" />
+                <span>Edit Clauses</span>
+              </Link>
+              {onSendDraft && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={onSendDraft}
+                  className="flex h-9 w-full cursor-pointer items-center justify-center gap-1.5 rounded-none border-line text-[12.5px] font-semibold text-ink hover:bg-surface"
+                >
+                  <Send className="size-3.5 text-faint" />
+                  <span>Send to Renter</span>
+                </Button>
+              )}
+            </div>
           </div>
         )}
 
-        {agreement.status === "Sent" && (
-          <p className="text-[13px] text-body leading-relaxed">
-            Agreement sent to{" "}
-            <strong className="text-ink">{agreement.renter.name}</strong>.
-            Awaiting their review.
+        {(status === "Sent" || status === "Viewed") && (
+          <p className="text-[13px] leading-relaxed text-body">
+            {status === "Viewed" ? (
+              <>
+                <strong className="text-ink">{agreement.renter.name}</strong>{" "}
+                has opened this agreement. Awaiting their approval or requested
+                revisions.
+              </>
+            ) : (
+              <>
+                Agreement sent to{" "}
+                <strong className="text-ink">{agreement.renter.name}</strong>.
+                Awaiting their review.
+              </>
+            )}
           </p>
         )}
 
-        {agreement.status === "Awaiting Renter Signature" && (
-          <p className="text-[13px] text-body leading-relaxed">
+        {status === "Awaiting Renter Signature" && (
+          <p className="text-[13px] leading-relaxed text-body">
             Waiting for{" "}
             <strong className="text-ink">{agreement.renter.name}</strong> to
-            sign.
+            add their electronic signature.
           </p>
         )}
 
-        {isSigned && (
-          <div className="space-y-1">
-            <p className="text-[13px] text-body leading-relaxed">
-              Both parties have signed. This agreement is legally active and
-              recorded.
+        {status === "Signed" && (
+          <div className="space-y-2.5">
+            <p className="text-[13px] leading-relaxed text-body">
+              Both parties have signed. This agreement is active and recorded.
             </p>
-            <span className="font-mono text-faint block">
+            <span className="block font-mono text-faint">
               Ref: {agreement.referenceNumber} &middot; v{agreement.version}.0
             </span>
+            {onCreateRenewalDraft && (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={onCreateRenewalDraft}
+                className="flex h-9 w-full cursor-pointer items-center justify-center gap-1.5 rounded-none border-line text-[12.5px] font-semibold text-ink hover:bg-surface"
+              >
+                <RefreshCw className="size-3.5 text-faint" />
+                <span>Create Renewal Draft</span>
+              </Button>
+            )}
           </div>
+        )}
+
+        {status === "Declined" && (
+          <p className="text-[13px] leading-relaxed text-body">
+            The renter declined this agreement. Prepare a revised draft if you
+            renegotiate terms.
+          </p>
+        )}
+
+        {status === "Expired" && (
+          <p className="text-[13px] leading-relaxed text-body">
+            This lease agreement has reached its expiration date. Create a new
+            agreement if the tenancy continues.
+          </p>
+        )}
+
+        {status === "Superseded" && (
+          <p className="text-[13px] leading-relaxed text-body">
+            This version has been replaced by a newer lease agreement version.
+          </p>
+        )}
+
+        {status === "Cancelled" && (
+          <p className="text-[13px] leading-relaxed text-body">
+            This agreement was cancelled and is archived for record keeping.
+          </p>
         )}
       </div>
     </div>

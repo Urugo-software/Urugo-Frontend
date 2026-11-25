@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { House } from "lucide-react";
-import CustomButton from "@/components/shared/CustomButton";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { resolveDashboardTitle } from "@/utils/dashboard-titles";
 import { DashboardNotificationsDropdown } from "./DashboardNotificationsDropdown";
 import MobileNavWrapper from "./home-seeker/mobile-nav/mobile-nav-wrapper";
 
@@ -11,35 +13,38 @@ interface DashboardHeaderProps {
   title?: string;
 }
 
-export function DashboardHeader({ title = "Dashboard" }: DashboardHeaderProps) {
+export function DashboardHeader({ title }: DashboardHeaderProps) {
   const pathname = usePathname();
-  const adminTitles: Record<string, string> = { admin: "Overview", users: "Users", properties: "Properties", "property-verification": "Property verification", leases: "Leases", payments: "Payments", complaints: "Complaints", "renter-history": "Renter's History", analytics: "Analytics", notifications: "Notifications", moderation: "Moderation", "audit-logs": "Audit logs", "admin-management": "Admin management", settings: "Settings" };
-  const currentTitle = pathname.startsWith("/admin") ? adminTitles[pathname.split("/")[2] || "admin"] || title : title;
+  const currentTitle = title ?? resolveDashboardTitle(pathname);
+
   return (
-    <header className="sticky top-0 z-20 flex h-18 shrink-0 items-center justify-between border-b border-line px-4 sm:px-8 backdrop-blur-md">
+    <header className="sticky top-0 z-20 flex h-18 shrink-0 items-center justify-between gap-4 border-b border-line bg-white/90 px-4 sm:px-8 backdrop-blur-md">
       {/* Current Page Title */}
-      <div className="flex items-center gap-3">
+      <div className="flex min-w-0 items-center gap-3">
         <MobileNavWrapper />
-        <h1 className="text-xl font-bold text-ink sm:text-2xl">{currentTitle}</h1>
+        <h1 className="truncate text-xl font-bold text-ink sm:text-2xl">
+          {currentTitle}
+        </h1>
       </div>
 
       {/* Header Actions & Routing */}
-      <div className="flex items-center gap-3">
-        <Link className="border border-line max-md:hidden" href="/">
-          <CustomButton
-            variant="light"
-            className="flex justify-center min-w-fit rounded-none"
-          >
-            <h1 className="group-hover:text-white text-brand">
-              Back to homepage
-            </h1>
-          </CustomButton>
+      <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+        <Link
+          href="/"
+          className={cn(
+            buttonVariants({ variant: "outline" }),
+            "hidden h-9 rounded-none border-line px-4 text-xs font-semibold text-ink hover:bg-brand hover:text-white md:inline-flex",
+          )}
+        >
+          Back to homepage
         </Link>
 
-        <Link className="md:hidden" href="/">
-          <span className="block" aria-label="home button">
-            <House className="size-5 text-ink" />
-          </span>
+        <Link
+          href="/"
+          aria-label="Back to homepage"
+          className="flex size-10 items-center justify-center text-ink transition-colors hover:bg-surface md:hidden"
+        >
+          <House aria-hidden="true" className="size-5" />
         </Link>
 
         <DashboardNotificationsDropdown pathname={pathname} />
@@ -47,4 +52,3 @@ export function DashboardHeader({ title = "Dashboard" }: DashboardHeaderProps) {
     </header>
   );
 }
-

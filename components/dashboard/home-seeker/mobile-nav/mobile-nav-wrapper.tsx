@@ -1,6 +1,7 @@
 "use client";
-import { useUiStore } from "@/store/ui.store";
+
 import { Menu } from "lucide-react";
+import { useUiStore } from "@/store/ui.store";
 
 function MobileNavWrapper() {
   const mobileSidebarOpen = useUiStore((state) => state.mobileSidebarOpen);
@@ -9,13 +10,15 @@ function MobileNavWrapper() {
   );
 
   return (
-    <div className="md:hidden flex flex-col items-end">
+    <div className="md:hidden">
       {!mobileSidebarOpen && (
         <button
-          aria-label="open mobile navigation"
+          type="button"
+          aria-label="Open mobile navigation"
           onClick={() => setMobileSidebarOpen(true)}
+          className="flex size-10 cursor-pointer items-center justify-center text-ink transition-colors hover:bg-surface"
         >
-          <Menu />
+          <Menu aria-hidden="true" className="size-5" />
         </button>
       )}
     </div>

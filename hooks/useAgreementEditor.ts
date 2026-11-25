@@ -15,12 +15,15 @@ import {
   moveArticleDown,
   updateArticle,
   deleteArticle,
+  insertArticleAt,
   restoreStandardArticle,
   resetAllToStandardArticles,
   getDeletedStandardArticles,
   validateArticles,
 } from "@/utils/agreement-utils";
 import { CANONICAL_18_ARTICLES } from "@/data/agreement-templates";
+import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
+import { createSafeId } from "@/utils/format";
 
 export interface UseAgreementEditorOptions {
   onSave?: (agreement: Agreement) => void;
@@ -29,11 +32,32 @@ export interface UseAgreementEditorOptions {
   onPreview?: (agreement: Agreement) => void;
 }
 
+function hasEditedStandardClauses(
+  articles: AgreementArticle[],
+  language: AgreementLanguage,
+): boolean {
+  return articles.some((art) => {
+    if (!art.isStandard || !art.standardNumber) return false;
+    const def = CANONICAL_18_ARTICLES.find(
+      (d) => d.standardNumber === art.standardNumber,
+    );
+    if (!def) return false;
+    const expectedTitle = language === "rw" ? def.titleRw : def.titleEn;
+    const expectedContent = language === "rw" ? def.contentRw : def.contentEn;
+    return (
+      art.title.trim() !== expectedTitle.trim() ||
+      art.content.trim() !== expectedContent.trim()
+    );
+  });
+}
+
 export function useAgreementEditor(
   initialAgreement: Agreement,
   options?: UseAgreementEditorOptions,
 ) {
   const router = useRouter();
+  const upsertAgreement = useLandlordWorkspace((s) => s.upsertAgreement);
+
   const [agreement, setAgreement] = useState<Agreement>(initialAgreement);
   const [articles, setArticles] = useState<AgreementArticle[]>(
     initialAgreement.articles,
@@ -43,8 +67,6 @@ export function useAgreementEditor(
   );
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
-
-  // Accordion state: single expanded article, first expanded by default
   const [expandedArticleId, setExpandedArticleId] = useState<string | null>(
     initialAgreement.articles[0]?.id ?? null,
   );
@@ -54,17 +76,20 @@ export function useAgreementEditor(
   const [isRestoreModalOpen, setIsRestoreModalOpen] = useState(false);
   const [isConfirmResetOpen, setIsConfirmResetOpen] = useState(false);
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
+  const [pendingLanguage, setPendingLanguage] =
+    useState<AgreementLanguage | null>(null);
+  const [pendingNavigation, setPendingNavigation] = useState<{
+    targetUrl: string;
+    isBackAction: boolean;
+  } | null>(null);
   const [showValidation, setShowValidation] = useState(false);
 
-  // Computed data
   const deletedStandardDefs = useMemo(
     () => getDeletedStandardArticles(articles),
     [articles],
   );
-
   const validation = useMemo(() => validateArticles(articles), [articles]);
 
-  // Keep unsaved changes alert on beforeunload
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (hasUnsavedChanges) {
@@ -76,12 +101,10 @@ export function useAgreementEditor(
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, [hasUnsavedChanges]);
 
-  // Accordion toggle: single article expanded at a time
   const handleToggleExpand = useCallback((articleId: string) => {
     setExpandedArticleId((prev) => (prev === articleId ? null : articleId));
   }, []);
 
-  // Update article title or content
   const handleUpdateArticle = useCallback(
     (id: string, updates: { title?: string; content?: string }) => {
       setArticles((prev) => updateArticle(prev, id, updates));
@@ -90,7 +113,6 @@ export function useAgreementEditor(
     [],
   );
 
-  // Reordering
   const handleMoveUp = useCallback((index: number) => {
     setArticles((prev) => moveArticleUp(prev, index));
     setHasUnsavedChanges(true);
@@ -101,80 +123,79 @@ export function useAgreementEditor(
     setHasUnsavedChanges(true);
   }, []);
 
-  // Delete article
   const handleDeleteArticle = useCallback((id: string) => {
     setArticles((prev) => deleteArticle(prev, id));
     setHasUnsavedChanges(true);
     toast.success("Clause removed from agreement.");
   }, []);
 
-  // Add custom article
   const handleAddCustomArticle = useCallback(
-    (title: string, content: string) => {
+    (title: string, content: string, insertIndex?: number) => {
       const newArticle: AgreementArticle = {
-        id: `custom-${Date.now()}`,
+        id: createSafeId("custom"),
         number: articles.length + 1,
         title: title.trim(),
         content: content.trim(),
         isStandard: false,
         isCustom: true,
       };
-      setArticles((prev) => [...prev, newArticle]);
+      const clampedIndex =
+        typeof insertIndex === "number"
+          ? Math.max(0, Math.min(articles.length, insertIndex))
+          : articles.length;
+      setArticles((prev) => insertArticleAt(prev, newArticle, clampedIndex));
       setExpandedArticleId(newArticle.id);
       setHasUnsavedChanges(true);
       setIsAddModalOpen(false);
-      toast.success(`Custom clause added as Article ${articles.length + 1}`);
+      toast.success(`Custom clause added as Article ${clampedIndex + 1}.`);
     },
     [articles.length],
   );
 
-  // Restore single standard article
   const handleRestoreStandardArticle = useCallback(
     (standardNumber: number) => {
       setArticles((prev) =>
         restoreStandardArticle(prev, standardNumber, language),
       );
       setHasUnsavedChanges(true);
-      toast.success(`Restored statutory clause ${standardNumber}`);
+      toast.success(`Restored statutory clause #${standardNumber}.`);
     },
     [language],
   );
 
-  // Restore all standard articles
   const handleRestoreAll = useCallback(() => {
-    deletedStandardDefs.forEach((def) => {
-      setArticles((prev) =>
-        restoreStandardArticle(prev, def.standardNumber, language),
-      );
-    });
+    setArticles((prev) =>
+      deletedStandardDefs.reduce(
+        (acc, def) => restoreStandardArticle(acc, def.standardNumber, language),
+        prev,
+      ),
+    );
     setHasUnsavedChanges(true);
     setIsRestoreModalOpen(false);
-    toast.success("Restored all omitted statutory clauses");
+    toast.success("Restored all omitted statutory clauses.");
   }, [deletedStandardDefs, language]);
 
-  // Full reset to 18 standard articles
   const handleResetEntireAgreement = useCallback(() => {
     const standard = resetAllToStandardArticles(language);
     setArticles(standard);
     setExpandedArticleId(standard[0]?.id ?? null);
     setHasUnsavedChanges(true);
     setIsConfirmResetOpen(false);
-    toast.success("Reset agreement to standard 18 statutory clauses");
+    toast.success("Reset agreement to standard 18 statutory clauses.");
   }, [language]);
 
-  // Apply template
   const handleSelectTemplate = useCallback(
     (template: SavedAgreementTemplate) => {
       const workingArticles = template.articles.map((art, idx) => ({
         ...art,
-        id: `art-tpl-${idx + 1}-${Date.now()}`,
+        id: createSafeId(`art-tpl-${idx + 1}`),
         number: idx + 1,
       }));
       setArticles(workingArticles);
       setExpandedArticleId(workingArticles[0]?.id ?? null);
       setHasUnsavedChanges(true);
       setIsTemplateModalOpen(false);
-      toast.success(`Loaded saved template: "${template.name}"`);
+      toast.success(`Loaded template: "${template.name}".`);
     },
     [],
   );
@@ -185,31 +206,11 @@ export function useAgreementEditor(
     setExpandedArticleId(standard[0]?.id ?? null);
     setHasUnsavedChanges(true);
     setIsTemplateModalOpen(false);
-    toast.success("Loaded standard 18 statutory clauses");
+    toast.success("Loaded standard 18 statutory clauses.");
   }, [language]);
 
-  // Language switch
-  const handleLanguageToggle = useCallback(
+  const applyLanguageSwitch = useCallback(
     (newLang: AgreementLanguage) => {
-      if (newLang === language) return;
-
-      // Ask confirmation if edits were made
-      if (hasUnsavedChanges) {
-        const confirmSwitch = window.confirm(
-          "Switching agreement language will translate standard statutory clauses to " +
-            (newLang === "rw" ? "Kinyarwanda" : "English") +
-            ". Do you want to proceed?",
-        );
-        if (!confirmSwitch) return;
-      }
-
-      setLanguage(newLang);
-      setAgreement((prev) => ({
-        ...prev,
-        language: newLang,
-      }));
-
-      // Translate standard clauses that match standard definitions
       const translatedArticles = articles.map((art) => {
         if (art.isStandard && art.standardNumber) {
           const def = CANONICAL_18_ARTICLES.find(
@@ -226,27 +227,43 @@ export function useAgreementEditor(
         return art;
       });
 
-      setArticles(translatedArticles);
-      setHasUnsavedChanges(true);
-      options?.onSave?.({
+      const updated: Agreement = {
         ...agreement,
         articles: translatedArticles,
         language: newLang,
         updatedAt: new Date().toISOString(),
-      });
+      };
+
+      setLanguage(newLang);
+      setAgreement(updated);
+      setArticles(translatedArticles);
+      setHasUnsavedChanges(true);
+      setPendingLanguage(null);
+      options?.onSave?.(updated);
       toast.success(
-        `Language switched to ${newLang === "rw" ? "Kinyarwanda" : "English"}`,
+        `Language switched to ${newLang === "rw" ? "Kinyarwanda" : "English"}.`,
       );
     },
-    [language, hasUnsavedChanges, articles, agreement, options],
+    [agreement, articles, options],
   );
 
-  // Save draft
+  const handleLanguageToggle = useCallback(
+    (newLang: AgreementLanguage) => {
+      if (newLang === language) return;
+      if (hasUnsavedChanges || hasEditedStandardClauses(articles, language)) {
+        setPendingLanguage(newLang);
+        return;
+      }
+      applyLanguageSwitch(newLang);
+    },
+    [language, hasUnsavedChanges, articles, applyLanguageSwitch],
+  );
+
   const handleSaveDraft = useCallback(() => {
     if (!validation.isValid) {
       setShowValidation(true);
       toast.error(
-        validation.errors[0] || "Please address validation errors before saving",
+        validation.errors[0] || "Please address validation errors before saving.",
       );
       return;
     }
@@ -256,51 +273,64 @@ export function useAgreementEditor(
       articles,
       language,
       updatedAt: new Date().toISOString(),
-      version: agreement.version,
     };
 
     setAgreement(updatedDraft);
     setHasUnsavedChanges(false);
     setShowValidation(false);
+    upsertAgreement(updatedDraft);
     options?.onSave?.(updatedDraft);
-    toast.success("Agreement draft saved successfully!");
-  }, [articles, language, validation, agreement, options]);
+    toast.success("Agreement draft saved.");
+  }, [articles, language, validation, agreement, upsertAgreement, options]);
 
-  // Send for review
   const handleSendToRenter = useCallback(() => {
     if (!validation.isValid) {
       setShowValidation(true);
-      toast.error("Cannot finalize agreement: resolve validation issues first");
+      toast.error("Resolve validation issues before sending the agreement.");
       return;
     }
+
+    const resolvedChangeRequests = agreement.changeRequests?.map((cr) =>
+      cr.status === "Pending" ? { ...cr, status: "Accepted" as const } : cr,
+    );
 
     const finalizedAgreement: Agreement = {
       ...agreement,
       articles,
       language,
       status: "Sent",
+      changeRequests: resolvedChangeRequests,
       updatedAt: new Date().toISOString(),
       version: agreement.version + 1,
     };
 
     setAgreement(finalizedAgreement);
     setHasUnsavedChanges(false);
+    upsertAgreement(finalizedAgreement);
     toast.success(
-      `Agreement finalized and sent to ${agreement.renter.name} for digital review!`,
+      `Agreement sent to ${agreement.renter.name} for digital review.`,
     );
     if (options?.onSend) {
       options.onSend(finalizedAgreement);
     } else {
       router.push(`/landlord/agreements/${agreement.id}`);
     }
-  }, [articles, language, validation, agreement, router, options]);
+  }, [
+    articles,
+    language,
+    validation,
+    agreement,
+    upsertAgreement,
+    router,
+    options,
+  ]);
 
-  // Open in-session document preview
   const handleOpenPreview = useCallback(() => {
     if (!validation.isValid) {
       setShowValidation(true);
       toast.error(
-        validation.errors[0] || "Please resolve validation errors before previewing.",
+        validation.errors[0] ||
+          "Please resolve validation errors before previewing.",
       );
       return;
     }
@@ -317,27 +347,31 @@ export function useAgreementEditor(
     setIsPreviewMode(true);
   }, [agreement, articles, language, validation, options]);
 
-  // Close preview and return to editor view
   const handleClosePreview = useCallback(() => {
     setIsPreviewMode(false);
   }, []);
 
-  // Navigate away with unsaved check
-  const handleNavigateAway = useCallback(
-    (targetUrl: string, isBackAction = false) => {
-      if (hasUnsavedChanges) {
-        const leave = window.confirm(
-          "You have unsaved changes in this agreement. Are you sure you want to leave?",
-        );
-        if (!leave) return;
-      }
+  const executeNavigation = useCallback(
+    (targetUrl: string, isBackAction: boolean) => {
+      setPendingNavigation(null);
       if (isBackAction && options?.onBack) {
         options.onBack();
       } else {
         router.push(targetUrl);
       }
     },
-    [hasUnsavedChanges, router, options],
+    [options, router],
+  );
+
+  const handleNavigateAway = useCallback(
+    (targetUrl: string, isBackAction = false) => {
+      if (hasUnsavedChanges) {
+        setPendingNavigation({ targetUrl, isBackAction });
+        return;
+      }
+      executeNavigation(targetUrl, isBackAction);
+    },
+    [hasUnsavedChanges, executeNavigation],
   );
 
   return {
@@ -353,6 +387,8 @@ export function useAgreementEditor(
     isRestoreModalOpen,
     isConfirmResetOpen,
     isTemplateModalOpen,
+    pendingLanguage,
+    pendingNavigation,
     isPreviewMode,
     setIsPreviewMode,
     handleOpenPreview,
@@ -361,6 +397,19 @@ export function useAgreementEditor(
     setIsRestoreModalOpen,
     setIsConfirmResetOpen,
     setIsTemplateModalOpen,
+    cancelLanguageSwitch: () => setPendingLanguage(null),
+    confirmLanguageSwitch: () => {
+      if (pendingLanguage) applyLanguageSwitch(pendingLanguage);
+    },
+    cancelNavigateAway: () => setPendingNavigation(null),
+    confirmNavigateAway: () => {
+      if (pendingNavigation) {
+        executeNavigation(
+          pendingNavigation.targetUrl,
+          pendingNavigation.isBackAction,
+        );
+      }
+    },
     handleToggleExpand,
     handleUpdateArticle,
     handleMoveUp,

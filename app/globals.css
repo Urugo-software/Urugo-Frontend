@@ -24,7 +24,7 @@
 
   --color-ink: #0e1116;
   --color-body: #5b6472;
-  --color-faint: #8a93a3;
+  --color-faint: #646e7d;
 
   --color-surface: #f7f8fa;
   --color-line: #e7e9ee;
@@ -269,8 +269,7 @@ body {
   .break-inside-avoid,
   .article-avoid-break,
   tr,
-  table,
-  section {
+  table {
     break-inside: avoid !important;
     page-break-inside: avoid !important;
   }

@@ -6,11 +6,11 @@ import {
   Users,
   Link as LinkIcon,
   CheckCircle2,
-  Search,
   Link2,
   Copy,
   Check,
 } from "lucide-react";
+import { DashboardSearchInput } from "@/components/shared/DashboardSearchInput";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -38,12 +38,16 @@ export function Step2RenterDetails({
 }: Step2RenterDetailsProps) {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredRenters = existingRenters.filter(
-    (r) =>
-      r.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      r.phone.includes(searchTerm) ||
-      r.propertyName.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
+  const filteredRenters = existingRenters.filter((r) => {
+    const q = searchTerm.trim().toLowerCase();
+    if (!q) return true;
+    return (
+      r.name.toLowerCase().includes(q) ||
+      r.phone.toLowerCase().includes(q) ||
+      r.propertyName.toLowerCase().includes(q) ||
+      r.unitNumber.toLowerCase().includes(q)
+    );
+  });
 
   return (
     <div className="space-y-8 sm:space-y-9 text-[12.5px]">
@@ -106,26 +110,30 @@ export function Step2RenterDetails({
       {mode === "existing" ? (
         /* OPTION B: Existing Renter Selection */
         <div className="space-y-5">
-          <div className="flex items-center gap-2 border border-line bg-white px-3 py-2">
-            <Search className="size-4 text-faint shrink-0" />
-            <input
-              type="text"
-              placeholder="Search existing renters by name, phone, or unit..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full text-xs text-ink placeholder:text-faint focus:outline-none"
-            />
-          </div>
+          <DashboardSearchInput
+            value={searchTerm}
+            onChange={setSearchTerm}
+            placeholder="Search existing renters by name, phone, property, or unit..."
+            label="Search existing renters"
+            preventFormEnter
+          />
 
+          {filteredRenters.length === 0 ? (
+            <p className="border border-line bg-surface/40 p-6 text-center text-xs text-body">
+              No renters match &ldquo;{searchTerm}&rdquo;.
+            </p>
+          ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {filteredRenters.map((renter) => {
               const isSelected = draft.existingRenterId === renter.id;
 
               return (
-                <div
+                <button
                   key={renter.id}
+                  type="button"
+                  aria-pressed={isSelected}
                   onClick={() => onSelectExistingRenter(renter)}
-                  className={`border p-4 cursor-pointer transition-all ${
+                  className={`border p-4 text-left cursor-pointer transition-all ${
                     isSelected
                       ? "border-ink bg-surface shadow-xs"
                       : "border-line bg-white hover:border-zinc-400"
@@ -158,10 +166,11 @@ export function Step2RenterDetails({
                       />
                     </div>
                   </div>
-                </div>
+                </button>
               );
             })}
           </div>
+          )}
 
           {draft.isExistingRenter && (
             <div className="p-4 border border-zinc-300 bg-surface/40 flex items-center justify-between">

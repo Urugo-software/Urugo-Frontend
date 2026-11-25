@@ -5,10 +5,12 @@ import {
   AlertTriangle,
   ArrowRight,
   Bell,
+  Calendar,
   Check,
   DollarSign,
   FileText,
   MailOpen,
+  MessageSquare,
   Settings2,
   X,
 } from "lucide-react";
@@ -20,6 +22,8 @@ const CATEGORY_META = {
   payment: { icon: DollarSign, label: "Payment", tone: "text-success" },
   dispute: { icon: AlertTriangle, label: "Dispute", tone: "text-amber-700" },
   tenancy: { icon: FileText, label: "Tenancy", tone: "text-brand-blue" },
+  inquiry: { icon: MessageSquare, label: "Inquiry", tone: "text-brand-blue" },
+  viewing: { icon: Calendar, label: "Viewing", tone: "text-brand" },
   system: { icon: Settings2, label: "System", tone: "text-faint" },
 } as const;
 

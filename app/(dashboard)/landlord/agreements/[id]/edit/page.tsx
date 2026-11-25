@@ -1,6 +1,5 @@
-import { notFound } from "next/navigation";
 import { mockAgreements } from "@/data/mock-agreements";
-import { AgreementEditor } from "@/components/dashboard/landlord/agreements/editor/AgreementEditor";
+import { AgreementEditView } from "@/components/dashboard/landlord/agreements/AgreementEditView";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -19,11 +18,10 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function AgreementEditPage({ params }: Props) {
   const { id } = await params;
-  const agreement = mockAgreements.find((a) => a.id === id) || mockAgreements[0];
 
-  if (!agreement) {
-    notFound();
-  }
-
-  return <AgreementEditor initialAgreement={agreement} />;
+  return (
+    <main className="flex flex-1 flex-col min-h-0 min-w-0 overflow-hidden bg-white h-full">
+      <AgreementEditView agreementId={id} />
+    </main>
+  );
 }

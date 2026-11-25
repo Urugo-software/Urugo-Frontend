@@ -14,7 +14,7 @@ export interface MembershipValues {
   toGroupId: string;
 }
 
-const selectStyle = "h-9 w-full cursor-pointer rounded-lg border border-input bg-white px-2 text-sm focus-visible:outline-ring";
+const selectStyle = "h-10 w-full cursor-pointer rounded-none border border-input bg-white px-2.5 text-sm focus-visible:outline-ring";
 const feedback = { id: "landlord-property-membership" };
 
 export default function MembershipForm({ request, form, formRef, selectedPropertyId, onClose }: {
@@ -41,6 +41,7 @@ export default function MembershipForm({ request, form, formRef, selectedPropert
     const result = changeMembership({ propertyIds: fields.propertyIds, fromGroupId: sourceId, toGroupId });
     if ("error" in result) {
       toast.error(result.error, feedback);
+      return;
     } else if (kind === "remove") {
       toast.success(`${propertyName ?? "The property"} is now under Ungrouped Properties.`, feedback);
     } else {

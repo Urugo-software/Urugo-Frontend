@@ -14,7 +14,7 @@ export function useLogin() {
         queryKey: ["me"],
       });
       toast.success("Login successful!");
-      router.replace("/guest");
+      router.replace("/home-seeker");
     },
     onError: (error) => {
       toast.error(error.message);

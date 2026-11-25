@@ -1,6 +1,7 @@
 import { AlertDialog } from "@base-ui/react/alert-dialog";
 import { Dialog } from "@base-ui/react/dialog";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -30,11 +31,13 @@ export function GroupDialog({
   request,
   onClose,
   onCreated,
+  onDeleted,
   returnFocusId,
 }: {
   request: GroupDialogRequest;
   onClose: () => void;
   onCreated?: (group: PropertyGroup) => void;
+  onDeleted?: () => void;
   returnFocusId?: string;
 }) {
   const { createGroup, updateGroup, deleteGroup } = useLandlordProperties();
@@ -68,11 +71,17 @@ export function GroupDialog({
         location: fields.location.trim() || undefined,
         coverImage,
       });
+      toast.success(`Group "${created.name}" created.`);
       onCreated?.(created);
     } else if (request.kind === "rename") {
-      updateGroup(request.group.id, { name: fields.name.trim() });
+      updateGroup(request.group.id, {
+        name: fields.name.trim(),
+        location: fields.location.trim() || undefined,
+      });
+      toast.success("Group details updated.");
     } else if (request.kind === "cover") {
       updateGroup(request.group.id, { coverImage });
+      toast.success("Group cover image updated.");
     }
     onClose();
   }
@@ -112,8 +121,11 @@ export function GroupDialog({
                   variant="destructive"
                   className="rounded-none"
                   onClick={() => {
+                    const name = request.group.name;
                     deleteGroup(request.group.id);
+                    toast.success(`Group "${name}" deleted.`);
                     onClose();
+                    onDeleted?.();
                   }}
                 >
                   Delete Group
@@ -145,7 +157,7 @@ export function GroupDialog({
                   </FieldError>
                 </Field>
               )}
-              {kind === "create" && (
+              {(kind === "create" || kind === "rename") && (
                 <Field>
                   <FieldLabel htmlFor="group-location">
                     Location (optional)

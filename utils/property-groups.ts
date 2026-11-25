@@ -35,21 +35,50 @@ export function applyMembershipChange(
 }
 
 export function summarizeGroup(members: LandlordPropertyItem[]) {
-  function total(key: "totalUnits" | "occupiedUnits" | "expectedMonthlyRentRwf" | "collectedRentThisMonthRwf") {
-    if (!members.length) return undefined;
-    let sum = 0;
-    for (const member of members) {
-      const amount = member[key];
-      if (typeof amount !== "number" || !Number.isFinite(amount)) return undefined;
-      sum += amount;
-    }
-    return sum;
+  if (!members.length) {
+    return {
+      totalUnits: undefined,
+      occupiedUnits: undefined,
+      expected: undefined,
+      collected: undefined,
+    };
   }
-  const allHaveUnits = members.every((member) => member.hasUnits);
+
+  let totalUnits = 0;
+  let occupiedUnits = 0;
+  let expected = 0;
+  let hasExpected = false;
+  let collected = 0;
+  let hasCollected = false;
+
+  for (const member of members) {
+    if (member.hasUnits) {
+      totalUnits += member.totalUnits ?? 0;
+      occupiedUnits += member.occupiedUnits ?? 0;
+    } else {
+      totalUnits += 1;
+      if (member.status === "Occupied") occupiedUnits += 1;
+    }
+
+    const expectedVal = member.expectedMonthlyRentRwf ?? member.monthlyRevenueRwf;
+    if (typeof expectedVal === "number" && Number.isFinite(expectedVal)) {
+      expected += expectedVal;
+      hasExpected = true;
+    }
+
+    if (
+      typeof member.collectedRentThisMonthRwf === "number" &&
+      Number.isFinite(member.collectedRentThisMonthRwf)
+    ) {
+      collected += member.collectedRentThisMonthRwf;
+      hasCollected = true;
+    }
+  }
+
   return {
-    totalUnits: allHaveUnits ? total("totalUnits") : undefined,
-    occupiedUnits: allHaveUnits ? total("occupiedUnits") : undefined,
-    expected: total("expectedMonthlyRentRwf"),
-    collected: total("collectedRentThisMonthRwf"),
+    totalUnits: totalUnits > 0 ? totalUnits : undefined,
+    occupiedUnits: totalUnits > 0 ? occupiedUnits : undefined,
+    expected: hasExpected ? expected : undefined,
+    collected: hasCollected ? collected : undefined,
   };
 }

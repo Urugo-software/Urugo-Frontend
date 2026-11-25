@@ -1,33 +1,43 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import type { LandlordServiceMode } from "@/types/landlord";
 
 export const NOTIFICATION_TABS = [
-  { id: "all", label: "All" },
-  { id: "payment", label: "Payments" },
-  { id: "tenancy", label: "Tenancies" },
-  { id: "dispute", label: "Disputes" },
-  { id: "system", label: "System" },
+  { id: "all", label: "All", managedOnly: false },
+  { id: "inquiry", label: "Inquiries", managedOnly: false },
+  { id: "viewing", label: "Viewings", managedOnly: false },
+  { id: "payment", label: "Payments", managedOnly: true },
+  { id: "tenancy", label: "Tenancies", managedOnly: true },
+  { id: "dispute", label: "Disputes", managedOnly: true },
+  { id: "system", label: "System", managedOnly: false },
 ] as const;
 
 interface NotificationTabsProps {
   activeTab: string;
   onTabChange: (tabId: string) => void;
   getCount: (tabId: string) => number;
+  serviceMode?: LandlordServiceMode;
 }
 
 export function NotificationTabs({
   activeTab,
   onTabChange,
   getCount,
+  serviceMode = "managed",
 }: NotificationTabsProps) {
+  const tabs =
+    serviceMode === "listing_only"
+      ? NOTIFICATION_TABS.filter((tab) => !tab.managedOnly)
+      : NOTIFICATION_TABS;
+
   return (
     <div
       role="tablist"
       aria-label="Notification categories"
       className="flex items-center gap-2 overflow-x-auto border-b border-line sm:gap-6"
     >
-      {NOTIFICATION_TABS.map((tab) => {
+      {tabs.map((tab) => {
         const isActive = activeTab === tab.id;
         const count = getCount(tab.id);
         return (
