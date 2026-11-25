@@ -3,15 +3,15 @@
 import Link from "next/link";
 import { useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Building2, Plus, Search, SearchX } from "lucide-react";
+import { Building2, Plus, SearchX } from "lucide-react";
 import type { ViewMode } from "@/components/dashboard/landlord/properties/PortfolioCard";
+import { DashboardSearchInput } from "@/components/shared/DashboardSearchInput";
 import { Pagination } from "@/components/shared/Pagination";
 import { ViewModeToggle } from "@/components/shared/ViewModeToggle";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { mockLandlordRenters } from "@/data/landlord-data";
 import { cn } from "@/lib/utils";
 import { useLandlordProperties } from "@/store/landlord-properties.store";
+import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
 import type { PropertyUnit } from "@/types/landlord";
 import { paginateItems } from "@/utils/pagination";
 import {
@@ -27,7 +27,7 @@ import { PropertyUnitCard } from "./PropertyUnitCard";
 import { SinglePropertyLeaseCard } from "./SinglePropertyLeaseCard";
 import { UnitDetailsDialog } from "./UnitDetailsDialog";
 
-type UnitFilter = "all" | "occupied" | "vacant" | "ending";
+type UnitFilter = "all" | "occupied" | "vacant" | "maintenance" | "ending";
 
 const UNITS_PER_PAGE = 6;
 
@@ -35,11 +35,13 @@ const filterOptions: { key: UnitFilter; label: string }[] = [
   { key: "all", label: "All Units" },
   { key: "occupied", label: "Occupied" },
   { key: "vacant", label: "Vacant" },
+  { key: "maintenance", label: "Maintenance" },
   { key: "ending", label: "Ending Soon" },
 ];
 
 export function PropertyTenanciesView({ propertyId }: { propertyId: string }) {
   const { properties, groups, units } = useLandlordProperties();
+  const renters = useLandlordWorkspace((s) => s.renters);
   const unitsSectionRef = useRef<HTMLElement>(null);
   const [unitFilter, setUnitFilter] = useState<UnitFilter>("all");
   const [searchTerm, setSearchTerm] = useState("");
@@ -60,16 +62,16 @@ export function PropertyTenanciesView({ propertyId }: { propertyId: string }) {
   );
 
   const propertyRenters = useMemo(
-    () => (property ? getRentersForProperty(property, mockLandlordRenters) : []),
-    [property],
+    () => (property ? getRentersForProperty(property, renters) : []),
+    [property, renters],
   );
 
   const doors = useMemo(
     () =>
       property && property.hasUnits
-        ? resolvePropertyDoors(property, units, mockLandlordRenters)
+        ? resolvePropertyDoors(property, units, renters)
         : [],
-    [property, units],
+    [property, renters, units],
   );
 
   const summary = useMemo(
@@ -87,6 +89,7 @@ export function PropertyTenanciesView({ propertyId }: { propertyId: string }) {
           unitFilter === "all" ||
           (unitFilter === "occupied" && renter !== null) ||
           (unitFilter === "vacant" && renter === null && unit.status === "Vacant") ||
+          (unitFilter === "maintenance" && unit.status === "Maintenance") ||
           (unitFilter === "ending" && renter?.tenancyStatus === "Ending");
 
         const matchesSearch =
@@ -184,21 +187,17 @@ export function PropertyTenanciesView({ propertyId }: { propertyId: string }) {
           </div>
 
           {doors.length > 1 && (
-            <div className="flex flex-wrap items-center justify-between gap-3 border border-line bg-white p-3 shadow-2xs">
-              <label className="relative min-w-0 flex-1 basis-full sm:basis-64">
-                <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-faint" />
-                <span className="sr-only">Search units or tenants</span>
-                <Input
-                  type="search"
-                  placeholder="Search by unit number, floor, or tenant"
-                  value={searchTerm}
-                  onChange={(event) => {
-                    setSearchTerm(event.target.value);
-                    setCurrentPage(1);
-                  }}
-                  className="rounded-none py-5 pl-9 text-sm"
-                />
-              </label>
+            <div className="flex flex-col gap-3 border border-line bg-white p-3 shadow-2xs lg:flex-row lg:items-center lg:justify-between">
+              <DashboardSearchInput
+                value={searchTerm}
+                onChange={(val) => {
+                  setSearchTerm(val);
+                  setCurrentPage(1);
+                }}
+                placeholder="Search by unit number, floor, or tenant"
+                label="Search units or tenants"
+                className="w-full lg:max-w-md"
+              />
 
               <div className="flex flex-wrap items-center gap-2">
                 <div
@@ -210,12 +209,13 @@ export function PropertyTenanciesView({ propertyId }: { propertyId: string }) {
                     <Button
                       key={key}
                       type="button"
+                      aria-pressed={unitFilter === key}
                       variant={unitFilter === key ? "default" : "outline"}
                       onClick={() => {
                         setUnitFilter(key);
                         setCurrentPage(1);
                       }}
-                      className="h-9 cursor-pointer rounded-none px-3 text-sm"
+                      className="h-9 cursor-pointer rounded-none px-3 text-xs font-semibold"
                     >
                       {label}
                     </Button>
