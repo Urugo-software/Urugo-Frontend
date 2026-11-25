@@ -5,6 +5,7 @@ import { Settings, HelpCircle } from "lucide-react";
 import { RoleType } from "@/types";
 import { useDashboardNavigation } from "@/hooks/useDashboardNavigation";
 import { SidebarItem } from "./SidebarItem";
+import { WorkspaceRoleSwitcher } from "./WorkspaceRoleSwitcher";
 import Logo from "../platform/layout/Logo";
 
 interface DashboardSidebarProps {
@@ -13,8 +14,14 @@ interface DashboardSidebarProps {
 
 export function DashboardSidebar({ currentRole }: DashboardSidebarProps) {
   const pathname = usePathname();
-  const { isAdmin, rootHref, navList, persona, isActive } =
-    useDashboardNavigation(pathname, currentRole);
+  const {
+    isAdmin,
+    activeWorkspaceRole,
+    rootHref,
+    navList,
+    persona,
+    isActive,
+  } = useDashboardNavigation(pathname, currentRole);
 
   return (
     <aside className="relative hidden md:flex h-screen w-[272px] shrink-0 flex-col overflow-hidden border-r border-line bg-white">
@@ -63,19 +70,22 @@ export function DashboardSidebar({ currentRole }: DashboardSidebarProps) {
       </nav>
 
       {/* User Session Footer */}
-      <div className="relative shrink-0 border-t border-line bg-surface px-6 py-4">
-        <div className="flex items-center gap-3">
-          <div className="grid size-10 shrink-0 place-items-center rounded-full bg-brand-tint text-sm font-bold text-brand-blue">
-            {persona.initials}
-          </div>
-          <div className="min-w-0">
-            <div className="truncate text-[13.5px] font-bold text-ink">
-              {persona.name}
+      <div className="relative shrink-0 border-t border-line bg-surface px-5 py-4">
+        <div className="flex items-center justify-between gap-2.5">
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="grid size-10 shrink-0 place-items-center bg-brand-tint text-sm font-bold text-brand-blue">
+              {persona.initials}
             </div>
-            <div className="truncate text-[12.5px] text-faint">
-              {persona.subtitle}
+            <div className="min-w-0">
+              <div className="truncate text-[13.5px] font-bold text-ink">
+                {persona.name}
+              </div>
+              <div className="truncate text-[12.5px] text-faint">
+                {persona.subtitle}
+              </div>
             </div>
           </div>
+          <WorkspaceRoleSwitcher currentRole={activeWorkspaceRole} />
         </div>
       </div>
     </aside>

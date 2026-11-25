@@ -3,19 +3,26 @@ export type MaintenanceStatus =
   | "In Progress"
   | "Resolved"
   | "Rejected";
-export type ElectricityStatus =
-  | "Normal"
-  | "Approaching limit"
-  | "Limit reached"
-  | "Exceeded";
+
 export type PaymentStatus = "Paid" | "Pending" | "Overdue";
+
+export type RenterNotificationCategory =
+  | "rent"
+  | "maintenance"
+  | "lease"
+  | "history"
+  | "inquiry";
 
 export interface RenterProfile {
   id: string;
   name: string;
+  email: string;
+  phone: string;
   avatar: string;
   unitNumber: string;
   propertyName: string;
+  emergencyContactName?: string;
+  emergencyContactPhone?: string;
 }
 
 export interface RenterProperty {
@@ -23,10 +30,12 @@ export interface RenterProperty {
   name: string;
   unitNumber: string;
   address: string;
+  image?: string;
   bedrooms: number;
   bathrooms: number;
   parking: boolean;
   wifi: boolean;
+  amenities?: string[];
   landlordName: string;
   landlordPhone: string;
   email: string;
@@ -44,33 +53,8 @@ export interface RenterPayment {
   paymentType?: string;
   paidAt?: string;
   period: string;
-}
-
-export interface ElectricityUsagePoint {
-  period: string;
-  kwh: number;
-}
-
-export interface ElectricityBill {
-  id: string;
-  period: string;
-  previousReading: number;
-  currentReading: number;
-  kwh: number;
-  amountRwf: number;
-  status: "Paid" | "Unpaid";
-}
-
-export interface RenterElectricity {
-  isConfigured: boolean;
-  currentKwh: number;
-  monthlyLimitKwh: number;
-  percentUsed: number;
-  status: ElectricityStatus;
-  statusMessage: string;
-  currentBillRwf: number;
-  usageHistory: ElectricityUsagePoint[];
-  monthlyBills: ElectricityBill[];
+  referenceNumber?: string;
+  receiptName?: string;
 }
 
 export interface RenterMaintenance {
@@ -81,18 +65,22 @@ export interface RenterMaintenance {
   priority: "Low" | "Medium" | "High";
   status: MaintenanceStatus;
   createdAt: string;
+  updatedNote?: string;
 }
 
 export interface RenterDocument {
   id: string;
   title: string;
-  category: string;
+  category: "Lease Agreement" | "Payment Receipt" | "Notice";
   date: string;
   size: string;
+  summary?: string;
+  referenceId?: string;
 }
 
 export interface RenterLeaseAgreement {
   id: string;
+  agreementId?: string;
   title: string;
   date: string;
   size: string;
@@ -106,12 +94,9 @@ export interface RenterLease {
   landlordName: string;
   landlordPhone: string;
   landlordEmail: string;
-  /** ISO-style or formatted date string for when the lease started / renter moved in */
   startDate: string;
-  /** Undefined means the tenancy has no fixed end date (open-ended) */
   endDate?: string;
   monthlyRentRwf: number;
-  /** Day of month on which rent is due */
   paymentDueDay: number;
   securityDepositRwf?: number;
   noticePeriodDays?: number;
@@ -124,5 +109,23 @@ export interface RenterNotification {
   message: string;
   date: string;
   read: boolean;
-  category: "rent" | "electricity" | "maintenance" | "lease";
+  category: RenterNotificationCategory;
+  href?: string;
+  actionLabel?: string;
+}
+
+export interface RenterSupportTicket {
+  id: string;
+  subject: string;
+  category: string;
+  message: string;
+  createdAt: string;
+  status: "Submitted" | "In Review";
+}
+
+export interface RenterFaqItem {
+  id: string;
+  category: string;
+  question: string;
+  answer: string;
 }

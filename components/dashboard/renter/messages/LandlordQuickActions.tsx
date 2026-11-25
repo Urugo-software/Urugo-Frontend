@@ -1,24 +1,29 @@
-import CustomButton from "@/components/shared/CustomButton";
-import { Phone } from "lucide-react";
 import Link from "next/link";
+import { Phone, Wrench } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export function LandlordQuickActions({ phone }: { phone: string }) {
   return (
-    <div className="pt-2 flex flex-col items-center gap-1 space-y-2">
-      <Link className="w-full" href={"tel:" + phone}>
-        <CustomButton variant="light" className="w-full">
-          <span className="-translate-x-4 group-hover:text-white flex items-center gap-4">
-            <Phone className="size-4" /> Call Landlord
-          </span>
-        </CustomButton>
-      </Link>
+    <div className="flex flex-col gap-2 pt-2">
+      <a href={`tel:${phone}`} className="w-full">
+        <Button
+          type="button"
+          className="w-full cursor-pointer justify-center rounded-none"
+        >
+          <Phone aria-hidden="true" className="size-4" />
+          Call Landlord
+        </Button>
+      </a>
 
       <Link href="/renter/maintenance" className="w-full">
-        <CustomButton variant="cancel" className="w-full">
-          <span className="-translate-x-4 group-hover:text-white flex items-center gap-4">
-            Report Maintenance Issue
-          </span>
-        </CustomButton>
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full cursor-pointer justify-center rounded-none"
+        >
+          <Wrench aria-hidden="true" className="size-4" />
+          Report Maintenance Issue
+        </Button>
       </Link>
     </div>
   );

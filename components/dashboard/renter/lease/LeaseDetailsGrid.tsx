@@ -1,69 +1,52 @@
-import { MapPin, User, Phone, Mail } from "lucide-react";
-import { RenterLease } from "@/types/renter";
+import { Mail, MapPin, Phone } from "lucide-react";
+import { UserAvatar } from "@/components/shared/UserAvatar";
+import type { RenterLease } from "@/types/renter";
+import { formatRwf } from "@/utils/format";
 import { getOrdinalSuffix } from "@/utils/rent-schedule-utils";
 
 interface Props {
   lease: RenterLease;
 }
 
-interface LeaseRow {
-  label: string;
-  value: string;
-}
-
 export function LeaseDetailsGrid({ lease }: Props) {
-  const endDateDisplay = lease.endDate ?? "No end date specified";
-
-  const termRows: LeaseRow[] = [
+  const termRows = [
     { label: "Lease Start Date", value: lease.startDate },
-    { label: "Lease End Date", value: endDateDisplay },
     {
-      label: "Monthly Rent",
-      value: `RWF ${lease.monthlyRentRwf.toLocaleString()}`,
+      label: "Lease End Date",
+      value: lease.endDate ?? "Open-ended monthly tenancy",
     },
+    { label: "Monthly Rent", value: formatRwf(lease.monthlyRentRwf) },
     {
       label: "Payment Due",
-      value: `${lease.paymentDueDay}${getOrdinalSuffix(lease.paymentDueDay)} of each month${lease.paymentDueDay >= 29 ? " (or month end)" : ""}`,
+      value: `${lease.paymentDueDay}${getOrdinalSuffix(lease.paymentDueDay)} of each month`,
     },
+    ...(lease.securityDepositRwf !== undefined
+      ? [
+          {
+            label: "Security Deposit",
+            value: formatRwf(lease.securityDepositRwf),
+          },
+        ]
+      : []),
+    ...(lease.noticePeriodDays !== undefined
+      ? [{ label: "Notice Period", value: `${lease.noticePeriodDays} days` }]
+      : []),
   ];
-
-  if (lease.securityDepositRwf !== undefined) {
-    termRows.push({
-      label: "Security Deposit",
-      value: `RWF ${lease.securityDepositRwf.toLocaleString()}`,
-    });
-  }
-
-  if (lease.noticePeriodDays !== undefined) {
-    termRows.push({
-      label: "Notice Period",
-      value: `${lease.noticePeriodDays} days`,
-    });
-  }
 
   return (
     <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-      {/* Lease Terms Card */}
-      <div className="border border-line bg-white p-5 shadow-xs">
-        <h3 className="mb-4 text-[17px] font-bold text-ink">Lease Terms</h3>
-        <div className="space-y-3 text-[12.5px]">
+      <div className="border border-line bg-white p-5 shadow-2xs">
+        <h3 className="mb-4 text-base font-bold text-ink">Lease Terms</h3>
+        <div className="space-y-3 text-sm">
           {termRows.map((row, idx) => (
             <div
               key={row.label}
-              className={`flex items-center justify-between${
-                idx < termRows.length - 1
-                  ? " border-b border-line pb-2"
-                  : ""
+              className={`flex items-center justify-between gap-4${
+                idx < termRows.length - 1 ? " border-b border-line pb-2.5" : ""
               }`}
             >
-              <span className="text-faint">{row.label}</span>
-              <span
-                className={`font-medium text-ink${
-                  row.label === "Lease End Date" && !lease.endDate
-                    ? " italic text-faint"
-                    : ""
-                }`}
-              >
+              <span className="text-body">{row.label}</span>
+              <span className="text-right font-semibold text-ink">
                 {row.value}
               </span>
             </div>
@@ -71,35 +54,36 @@ export function LeaseDetailsGrid({ lease }: Props) {
         </div>
       </div>
 
-      {/* Property & Landlord Card */}
-      <div className="border border-line bg-white p-5 shadow-xs">
-        <h3 className="mb-4 text-[17px] font-bold text-ink">
+      <div className="border border-line bg-white p-5 shadow-2xs">
+        <h3 className="mb-4 text-base font-bold text-ink">
           Property &amp; Landlord
         </h3>
 
-        {/* Property address */}
-        <div className="mb-4 flex items-start gap-2 text-[12.5px] text-body">
+        <div className="mb-4 flex items-start gap-2 text-sm text-body">
           <MapPin className="mt-0.5 size-4 shrink-0 text-faint" />
           <span>{lease.address}</span>
         </div>
 
-        {/* Landlord contact */}
-        <div className="flex items-start gap-4">
-          <div className="grid size-11 shrink-0 place-items-center rounded-full bg-brand-tint text-brand">
-            <User className="size-6" />
-          </div>
-          <div>
-            <div className="text-sm font-bold tracking-[0.5px] text-ink">
+        <div className="flex items-start gap-4 border-t border-line pt-4">
+          <UserAvatar name={lease.landlordName} className="size-12 text-sm" />
+          <div className="min-w-0 space-y-2">
+            <div className="text-sm font-bold text-ink">
               {lease.landlordName}
             </div>
-            <div className="mt-2 flex items-center gap-1.5 text-[12.5px] text-body">
+            <a
+              href={`tel:${lease.landlordPhone.replace(/\s+/g, "")}`}
+              className="flex items-center gap-1.5 text-sm text-body hover:text-ink hover:underline"
+            >
               <Phone className="size-3.5 text-faint" />
-              <span className="tracking-[0.5px]">{lease.landlordPhone}</span>
-            </div>
-            <div className="mt-2 flex items-center gap-1.5 text-[12.5px] text-body">
+              <span>{lease.landlordPhone}</span>
+            </a>
+            <a
+              href={`mailto:${lease.landlordEmail}`}
+              className="flex items-center gap-1.5 text-sm text-body hover:text-ink hover:underline"
+            >
               <Mail className="size-3.5 text-faint" />
-              <span className="tracking-[0.5px]">{lease.landlordEmail}</span>
-            </div>
+              <span className="truncate">{lease.landlordEmail}</span>
+            </a>
           </div>
         </div>
       </div>

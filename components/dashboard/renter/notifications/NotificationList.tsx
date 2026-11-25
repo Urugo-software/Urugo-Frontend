@@ -1,24 +1,64 @@
+"use client";
+
 import { Bell } from "lucide-react";
-import { RenterNotification } from "@/types/renter";
+import { EmptyStateBox } from "@/components/shared/EmptyStateBox";
+import { Button } from "@/components/ui/button";
+import type { RenterNotification } from "@/types/renter";
 import { NotificationItemCard } from "./NotificationItemCard";
 
-export function NotificationList({ items }: { items: RenterNotification[] }) {
+interface NotificationListProps {
+  items: RenterNotification[];
+  hasFilters: boolean;
+  onResetFilters: () => void;
+  onMarkRead: (id: string) => void;
+  onToggleRead: (id: string) => void;
+  onDismiss: (id: string) => void;
+}
+
+export function NotificationList({
+  items,
+  hasFilters,
+  onResetFilters,
+  onMarkRead,
+  onToggleRead,
+  onDismiss,
+}: NotificationListProps) {
   if (items.length === 0) {
     return (
-      <div className="flex min-h-64 flex-col items-center justify-center rounded-xl border border-line bg-surface p-8 text-center">
-        <Bell className="size-8 text-faint mb-2" />
-        <p className="text-sm font-semibold text-ink">No notifications yet.</p>
-        <p className="text-xs text-body mt-0.5">
-          Alerts regarding rent, electricity, and maintenance will appear here.
-        </p>
-      </div>
+      <EmptyStateBox
+        icon={Bell}
+        title="You're all caught up"
+        description={
+          hasFilters
+            ? "No notifications match your current filter."
+            : "Rent reminders, maintenance updates, and lease notices will appear here."
+        }
+        action={
+          hasFilters ? (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onResetFilters}
+              className="cursor-pointer rounded-none"
+            >
+              Show all notifications
+            </Button>
+          ) : undefined
+        }
+      />
     );
   }
 
   return (
-    <div className="space-y-3">
-      {items.map((item) => (
-        <NotificationItemCard key={item.id} notif={item} />
+    <div className="divide-y divide-line border border-line bg-white shadow-2xs">
+      {items.map((notif) => (
+        <NotificationItemCard
+          key={notif.id}
+          notif={notif}
+          onMarkRead={onMarkRead}
+          onToggleRead={onToggleRead}
+          onDismiss={onDismiss}
+        />
       ))}
     </div>
   );

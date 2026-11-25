@@ -73,11 +73,20 @@ interface LandlordWorkspaceStore {
 
   createIssue: (issue: Omit<RentalIssue, "id">) => RentalIssue;
   updateIssueStatus: (issueId: string, status: IssueStatus) => void;
+  submitIssueDispute: (
+    issueId: string,
+    renterResponse: string,
+    evidenceTitle?: string,
+  ) => void;
 
   addInquiry: (
     inquiry: Omit<LandlordInquiry, "id" | "createdAt" | "status" | "replies">,
   ) => LandlordInquiry;
-  replyToInquiry: (inquiryId: string, text: string) => void;
+  replyToInquiry: (
+    inquiryId: string,
+    text: string,
+    sender?: "landlord" | "seeker",
+  ) => void;
   updateInquiryStatus: (inquiryId: string, status: InquiryStatus) => void;
 
   addViewingRequest: (
@@ -90,6 +99,7 @@ interface LandlordWorkspaceStore {
     preferredTime: string,
   ) => void;
   rejectViewing: (viewingId: string, rejectionReason: string) => void;
+  cancelViewingRequest: (viewingId: string) => void;
 
   markNotificationRead: (id: string) => void;
   toggleNotificationRead: (id: string) => void;
@@ -262,6 +272,39 @@ export const useLandlordWorkspace = create<LandlordWorkspaceStore>()(
           ),
         })),
 
+      submitIssueDispute: (issueId, renterResponse, evidenceTitle) =>
+        set((s) => ({
+          issues: s.issues.map((i) =>
+            i.id === issueId
+              ? {
+                  ...i,
+                  status: "Disputed" as const,
+                  renterResponse: renterResponse.trim(),
+                  evidence: evidenceTitle
+                    ? {
+                        title: evidenceTitle,
+                        type: "Payment Proof",
+                        verified: false,
+                      }
+                    : i.evidence,
+                }
+              : i,
+          ),
+          notifications: [
+            {
+              id: createSafeId("notif"),
+              title: "Renter Dispute Submitted",
+              message: `A renter submitted a dispute response for case ${issueId}.`,
+              timestamp: "Just now",
+              category: "dispute",
+              isUnread: true,
+              actionHref: `/landlord/renter-history/${issueId}`,
+              actionLabel: "Review Dispute",
+            },
+            ...s.notifications,
+          ],
+        })),
+
       addInquiry: (input) => {
         const inquiry: LandlordInquiry = {
           ...input,
@@ -289,18 +332,18 @@ export const useLandlordWorkspace = create<LandlordWorkspaceStore>()(
         return inquiry;
       },
 
-      replyToInquiry: (inquiryId, text) =>
+      replyToInquiry: (inquiryId, text, sender = "landlord") =>
         set((s) => ({
           inquiries: s.inquiries.map((inq) =>
             inq.id === inquiryId
               ? {
                   ...inq,
-                  status: "Replied" as const,
+                  status: sender === "landlord" ? ("Replied" as const) : ("New" as const),
                   replies: [
                     ...inq.replies,
                     {
                       id: createSafeId("rep"),
-                      sender: "landlord" as const,
+                      sender,
                       text,
                       timestamp: "Just now",
                     },
@@ -371,6 +414,11 @@ export const useLandlordWorkspace = create<LandlordWorkspaceStore>()(
               ? { ...v, status: "Rejected" as const, rejectionReason }
               : v,
           ),
+        })),
+
+      cancelViewingRequest: (viewingId) =>
+        set((s) => ({
+          viewings: s.viewings.filter((v) => v.id !== viewingId),
         })),
 
       markNotificationRead: (id) =>

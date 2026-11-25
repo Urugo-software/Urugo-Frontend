@@ -11,16 +11,16 @@ import {
   DollarSign,
   Wrench,
   Folder,
-  Zap,
   MessageSquare,
   ScrollText,
   CreditCard,
   ShieldCheck,
   Settings,
   History,
-  LucideIcon,
+  Compass,
 } from "lucide-react";
-import { RoleType } from "@/types";
+import type { LucideIcon } from "lucide-react";
+import type { RoleType } from "@/types";
 import type { LandlordServiceMode } from "@/types/landlord";
 
 export interface NavItemConfig {
@@ -91,6 +91,59 @@ export function getLandlordNavItems(
     : [...sharedBase, ...managedItems, notificationsItem];
 }
 
+export interface RenterNavOptions {
+  activeInquiries?: number;
+  pendingPayments?: number;
+  activeMaintenance?: number;
+  actionableIssues?: number;
+  unreadNotifications?: number;
+}
+
+export function getRenterNavItems(
+  options: RenterNavOptions = {},
+): NavItemConfig[] {
+  const badge = (n?: number) => (n && n > 0 ? n : undefined);
+
+  return [
+    { label: "Overview", href: "/renter", icon: LayoutDashboard },
+    { label: "Explore Homes", href: "/renter/explore", icon: Compass },
+    {
+      label: "Inquiries & Visits",
+      href: "/renter/inquiries",
+      icon: Calendar,
+      badge: badge(options.activeInquiries),
+    },
+    { label: "My Property", href: "/renter/property", icon: Building2 },
+    { label: "Lease", href: "/renter/lease", icon: ScrollText },
+    {
+      label: "Payments",
+      href: "/renter/payments",
+      icon: DollarSign,
+      badge: badge(options.pendingPayments),
+    },
+    {
+      label: "Maintenance",
+      href: "/renter/maintenance",
+      icon: Wrench,
+      badge: badge(options.activeMaintenance),
+    },
+    {
+      label: "Rental History",
+      href: "/renter/rental-history",
+      icon: History,
+      badge: badge(options.actionableIssues),
+    },
+    { label: "Documents", href: "/renter/documents", icon: Folder },
+    { label: "Messages", href: "/renter/messages", icon: MessageSquare },
+    {
+      label: "Notifications",
+      href: "/renter/notifications",
+      icon: Bell,
+      badge: badge(options.unreadNotifications),
+    },
+  ];
+}
+
 export function isNavItemActive(
   pathname: string,
   href: string,
@@ -150,7 +203,6 @@ export const roleNavItems: Record<RoleType, NavItemConfig[]> = {
     { label: "My Property", href: "/renter/property", icon: Building2 },
     { label: "Lease", href: "/renter/lease", icon: ScrollText },
     { label: "Payments", href: "/renter/payments", icon: DollarSign },
-    { label: "Electricity", href: "/renter/electricity", icon: Zap },
     {
       label: "Maintenance",
       href: "/renter/maintenance",

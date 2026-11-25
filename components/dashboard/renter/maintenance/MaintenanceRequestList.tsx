@@ -1,23 +1,52 @@
-import React from "react";
 import { Wrench } from "lucide-react";
-import { RenterMaintenance } from "@/types/renter";
+import { EmptyStateBox } from "@/components/shared/EmptyStateBox";
+import type { RenterMaintenance } from "@/types/renter";
 import { MaintenanceRequestItem } from "./MaintenanceRequestItem";
 
-export function MaintenanceRequestList({ items }: { items: RenterMaintenance[] }) {
+interface MaintenanceRequestListProps {
+  items: RenterMaintenance[];
+  onSelect: (item: RenterMaintenance) => void;
+  onClearFilters?: () => void;
+}
+
+export function MaintenanceRequestList({
+  items,
+  onSelect,
+  onClearFilters,
+}: MaintenanceRequestListProps) {
   if (items.length === 0) {
     return (
-      <div className="flex min-h-64 flex-col items-center justify-center rounded-xl border border-line bg-surface p-8 text-center">
-        <Wrench className="size-8 text-faint mb-2" />
-        <p className="text-sm font-semibold text-ink">No maintenance requests yet.</p>
-        <p className="text-xs text-body mt-0.5">Submit a request if you encounter any issue in your apartment.</p>
-      </div>
+      <EmptyStateBox
+        icon={Wrench}
+        title="No maintenance requests found"
+        description={
+          onClearFilters
+            ? "No requests match your search or status filter."
+            : "Submit a request if you encounter any issue in your apartment."
+        }
+        action={
+          onClearFilters ? (
+            <button
+              type="button"
+              onClick={onClearFilters}
+              className="cursor-pointer border border-line bg-white px-4 py-2 text-xs font-semibold text-ink hover:bg-surface"
+            >
+              Clear filters
+            </button>
+          ) : undefined
+        }
+      />
     );
   }
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
       {items.map((item) => (
-        <MaintenanceRequestItem key={item.id} item={item} />
+        <MaintenanceRequestItem
+          key={item.id}
+          item={item}
+          onSelect={onSelect}
+        />
       ))}
     </div>
   );

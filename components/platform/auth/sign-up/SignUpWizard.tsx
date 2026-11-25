@@ -1,14 +1,25 @@
 "use client";
 
-import { Building2, Camera, Home, IdCard, ShieldCheck, UserRound } from "lucide-react";
+import {
+  Building2,
+  Camera,
+  Home,
+  IdCard,
+  KeyRound,
+  MailCheck,
+  ShieldCheck,
+  UserRound,
+} from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState, type FormEvent } from "react";
 
 import { Button } from "@/components/ui/button";
 import { FieldDescription, FieldGroup } from "@/components/ui/field";
 import { signUpSteps } from "@/data/home-data";
+import { useLandlordProperties } from "@/store/landlord-properties.store";
 import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
+import { useRenterWorkspace } from "@/store/renter-workspace.store";
 import type { LandlordServiceMode } from "@/types/landlord";
 
 import FirstStep from "./FirstStep";
@@ -18,7 +29,7 @@ import { SignUpProgress } from "./SignUpProgress";
 import type { SignUpValues } from "./SignUpWizardField";
 import ThirdStep from "./ThirdStep";
 
-type OnboardingPath = "home_seeker" | LandlordServiceMode;
+type OnboardingPath = "home_seeker" | "renter" | LandlordServiceMode;
 
 const ONBOARDING_OPTIONS: Array<{
   id: OnboardingPath;
@@ -31,6 +42,12 @@ const ONBOARDING_OPTIONS: Array<{
     label: "Home Seeker",
     desc: "Browse listings, save favorites, and request property viewings.",
     icon: Home,
+  },
+  {
+    id: "renter",
+    label: "Renter / Tenant",
+    desc: "Access your lease, submit rent payments, track repairs, and view rental history.",
+    icon: KeyRound,
   },
   {
     id: "listing_only",
@@ -46,6 +63,32 @@ const ONBOARDING_OPTIONS: Array<{
   },
 ];
 
+const PATH_DESTINATIONS: Record<
+  OnboardingPath,
+  { label: string; route: string; buttonLabel: string }
+> = {
+  home_seeker: {
+    label: "Home Seeker",
+    route: "/home-seeker",
+    buttonLabel: "Continue to Home Seeker Dashboard",
+  },
+  renter: {
+    label: "Renter",
+    route: "/renter",
+    buttonLabel: "Continue to Renter Dashboard",
+  },
+  listing_only: {
+    label: "Listing-Only Landlord",
+    route: "/landlord",
+    buttonLabel: "Continue to Landlord Dashboard",
+  },
+  managed: {
+    label: "Managed Landlord",
+    route: "/landlord",
+    buttonLabel: "Continue to Landlord Dashboard",
+  },
+};
+
 const progressSteps = signUpSteps.map((step, index) => ({
   ...step,
   icon: [UserRound, IdCard, Camera][index],
@@ -53,10 +96,22 @@ const progressSteps = signUpSteps.map((step, index) => ({
 
 export function SignUpWizard() {
   const router = useRouter();
-  const setServiceMode = useLandlordWorkspace((s) => s.setServiceMode);
-  const updateProfile = useLandlordWorkspace((s) => s.updateProfile);
+  const searchParams = useSearchParams();
+  const inviteCode = searchParams.get("invite")?.trim() ?? "";
+  const invitedPropertyId = searchParams.get("property")?.trim() ?? "";
 
-  const [accountPath, setAccountPath] = useState<OnboardingPath>("listing_only");
+  const properties = useLandlordProperties((s) => s.properties);
+  const setServiceMode = useLandlordWorkspace((s) => s.setServiceMode);
+  const updateLandlordProfile = useLandlordWorkspace((s) => s.updateProfile);
+  const updateRenterProfile = useRenterWorkspace((s) => s.updateProfile);
+
+  const invitedProperty = invitedPropertyId
+    ? properties.find((p) => p.id === invitedPropertyId)
+    : undefined;
+
+  const [accountPath, setAccountPath] = useState<OnboardingPath>(
+    inviteCode ? "renter" : "listing_only",
+  );
   const [currentStep, setCurrentStep] = useState(1);
   const [values, setValues] = useState<SignUpValues>({
     fullName: "",
@@ -78,16 +133,29 @@ export function SignUpWizard() {
       setCurrentStep((previous) => previous + 1);
       return;
     }
+
+    const fullName = values.fullName.trim();
+    const email = values.email.trim();
+    const phone = values.telephone.trim();
+
     if (accountPath === "listing_only" || accountPath === "managed") {
       setServiceMode(accountPath);
-      if (values.fullName.trim() || values.email.trim()) {
-        updateProfile({
-          ...(values.fullName.trim() ? { fullName: values.fullName.trim() } : {}),
-          ...(values.email.trim() ? { email: values.email.trim() } : {}),
-          ...(values.telephone.trim() ? { phone: values.telephone.trim() } : {}),
+      if (fullName || email || phone) {
+        updateLandlordProfile({
+          ...(fullName ? { fullName } : {}),
+          ...(email ? { email } : {}),
+          ...(phone ? { phone } : {}),
         });
       }
+    } else if (accountPath === "renter") {
+      updateRenterProfile({
+        ...(fullName ? { name: fullName } : {}),
+        ...(email ? { email } : {}),
+        ...(phone ? { phone } : {}),
+        ...(invitedProperty ? { propertyName: invitedProperty.name } : {}),
+      });
     }
+
     // Backend registration API is not connected yet.
     setSubmissionNotice(true);
   };
@@ -97,8 +165,7 @@ export function SignUpWizard() {
     setCurrentStep((previous) => previous - 1);
   };
 
-  const isLandlordPath =
-    accountPath === "listing_only" || accountPath === "managed";
+  const destination = PATH_DESTINATIONS[accountPath];
 
   return (
     <form
@@ -112,6 +179,33 @@ export function SignUpWizard() {
           title={step.title}
           description={step.description}
         />
+
+        {inviteCode && (
+          <div
+            role="status"
+            className="flex items-start gap-3 border border-blue-200 bg-brand-tint/70 p-3.5 text-xs text-brand-deep"
+          >
+            <MailCheck
+              aria-hidden="true"
+              className="mt-0.5 size-4 shrink-0 text-brand-blue"
+            />
+            <div className="space-y-1">
+              <div className="font-bold text-ink">
+                Landlord Invitation Detected ({inviteCode})
+              </div>
+              <p className="leading-snug text-body">
+                {invitedProperty
+                  ? `You were invited to join ${invitedProperty.name} (${invitedProperty.location}) as a renter.`
+                  : "Complete your details below to preview your renter workspace."}
+              </p>
+              <p className="text-faint">
+                Simulated invite link — full token verification requires backend
+                onboarding.
+              </p>
+            </div>
+          </div>
+        )}
+
         <FieldGroup className="gap-4 sm:gap-5">
           {currentStep === 1 && (
             <>
@@ -119,7 +213,11 @@ export function SignUpWizard() {
                 <p className="text-xs font-semibold uppercase tracking-wider text-faint">
                   How will you use Urugo?
                 </p>
-                <div role="radiogroup" aria-label="Account service path" className="grid gap-2">
+                <div
+                  role="radiogroup"
+                  aria-label="Account service path"
+                  className="grid gap-2"
+                >
                   {ONBOARDING_OPTIONS.map(({ id, label, desc, icon: Icon }) => {
                     const selected = accountPath === id;
                     return (
@@ -142,7 +240,9 @@ export function SignUpWizard() {
                           }`}
                         />
                         <div className="min-w-0">
-                          <div className="text-xs font-bold text-ink">{label}</div>
+                          <div className="text-xs font-bold text-ink">
+                            {label}
+                          </div>
                           <div className="mt-0.5 text-xs leading-snug text-body">
                             {desc}
                           </div>
@@ -184,23 +284,15 @@ export function SignUpWizard() {
             >
               <p>
                 Backend account registration is not connected yet. Your{" "}
-                <strong>
-                  {accountPath === "listing_only"
-                    ? "Listing-Only Landlord"
-                    : accountPath === "managed"
-                      ? "Managed Landlord"
-                      : "Home Seeker"}
-                </strong>{" "}
-                workspace preference has been configured locally for preview.
+                <strong>{destination.label}</strong> workspace preference has
+                been configured locally for preview.
               </p>
               <Button
                 type="button"
-                onClick={() =>
-                  router.push(isLandlordPath ? "/landlord" : "/home-seeker")
-                }
+                onClick={() => router.push(destination.route)}
                 className="w-full cursor-pointer rounded-none"
               >
-                Continue to {isLandlordPath ? "Landlord" : "Home Seeker"} Dashboard
+                {destination.buttonLabel}
               </Button>
             </div>
           )}

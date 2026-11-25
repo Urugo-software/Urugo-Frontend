@@ -3,9 +3,9 @@
 import { useMemo } from "react";
 import { adminDirectories } from "@/data/admin-dashboard-data";
 import { notificationsData } from "@/data/home-seeker-data";
-import { mockRenterNotifications } from "@/data/renter-extra-data";
 import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
-import { HeaderNotificationPreviewItem } from "@/types/dashboard-notifications.types";
+import { useRenterWorkspace } from "@/store/renter-workspace.store";
+import type { HeaderNotificationPreviewItem } from "@/types/dashboard-notifications.types";
 
 export function useDashboardNotifications(pathname: string) {
   const landlordNotifications = useLandlordWorkspace((s) => s.notifications);
@@ -15,7 +15,14 @@ export function useDashboardNotifications(pathname: string) {
     (s) => s.markAllNotificationsRead,
   );
 
+  const renterNotifications = useRenterWorkspace((s) => s.notifications);
+  const markRenterRead = useRenterWorkspace((s) => s.markNotificationRead);
+  const markAllRenterRead = useRenterWorkspace(
+    (s) => s.markAllNotificationsRead,
+  );
+
   const isLandlord = pathname.startsWith("/landlord");
+  const isRenter = pathname.startsWith("/renter");
 
   return useMemo(() => {
     let viewAllHref = "/home-seeker/notifications";
@@ -44,17 +51,17 @@ export function useDashboardNotifications(pathname: string) {
         categoryLabel: n.category,
         href: n.actionHref || "/landlord/notifications",
       }));
-    } else if (pathname.startsWith("/renter")) {
+    } else if (isRenter) {
       viewAllHref = "/renter/notifications";
-      unreadCount = mockRenterNotifications.filter((n) => !n.read).length;
-      items = mockRenterNotifications.slice(0, 4).map((n) => ({
+      unreadCount = renterNotifications.filter((n) => !n.read).length;
+      items = renterNotifications.slice(0, 5).map((n) => ({
         id: n.id,
         title: n.title,
         message: n.message,
         timestamp: n.date,
         isUnread: !n.read,
         categoryLabel: n.category,
-        href: "/renter/notifications",
+        href: n.href || "/renter/notifications",
       }));
     } else if (pathname.startsWith("/admin")) {
       viewAllHref = "/admin/notifications";
@@ -88,15 +95,27 @@ export function useDashboardNotifications(pathname: string) {
       unreadCount,
       hasUnread: unreadCount > 0,
       viewAllHref,
-      onMarkRead: isLandlord ? markLandlordRead : undefined,
-      onMarkAllRead: isLandlord ? markAllLandlordRead : undefined,
+      onMarkRead: isLandlord
+        ? markLandlordRead
+        : isRenter
+          ? markRenterRead
+          : undefined,
+      onMarkAllRead: isLandlord
+        ? markAllLandlordRead
+        : isRenter
+          ? markAllRenterRead
+          : undefined,
     };
   }, [
     isLandlord,
+    isRenter,
     landlordNotifications,
     markAllLandlordRead,
+    markAllRenterRead,
     markLandlordRead,
+    markRenterRead,
     pathname,
+    renterNotifications,
     serviceMode,
   ]);
 }

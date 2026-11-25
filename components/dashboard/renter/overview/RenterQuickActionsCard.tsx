@@ -1,32 +1,40 @@
-import React from "react";
 import Link from "next/link";
-import { Building2, Bell, Folder, ScrollText } from "lucide-react";
+import {
+  Building2,
+  Calendar,
+  Compass,
+  Folder,
+  History,
+  ScrollText,
+} from "lucide-react";
+
+const QUICK_ACTIONS = [
+  { label: "My Property", href: "/renter/property", icon: Building2 },
+  { label: "Lease Agreement", href: "/renter/lease", icon: ScrollText },
+  { label: "Documents & Receipts", href: "/renter/documents", icon: Folder },
+  { label: "Explore Homes", href: "/renter/explore", icon: Compass },
+  { label: "Inquiries & Visits", href: "/renter/inquiries", icon: Calendar },
+  { label: "Rental History", href: "/renter/rental-history", icon: History },
+];
 
 export function RenterQuickActionsCard() {
-  const actions = [
-    { label: "My Property", href: "/renter/property", icon: Building2 },
-    { label: "My Lease", href: "/renter/lease", icon: ScrollText },
-    { label: "Documents & Receipts", href: "/renter/documents", icon: Folder },
-    { label: "Notifications", href: "/renter/notifications", icon: Bell },
-  ];
-
   return (
-    <div className=" border border-line bg-white p-5 shadow-xs">
-      <h3 className="mb-3 text-xs font-semibold text-faint uppercase tracking-wider">
+    <section className="border border-line bg-white p-5 shadow-2xs">
+      <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-faint">
         Quick Access
       </h3>
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {actions.map((act) => (
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {QUICK_ACTIONS.map(({ label, href, icon: Icon }) => (
           <Link
-            key={act.label}
-            href={act.href}
-            className="flex items-center gap-3 rounded-lg border border-line p-3 transition hover:bg-surface"
+            key={label}
+            href={href}
+            className="flex items-center gap-3 border border-line bg-white px-4 py-3 text-sm font-semibold text-ink transition-colors hover:border-ink/40 hover:bg-surface"
           >
-            <act.icon className="size-5 text-brand" />
-            <span className="text-xs font-semibold text-ink">{act.label}</span>
+            <Icon aria-hidden="true" className="size-4 shrink-0 text-brand-blue" />
+            <span className="truncate">{label}</span>
           </Link>
         ))}
       </div>
-    </div>
+    </section>
   );
 }

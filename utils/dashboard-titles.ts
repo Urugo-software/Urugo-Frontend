@@ -29,12 +29,14 @@ export const DASHBOARD_EXACT_TITLES: Record<string, string> = {
 
   // Renter
   "/renter": "Overview",
+  "/renter/explore": "Explore Homes",
+  "/renter/inquiries": "Inquiries & Visits",
   "/renter/property": "My Property",
   "/renter/lease": "Lease",
   "/renter/payments": "Payments",
   "/renter/payments/pay-rent": "Pay Rent",
-  "/renter/electricity": "Electricity",
   "/renter/maintenance": "Maintenance",
+  "/renter/rental-history": "Rental History",
   "/renter/messages": "Messages",
   "/renter/documents": "Documents",
   "/renter/notifications": "Notifications",

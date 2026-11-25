@@ -6,6 +6,7 @@ import { HelpCircle, Settings, X } from "lucide-react";
 import { motion } from "framer-motion";
 import { useDashboardNavigation } from "@/hooks/useDashboardNavigation";
 import { SidebarItem } from "../../SidebarItem";
+import { WorkspaceRoleSwitcher } from "../../WorkspaceRoleSwitcher";
 
 function MobileSidebar({
   setMobileSidebarOpen,
@@ -13,8 +14,14 @@ function MobileSidebar({
   setMobileSidebarOpen: (open: boolean) => void;
 }) {
   const pathname = usePathname();
-  const { isAdmin, rootHref, navList, persona, isActive } =
-    useDashboardNavigation(pathname);
+  const {
+    isAdmin,
+    activeWorkspaceRole,
+    rootHref,
+    navList,
+    persona,
+    isActive,
+  } = useDashboardNavigation(pathname);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -96,18 +103,24 @@ function MobileSidebar({
         </nav>
 
         <div className="shrink-0 border-t border-line bg-surface px-5 py-4">
-          <div className="flex items-center gap-3">
-            <div className="grid size-10 shrink-0 place-items-center rounded-full bg-brand-tint text-sm font-bold text-brand-blue">
-              {persona.initials}
-            </div>
-            <div className="min-w-0">
-              <div className="truncate text-[13.5px] font-bold text-ink">
-                {persona.name}
+          <div className="flex items-center justify-between gap-2.5">
+            <div className="flex min-w-0 items-center gap-3">
+              <div className="grid size-10 shrink-0 place-items-center bg-brand-tint text-sm font-bold text-brand-blue">
+                {persona.initials}
               </div>
-              <div className="truncate text-[12.5px] text-faint">
-                {persona.subtitle}
+              <div className="min-w-0">
+                <div className="truncate text-[13.5px] font-bold text-ink">
+                  {persona.name}
+                </div>
+                <div className="truncate text-[12.5px] text-faint">
+                  {persona.subtitle}
+                </div>
               </div>
             </div>
+            <WorkspaceRoleSwitcher
+              currentRole={activeWorkspaceRole}
+              onNavigate={() => setMobileSidebarOpen(false)}
+            />
           </div>
         </div>
       </motion.div>

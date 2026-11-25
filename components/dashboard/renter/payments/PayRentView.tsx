@@ -1,56 +1,179 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useForm, useWatch } from "react-hook-form";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import type { PaymentMethod } from "@/data/payment-methods-data";
 import { usePayRent } from "@/hooks/mutate/useRenterMutations";
-import { PaymentMethod } from "@/data/payment-methods-data";
+import { useRenterWorkspace } from "@/store/renter-workspace.store";
+import { summarizeRenterPayments } from "@/utils/renter-helpers";
 import { PayRentHeader } from "./PayRentHeader";
 import { PaymentTypeSelector } from "./PaymentTypeSelector";
-import { PaymentAmountSection } from "./PaymentAmountSection";
+import { PaymentAmountCard } from "./PaymentAmountCard";
 import { PaymentConfirmationUpload } from "./PaymentConfirmationUpload";
 import { PayRentFooterActions } from "./PayRentFooterActions";
+
+interface PayRentFormValues {
+  paymentMethod: PaymentMethod;
+  amountRwf: number;
+  phone: string;
+  referenceNumber: string;
+}
 
 export function PayRentView() {
   const router = useRouter();
   const payRentMutation = usePayRent();
+  const profile = useRenterWorkspace((s) => s.profile);
+  const property = useRenterWorkspace((s) => s.property);
+  const payments = useRenterWorkspace((s) => s.payments);
+  const { pendingPayment } = summarizeRenterPayments(payments);
 
-  const [paymentMethod, setPaymentMethod] =
-    useState<PaymentMethod>("MTN Mobile Money");
-  const [amountRwf, setAmountRwf] = useState<number>(250000);
-  const [phone, setPhone] = useState<string>("0788123456");
-  const [referenceNumber, setReferenceNumber] = useState<string>("");
-  const [, setReceiptFile] = useState<File | null>(null);
+  const [receiptFile, setReceiptFile] = useState<File | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const defaultAmount = pendingPayment?.amountRwf ?? property.monthlyRentRwf;
+  const targetPeriod = pendingPayment?.period ?? "Current Month";
+
+  const {
+    register,
+    control,
+    setValue,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<PayRentFormValues>({
+    defaultValues: {
+      paymentMethod: "MTN Mobile Money",
+      amountRwf: defaultAmount,
+      phone: profile.phone,
+      referenceNumber: "",
+    },
+  });
+
+  const paymentMethod = useWatch({ control, name: "paymentMethod" });
+  const amountRwf = useWatch({ control, name: "amountRwf" });
+  const isMobileMoney =
+    paymentMethod === "MTN Mobile Money" || paymentMethod === "AIRTEL Money";
+
+  const onSubmit = (vals: PayRentFormValues) => {
     payRentMutation.mutate(
-      { paymentMethod, phone, amountRwf },
+      {
+        paymentId: pendingPayment?.id,
+        paymentMethod: vals.paymentMethod,
+        phone: vals.phone.trim(),
+        amountRwf: Number(vals.amountRwf),
+        referenceNumber: vals.referenceNumber.trim() || undefined,
+        receiptName: receiptFile?.name,
+        period: targetPeriod,
+      },
       { onSuccess: () => router.push("/renter/payments") },
     );
   };
 
   return (
-    <div className="min-h-0 flex-1 overflow-y-auto p-4 pb-16 sm:p-8 sm:pb-20 md:p-10 md:pb-24">
+    <div className="min-h-0 flex-1 overflow-y-auto bg-surface/30 p-4 pb-16 sm:p-8 sm:pb-20 md:p-10 md:pb-24">
       <div className="mx-auto max-w-3xl space-y-6">
         <PayRentHeader />
+
         <form
-          onSubmit={handleSubmit}
-          className="space-y-6 rounded-lg border border-line bg-white p-6 shadow-2xs sm:p-8"
+          noValidate
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-6 border border-line bg-white p-5 shadow-2xs sm:p-8"
         >
           <PaymentTypeSelector
             selected={paymentMethod}
-            onSelect={setPaymentMethod}
+            onSelect={(method) => setValue("paymentMethod", method)}
           />
-          <PaymentAmountSection
-            amountRwf={amountRwf}
-            onAmountChange={setAmountRwf}
-            paymentMethod={paymentMethod}
-            phone={phone}
-            onPhoneChange={setPhone}
-            referenceNumber={referenceNumber}
-            onReferenceChange={setReferenceNumber}
+
+          <PaymentAmountCard
+            amountRwf={Number(amountRwf) || 0}
+            period={targetPeriod}
+            unitNumber={`Unit ${property.unitNumber}`}
           />
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Field>
+              <FieldLabel htmlFor="pay-amount">Amount Paid (RWF) *</FieldLabel>
+              <Input
+                id="pay-amount"
+                type="number"
+                min={1000}
+                step={1000}
+                className="h-10 rounded-none font-ibm"
+                {...register("amountRwf", {
+                  valueAsNumber: true,
+                  validate: (v) =>
+                    (Number.isFinite(v) && v >= 1000) ||
+                    "Enter a valid amount of at least 1,000 RWF.",
+                })}
+              />
+              <FieldError>{errors.amountRwf?.message}</FieldError>
+            </Field>
+
+            {isMobileMoney ? (
+              <Field>
+                <FieldLabel htmlFor="pay-phone">
+                  Mobile Money Phone Number *
+                </FieldLabel>
+                <Input
+                  id="pay-phone"
+                  type="tel"
+                  placeholder="+250 788 123 456"
+                  className="h-10 rounded-none"
+                  {...register("phone", {
+                    validate: (v) =>
+                      !isMobileMoney ||
+                      v.replace(/\s+/g, "").length >= 10 ||
+                      "Enter a valid Mobile Money phone number.",
+                  })}
+                />
+                <FieldError>{errors.phone?.message}</FieldError>
+              </Field>
+            ) : (
+              <Field>
+                <FieldLabel htmlFor="pay-ref">
+                  Bank Transfer Reference *
+                </FieldLabel>
+                <Input
+                  id="pay-ref"
+                  type="text"
+                  placeholder="e.g. BK-984210"
+                  className="h-10 rounded-none"
+                  {...register("referenceNumber", {
+                    validate: (v) =>
+                      isMobileMoney ||
+                      v.trim().length >= 4 ||
+                      "Enter your transaction reference.",
+                  })}
+                />
+                <FieldError>{errors.referenceNumber?.message}</FieldError>
+              </Field>
+            )}
+          </div>
+
+          {isMobileMoney && (
+            <Field>
+              <FieldLabel htmlFor="pay-momo-ref">
+                Transaction Reference (optional)
+              </FieldLabel>
+              <Input
+                id="pay-momo-ref"
+                type="text"
+                placeholder="e.g. TXN-99823"
+                className="h-10 rounded-none"
+                {...register("referenceNumber")}
+              />
+            </Field>
+          )}
+
           <PaymentConfirmationUpload onFileSelect={setReceiptFile} />
+
+          <p className="border-l-2 border-brand-blue bg-brand-tint/30 px-3 py-2 text-xs text-body">
+            Preview mode: submitting records your payment locally and generates a
+            receipt preview. Live MoMo/Airtel settlement requires backend gateway
+            integration.
+          </p>
+
           <PayRentFooterActions isPending={payRentMutation.isPending} />
         </form>
       </div>

@@ -10,11 +10,14 @@ export interface OverviewStatCardItem {
   accent?: "default" | "success" | "warning" | "danger";
 }
 
-const ACCENT_VALUE: Record<NonNullable<OverviewStatCardItem["accent"]>, string> = {
+const ACCENT_VALUE: Record<
+  NonNullable<OverviewStatCardItem["accent"]>,
+  string
+> = {
   default: "text-ink",
   success: "text-emerald-700",
   warning: "text-amber-700",
-  danger: "text-rose-700",
+  danger: "text-red-600",
 };
 
 export function OverviewStatGrid({ items }: { items: OverviewStatCardItem[] }) {
@@ -37,7 +40,7 @@ export function OverviewStatGrid({ items }: { items: OverviewStatCardItem[] }) {
 
             <div className="mt-3">
               <p
-                className={`font-ibm text-2xl font-bold tracking-tight ${
+                className={`text-2xl font-bold tracking-tight ${
                   ACCENT_VALUE[item.accent ?? "default"]
                 }`}
               >
@@ -48,12 +51,14 @@ export function OverviewStatGrid({ items }: { items: OverviewStatCardItem[] }) {
                 <div className="mt-2.5 h-1.5 w-full overflow-hidden bg-surface">
                   <div
                     className="h-full bg-emerald-600 transition-all"
-                    style={{ width: `${Math.min(100, Math.max(0, item.progressPercent))}%` }}
+                    style={{
+                      width: `${Math.min(100, Math.max(0, item.progressPercent))}%`,
+                    }}
                   />
                 </div>
               )}
 
-              <p className="mt-2 text-xs leading-relaxed text-body">
+              <p className="mt-2 text-[12.5px] md:text-[14px] bgp.leading-relaxed text-body">
                 {item.helper}
               </p>
             </div>
