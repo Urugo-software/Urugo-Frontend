@@ -49,7 +49,11 @@ export function LandlordGreetingHeader({
             icon: Building2,
             primary: true,
           },
-          { label: "Add Renter", href: "/landlord/renters/add", icon: UserPlus },
+          {
+            label: "Add Renter",
+            href: "/landlord/renters/add",
+            icon: UserPlus,
+          },
           { label: "Agreements", href: "/landlord/agreements", icon: FileText },
           { label: "Payments", href: "/landlord/payments", icon: CreditCard },
         ];
@@ -61,7 +65,9 @@ export function LandlordGreetingHeader({
           <h2 className="text-2xl font-bold tracking-tight text-ink sm:text-3xl">
             Good morning, {firstName}
           </h2>
-          <span aria-hidden="true" className="text-line">&middot;</span>
+          <span aria-hidden="true" className="text-line">
+            &middot;
+          </span>
           <Link
             href="/landlord/settings?tab=service"
             className="hover:underline"
