@@ -3,7 +3,6 @@ import {
   fetchRenterOverview,
   fetchRenterProperty,
   fetchRenterPayments,
-  fetchRenterElectricity,
   fetchRenterMaintenance,
   fetchRenterDocuments,
   fetchRenterNotifications,
@@ -28,13 +27,6 @@ export function useRenterPayments() {
   return useQuery({
     queryKey: ["renter-payments"],
     queryFn: fetchRenterPayments,
-  });
-}
-
-export function useRenterElectricity() {
-  return useQuery({
-    queryKey: ["renter-electricity"],
-    queryFn: fetchRenterElectricity,
   });
 }
 

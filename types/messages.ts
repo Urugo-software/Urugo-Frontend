@@ -14,5 +14,6 @@ export interface ConversationContact {
   property: string;
   unit: string;
   phone: string;
+  email?: string;
   online: boolean;
 }
