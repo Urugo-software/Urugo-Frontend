@@ -12,24 +12,36 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { useAdminWorkspace } from "@/store/admin-workspace.store";
+import type { SystemRole } from "@/types/admin";
 
 interface WorkspaceRoleSwitcherProps {
   currentRole: "renter" | "landlord" | "home_seeker" | "admin";
   onNavigate?: () => void;
 }
 
-const ROLE_LINKS = [
-  { id: "renter", labelKey: "renterDashboard", href: "/renter" },
-  { id: "landlord", labelKey: "landlordDashboard", href: "/landlord" },
-] as const;
+const ROLE_LINKS: ReadonlyArray<{
+  id: "admin" | "landlord" | "renter";
+  systemRole: SystemRole;
+  labelKey: "adminDashboard" | "landlordDashboard" | "renterDashboard";
+  href: string;
+}> = [
+  { id: "admin", systemRole: "ADMIN", labelKey: "adminDashboard", href: "/admin" },
+  {
+    id: "landlord",
+    systemRole: "LANDLORD",
+    labelKey: "landlordDashboard",
+    href: "/landlord",
+  },
+  { id: "renter", systemRole: "RENTER", labelKey: "renterDashboard", href: "/renter" },
+];
 
 export function WorkspaceRoleSwitcher({
   currentRole,
   onNavigate,
 }: WorkspaceRoleSwitcherProps) {
   const t = useTranslations("common.workspace");
-
-  if (currentRole === "admin") return null;
+  const setActiveRole = useAdminWorkspace((s) => s.setActiveRole);
 
   return (
     <DropdownMenu>
@@ -61,7 +73,10 @@ export function WorkspaceRoleSwitcher({
               render={
                 <Link
                   href={role.href}
-                  onClick={onNavigate}
+                  onClick={() => {
+                    setActiveRole(role.systemRole);
+                    onNavigate?.();
+                  }}
                   className={cn(
                     "block w-full rounded-none px-2.5 py-2 text-xs font-semibold",
                     active

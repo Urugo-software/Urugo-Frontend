@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { CheckCheck } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { AdminConsentBanner } from "@/components/dashboard/admin/shared/AdminConsentBanner";
 import { DashboardSearchInput } from "@/components/shared/DashboardSearchInput";
 import SectionLoading from "@/components/shared/SectionLoading";
 import SectionError from "@/components/shared/SectionError";
@@ -59,6 +60,8 @@ export function RenterNotificationsView() {
   return (
     <div className="min-h-0 flex-1 overflow-y-auto bg-surface/30 p-4 pb-16 sm:p-8 sm:pb-20 md:p-10 md:pb-24">
       <div className=" max-w-7xl space-y-6">
+        <AdminConsentBanner party="renter" />
+
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="flex flex-wrap items-baseline gap-3">

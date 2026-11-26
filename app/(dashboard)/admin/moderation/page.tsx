@@ -1,2 +1,5 @@
-import { AdminQueueView } from "@/components/dashboard/admin/AdminQueueView";
-export default function AdminModerationPage() { return <AdminQueueView kind="moderation" />; }
+import { AdminCasesView } from "@/components/dashboard/admin/cases/AdminCasesView";
+
+export default function AdminModerationPage() {
+  return <AdminCasesView kind="moderation" />;
+}

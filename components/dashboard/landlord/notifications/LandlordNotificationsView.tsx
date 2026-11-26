@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { AdminConsentBanner } from "@/components/dashboard/admin/shared/AdminConsentBanner";
 import { DashboardSearchInput } from "@/components/shared/DashboardSearchInput";
 import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
 import { NotificationList } from "./NotificationList";
@@ -72,6 +73,8 @@ export function LandlordNotificationsView() {
   return (
     <div className="min-h-0 flex-1 overflow-y-auto bg-surface/30 p-4 pb-16 sm:p-8 sm:pb-20 md:p-10 md:pb-24">
       <div className="max-w-7xl space-y-6">
+        <AdminConsentBanner party="landlord" />
+
         <NotificationsHeader
           unreadCount={unreadCount}
           unreadOnly={unreadOnly}

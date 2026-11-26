@@ -1,13 +1,19 @@
 "use client";
 
 import { useMemo } from "react";
-import { adminDirectories } from "@/data/admin-dashboard-data";
 import { notificationsData } from "@/data/home-seeker-data";
+import { useAdminWorkspace } from "@/store/admin-workspace.store";
 import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
 import { useRenterWorkspace } from "@/store/renter-workspace.store";
 import type { HeaderNotificationPreviewItem } from "@/types/dashboard-notifications.types";
 
 export function useDashboardNotifications(pathname: string) {
+  const adminNotifications = useAdminWorkspace((s) => s.notifications);
+  const markAdminRead = useAdminWorkspace((s) => s.markNotificationRead);
+  const markAllAdminRead = useAdminWorkspace(
+    (s) => s.markAllNotificationsRead,
+  );
+
   const landlordNotifications = useLandlordWorkspace((s) => s.notifications);
   const serviceMode = useLandlordWorkspace((s) => s.serviceMode);
   const markLandlordRead = useLandlordWorkspace((s) => s.markNotificationRead);
@@ -21,6 +27,7 @@ export function useDashboardNotifications(pathname: string) {
     (s) => s.markAllNotificationsRead,
   );
 
+  const isAdmin = pathname.startsWith("/admin");
   const isLandlord = pathname.startsWith("/landlord");
   const isRenter = pathname.startsWith("/renter");
 
@@ -63,18 +70,17 @@ export function useDashboardNotifications(pathname: string) {
         categoryLabel: n.category,
         href: n.href || "/renter/notifications",
       }));
-    } else if (pathname.startsWith("/admin")) {
+    } else if (isAdmin) {
       viewAllHref = "/admin/notifications";
-      const adminRows = adminDirectories.notifications?.rows || [];
-      unreadCount = adminRows.filter((r) => r.delivery !== "Delivered").length;
-      items = adminRows.slice(0, 4).map((row, idx) => ({
-        id: `admin-notif-${idx}`,
-        title: row.title || "Admin Notification",
-        message: `${row.audience || "All users"} · ${row.channel || "Platform"}`,
-        timestamp: row.created || "Recently",
-        isUnread: row.delivery !== "Delivered",
-        categoryLabel: row.audience,
-        href: "/admin/notifications",
+      unreadCount = adminNotifications.filter((n) => n.isUnread).length;
+      items = adminNotifications.slice(0, 5).map((n) => ({
+        id: n.id,
+        title: n.title,
+        message: n.message,
+        timestamp: n.createdAt,
+        isUnread: n.isUnread,
+        categoryLabel: n.audience,
+        href: n.href,
       }));
     } else {
       viewAllHref = "/home-seeker/notifications";
@@ -95,26 +101,33 @@ export function useDashboardNotifications(pathname: string) {
       unreadCount,
       hasUnread: unreadCount > 0,
       viewAllHref,
-      onMarkRead: isLandlord
-        ? markLandlordRead
-        : isRenter
-          ? markRenterRead
-          : undefined,
-      onMarkAllRead: isLandlord
-        ? markAllLandlordRead
-        : isRenter
-          ? markAllRenterRead
-          : undefined,
+      onMarkRead: isAdmin
+        ? markAdminRead
+        : isLandlord
+          ? markLandlordRead
+          : isRenter
+            ? markRenterRead
+            : undefined,
+      onMarkAllRead: isAdmin
+        ? markAllAdminRead
+        : isLandlord
+          ? markAllLandlordRead
+          : isRenter
+            ? markAllRenterRead
+            : undefined,
     };
   }, [
+    adminNotifications,
+    isAdmin,
     isLandlord,
     isRenter,
     landlordNotifications,
+    markAdminRead,
+    markAllAdminRead,
     markAllLandlordRead,
     markAllRenterRead,
     markLandlordRead,
     markRenterRead,
-    pathname,
     renterNotifications,
     serviceMode,
   ]);

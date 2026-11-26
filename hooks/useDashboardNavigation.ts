@@ -3,13 +3,14 @@
 import { useMemo } from "react";
 import { useTranslations } from "next-intl";
 import {
-  adminNavItems,
+  getAdminNavItems,
   getLandlordNavItems,
   getRenterNavItems,
   isNavItemActive,
   roleNavItems,
   type NavItemConfig,
 } from "@/data/dashboard-data";
+import { useAdminWorkspace } from "@/store/admin-workspace.store";
 import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
 import { useRenterWorkspace } from "@/store/renter-workspace.store";
 import type { RoleType } from "@/types";
@@ -35,6 +36,12 @@ export function useDashboardNavigation(
   const renterMaintenance = useRenterWorkspace((s) => s.maintenance);
   const renterNotifications = useRenterWorkspace((s) => s.notifications);
 
+  const currentAdminName = useAdminWorkspace((s) => s.currentAdminName);
+  const adminApprovals = useAdminWorkspace((s) => s.approvals);
+  const adminProperties = useAdminWorkspace((s) => s.properties);
+  const adminCases = useAdminWorkspace((s) => s.cases);
+  const adminNotifications = useAdminWorkspace((s) => s.notifications);
+
   const isAdmin = pathname.startsWith("/admin");
   const isLandlord = pathname.startsWith("/landlord");
   const isRenter = pathname.startsWith("/renter");
@@ -49,7 +56,25 @@ export function useDashboardNavigation(
     : `/${derivedRole === "home_seeker" ? "home-seeker" : derivedRole}`;
 
   const rawNavList: NavItemConfig[] = useMemo(() => {
-    if (isAdmin) return adminNavItems;
+    if (isAdmin) {
+      return getAdminNavItems({
+        approvals: adminApprovals.filter(
+          (a) => a.status === "Pending Consent" || a.status === "Approved",
+        ).length,
+        verification: adminProperties.filter(
+          (p) =>
+            p.verification === "Pending" ||
+            p.verification === "Needs Information",
+        ).length,
+        complaints: adminCases.filter(
+          (c) =>
+            c.kind === "complaint" &&
+            c.status !== "Resolved" &&
+            c.status !== "Rejected",
+        ).length,
+        notifications: adminNotifications.filter((n) => n.isUnread).length,
+      });
+    }
 
     if (isLandlord) {
       const relevantNotifications = landlordNotifications.filter(
@@ -102,6 +127,10 @@ export function useDashboardNavigation(
 
     return roleNavItems[derivedRole] || roleNavItems.home_seeker;
   }, [
+    adminApprovals,
+    adminCases,
+    adminNotifications,
+    adminProperties,
     derivedRole,
     inquiries,
     isAdmin,
@@ -129,8 +158,8 @@ export function useDashboardNavigation(
 
   const persona = isAdmin
     ? {
-        initials: "AD",
-        name: "Urugo Admin",
+        initials: getInitials(currentAdminName),
+        name: currentAdminName,
         subtitle: tWorkspace("adminSubtitle"),
       }
     : isLandlord

@@ -1,5 +1,5 @@
-﻿import { AdminDirectoryPage } from "@/components/dashboard/admin/AdminDirectoryPage";
+﻿import { AdminAuditLogsView } from "@/components/dashboard/admin/audit/AdminAuditLogsView";
 
 export default function AdminAuditLogsPage() {
-  return <AdminDirectoryPage directory="audit-logs" />;
+  return <AdminAuditLogsView />;
 }
