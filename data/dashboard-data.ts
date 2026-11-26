@@ -18,6 +18,8 @@ import {
   Settings,
   History,
   Compass,
+  CheckSquare,
+  Globe,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { RoleType } from "@/types";
@@ -26,6 +28,7 @@ import type { LandlordServiceMode } from "@/types/landlord";
 export interface NavItemConfig {
   label: string;
   labelKey?: string;
+  sectionKey?: string;
   href: string;
   icon: LucideIcon;
   badge?: number;
@@ -236,22 +239,40 @@ export const roleNavItems: Record<RoleType, NavItemConfig[]> = {
   ],
 };
 
-export const adminNavItems: NavItemConfig[] = [
-  { label: "Overview", labelKey: "overview", href: "/admin", icon: LayoutDashboard },
-  { label: "Users", labelKey: "users", href: "/admin/users", icon: User },
-  { label: "Properties", labelKey: "properties", href: "/admin/properties", icon: Building2 },
-  { label: "Verification", labelKey: "verification", href: "/admin/property-verification", icon: ShieldCheck },
-  { label: "Leases", labelKey: "leases", href: "/admin/leases", icon: ScrollText },
-  { label: "Payments", labelKey: "payments", href: "/admin/payments", icon: CreditCard },
-  { label: "Complaints", labelKey: "complaints", href: "/admin/complaints", icon: MessageSquare },
-  { label: "Renter's History", labelKey: "renterHistory", href: "/admin/renter-history", icon: FileText },
-  { label: "Analytics", labelKey: "analytics", href: "/admin/analytics", icon: Calendar },
-  { label: "Notifications", labelKey: "notifications", href: "/admin/notifications", icon: Bell },
-  { label: "Moderation", labelKey: "moderation", href: "/admin/moderation", icon: Wrench },
-  { label: "Audit Logs", labelKey: "auditLogs", href: "/admin/audit-logs", icon: Clock },
-  { label: "Admin Management", labelKey: "adminManagement", href: "/admin/admin-management", icon: User },
-  { label: "Settings", labelKey: "settings", href: "/admin/settings", icon: Settings },
-];
+export interface AdminBadgeCounts {
+  approvals?: number;
+  verification?: number;
+  complaints?: number;
+  moderation?: number;
+  notifications?: number;
+}
+
+export function getAdminNavItems(
+  badges: AdminBadgeCounts = {},
+): NavItemConfig[] {
+  const badge = (n?: number) => (n && n > 0 ? n : undefined);
+
+  return [
+    { label: "Overview", labelKey: "overview", sectionKey: "adminSectionOverview", href: "/admin", icon: LayoutDashboard },
+    { label: "Analytics", labelKey: "analytics", sectionKey: "adminSectionOverview", href: "/admin/analytics", icon: Calendar },
+    { label: "Approvals", labelKey: "approvals", sectionKey: "adminSectionOperations", href: "/admin/approvals", icon: CheckSquare, badge: badge(badges.approvals) },
+    { label: "Verification", labelKey: "verification", sectionKey: "adminSectionOperations", href: "/admin/property-verification", icon: ShieldCheck, badge: badge(badges.verification) },
+    { label: "Complaints", labelKey: "complaints", sectionKey: "adminSectionOperations", href: "/admin/complaints", icon: MessageSquare, badge: badge(badges.complaints) },
+    { label: "Moderation", labelKey: "moderation", sectionKey: "adminSectionOperations", href: "/admin/moderation", icon: Wrench, badge: badge(badges.moderation) },
+    { label: "Users", labelKey: "users", sectionKey: "adminSectionDirectory", href: "/admin/users", icon: User },
+    { label: "Properties", labelKey: "properties", sectionKey: "adminSectionDirectory", href: "/admin/properties", icon: Building2 },
+    { label: "Leases", labelKey: "leases", sectionKey: "adminSectionDirectory", href: "/admin/leases", icon: ScrollText },
+    { label: "Renter's History", labelKey: "renterHistory", sectionKey: "adminSectionDirectory", href: "/admin/renter-history", icon: FileText },
+    { label: "Payments", labelKey: "payments", sectionKey: "adminSectionFinance", href: "/admin/payments", icon: CreditCard },
+    { label: "Notifications", labelKey: "notifications", sectionKey: "adminSectionFinance", href: "/admin/notifications", icon: Bell, badge: badge(badges.notifications) },
+    { label: "Public Content", labelKey: "publicContent", sectionKey: "adminSectionGovernance", href: "/admin/public-content", icon: Globe },
+    { label: "Audit Logs", labelKey: "auditLogs", sectionKey: "adminSectionGovernance", href: "/admin/audit-logs", icon: Clock },
+    { label: "Admin Management", labelKey: "adminManagement", sectionKey: "adminSectionGovernance", href: "/admin/admin-management", icon: User },
+    { label: "Settings", labelKey: "settings", sectionKey: "adminSectionGovernance", href: "/admin/settings", icon: Settings },
+  ];
+}
+
+export const adminNavItems: NavItemConfig[] = getAdminNavItems();
 
 export interface SavedPropertyItem {
   id: string;

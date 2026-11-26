@@ -48,7 +48,7 @@
     "backToHome": "Back to homepage",
     "signIn": "Sign in",
     "signUp": "Sign up",
-    "listYourProperty": "List your property"
+    "listYourProperty": "List property"
   },
   "states": {
     "loading": "Loading...",
@@ -75,7 +75,7 @@
     "properties": "Properties"
   },
   "navigation": {
-    "navigation": "Navigation",
+    "navigation": "MENU",
     "dashboardNavigation": "Dashboard navigation",
     "openMobileNavigation": "Open mobile navigation",
     "closeMobileMenu": "Close mobile menu",
@@ -114,7 +114,14 @@
     "analytics": "Analytics",
     "moderation": "Moderation",
     "auditLogs": "Audit Logs",
-    "adminManagement": "Admin Management"
+    "adminManagement": "Admin Management",
+    "approvals": "Approvals",
+    "publicContent": "Public Content",
+    "adminSectionOverview": "Overview & Insights",
+    "adminSectionOperations": "Operations & Approvals",
+    "adminSectionDirectory": "Platform Directory",
+    "adminSectionFinance": "Finance & Comms",
+    "adminSectionGovernance": "Governance & Control"
   },
   "dashboardTitles": {
     "homeSeekerDashboard": "Dashboard",
@@ -162,17 +169,26 @@
     "renterSettings": "Settings",
     "renterHelp": "Help Center",
     "adminOverview": "Overview",
+    "adminApprovals": "Approvals",
+    "adminApprovalDetails": "Approval Details",
     "adminUsers": "Users",
+    "adminUserDetails": "User Details",
     "adminProperties": "Properties",
+    "adminPropertyDetails": "Property Details",
     "adminVerification": "Property Verification",
     "adminLeases": "Leases",
+    "adminLeaseDetails": "Lease Details",
     "adminPayments": "Payments",
     "adminPaymentDetails": "Transaction Details",
     "adminComplaints": "Complaints",
+    "adminComplaintDetails": "Complaint Details",
     "adminRenterHistory": "Renter History",
+    "adminRenterHistoryDetails": "Rental History Details",
+    "adminPublicContent": "Public Content",
     "adminAnalytics": "Analytics",
     "adminNotifications": "Notifications",
     "adminModeration": "Moderation",
+    "adminModerationDetails": "Moderation Report",
     "adminAuditLogs": "Audit Logs",
     "adminManagement": "Admin Management",
     "adminSettings": "Settings"
@@ -180,6 +196,7 @@
   "workspace": {
     "switchRoleAria": "Switch dashboard workspace",
     "switchWorkspace": "Switch Workspace",
+    "adminDashboard": "Admin Dashboard",
     "renterDashboard": "Renter Dashboard",
     "landlordDashboard": "Landlord Dashboard",
     "adminSubtitle": "Platform administrator",
@@ -247,6 +264,23 @@
     "awaitingSignature": "Awaiting Signature",
     "noticeGiven": "Notice Given",
     "ended": "Ended",
-    "settled": "Settled"
+    "settled": "Settled",
+    "restricted": "Restricted",
+    "disabled": "Disabled",
+    "needsInformation": "Needs Information",
+    "underReview": "Under Review",
+    "waitingForInformation": "Waiting for Information",
+    "escalated": "Escalated",
+    "successful": "Successful",
+    "failed": "Failed",
+    "refunded": "Refunded",
+    "endingSoon": "Ending Soon",
+    "pendingConsent": "Pending Consent",
+    "executed": "Executed",
+    "matched": "Matched",
+    "awaitingProvider": "Awaiting Provider",
+    "mismatch": "Mismatch",
+    "pendingBackendExecution": "Pending Backend Execution",
+    "simulatedInApp": "Simulated (In-app only)"
   }
 }

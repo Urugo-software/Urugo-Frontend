@@ -1,5 +1,5 @@
-﻿import { AdminDirectoryPage } from "@/components/dashboard/admin/AdminDirectoryPage";
+﻿import { AdminAccountsView } from "@/components/dashboard/admin/users/AdminAccountsView";
 
 export default function AdminAdminManagementPage() {
-  return <AdminDirectoryPage directory="admin-management" />;
+  return <AdminAccountsView />;
 }

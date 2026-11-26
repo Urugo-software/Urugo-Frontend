@@ -1,5 +1,5 @@
-﻿import { AdminDirectoryPage } from "@/components/dashboard/admin/AdminDirectoryPage";
+﻿import { AdminRenterHistoryView } from "@/components/dashboard/admin/history/AdminRenterHistoryView";
 
 export default function AdminRenterHistoryPage() {
-  return <AdminDirectoryPage directory="renter-history" />;
+  return <AdminRenterHistoryView />;
 }

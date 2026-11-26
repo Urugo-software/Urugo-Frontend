@@ -1,7 +1,7 @@
 import type { AppLocale } from "./config";
 
 export async function loadLocaleMessages(locale: AppLocale) {
-  const [common, publicSite, properties, auth, landlord, renter] =
+  const [common, publicSite, properties, auth, landlord, renter, admin] =
     await Promise.all([
       import(`@/messages/${locale}/common.json`),
       import(`@/messages/${locale}/public.json`),
@@ -9,6 +9,7 @@ export async function loadLocaleMessages(locale: AppLocale) {
       import(`@/messages/${locale}/auth.json`),
       import(`@/messages/${locale}/landlord.json`),
       import(`@/messages/${locale}/renter.json`),
+      import(`@/messages/${locale}/admin.json`),
     ]);
 
   return {
@@ -18,5 +19,6 @@ export async function loadLocaleMessages(locale: AppLocale) {
     auth: auth.default,
     landlord: landlord.default,
     renter: renter.default,
+    admin: admin.default,
   };
 }

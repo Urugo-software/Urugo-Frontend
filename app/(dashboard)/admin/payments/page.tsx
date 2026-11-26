@@ -1,5 +1,5 @@
-﻿import { AdminDirectoryPage } from "@/components/dashboard/admin/AdminDirectoryPage";
+﻿import { AdminPaymentsView } from "@/components/dashboard/admin/payments/AdminPaymentsView";
 
 export default function AdminPaymentsPage() {
-  return <AdminDirectoryPage directory="payments" />;
+  return <AdminPaymentsView />;
 }

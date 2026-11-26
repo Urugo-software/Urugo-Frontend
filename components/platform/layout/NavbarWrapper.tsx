@@ -8,13 +8,13 @@ function NavbarWrapper() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <>
+    <div className="relative">
       <Navbar
         mobileMenuOpen={mobileMenuOpen}
         setMobileMenuOpen={setMobileMenuOpen}
       />
       {mobileMenuOpen && <MobileMenu setMobileMenuOpen={setMobileMenuOpen} />}
-    </>
+    </div>
   );
 }
 

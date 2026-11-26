@@ -45,6 +45,7 @@ export const DASHBOARD_EXACT_TITLES: Record<string, string> = {
 
   // Admin
   "/admin": "Overview",
+  "/admin/approvals": "Approvals",
   "/admin/users": "Users",
   "/admin/properties": "Properties",
   "/admin/property-verification": "Property verification",
@@ -52,6 +53,7 @@ export const DASHBOARD_EXACT_TITLES: Record<string, string> = {
   "/admin/payments": "Payments",
   "/admin/complaints": "Complaints",
   "/admin/renter-history": "Renter's History",
+  "/admin/public-content": "Public Content",
   "/admin/analytics": "Analytics",
   "/admin/notifications": "Notifications",
   "/admin/moderation": "Moderation",
@@ -69,7 +71,14 @@ const DASHBOARD_PATTERN_TITLES: Array<{ pattern: RegExp; title: string }> = [
   { pattern: /^\/landlord\/agreements\/[^/]+$/, title: "Agreement Details" },
   { pattern: /^\/landlord\/tenancies\/[^/]+$/, title: "Tenancy Details" },
   { pattern: /^\/landlord\/renter-history\/[^/]+$/, title: "Renter History Details" },
+  { pattern: /^\/admin\/approvals\/[^/]+$/, title: "Approval Details" },
+  { pattern: /^\/admin\/users\/[^/]+$/, title: "User Details" },
+  { pattern: /^\/admin\/properties\/[^/]+$/, title: "Property Details" },
+  { pattern: /^\/admin\/leases\/[^/]+$/, title: "Lease Details" },
+  { pattern: /^\/admin\/renter-history\/[^/]+$/, title: "Rental History Details" },
   { pattern: /^\/admin\/payments\/[^/]+$/, title: "Transaction Details" },
+  { pattern: /^\/admin\/complaints\/[^/]+$/, title: "Complaint Details" },
+  { pattern: /^\/admin\/moderation\/[^/]+$/, title: "Moderation Report" },
 ];
 
 function normalizePathname(pathname: string): string {
@@ -131,6 +140,7 @@ export const DASHBOARD_EXACT_TITLE_KEYS: Record<string, string> = {
   "/renter/settings": "renterSettings",
   "/renter/help-center": "renterHelp",
   "/admin": "adminOverview",
+  "/admin/approvals": "adminApprovals",
   "/admin/users": "adminUsers",
   "/admin/properties": "adminProperties",
   "/admin/property-verification": "adminVerification",
@@ -138,6 +148,7 @@ export const DASHBOARD_EXACT_TITLE_KEYS: Record<string, string> = {
   "/admin/payments": "adminPayments",
   "/admin/complaints": "adminComplaints",
   "/admin/renter-history": "adminRenterHistory",
+  "/admin/public-content": "adminPublicContent",
   "/admin/analytics": "adminAnalytics",
   "/admin/notifications": "adminNotifications",
   "/admin/moderation": "adminModeration",
@@ -155,7 +166,14 @@ const DASHBOARD_PATTERN_TITLE_KEYS: Array<{ pattern: RegExp; key: string }> = [
   { pattern: /^\/landlord\/agreements\/[^/]+$/, key: "landlordAgreementDetails" },
   { pattern: /^\/landlord\/tenancies\/[^/]+$/, key: "landlordTenancyDetails" },
   { pattern: /^\/landlord\/renter-history\/[^/]+$/, key: "landlordRenterHistoryDetails" },
+  { pattern: /^\/admin\/approvals\/[^/]+$/, key: "adminApprovalDetails" },
+  { pattern: /^\/admin\/users\/[^/]+$/, key: "adminUserDetails" },
+  { pattern: /^\/admin\/properties\/[^/]+$/, key: "adminPropertyDetails" },
+  { pattern: /^\/admin\/leases\/[^/]+$/, key: "adminLeaseDetails" },
+  { pattern: /^\/admin\/renter-history\/[^/]+$/, key: "adminRenterHistoryDetails" },
   { pattern: /^\/admin\/payments\/[^/]+$/, key: "adminPaymentDetails" },
+  { pattern: /^\/admin\/complaints\/[^/]+$/, key: "adminComplaintDetails" },
+  { pattern: /^\/admin\/moderation\/[^/]+$/, key: "adminModerationDetails" },
 ];
 
 export function resolveDashboardTitleKey(

@@ -55,6 +55,23 @@ const STATUS_KEY_MAP: Record<string, string> = {
   "notice given": "noticeGiven",
   ended: "ended",
   settled: "settled",
+  restricted: "restricted",
+  disabled: "disabled",
+  "needs information": "needsInformation",
+  "under review": "underReview",
+  "waiting for information": "waitingForInformation",
+  escalated: "escalated",
+  successful: "successful",
+  failed: "failed",
+  refunded: "refunded",
+  "ending soon": "endingSoon",
+  "pending consent": "pendingConsent",
+  executed: "executed",
+  matched: "matched",
+  "awaiting provider": "awaitingProvider",
+  mismatch: "mismatch",
+  "pending backend execution": "pendingBackendExecution",
+  "simulated (in-app only)": "simulatedInApp",
 };
 
 export function getStatusTranslationKey(label: string): string | null {

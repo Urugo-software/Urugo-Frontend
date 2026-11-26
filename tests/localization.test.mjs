@@ -34,6 +34,7 @@ const NAMESPACES = [
   "auth",
   "landlord",
   "renter",
+  "admin",
 ];
 
 function flattenMessages(obj, prefix = "") {

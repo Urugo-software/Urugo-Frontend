@@ -1,20 +1,245 @@
-import { LockKeyhole, Bell, CreditCard, ShieldCheck, Sparkles, Globe2 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AdminPageHeading } from "./AdminPageHeading";
+"use client";
 
-const groups = [
-  { title: "Platform", icon: Globe2, note: "Public identity and regional defaults", rows: [["Platform name", "Urugo"], ["Currency", "Rwandan franc (RWF)"], ["Default location", "Kigali, Rwanda"], ["Maintenance mode", "Off"]] },
-  { title: "Payments", icon: CreditCard, note: "Provider availability and settlement", rows: [["Providers", "MTN MoMo, Airtel Money, Bank of Kigali"], ["Transaction fees", "Managed by finance"], ["Settlement currency", "RWF"]] },
-  { title: "Notifications", icon: Bell, note: "Delivery channels used by the platform", rows: [["Email delivery", "Enabled"], ["SMS delivery", "Enabled"], ["Templates", "12 active"]] },
-  { title: "Verification", icon: ShieldCheck, note: "Required checks for accounts and listings", rows: [["Landlord identity", "National ID required"], ["Property documents", "Ownership proof required"], ["Review queue", "86 awaiting review"]] },
-  { title: "AI services", icon: Sparkles, note: "Service configuration and usage limits", rows: [["Provider", "Configured"], ["Credentials", "Protected"], ["Usage limits", "Managed by platform"]] },
-];
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { LockKeyhole } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useAdminWorkspace } from "@/store/admin-workspace.store";
+import type { AdminPlatformSettings } from "@/types/admin";
+import { AdminReasonModal } from "./shared/AdminReasonModal";
+import { AdminShellSection } from "./shared/AdminShellSection";
 
-function SettingsGroup({ group }: { group: typeof groups[number] }) {
-  const Icon = group.icon;
-  return <Card className="gap-0 rounded-lg py-0 shadow-xs ring-line"><CardHeader className="flex flex-row items-center gap-3 border-b border-line py-4"><span className="grid size-9 place-items-center rounded-md bg-surface text-body"><Icon className="size-4" /></span><div><CardTitle className="text-[15px]">{group.title}</CardTitle><p className="mt-1 text-[13px] text-body">{group.note}</p></div></CardHeader><CardContent className="divide-y divide-line px-4">{group.rows.map(([label, value]) => <div key={label} className="flex flex-wrap justify-between gap-2 py-3"><span className="text-sm text-body">{label}</span><span className="text-sm font-medium text-ink">{value}</span></div>)}</CardContent></Card>;
+interface SettingsFormValues extends AdminPlatformSettings {
+  reason: string;
 }
 
 export function AdminSettingsView() {
-  return <div className="min-h-0 flex-1 overflow-y-auto"><div className="mx-auto max-w-[1500px] space-y-6 p-4 pb-16 sm:p-8 md:p-10"><AdminPageHeading title="Platform settings" description="Review platform defaults, integrations, and verification requirements." action={<span className="inline-flex items-center gap-2 rounded-md bg-surface px-3 py-2 text-[13px] text-body"><LockKeyhole className="size-3.5" />Sensitive values protected</span>} /><div className="grid gap-5 lg:grid-cols-2">{groups.map((group) => <SettingsGroup key={group.title} group={group} />)}</div><p className="text-[13px] leading-5 text-body">Sample configuration shown for review. Secret credentials are never displayed; changes require a connected admin API.</p></div></div>;
+  const t = useTranslations("admin.settings");
+  const tActions = useTranslations("common.actions");
+  const tCommon = useTranslations("admin.common");
+  const settings = useAdminWorkspace((s) => s.settings);
+  const updateSettings = useAdminWorkspace((s) => s.updatePlatformSettings);
+  const [pendingDraft, setPendingDraft] =
+    useState<AdminPlatformSettings | null>(null);
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<SettingsFormValues>({
+    defaultValues: { ...settings, reason: "" },
+  });
+
+  const onFormSubmit = (values: SettingsFormValues) => {
+    const nextSettings: AdminPlatformSettings = {
+      platformName: values.platformName.trim(),
+      currency: "RWF",
+      defaultLocation: values.defaultLocation.trim(),
+      maintenanceMode: values.maintenanceMode,
+      maintenanceReason: values.maintenanceReason,
+      allowNewRegistrations: values.allowNewRegistrations,
+      requirePropertyVerificationBeforePublic:
+        values.requirePropertyVerificationBeforePublic,
+      requireLandlordIdentityVerification:
+        values.requireLandlordIdentityVerification,
+      disputeNoticeWindowDays: Number(values.disputeNoticeWindowDays),
+    };
+
+    if (nextSettings.maintenanceMode !== settings.maintenanceMode) {
+      setPendingDraft(nextSettings);
+      return;
+    }
+
+    try {
+      updateSettings(nextSettings, values.reason);
+      setValue("reason", "");
+      toast.success(t("savedToast"));
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : tCommon("actionFailed"),
+      );
+    }
+  };
+
+  return (
+    <AdminShellSection
+      title={t("title")}
+      description={t("description")}
+      action={
+        <span className="inline-flex items-center gap-1.5 border border-line bg-white px-3 py-1.5 text-xs font-semibold text-body">
+          <LockKeyhole aria-hidden="true" className="size-3.5" />
+          {t("secretsProtected")}
+        </span>
+      }
+    >
+      <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-6">
+        <section className="grid gap-5 lg:grid-cols-2">
+          <div className="space-y-4 border border-line bg-white p-5 shadow-2xs">
+            <h3 className="border-b border-line pb-3 text-sm font-bold text-ink">
+              {t("platformSection")}
+            </h3>
+            <div>
+              <label className="block text-xs font-semibold text-ink">
+                {t("platformName")}
+              </label>
+              <Input
+                {...register("platformName", {
+                  required: t("platformNameRequired"),
+                })}
+                className="mt-1 h-10 rounded-none border-line bg-white text-sm"
+              />
+              {errors.platformName && (
+                <p className="mt-1 text-xs text-rose-700">
+                  {errors.platformName.message}
+                </p>
+              )}
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-ink">
+                {t("defaultLocation")}
+              </label>
+              <Input
+                {...register("defaultLocation", {
+                  required: t("locationRequired"),
+                })}
+                className="mt-1 h-10 rounded-none border-line bg-white text-sm"
+              />
+              {errors.defaultLocation && (
+                <p className="mt-1 text-xs text-rose-700">
+                  {errors.defaultLocation.message}
+                </p>
+              )}
+            </div>
+            <label className="flex cursor-pointer items-start gap-2.5 border border-line bg-surface/50 p-3 text-xs text-ink">
+              <input
+                type="checkbox"
+                {...register("maintenanceMode")}
+                className="mt-0.5 size-4 accent-rose-700"
+              />
+              <span>
+                <strong className="block">{t("maintenanceMode")}</strong>
+                <span className="text-body">{t("maintenanceModeHelp")}</span>
+              </span>
+            </label>
+          </div>
+
+          <div className="space-y-4 border border-line bg-white p-5 shadow-2xs">
+            <h3 className="border-b border-line pb-3 text-sm font-bold text-ink">
+              {t("policySection")}
+            </h3>
+            <label className="flex cursor-pointer items-center gap-2.5 text-sm text-ink">
+              <input
+                type="checkbox"
+                {...register("allowNewRegistrations")}
+                className="size-4 accent-brand-blue"
+              />
+              {t("allowRegistrations")}
+            </label>
+            <label className="flex cursor-pointer items-center gap-2.5 text-sm text-ink">
+              <input
+                type="checkbox"
+                {...register("requirePropertyVerificationBeforePublic")}
+                className="size-4 accent-brand-blue"
+              />
+              {t("requirePropertyVerify")}
+            </label>
+            <label className="flex cursor-pointer items-center gap-2.5 text-sm text-ink">
+              <input
+                type="checkbox"
+                {...register("requireLandlordIdentityVerification")}
+                className="size-4 accent-brand-blue"
+              />
+              {t("requireLandlordId")}
+            </label>
+            <div>
+              <label className="block text-xs font-semibold text-ink">
+                {t("noticeWindowDays")}
+              </label>
+              <Input
+                type="number"
+                {...register("disputeNoticeWindowDays", {
+                  min: { value: 1, message: t("noticeWindowRange") },
+                  max: { value: 14, message: t("noticeWindowRange") },
+                })}
+                className="mt-1 h-10 w-32 rounded-none border-line bg-white text-sm"
+              />
+              {errors.disputeNoticeWindowDays && (
+                <p className="mt-1 text-xs text-rose-700">
+                  {errors.disputeNoticeWindowDays.message}
+                </p>
+              )}
+            </div>
+          </div>
+        </section>
+
+        <section className="space-y-3 border border-line bg-white p-5 shadow-2xs">
+          <h3 className="text-sm font-bold text-ink">
+            {t("providerStatusTitle")}
+          </h3>
+          <div className="grid gap-3 text-xs sm:grid-cols-3">
+            <div className="border border-line bg-surface/40 p-3">
+              <p className="font-semibold text-ink">{t("paymentProviders")}</p>
+              <p className="mt-1 text-body">MTN MoMo · Airtel Money · Bank</p>
+            </div>
+            <div className="border border-line bg-surface/40 p-3">
+              <p className="font-semibold text-ink">{t("aiServices")}</p>
+              <p className="mt-1 text-body">{t("credentialsHidden")}</p>
+            </div>
+            <div className="border border-line bg-surface/40 p-3">
+              <p className="font-semibold text-ink">{t("externalMessaging")}</p>
+              <p className="mt-1 text-body">{t("inAppOnlyNote")}</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="space-y-3 border border-line bg-white p-5 shadow-2xs">
+          <label className="block text-xs font-semibold text-ink">
+            {t("changeReasonLabel")} *
+          </label>
+          <Input
+            placeholder={t("changeReasonPlaceholder")}
+            {...register("reason", {
+              required: t("reasonRequired"),
+              minLength: { value: 5, message: t("reasonRequired") },
+            })}
+            className="h-10 rounded-none border-line bg-white text-sm"
+          />
+          {errors.reason && (
+            <p className="text-xs text-rose-700">{errors.reason.message}</p>
+          )}
+          <div className="flex justify-end">
+            <Button
+              type="submit"
+              className="h-10 rounded-none bg-ink px-5 text-xs font-semibold text-white"
+            >
+              {tActions("saveChanges")}
+            </Button>
+          </div>
+        </section>
+      </form>
+
+      <AdminReasonModal
+        open={Boolean(pendingDraft)}
+        onClose={() => setPendingDraft(null)}
+        title={t("confirmMaintenanceTitle")}
+        description={t("confirmMaintenanceDesc")}
+        consequenceWarning={t("maintenanceWarning")}
+        confirmLabel={t("applySettings")}
+        isDestructive
+        onSubmitAction={(values) => {
+          if (!pendingDraft) return;
+          updateSettings(
+            { ...pendingDraft, maintenanceReason: values.reason },
+            values.reason,
+          );
+          setValue("reason", "");
+          toast.success(t("savedToast"));
+        }}
+      />
+    </AdminShellSection>
+  );
 }

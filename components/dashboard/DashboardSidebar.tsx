@@ -1,5 +1,6 @@
 "use client";
 
+import { Fragment } from "react";
 import { usePathname } from "next/navigation";
 import { Settings, HelpCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -36,16 +37,29 @@ export function DashboardSidebar({ currentRole }: DashboardSidebarProps) {
         aria-label={tNav("dashboardNavigation")}
         className="mt-4 flex flex-1 flex-col gap-1 overflow-y-auto px-4 pb-4"
       >
-        {navList.map((item) => (
-          <SidebarItem
-            key={item.href}
-            href={item.href}
-            icon={item.icon}
-            label={item.label}
-            badge={item.badge}
-            active={isActive(item.href)}
-          />
-        ))}
+        {navList.map((item, idx) => {
+          const prevSection = idx > 0 ? navList[idx - 1]?.sectionKey : undefined;
+          const showSectionHeader =
+            Boolean(item.sectionKey) && item.sectionKey !== prevSection;
+          return (
+            <Fragment key={item.href}>
+              {showSectionHeader && item.sectionKey && (
+                <div className={idx === 0 ? "px-3 pb-1 pt-1" : "px-3 pb-1 pt-4"}>
+                  <span className="text-[12.5px] font-bold uppercase tracking-widest text-faint">
+                    {tNav(item.sectionKey)}
+                  </span>
+                </div>
+              )}
+              <SidebarItem
+                href={item.href}
+                icon={item.icon}
+                label={item.label}
+                badge={item.badge}
+                active={isActive(item.href)}
+              />
+            </Fragment>
+          );
+        })}
 
         {!isAdmin && (
           <>
