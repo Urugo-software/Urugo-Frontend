@@ -4,6 +4,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef } from "react";
+import { X } from "lucide-react";
+
+import { LanguageSwitcher } from "@/components/shared/LanguageSwitcher";
+import { navItems } from "@/data/navbar-data";
+import { isActivePath } from "@/lib/utils";
+
+const NAV_KEY_BY_HREF = {
+  "/": "home",
+  "/properties": "properties",
+  "/features": "features",
+  "/how-it-works": "howItWorks",
+} as const;
 
 import { LanguageSwitcher } from "@/components/shared/LanguageSwitcher";
 import { navItems } from "@/data/navbar-data";
@@ -51,6 +63,7 @@ function MobileMenu({
     document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("keydown", handleKeyDown);
     return () => {
+      document.body.style.overflow = prevOverflow;
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleKeyDown);
     };
