@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -11,11 +12,29 @@ import { StatusBadge } from "@/components/shared/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAdminWorkspace } from "@/store/admin-workspace.store";
-import type { AdminCaseKind, AdminCaseStatus } from "@/types/admin";
+import type {
+  AdminCaseKind,
+  AdminCaseRecord,
+  AdminCaseStatus,
+} from "@/types/admin";
 import { getAdminStatusTone } from "@/utils/admin-status-tone";
 import { AdminDetailGrid } from "../shared/AdminDetailGrid";
 import { AdminReasonModal } from "../shared/AdminReasonModal";
 import { AdminShellSection } from "../shared/AdminShellSection";
+
+function resolveCaseTargetHref(item: AdminCaseRecord): string {
+  const encodedId = encodeURIComponent(item.targetId);
+  switch (item.targetType) {
+    case "property":
+      return `/admin/properties/${encodedId}`;
+    case "lease":
+      return `/admin/leases/${encodedId}`;
+    case "user":
+      return `/admin/users/${encodedId}`;
+    case "payment":
+      return `/admin/payments/${encodedId}`;
+  }
+}
 
 export function AdminCaseDetailView({
   caseId,
@@ -27,12 +46,13 @@ export function AdminCaseDetailView({
   const t = useTranslations(
     kind === "complaint" ? "admin.complaints" : "admin.moderation",
   );
+  const tCommon = useTranslations("admin.common");
   const cases = useAdminWorkspace((s) => s.cases);
   const users = useAdminWorkspace((s) => s.users);
   const updateCase = useAdminWorkspace((s) => s.updateCaseRecord);
   const [nextStatus, setNextStatus] = useState<AdminCaseStatus | null>(null);
 
-  const item = cases.find((c) => c.id === caseId);
+  const item = cases.find((c) => c.id === caseId && c.kind === kind);
   const admins = users.filter((u) => u.role === "ADMIN" && u.status === "Active");
   const basePath =
     kind === "complaint" ? "/admin/complaints" : "/admin/moderation";
@@ -52,6 +72,20 @@ export function AdminCaseDetailView({
       </AdminShellSection>
     );
   }
+
+  const runUpdate = (
+    payload: Parameters<typeof updateCase>[0],
+    successMessage: string,
+  ) => {
+    try {
+      updateCase(payload);
+      toast.success(successMessage);
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : tCommon("actionFailed"),
+      );
+    }
+  };
 
   return (
     <AdminShellSection
@@ -76,7 +110,17 @@ export function AdminCaseDetailView({
         rows={[
           { label: t("colId"), value: item.id },
           { label: t("colReporter"), value: item.reporterName },
-          { label: t("targetLabel"), value: item.targetLabel },
+          {
+            label: t("targetLabel"),
+            value: (
+              <Link
+                href={resolveCaseTargetHref(item)}
+                className="text-brand-blue hover:underline"
+              >
+                {item.targetLabel} ({item.targetId})
+              </Link>
+            ),
+          },
           { label: t("createdLabel"), value: item.createdAt },
           {
             label: t("colAssignee"),
@@ -84,13 +128,15 @@ export function AdminCaseDetailView({
               <select
                 aria-label={t("colAssignee")}
                 value={item.assignee}
-                onChange={(e) => {
-                  updateCase({ caseId: item.id, assignee: e.target.value });
-                  toast.success(t("assignedToast"));
-                }}
+                onChange={(e) =>
+                  runUpdate(
+                    { caseId: item.id, assignee: e.target.value },
+                    t("assignedToast"),
+                  )
+                }
                 className="h-8 rounded-none border border-line bg-white px-2 text-xs font-semibold text-ink"
               >
-                <option value="Unassigned">Unassigned</option>
+                <option value="Unassigned">{t("unassigned")}</option>
                 {admins.map((a) => (
                   <option key={a.id} value={a.name}>
                     {a.name}
@@ -111,16 +157,25 @@ export function AdminCaseDetailView({
         ]}
       />
 
+      {item.resolutionSummary && (
+        <div className="border border-line bg-white p-4 text-xs text-body shadow-2xs">
+          <p className="font-bold text-ink">{t("resolutionSummaryLabel")}</p>
+          <p className="mt-1">{item.resolutionSummary}</p>
+        </div>
+      )}
+
       <section className="space-y-4 border border-line bg-white p-5 shadow-2xs">
         <h3 className="text-sm font-bold text-ink">{t("actionsTitle")}</h3>
         <div className="flex flex-wrap gap-2">
           <Button
             type="button"
             variant="outline"
-            onClick={() => {
-              updateCase({ caseId: item.id, status: "Under Review" });
-              toast.success(t("updatedToast"));
-            }}
+            onClick={() =>
+              runUpdate(
+                { caseId: item.id, status: "Under Review" },
+                t("updatedToast"),
+              )
+            }
             className="h-9 rounded-none border-line px-3.5 text-xs font-semibold"
           >
             {t("markUnderReview")}
@@ -161,9 +216,11 @@ export function AdminCaseDetailView({
         <form
           onSubmit={handleSubmit((values) => {
             if (!values.note.trim()) return;
-            updateCase({ caseId: item.id, note: values.note.trim() });
+            runUpdate(
+              { caseId: item.id, note: values.note.trim() },
+              t("noteAddedToast"),
+            );
             reset({ note: "" });
-            toast.success(t("noteAddedToast"));
           })}
           className="flex flex-col gap-2 border-t border-line pt-4 sm:flex-row"
         >

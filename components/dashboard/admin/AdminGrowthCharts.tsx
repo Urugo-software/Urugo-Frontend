@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   Bar,
   BarChart,
@@ -19,6 +20,7 @@ import {
 } from "@/data/admin-dashboard-data";
 
 export function AdminGrowthCharts() {
+  const t = useTranslations("admin.charts");
   const [period, setPeriod] =
     useState<keyof typeof userGrowthByPeriod>("month");
   const [range, setRange] = useState(6);
@@ -30,7 +32,7 @@ export function AdminGrowthCharts() {
   const axis = {
     axisLine: false,
     tickLine: false,
-    tick: { fontSize: 12, fill: "#5b6472" },
+    tick: { fontSize: 12.5, fill: "#5b6472" },
   };
 
   return (
@@ -38,9 +40,11 @@ export function AdminGrowthCharts() {
       <section className="border border-line bg-white shadow-2xs">
         <div className="flex items-center justify-between gap-3 border-b border-line px-5 py-4">
           <div>
-            <h3 className="text-sm font-bold text-ink">User growth</h3>
+            <h3 className="text-sm font-bold text-ink">
+              {t("userGrowthTitle")}
+            </h3>
             <p className="mt-0.5 text-xs text-body">
-              New account registrations
+              {t("userGrowthSubtitle")}
             </p>
           </div>
           <select
@@ -48,12 +52,12 @@ export function AdminGrowthCharts() {
             onChange={(event) =>
               setPeriod(event.target.value as keyof typeof userGrowthByPeriod)
             }
-            aria-label="User growth period"
+            aria-label={t("userGrowthPeriodAria")}
             className="h-9 rounded-none border border-line bg-white px-2.5 text-xs font-semibold text-ink"
           >
-            <option value="day">Daily</option>
-            <option value="week">Weekly</option>
-            <option value="month">Monthly</option>
+            <option value="day">{t("daily")}</option>
+            <option value="week">{t("weekly")}</option>
+            <option value="month">{t("monthly")}</option>
           </select>
         </div>
         <div className="px-3 pb-4 pt-5">
@@ -72,7 +76,7 @@ export function AdminGrowthCharts() {
                 <Line
                   type="monotone"
                   dataKey="users"
-                  name="New users"
+                  name={t("newUsers")}
                   stroke="#1d4ed8"
                   strokeWidth={2}
                   dot={{ r: 3, fill: "#1d4ed8" }}
@@ -86,19 +90,21 @@ export function AdminGrowthCharts() {
       <section className="border border-line bg-white shadow-2xs">
         <div className="flex items-center justify-between gap-3 border-b border-line px-5 py-4">
           <div>
-            <h3 className="text-sm font-bold text-ink">Property activity</h3>
+            <h3 className="text-sm font-bold text-ink">
+              {t("propertyActivityTitle")}
+            </h3>
             <p className="mt-0.5 text-xs text-body">
-              New listings and verified properties
+              {t("propertyActivitySubtitle")}
             </p>
           </div>
           <select
             value={range}
             onChange={(event) => setRange(Number(event.target.value))}
-            aria-label="Property analytics date range"
+            aria-label={t("propertyRangeAria")}
             className="h-9 rounded-none border border-line bg-white px-2.5 text-xs font-semibold text-ink"
           >
-            <option value={3}>Last 3 months</option>
-            <option value={6}>Last 6 months</option>
+            <option value={3}>{t("last3Months")}</option>
+            <option value={6}>{t("last6Months")}</option>
           </select>
         </div>
         <div className="px-3 pb-3 pt-5">
@@ -114,14 +120,18 @@ export function AdminGrowthCharts() {
                 <Tooltip
                   contentStyle={{ borderColor: "#e7e9ee", fontSize: 13 }}
                 />
-                <Legend wrapperStyle={{ fontSize: 12 }} />
-                <Bar dataKey="newListings" name="New listings" fill="#94a3b8" />
-                <Bar dataKey="verified" name="Verified" fill="#1d4ed8" />
+                <Legend wrapperStyle={{ fontSize: 12.5 }} />
+                <Bar
+                  dataKey="newListings"
+                  name={t("newListings")}
+                  fill="#94a3b8"
+                />
+                <Bar dataKey="verified" name={t("verified")} fill="#1d4ed8" />
               </BarChart>
             </ResponsiveContainer>
           </div>
           <p className="border-t border-line px-2 pt-3 text-xs text-body">
-            Selected period: {rejected} rejected, {suspended} suspended
+            {t("selectedPeriodSummary", { rejected, suspended })}
           </p>
         </div>
       </section>

@@ -69,13 +69,13 @@ function HeroSection() {
             ),
           })}
         </h1>
-        <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-body sm:text-base">
+        <p className="mx-auto mt-3 max-w-2xl text-base  leading-relaxed text-body ">
           {t("subtitle")}
         </p>
       </div>
 
       {/* Floating Search Bar */}
-      <div className="relative z-20 mx-auto -mb-6 max-w-xl px-4 sm:-mb-7">
+      <div className="relative  z-20 mx-auto -mb-6 max-w-xl px-4 sm:-mb-7">
         <form
           onSubmit={handleSearch}
           role="search"

@@ -116,7 +116,12 @@
     "auditLogs": "Inyandiko",
     "adminManagement": "Abayobozi",
     "approvals": "Ibyemezo",
-    "publicContent": "Ibikubiyemo"
+    "publicContent": "Ibikubiyemo",
+    "adminSectionOverview": "Incamake n'Imibare",
+    "adminSectionOperations": "Ibikorwa n'Ibyemezo",
+    "adminSectionDirectory": "Urutonde rw'Urubuga",
+    "adminSectionFinance": "Imari n'Itumanaho",
+    "adminSectionGovernance": "Ubuyobozi n'Igenamiterere"
   },
   "dashboardTitles": {
     "homeSeekerDashboard": "Imbonerahamwe",

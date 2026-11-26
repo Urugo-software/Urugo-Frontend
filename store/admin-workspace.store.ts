@@ -31,16 +31,17 @@ import type {
   AdminRenterHistoryRecord,
   AdminUserRecord,
   ApprovalActionType,
-  AuditCategory,
   SystemRole,
   UserAccountStatus,
   VerificationStatus,
 } from "@/types/admin";
 import type { IssueStatus, ListingStatus } from "@/types/landlord";
+import type { RenterNotificationCategory } from "@/types/renter";
 import {
   applyPartyConsentDecision,
   buildExpiryIso,
   canExecuteApproval,
+  computeApprovalStatus,
   getApprovingPartyNames,
 } from "@/utils/admin-approvals";
 import {
@@ -65,6 +66,7 @@ function pushCrossWorkspaceNotice(
   message: string,
   hrefLandlord = "/landlord/notifications",
   hrefRenter = "/renter/notifications",
+  renterCategory: RenterNotificationCategory = "lease",
 ) {
   if (target === "landlord" || target === "both") {
     useLandlordWorkspace.setState((s) => ({
@@ -88,7 +90,7 @@ function pushCrossWorkspaceNotice(
       title,
       message,
       date: "Just now",
-      category: "system",
+      category: renterCategory,
       read: false,
       href: hrefRenter,
     });
@@ -313,11 +315,16 @@ export const useAdminWorkspace = create<AdminWorkspaceStore>()(
         const check = validatePolicyInput("manage_admin_account", { reason });
         if (!check.valid) throw new Error(check.error);
 
+        const normalizedEmail = email.trim().toLowerCase();
+        if (s.users.some((u) => u.email.trim().toLowerCase() === normalizedEmail)) {
+          throw new Error("An account with this email address already exists.");
+        }
+
         const nextAdmin: AdminUserRecord = {
           id: createSafeId("usr-adm"),
-          name,
-          email,
-          phone,
+          name: name.trim(),
+          email: normalizedEmail,
+          phone: phone.trim(),
           role: "ADMIN",
           verification: "Verified",
           status: "Active",
@@ -598,6 +605,39 @@ export const useAdminWorkspace = create<AdminWorkspaceStore>()(
         });
         if (!check.valid) throw new Error(check.error);
 
+        if (
+          actionType === "property_landlord_association" &&
+          payload.propertyId &&
+          payload.landlordId
+        ) {
+          const prop = s.properties.find((p) => p.id === payload.propertyId);
+          if (!prop) throw new Error("Property not found.");
+          if (prop.landlordId === payload.landlordId) {
+            throw new Error(
+              "Selected landlord is already associated with this property.",
+            );
+          }
+        }
+
+        if (
+          actionType === "renter_landlord_association" &&
+          payload.propertyId &&
+          payload.unitLabel
+        ) {
+          const conflict = s.leases.find(
+            (l) =>
+              l.propertyId === payload.propertyId &&
+              l.unitLabel.trim().toLowerCase() ===
+                payload.unitLabel!.trim().toLowerCase() &&
+              (l.status === "Active" || l.status === "Ending Soon"),
+          );
+          if (conflict) {
+            throw new Error(
+              `Unit ${payload.unitLabel} already has an active lease (${conflict.id}).`,
+            );
+          }
+        }
+
         const request: AdminApprovalRequest = {
           id: createSafeId("APR").toUpperCase(),
           actionType,
@@ -664,6 +704,23 @@ export const useAdminWorkspace = create<AdminWorkspaceStore>()(
         const s = get();
         const existing = s.approvals.find((a) => a.id === requestId);
         if (!existing) throw new Error("Approval request not found.");
+
+        const liveStatus = computeApprovalStatus(existing);
+        if (liveStatus === "Expired") {
+          set((curr) => ({
+            approvals: curr.approvals.map((a) =>
+              a.id === requestId ? { ...a, status: "Expired" } : a,
+            ),
+          }));
+          throw new Error("This approval request has expired and can no longer be executed.");
+        }
+        if (
+          liveStatus === "Executed" ||
+          liveStatus === "Cancelled" ||
+          liveStatus === "Rejected"
+        ) {
+          throw new Error(`Approval request is already ${liveStatus.toLowerCase()}.`);
+        }
 
         let updated = applyPartyConsentDecision(
           existing,
@@ -906,6 +963,9 @@ export const useAdminWorkspace = create<AdminWorkspaceStore>()(
           "both",
           `Rental history review: ${status}`,
           `${rec.recordTitle} (${rec.propertyTitle}) updated to ${status}. Reason: ${reason}`,
+          "/landlord/renter-history",
+          "/renter/rental-history",
+          "history",
         );
         set((curr) => ({
           renterHistory: curr.renterHistory.map((r) =>
@@ -1000,6 +1060,9 @@ export const useAdminWorkspace = create<AdminWorkspaceStore>()(
           "both",
           `${requestType} request logged for ${transactionId}`,
           `Awaiting payment-provider reconciliation. Reason: ${reason}`,
+          "/landlord/payments",
+          "/renter/payments",
+          "rent",
         );
         set((curr) => ({
           financialRequests: [req, ...curr.financialRequests],

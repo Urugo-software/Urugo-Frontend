@@ -19,6 +19,7 @@ interface SettingsFormValues extends AdminPlatformSettings {
 export function AdminSettingsView() {
   const t = useTranslations("admin.settings");
   const tActions = useTranslations("common.actions");
+  const tCommon = useTranslations("admin.common");
   const settings = useAdminWorkspace((s) => s.settings);
   const updateSettings = useAdminWorkspace((s) => s.updatePlatformSettings);
   const [pendingDraft, setPendingDraft] =
@@ -27,6 +28,7 @@ export function AdminSettingsView() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<SettingsFormValues>({
     defaultValues: { ...settings, reason: "" },
@@ -34,9 +36,9 @@ export function AdminSettingsView() {
 
   const onFormSubmit = (values: SettingsFormValues) => {
     const nextSettings: AdminPlatformSettings = {
-      platformName: values.platformName,
+      platformName: values.platformName.trim(),
       currency: "RWF",
-      defaultLocation: values.defaultLocation,
+      defaultLocation: values.defaultLocation.trim(),
       maintenanceMode: values.maintenanceMode,
       maintenanceReason: values.maintenanceReason,
       allowNewRegistrations: values.allowNewRegistrations,
@@ -52,8 +54,15 @@ export function AdminSettingsView() {
       return;
     }
 
-    updateSettings(nextSettings, values.reason);
-    toast.success(t("savedToast"));
+    try {
+      updateSettings(nextSettings, values.reason);
+      setValue("reason", "");
+      toast.success(t("savedToast"));
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : tCommon("actionFailed"),
+      );
+    }
   };
 
   return (
@@ -78,18 +87,32 @@ export function AdminSettingsView() {
                 {t("platformName")}
               </label>
               <Input
-                {...register("platformName", { required: true })}
+                {...register("platformName", {
+                  required: t("platformNameRequired"),
+                })}
                 className="mt-1 h-10 rounded-none border-line bg-white text-sm"
               />
+              {errors.platformName && (
+                <p className="mt-1 text-xs text-rose-700">
+                  {errors.platformName.message}
+                </p>
+              )}
             </div>
             <div>
               <label className="block text-xs font-semibold text-ink">
                 {t("defaultLocation")}
               </label>
               <Input
-                {...register("defaultLocation", { required: true })}
+                {...register("defaultLocation", {
+                  required: t("locationRequired"),
+                })}
                 className="mt-1 h-10 rounded-none border-line bg-white text-sm"
               />
+              {errors.defaultLocation && (
+                <p className="mt-1 text-xs text-rose-700">
+                  {errors.defaultLocation.message}
+                </p>
+              )}
             </div>
             <label className="flex cursor-pointer items-start gap-2.5 border border-line bg-surface/50 p-3 text-xs text-ink">
               <input
@@ -138,9 +161,17 @@ export function AdminSettingsView() {
               </label>
               <Input
                 type="number"
-                {...register("disputeNoticeWindowDays", { min: 1, max: 14 })}
+                {...register("disputeNoticeWindowDays", {
+                  min: { value: 1, message: t("noticeWindowRange") },
+                  max: { value: 14, message: t("noticeWindowRange") },
+                })}
                 className="mt-1 h-10 w-32 rounded-none border-line bg-white text-sm"
               />
+              {errors.disputeNoticeWindowDays && (
+                <p className="mt-1 text-xs text-rose-700">
+                  {errors.disputeNoticeWindowDays.message}
+                </p>
+              )}
             </div>
           </div>
         </section>
@@ -205,6 +236,7 @@ export function AdminSettingsView() {
             { ...pendingDraft, maintenanceReason: values.reason },
             values.reason,
           );
+          setValue("reason", "");
           toast.success(t("savedToast"));
         }}
       />

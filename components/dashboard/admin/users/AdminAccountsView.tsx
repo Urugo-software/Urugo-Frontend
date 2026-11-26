@@ -29,6 +29,7 @@ interface CreateAdminValues {
 export function AdminAccountsView() {
   const t = useTranslations("admin.adminManagement");
   const tActions = useTranslations("common.actions");
+  const tCommon = useTranslations("admin.common");
   const users = useAdminWorkspace((s) => s.users);
   const createAdmin = useAdminWorkspace((s) => s.createAdminAccount);
   const toggleStatus = useAdminWorkspace((s) => s.toggleAdminAccountStatus);
@@ -138,9 +139,15 @@ export function AdminAccountsView() {
         <form
           id="add-admin-form"
           onSubmit={handleSubmit((values) => {
-            createAdmin(values);
-            toast.success(t("createdToast"));
-            setCreateOpen(false);
+            try {
+              createAdmin(values);
+              toast.success(t("createdToast"));
+              setCreateOpen(false);
+            } catch (error) {
+              toast.error(
+                error instanceof Error ? error.message : tCommon("actionFailed"),
+              );
+            }
           })}
           className="space-y-3.5"
         >
@@ -149,7 +156,7 @@ export function AdminAccountsView() {
               {t("colName")} *
             </label>
             <Input
-              {...register("name", { required: "Name is required" })}
+              {...register("name", { required: t("nameRequired") })}
               className="mt-1 h-10 rounded-none border-line bg-white text-sm"
             />
             {errors.name && (
@@ -162,18 +169,24 @@ export function AdminAccountsView() {
             </label>
             <Input
               type="email"
-              {...register("email", { required: "Email is required" })}
+              {...register("email", { required: t("emailRequired") })}
               className="mt-1 h-10 rounded-none border-line bg-white text-sm"
             />
+            {errors.email && (
+              <p className="mt-1 text-xs text-rose-700">{errors.email.message}</p>
+            )}
           </div>
           <div>
             <label className="block text-xs font-semibold text-ink">
               {t("phoneLabel")} *
             </label>
             <Input
-              {...register("phone", { required: "Phone is required" })}
+              {...register("phone", { required: t("phoneRequired") })}
               className="mt-1 h-10 rounded-none border-line bg-white text-sm"
             />
+            {errors.phone && (
+              <p className="mt-1 text-xs text-rose-700">{errors.phone.message}</p>
+            )}
           </div>
           <div>
             <label className="block text-xs font-semibold text-ink">
@@ -181,11 +194,16 @@ export function AdminAccountsView() {
             </label>
             <Input
               {...register("reason", {
-                required: "Justification is required",
-                minLength: { value: 5, message: "Minimum 5 characters" },
+                required: t("reasonRequired"),
+                minLength: { value: 5, message: t("reasonMinLength") },
               })}
               className="mt-1 h-10 rounded-none border-line bg-white text-sm"
             />
+            {errors.reason && (
+              <p className="mt-1 text-xs text-rose-700">
+                {errors.reason.message}
+              </p>
+            )}
           </div>
         </form>
       </ModalDialog>
@@ -205,14 +223,8 @@ export function AdminAccountsView() {
         isDestructive={toggleTarget?.status === "Active"}
         onSubmitAction={(values) => {
           if (!toggleTarget) return;
-          try {
-            toggleStatus(toggleTarget.id, values.reason);
-            toast.success(t("updatedToast"));
-          } catch (error) {
-            toast.error(
-              error instanceof Error ? error.message : "Action blocked",
-            );
-          }
+          toggleStatus(toggleTarget.id, values.reason);
+          toast.success(t("updatedToast"));
         }}
       />
     </AdminShellSection>

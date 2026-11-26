@@ -11,7 +11,7 @@ import type {
   AdminRenterHistoryRecord,
   AdminUserRecord,
 } from "@/types/admin";
-import { buildExpiryIso } from "../utils/admin-approvals.ts";
+import { buildExpiryIso } from "@/utils/admin-approvals";
 
 export const initialAdminUsers: AdminUserRecord[] = [
   {

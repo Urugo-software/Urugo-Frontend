@@ -8,6 +8,7 @@ import { StatusBadge } from "@/components/shared/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { useAdminWorkspace } from "@/store/admin-workspace.store";
 import type { AdminApprovalRequest } from "@/types/admin";
+import { computeApprovalStatus } from "@/utils/admin-approvals";
 import { getAdminStatusTone } from "@/utils/admin-status-tone";
 import {
   AdminEntityTable,
@@ -27,7 +28,8 @@ export function AdminApprovalsView() {
   const filtered = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
     return approvals.filter((req) => {
-      const matchesStatus = !statusFilter || req.status === statusFilter;
+      const liveStatus = computeApprovalStatus(req);
+      const matchesStatus = !statusFilter || liveStatus === statusFilter;
       const matchesQuery =
         !q ||
         req.id.toLowerCase().includes(q) ||
@@ -89,12 +91,15 @@ export function AdminApprovalsView() {
     {
       key: "status",
       header: t("colStatus"),
-      render: (item) => (
-        <StatusBadge
-          label={item.status}
-          tone={getAdminStatusTone(item.status)}
-        />
-      ),
+      render: (item) => {
+        const liveStatus = computeApprovalStatus(item);
+        return (
+          <StatusBadge
+            label={liveStatus}
+            tone={getAdminStatusTone(liveStatus)}
+          />
+        );
+      },
     },
   ];
 

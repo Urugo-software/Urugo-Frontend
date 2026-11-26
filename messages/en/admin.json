@@ -1,6 +1,13 @@
 {
   "common": {
-    "simulatedModeBadge": "Simulated workspace · Backend API pending"
+    "simulatedModeBadge": "Simulated workspace · Backend API pending",
+    "emptyTitle": "No matching records",
+    "emptyDescription": "Adjust your search or filters to view matching items.",
+    "actionFailed": "Unable to complete this action. Please review the details and try again.",
+    "errorTitle": "Admin section error",
+    "errorDescription": "Something went wrong while rendering this administrative view.",
+    "backToOverview": "Back to overview",
+    "noRecordsYet": "No linked records found."
   },
   "guard": {
     "title": "Administrator access required",
@@ -39,6 +46,36 @@
     "reasonPrefix": "Reason",
     "decline": "Decline",
     "approve": "Approve"
+  },
+  "charts": {
+    "paymentVolumeTitle": "Monthly payment volume",
+    "paymentVolumeSubtitle": "Historical trend · Successful, pending, and failed payments (millions of RWF)",
+    "paymentRangeAria": "Payment chart date range",
+    "last3Months": "Last 3 months",
+    "last6Months": "Last 6 months",
+    "successful": "Successful",
+    "pending": "Pending",
+    "failed": "Failed",
+    "userGrowthTitle": "User growth",
+    "userGrowthSubtitle": "Historical account registration trend",
+    "userGrowthPeriodAria": "User growth period",
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "monthly": "Monthly",
+    "newUsers": "New users",
+    "propertyActivityTitle": "Property activity",
+    "propertyActivitySubtitle": "New listings and verified properties",
+    "propertyRangeAria": "Property analytics date range",
+    "newListings": "New listings",
+    "verified": "Verified",
+    "selectedPeriodSummary": "Selected period: {rejected} rejected, {suspended} suspended",
+    "geographyTitle": "Property locations",
+    "geographySubtitle": "Live distribution from registered properties in workspace",
+    "geographyGroupingAria": "Geographic grouping",
+    "province": "Province",
+    "district": "District",
+    "sector": "Sector",
+    "propertiesCount": "{count} properties"
   },
   "overview": {
     "title": "Platform overview",
@@ -132,7 +169,13 @@
     "propertyLabel": "Property",
     "unitLabel": "Unit",
     "monthlyRentLabel": "Monthly rent (RWF)",
-    "initiatedToast": "Consent request sent to Landlord and Renter."
+    "initiatedToast": "Consent request sent to Landlord and Renter.",
+    "noEligibleParties": "At least one landlord, renter, and property are required to propose an association.",
+    "unitRequired": "Unit label is required.",
+    "rentMinError": "Monthly rent must be at least 1,000 RWF.",
+    "reasonRequired": "Reason is required.",
+    "reasonMinLength": "Reason must be at least 5 characters.",
+    "expiredNotice": "This request has expired and cannot be executed."
   },
   "users": {
     "title": "Users",
@@ -171,7 +214,12 @@
     "confirmStatusChange": "Confirm status change",
     "serviceModeConsentDesc": "Changing a landlord's service mode requires their explicit approval.",
     "requiresLandlordConsent": "Explicit approval required from Landlord: {name}.",
-    "consentSentToast": "Service-mode consent request sent to landlord."
+    "consentSentToast": "Service-mode consent request sent to landlord.",
+    "restrictionBannerTitle": "Active account restriction",
+    "emergencyPostReviewBanner": "Emergency security lockout is active and requires post-action review within 24 hours.",
+    "linkedPropertiesTitle": "Linked properties",
+    "linkedLeasesTitle": "Linked leases",
+    "recentPaymentsTitle": "Related payments"
   },
   "adminManagement": {
     "title": "Admin management",
@@ -193,7 +241,12 @@
     "disableAdminTitle": "Disable administrator access",
     "activateAdminTitle": "Activate administrator access",
     "toggleDesc": "Update administrative access for {name}. At least one active ADMIN must remain.",
-    "updatedToast": "Administrator access updated."
+    "updatedToast": "Administrator access updated.",
+    "nameRequired": "Full name is required.",
+    "emailRequired": "A valid email address is required.",
+    "phoneRequired": "Phone number is required.",
+    "reasonRequired": "Access justification is required.",
+    "reasonMinLength": "Justification must be at least 5 characters."
   },
   "properties": {
     "title": "Properties",
@@ -230,7 +283,10 @@
     "updatedToast": "Property updated and landlord notified.",
     "ownershipConsentDesc": "Requires ownership/mandate reference and receiving landlord consent.",
     "requiresReceivingLandlord": "Requires explicit approval from receiving landlord: {name}.",
-    "consentSentToast": "Property association consent request sent."
+    "consentSentToast": "Property association consent request sent.",
+    "reviewNotesTitle": "Latest administrative review note",
+    "linkedLeasesTitle": "Associated leases",
+    "sameLandlordError": "Select a different landlord to propose an ownership or management association."
   },
   "verification": {
     "title": "Property verification",
@@ -279,7 +335,12 @@
     "evidenceLabel": "Documentary evidence",
     "reasonLabel": "Reason for amendment",
     "nonMaterialNoteDesc": "Record a non-substantive administrative note without changing rent or dates.",
-    "noteSavedToast": "Administrative note recorded."
+    "noteSavedToast": "Administrative note recorded.",
+    "relatedPaymentsTitle": "Related payments",
+    "rentMinError": "Monthly rent must be at least 1,000 RWF.",
+    "endDateError": "End date must be after the lease start date.",
+    "evidenceRequired": "Evidence reference (min 3 characters) is required.",
+    "reasonRequired": "Reason (min 5 characters) is required."
   },
   "renterHistory": {
     "title": "Renter's history",
@@ -311,7 +372,8 @@
     "mediationModalDesc": "Document verified evidence reviewed from both landlord and renter.",
     "confirmDebtWarning": "Confirming an obligation affects the renter's verified rental history.",
     "applyMediation": "Record mediation",
-    "mediatedToast": "Rental history status updated and logged."
+    "mediatedToast": "Rental history status updated and logged.",
+    "reviewNoteLabel": "Latest mediation note"
   },
   "payments": {
     "title": "Payments",
@@ -346,7 +408,10 @@
     "viewAuditTrail": "View audit log",
     "financialWarning": "Requires verified provider/bank reference and backend payment-gateway settlement.",
     "submitRequest": "Log financial request",
-    "requestLoggedToast": "Financial review request logged as Pending Backend Execution."
+    "requestLoggedToast": "Financial review request logged as Pending Backend Execution.",
+    "cancelRequest": "Cancel request",
+    "cancelRequestDesc": "Cancel this pending financial review request before backend processing.",
+    "cancelledToast": "Financial review request cancelled and audited."
   },
   "complaints": {
     "title": "Complaints & disputes",
@@ -376,7 +441,9 @@
     "addNote": "Add note",
     "noteAddedToast": "Investigation note added.",
     "decisionDesc": "Provide the rationale for this complaint decision.",
-    "applyDecision": "Apply decision"
+    "applyDecision": "Apply decision",
+    "unassigned": "Unassigned",
+    "resolutionSummaryLabel": "Latest decision summary"
   },
   "moderation": {
     "title": "Moderation",
@@ -406,7 +473,9 @@
     "addNote": "Add note",
     "noteAddedToast": "Moderation note added.",
     "decisionDesc": "Provide a clear moderation decision rationale.",
-    "applyDecision": "Apply decision"
+    "applyDecision": "Apply decision",
+    "unassigned": "Unassigned",
+    "resolutionSummaryLabel": "Latest moderation decision"
   },
   "publicContent": {
     "title": "Public platform content",
@@ -430,7 +499,13 @@
     "savedToast": "Public platform content updated and audited.",
     "audienceLabel": "Target audience",
     "questionLabel": "Question",
-    "answerLabel": "Answer"
+    "answerLabel": "Answer",
+    "titleRequired": "Banner title is required.",
+    "messageRequired": "Banner message is required.",
+    "phoneRequired": "Support phone is required.",
+    "emailRequired": "A valid support email is required.",
+    "questionRequired": "Question is required.",
+    "answerRequired": "Answer is required."
   },
   "notifications": {
     "title": "Notifications",
@@ -445,7 +520,16 @@
     "noticeTitleLabel": "Title",
     "audienceLabel": "Audience",
     "channelLabel": "Channel",
-    "messageLabel": "Message"
+    "messageLabel": "Message",
+    "searchPlaceholder": "Search notifications by title, message, or audience",
+    "allCategories": "All categories",
+    "categoryVerification": "Verification",
+    "categoryApproval": "Approval",
+    "categoryDispute": "Dispute",
+    "categorySecurity": "Security",
+    "categorySystem": "System",
+    "titleRequired": "Notice title is required.",
+    "messageRequired": "Notice message is required."
   },
   "auditLogs": {
     "title": "Audit logs",
@@ -453,6 +537,9 @@
     "readOnlyBadge": "Immutable · Read only",
     "searchPlaceholder": "Search by action, actor, target, or reason",
     "allCategories": "All categories",
+    "allExecutionStatuses": "All execution statuses",
+    "exportCsv": "Export CSV",
+    "exportedToast": "Audit log CSV exported.",
     "itemLabel": "audit events",
     "colAction": "Action",
     "colActor": "Actor",
@@ -461,7 +548,9 @@
     "colTime": "Timestamp",
     "reasonLabel": "Reason",
     "beforeLabel": "Before value",
-    "afterLabel": "After value"
+    "afterLabel": "After value",
+    "approvalRequestLabel": "Approval request ID",
+    "approvingPartiesLabel": "Approving parties"
   },
   "settings": {
     "title": "Platform settings",
@@ -490,6 +579,9 @@
     "confirmMaintenanceTitle": "Confirm maintenance mode change",
     "confirmMaintenanceDesc": "Toggling maintenance mode affects platform availability.",
     "maintenanceWarning": "Verify no critical active transactions are interrupted before enabling maintenance mode.",
-    "applySettings": "Confirm & save settings"
+    "applySettings": "Confirm & save settings",
+    "platformNameRequired": "Platform name is required.",
+    "locationRequired": "Default location is required.",
+    "noticeWindowRange": "Notice window must be between 1 and 14 days."
   }
 }

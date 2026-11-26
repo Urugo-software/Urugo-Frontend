@@ -48,7 +48,7 @@
     "backToHome": "Back to homepage",
     "signIn": "Sign in",
     "signUp": "Sign up",
-    "listYourProperty": "List your property"
+    "listYourProperty": "List property"
   },
   "states": {
     "loading": "Loading...",
@@ -75,7 +75,7 @@
     "properties": "Properties"
   },
   "navigation": {
-    "navigation": "Navigation",
+    "navigation": "MENU",
     "dashboardNavigation": "Dashboard navigation",
     "openMobileNavigation": "Open mobile navigation",
     "closeMobileMenu": "Close mobile menu",
@@ -116,7 +116,12 @@
     "auditLogs": "Audit Logs",
     "adminManagement": "Admin Management",
     "approvals": "Approvals",
-    "publicContent": "Public Content"
+    "publicContent": "Public Content",
+    "adminSectionOverview": "Overview & Insights",
+    "adminSectionOperations": "Operations & Approvals",
+    "adminSectionDirectory": "Platform Directory",
+    "adminSectionFinance": "Finance & Comms",
+    "adminSectionGovernance": "Governance & Control"
   },
   "dashboardTitles": {
     "homeSeekerDashboard": "Dashboard",

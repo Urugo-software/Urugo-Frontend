@@ -72,6 +72,12 @@ export function useDashboardNavigation(
             c.status !== "Resolved" &&
             c.status !== "Rejected",
         ).length,
+        moderation: adminCases.filter(
+          (c) =>
+            c.kind === "moderation" &&
+            c.status !== "Resolved" &&
+            c.status !== "Rejected",
+        ).length,
         notifications: adminNotifications.filter((n) => n.isUnread).length,
       });
     }

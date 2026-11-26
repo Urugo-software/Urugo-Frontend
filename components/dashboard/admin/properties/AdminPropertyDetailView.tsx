@@ -33,8 +33,10 @@ export function AdminPropertyDetailView({
   propertyId: string;
 }) {
   const t = useTranslations("admin.properties");
+  const tCommon = useTranslations("admin.common");
   const locale = useLocale() as AppLocale;
   const properties = useAdminWorkspace((s) => s.properties);
+  const leases = useAdminWorkspace((s) => s.leases);
   const users = useAdminWorkspace((s) => s.users);
   const reviewVerification = useAdminWorkspace(
     (s) => s.reviewPropertyVerification,
@@ -65,6 +67,8 @@ export function AdminPropertyDetailView({
     landlords.find((l) => l.id === targetLandlordId) ??
     landlords.find((l) => l.id !== property.landlordId) ??
     landlords[0];
+  const linkedLeases = leases.filter((l) => l.propertyId === property.id);
+  const isSameLandlord = chosenLandlord?.id === property.landlordId;
 
   return (
     <AdminShellSection
@@ -91,6 +95,13 @@ export function AdminPropertyDetailView({
           { label: property.title },
         ]}
       />
+
+      {property.reviewNotes && (
+        <div className="border border-line bg-white p-4 text-xs text-body shadow-2xs">
+          <p className="font-bold text-ink">{t("reviewNotesTitle")}</p>
+          <p className="mt-1">{property.reviewNotes}</p>
+        </div>
+      )}
 
       <AdminDetailGrid
         title={t("detailsTitle")}
@@ -201,12 +212,61 @@ export function AdminPropertyDetailView({
             <Button
               type="button"
               variant="outline"
-              onClick={() => setMode("associate_landlord")}
-              className="h-9 rounded-none border-line px-3.5 text-xs font-semibold text-brand-blue"
+              disabled={!chosenLandlord || isSameLandlord}
+              onClick={() => {
+                if (isSameLandlord) {
+                  toast.error(t("sameLandlordError"));
+                  return;
+                }
+                setMode("associate_landlord");
+              }}
+              className="h-9 rounded-none border-line px-3.5 text-xs font-semibold text-brand-blue disabled:opacity-50"
             >
               {t("proposeLandlordAssociation")}
             </Button>
           </div>
+          {isSameLandlord && (
+            <p className="mt-2 text-xs text-amber-800">
+              {t("sameLandlordError")}
+            </p>
+          )}
+        </div>
+      </section>
+
+      <section className="border border-line bg-white shadow-2xs">
+        <div className="border-b border-line px-5 py-3.5">
+          <h3 className="text-sm font-bold text-ink">
+            {t("linkedLeasesTitle")} ({linkedLeases.length})
+          </h3>
+        </div>
+        <div className="divide-y divide-line px-5">
+          {linkedLeases.length === 0 ? (
+            <p className="py-4 text-xs text-faint">{tCommon("noRecordsYet")}</p>
+          ) : (
+            linkedLeases.map((lease) => (
+              <div
+                key={lease.id}
+                className="flex flex-wrap items-center justify-between gap-3 py-3 text-sm"
+              >
+                <div>
+                  <Link
+                    href={`/admin/leases/${encodeURIComponent(lease.id)}`}
+                    className="font-semibold text-brand-blue hover:underline"
+                  >
+                    {lease.id} · {lease.unitLabel} — {lease.renterName}
+                  </Link>
+                  <p className="text-xs text-body">
+                    {formatRwfLocalized(lease.rentRwf, locale)} ·{" "}
+                    {lease.startDate} → {lease.endDate}
+                  </p>
+                </div>
+                <StatusBadge
+                  label={lease.status}
+                  tone={getAdminStatusTone(lease.status)}
+                />
+              </div>
+            ))
+          )}
         </div>
       </section>
 

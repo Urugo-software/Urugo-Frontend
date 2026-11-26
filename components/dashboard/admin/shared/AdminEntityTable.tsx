@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import { FolderSearch } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { EmptyStateBox } from "@/components/shared/EmptyStateBox";
 import { Pagination } from "@/components/shared/Pagination";
 import { paginateItems } from "@/utils/pagination";
@@ -34,12 +35,14 @@ export function AdminEntityTable<T>({
   getRowKey,
   pageSize = 6,
   itemLabel,
-  emptyTitle = "No matching records",
-  emptyDescription = "Adjust your search or filters to view matching items.",
+  emptyTitle,
+  emptyDescription,
   emptyIcon = FolderSearch,
   onResetEmpty,
-  resetLabel = "Reset",
+  resetLabel,
 }: AdminEntityTableProps<T>) {
+  const tCommon = useTranslations("admin.common");
+  const tActions = useTranslations("common.actions");
   const [currentPage, setCurrentPage] = useState(1);
   const { items: visible, page, totalPages, totalItems } = paginateItems(
     items,
@@ -51,8 +54,8 @@ export function AdminEntityTable<T>({
     return (
       <EmptyStateBox
         icon={emptyIcon}
-        title={emptyTitle}
-        description={emptyDescription}
+        title={emptyTitle ?? tCommon("emptyTitle")}
+        description={emptyDescription ?? tCommon("emptyDescription")}
         action={
           onResetEmpty ? (
             <button
@@ -60,7 +63,7 @@ export function AdminEntityTable<T>({
               onClick={onResetEmpty}
               className="cursor-pointer border border-line bg-ink px-4 py-2 text-xs font-semibold text-white hover:bg-ink/90"
             >
-              {resetLabel}
+              {resetLabel ?? tActions("reset")}
             </button>
           ) : undefined
         }

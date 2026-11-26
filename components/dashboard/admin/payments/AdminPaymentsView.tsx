@@ -158,7 +158,14 @@ export function AdminPaymentsView() {
               >
                 <div>
                   <p className="font-semibold text-ink">
-                    {req.id} · {req.requestType} ({req.transactionId})
+                    {req.id} · {req.requestType} (
+                    <Link
+                      href={`/admin/payments/${encodeURIComponent(req.transactionId)}`}
+                      className="text-brand-blue hover:underline"
+                    >
+                      {req.transactionId}
+                    </Link>
+                    )
                   </p>
                   <p className="text-xs text-body">
                     {formatRwfLocalized(req.amountRwf, locale)} — {req.reason}

@@ -1,13 +1,16 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { UserX } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { AlertTriangle, UserX } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { EmptyStateBox } from "@/components/shared/EmptyStateBox";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { Button } from "@/components/ui/button";
+import type { AppLocale } from "@/i18n/config";
+import { formatRwfLocalized } from "@/i18n/formatting";
 import { useAdminWorkspace } from "@/store/admin-workspace.store";
 import { getAdminStatusTone } from "@/utils/admin-status-tone";
 import { AdminConsentRequestModal } from "../shared/AdminConsentRequestModal";
@@ -27,7 +30,12 @@ type ModalMode =
 
 export function AdminUserDetailView({ userId }: { userId: string }) {
   const t = useTranslations("admin.users");
+  const tCommon = useTranslations("admin.common");
+  const locale = useLocale() as AppLocale;
   const users = useAdminWorkspace((s) => s.users);
+  const properties = useAdminWorkspace((s) => s.properties);
+  const leases = useAdminWorkspace((s) => s.leases);
+  const payments = useAdminWorkspace((s) => s.payments);
   const verifyIdentity = useAdminWorkspace((s) => s.verifyUserIdentity);
   const updateAccountStatus = useAdminWorkspace(
     (s) => s.updateUserAccountStatus,
@@ -47,6 +55,14 @@ export function AdminUserDetailView({ userId }: { userId: string }) {
       </AdminShellSection>
     );
   }
+
+  const linkedProperties = properties.filter((p) => p.landlordId === user.id);
+  const linkedLeases = leases.filter(
+    (l) => l.landlordId === user.id || l.renterId === user.id,
+  );
+  const linkedPayments = payments.filter(
+    (p) => p.landlordId === user.id || p.renterId === user.id,
+  );
 
   const targetServiceMode =
     user.serviceMode === "listing_only" ? "managed" : "listing_only";
@@ -75,22 +91,40 @@ export function AdminUserDetailView({ userId }: { userId: string }) {
         ]}
       />
 
+      {(user.restrictionReason || user.pendingPostReview) && (
+        <div className="space-y-1.5 border border-rose-300 bg-rose-50 p-4 text-xs text-rose-900">
+          <div className="flex items-center gap-2 font-bold">
+            <AlertTriangle aria-hidden="true" className="size-4 shrink-0" />
+            <span>{t("restrictionBannerTitle")}</span>
+          </div>
+          {user.restrictionReason && <p>{user.restrictionReason}</p>}
+          {user.pendingPostReview && (
+            <p className="font-semibold">{t("emergencyPostReviewBanner")}</p>
+          )}
+        </div>
+      )}
+
       <AdminDetailGrid
         title={t("accountProfile")}
         rows={[
           { label: t("colName"), value: user.name },
-          { label: t("colRole"), value: user.role },
+          {
+            label: t("colRole"),
+            value: user.serviceMode
+              ? `${user.role} · ${user.serviceMode}`
+              : user.role,
+          },
           { label: t("colEmail"), value: user.email },
           { label: t("colPhone"), value: user.phone },
           { label: t("registeredAt"), value: user.registeredAt },
           { label: t("colLastActivity"), value: user.lastActivity },
           {
             label: t("propertiesCount"),
-            value: String(user.propertiesCount),
+            value: String(linkedProperties.length || user.propertiesCount),
           },
           {
             label: t("activeLeasesCount"),
-            value: String(user.activeLeasesCount),
+            value: String(linkedLeases.length || user.activeLeasesCount),
           },
         ]}
       />
@@ -166,6 +200,126 @@ export function AdminUserDetailView({ userId }: { userId: string }) {
           )}
         </div>
       </section>
+
+      <div className="grid gap-5 lg:grid-cols-2">
+        {user.role === "LANDLORD" && (
+          <section className="border border-line bg-white shadow-2xs">
+            <div className="border-b border-line px-5 py-3.5">
+              <h3 className="text-sm font-bold text-ink">
+                {t("linkedPropertiesTitle")} ({linkedProperties.length})
+              </h3>
+            </div>
+            <div className="divide-y divide-line px-5">
+              {linkedProperties.length === 0 ? (
+                <p className="py-4 text-xs text-faint">
+                  {tCommon("noRecordsYet")}
+                </p>
+              ) : (
+                linkedProperties.map((prop) => (
+                  <div
+                    key={prop.id}
+                    className="flex items-center justify-between gap-3 py-3 text-sm"
+                  >
+                    <div>
+                      <Link
+                        href={`/admin/properties/${encodeURIComponent(prop.id)}`}
+                        className="font-semibold text-brand-blue hover:underline"
+                      >
+                        {prop.title} ({prop.id})
+                      </Link>
+                      <p className="text-xs text-body">{prop.location}</p>
+                    </div>
+                    <StatusBadge
+                      label={prop.isSuspended ? "Suspended" : prop.verification}
+                      tone={getAdminStatusTone(
+                        prop.isSuspended ? "Suspended" : prop.verification,
+                      )}
+                    />
+                  </div>
+                ))
+              )}
+            </div>
+          </section>
+        )}
+
+        <section className="border border-line bg-white shadow-2xs">
+          <div className="border-b border-line px-5 py-3.5">
+            <h3 className="text-sm font-bold text-ink">
+              {t("linkedLeasesTitle")} ({linkedLeases.length})
+            </h3>
+          </div>
+          <div className="divide-y divide-line px-5">
+            {linkedLeases.length === 0 ? (
+              <p className="py-4 text-xs text-faint">
+                {tCommon("noRecordsYet")}
+              </p>
+            ) : (
+              linkedLeases.map((lease) => (
+                <div
+                  key={lease.id}
+                  className="flex items-center justify-between gap-3 py-3 text-sm"
+                >
+                  <div>
+                    <Link
+                      href={`/admin/leases/${encodeURIComponent(lease.id)}`}
+                      className="font-semibold text-brand-blue hover:underline"
+                    >
+                      {lease.id} · {lease.propertyTitle} ({lease.unitLabel})
+                    </Link>
+                    <p className="text-xs text-body">
+                      {formatRwfLocalized(lease.rentRwf, locale)} ·{" "}
+                      {lease.startDate} → {lease.endDate}
+                    </p>
+                  </div>
+                  <StatusBadge
+                    label={lease.status}
+                    tone={getAdminStatusTone(lease.status)}
+                  />
+                </div>
+              ))
+            )}
+          </div>
+        </section>
+
+        <section className="border border-line bg-white shadow-2xs lg:col-span-2">
+          <div className="border-b border-line px-5 py-3.5">
+            <h3 className="text-sm font-bold text-ink">
+              {t("recentPaymentsTitle")} ({linkedPayments.length})
+            </h3>
+          </div>
+          <div className="divide-y divide-line px-5">
+            {linkedPayments.length === 0 ? (
+              <p className="py-4 text-xs text-faint">
+                {tCommon("noRecordsYet")}
+              </p>
+            ) : (
+              linkedPayments.map((payment) => (
+                <div
+                  key={payment.transactionId}
+                  className="flex flex-wrap items-center justify-between gap-3 py-3 text-sm"
+                >
+                  <div>
+                    <Link
+                      href={`/admin/payments/${encodeURIComponent(payment.transactionId)}`}
+                      className="font-semibold text-brand-blue hover:underline"
+                    >
+                      {payment.transactionId} · {payment.propertyTitle}
+                    </Link>
+                    <p className="text-xs text-body">
+                      {formatRwfLocalized(payment.amountRwf, locale)} ·{" "}
+                      {payment.provider} · {payment.createdAt}
+                    </p>
+                  </div>
+                  <StatusBadge
+                    label={payment.status}
+                    tone={getAdminStatusTone(payment.status)}
+                  />
+                </div>
+              ))
+            )}
+          </div>
+        </section>
+      </div>
 
       <AdminReasonModal
         open={modalMode === "verify" || modalMode === "reject_kyc"}

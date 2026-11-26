@@ -13,9 +13,9 @@ import type { AppLocale } from "@/i18n/config";
 import { formatRwfLocalized } from "@/i18n/formatting";
 import { useAdminWorkspace } from "@/store/admin-workspace.store";
 import { getAdminStatusTone } from "@/utils/admin-status-tone";
-import { AdminDetailGrid } from "../shared/AdminDetailGrid";
-import { AdminReasonModal } from "../shared/AdminReasonModal";
-import { AdminShellSection } from "../shared/AdminShellSection";
+import { AdminDetailGrid } from "./shared/AdminDetailGrid";
+import { AdminReasonModal } from "./shared/AdminReasonModal";
+import { AdminShellSection } from "./shared/AdminShellSection";
 
 export function AdminTransactionDetail({
   transactionId,
@@ -29,9 +29,13 @@ export function AdminTransactionDetail({
   const requestAdjustment = useAdminWorkspace(
     (s) => s.requestFinancialAdjustment,
   );
+  const cancelFinancialRequest = useAdminWorkspace(
+    (s) => s.cancelFinancialRequest,
+  );
   const [reqType, setReqType] = useState<
     null | "Refund" | "Ledger Correction"
   >(null);
+  const [cancelTargetId, setCancelTargetId] = useState<string | null>(null);
 
   const payment = payments.find((p) => p.transactionId === transactionId);
   if (!payment) {
@@ -71,8 +75,28 @@ export function AdminTransactionDetail({
       <AdminDetailGrid
         title={t("detailsTitle")}
         rows={[
-          { label: t("colRenter"), value: payment.renterName },
-          { label: t("landlordLabel"), value: payment.landlordName },
+          {
+            label: t("colRenter"),
+            value: (
+              <Link
+                href={`/admin/users/${encodeURIComponent(payment.renterId)}`}
+                className="text-brand-blue hover:underline"
+              >
+                {payment.renterName}
+              </Link>
+            ),
+          },
+          {
+            label: t("landlordLabel"),
+            value: (
+              <Link
+                href={`/admin/users/${encodeURIComponent(payment.landlordId)}`}
+                className="text-brand-blue hover:underline"
+              >
+                {payment.landlordName}
+              </Link>
+            ),
+          },
           { label: t("colProperty"), value: payment.propertyTitle },
           {
             label: t("colAmount"),
@@ -133,10 +157,22 @@ export function AdminTransactionDetail({
                 <span className="font-semibold text-ink">
                   {req.id} · {req.requestType} ({req.evidenceRef})
                 </span>
-                <StatusBadge
-                  label={req.status}
-                  tone={getAdminStatusTone(req.status)}
-                />
+                <div className="flex items-center gap-2">
+                  <StatusBadge
+                    label={req.status}
+                    tone={getAdminStatusTone(req.status)}
+                  />
+                  {req.status === "Pending Backend Execution" && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setCancelTargetId(req.id)}
+                      className="h-7 rounded-none border-line px-2.5 text-[12.5px] font-semibold text-rose-700 hover:bg-rose-50"
+                    >
+                      {t("cancelRequest")}
+                    </Button>
+                  )}
+                </div>
               </div>
             ))}
           </div>
@@ -166,6 +202,20 @@ export function AdminTransactionDetail({
             evidenceRef: values.evidenceRef,
           });
           toast.success(t("requestLoggedToast"));
+        }}
+      />
+
+      <AdminReasonModal
+        open={Boolean(cancelTargetId)}
+        onClose={() => setCancelTargetId(null)}
+        title={t("cancelRequest")}
+        description={t("cancelRequestDesc")}
+        confirmLabel={t("cancelRequest")}
+        isDestructive
+        onSubmitAction={(values) => {
+          if (!cancelTargetId) return;
+          cancelFinancialRequest(cancelTargetId, values.reason);
+          toast.success(t("cancelledToast"));
         }}
       />
     </AdminShellSection>

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { ScrollText } from "lucide-react";
@@ -29,8 +30,10 @@ interface MaterialLeaseEditValues {
 export function AdminLeaseDetailView({ leaseId }: { leaseId: string }) {
   const t = useTranslations("admin.leases");
   const tActions = useTranslations("common.actions");
+  const tCommon = useTranslations("admin.common");
   const locale = useLocale() as AppLocale;
   const leases = useAdminWorkspace((s) => s.leases);
+  const payments = useAdminWorkspace((s) => s.payments);
   const initiateApproval = useAdminWorkspace((s) => s.initiateApprovalRequest);
   const correctNote = useAdminWorkspace((s) => s.correctLeaseNonMaterialNote);
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -40,17 +43,27 @@ export function AdminLeaseDetailView({ leaseId }: { leaseId: string }) {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<MaterialLeaseEditValues>({
-    values: lease
-      ? {
-          rentRwf: lease.rentRwf,
-          endDate: lease.endDate,
-          reason: "",
-          evidenceRef: "",
-        }
-      : undefined,
+    defaultValues: {
+      rentRwf: lease?.rentRwf ?? 0,
+      endDate: lease?.endDate ?? "",
+      reason: "",
+      evidenceRef: "",
+    },
   });
+
+  useEffect(() => {
+    if (editModalOpen && lease) {
+      reset({
+        rentRwf: lease.rentRwf,
+        endDate: lease.endDate,
+        reason: "",
+        evidenceRef: "",
+      });
+    }
+  }, [editModalOpen, lease, reset]);
 
   if (!lease) {
     return (
@@ -63,6 +76,11 @@ export function AdminLeaseDetailView({ leaseId }: { leaseId: string }) {
       </AdminShellSection>
     );
   }
+
+  const relatedPayments = payments.filter(
+    (p) =>
+      p.renterId === lease.renterId && p.landlordId === lease.landlordId,
+  );
 
   return (
     <AdminShellSection
@@ -86,11 +104,38 @@ export function AdminLeaseDetailView({ leaseId }: { leaseId: string }) {
         title={t("leaseOverview")}
         rows={[
           { label: t("colId"), value: lease.id },
-          { label: t("colRenter"), value: lease.renterName },
-          { label: t("colLandlord"), value: lease.landlordName },
+          {
+            label: t("colRenter"),
+            value: (
+              <Link
+                href={`/admin/users/${encodeURIComponent(lease.renterId)}`}
+                className="text-brand-blue hover:underline"
+              >
+                {lease.renterName}
+              </Link>
+            ),
+          },
+          {
+            label: t("colLandlord"),
+            value: (
+              <Link
+                href={`/admin/users/${encodeURIComponent(lease.landlordId)}`}
+                className="text-brand-blue hover:underline"
+              >
+                {lease.landlordName}
+              </Link>
+            ),
+          },
           {
             label: t("colProperty"),
-            value: `${lease.propertyTitle} · ${lease.unitLabel}`,
+            value: (
+              <Link
+                href={`/admin/properties/${encodeURIComponent(lease.propertyId)}`}
+                className="text-brand-blue hover:underline"
+              >
+                {lease.propertyTitle} · {lease.unitLabel}
+              </Link>
+            ),
           },
           {
             label: t("colRent"),
@@ -132,6 +177,43 @@ export function AdminLeaseDetailView({ leaseId }: { leaseId: string }) {
         )}
       </section>
 
+      <section className="border border-line bg-white shadow-2xs">
+        <div className="border-b border-line px-5 py-3.5">
+          <h3 className="text-sm font-bold text-ink">
+            {t("relatedPaymentsTitle")} ({relatedPayments.length})
+          </h3>
+        </div>
+        <div className="divide-y divide-line px-5">
+          {relatedPayments.length === 0 ? (
+            <p className="py-4 text-xs text-faint">{tCommon("noRecordsYet")}</p>
+          ) : (
+            relatedPayments.map((payment) => (
+              <div
+                key={payment.transactionId}
+                className="flex flex-wrap items-center justify-between gap-3 py-3 text-sm"
+              >
+                <div>
+                  <Link
+                    href={`/admin/payments/${encodeURIComponent(payment.transactionId)}`}
+                    className="font-semibold text-brand-blue hover:underline"
+                  >
+                    {payment.transactionId} · {payment.propertyTitle}
+                  </Link>
+                  <p className="text-xs text-body">
+                    {formatRwfLocalized(payment.amountRwf, locale)} ·{" "}
+                    {payment.provider} · {payment.createdAt}
+                  </p>
+                </div>
+                <StatusBadge
+                  label={payment.status}
+                  tone={getAdminStatusTone(payment.status)}
+                />
+              </div>
+            ))
+          )}
+        </div>
+      </section>
+
       <ModalDialog
         open={editModalOpen}
         onClose={() => setEditModalOpen(false)}
@@ -160,28 +242,34 @@ export function AdminLeaseDetailView({ leaseId }: { leaseId: string }) {
         <form
           id="lease-consent-edit-form"
           onSubmit={handleSubmit((values) => {
-            initiateApproval({
-              actionType: "lease_material_edit",
-              title: `Amend lease ${lease.id}`,
-              targetType: "lease",
-              targetId: lease.id,
-              reason: values.reason,
-              evidenceRef: values.evidenceRef,
-              requiresLandlord: true,
-              requiresRenter: true,
-              payload: {
-                leaseId: lease.id,
-                landlordId: lease.landlordId,
-                landlordName: lease.landlordName,
-                renterId: lease.renterId,
-                renterName: lease.renterName,
-                rentRwf: Number(values.rentRwf),
-                endDate: values.endDate,
-                summary: `Update monthly rent to ${Number(values.rentRwf).toLocaleString()} RWF and end date to ${values.endDate}.`,
-              },
-            });
-            toast.success(t("consentSentToast"));
-            setEditModalOpen(false);
+            try {
+              initiateApproval({
+                actionType: "lease_material_edit",
+                title: `Amend lease ${lease.id}`,
+                targetType: "lease",
+                targetId: lease.id,
+                reason: values.reason,
+                evidenceRef: values.evidenceRef,
+                requiresLandlord: true,
+                requiresRenter: true,
+                payload: {
+                  leaseId: lease.id,
+                  landlordId: lease.landlordId,
+                  landlordName: lease.landlordName,
+                  renterId: lease.renterId,
+                  renterName: lease.renterName,
+                  rentRwf: Number(values.rentRwf),
+                  endDate: values.endDate,
+                  summary: `Update monthly rent to ${Number(values.rentRwf).toLocaleString()} RWF and end date to ${values.endDate}.`,
+                },
+              });
+              toast.success(t("consentSentToast"));
+              setEditModalOpen(false);
+            } catch (error) {
+              toast.error(
+                error instanceof Error ? error.message : tCommon("actionFailed"),
+              );
+            }
           })}
           className="space-y-3.5"
         >
@@ -192,9 +280,17 @@ export function AdminLeaseDetailView({ leaseId }: { leaseId: string }) {
               </label>
               <Input
                 type="number"
-                {...register("rentRwf", { required: true, min: 1000 })}
+                {...register("rentRwf", {
+                  required: t("rentMinError"),
+                  min: { value: 1000, message: t("rentMinError") },
+                })}
                 className="mt-1 h-10 rounded-none border-line bg-white text-sm"
               />
+              {errors.rentRwf && (
+                <p className="mt-1 text-xs text-rose-700">
+                  {errors.rentRwf.message}
+                </p>
+              )}
             </div>
             <div>
               <label className="block text-xs font-semibold text-ink">
@@ -202,9 +298,20 @@ export function AdminLeaseDetailView({ leaseId }: { leaseId: string }) {
               </label>
               <Input
                 type="date"
-                {...register("endDate", { required: true })}
+                {...register("endDate", {
+                  required: t("endDateError"),
+                  validate: (value) =>
+                    !lease.startDate || value > lease.startDate
+                      ? true
+                      : t("endDateError"),
+                })}
                 className="mt-1 h-10 rounded-none border-line bg-white text-sm"
               />
+              {errors.endDate && (
+                <p className="mt-1 text-xs text-rose-700">
+                  {errors.endDate.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -215,8 +322,8 @@ export function AdminLeaseDetailView({ leaseId }: { leaseId: string }) {
             <Input
               placeholder="Signed addendum / support ticket"
               {...register("evidenceRef", {
-                required: "Evidence reference is required",
-                minLength: { value: 3, message: "Minimum 3 characters" },
+                required: t("evidenceRequired"),
+                minLength: { value: 3, message: t("evidenceRequired") },
               })}
               className="mt-1 h-10 rounded-none border-line bg-white text-sm"
             />
@@ -234,8 +341,8 @@ export function AdminLeaseDetailView({ leaseId }: { leaseId: string }) {
             <textarea
               rows={2}
               {...register("reason", {
-                required: "Reason is required",
-                minLength: { value: 5, message: "Minimum 5 characters" },
+                required: t("reasonRequired"),
+                minLength: { value: 5, message: t("reasonRequired") },
               })}
               className="mt-1 w-full rounded-none border border-line bg-white p-2.5 text-sm text-ink"
             />

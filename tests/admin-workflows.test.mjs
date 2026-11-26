@@ -4,6 +4,7 @@ import {
   applyPartyConsentDecision,
   canExecuteApproval,
   computeApprovalStatus,
+  getApprovingPartyNames,
 } from "../utils/admin-approvals.ts";
 import { computeAdminOverviewSummary } from "../utils/admin-metrics.ts";
 import {
@@ -208,4 +209,25 @@ test("computeAdminOverviewSummary derives verifiable counts from records", () =>
   assert.equal(summary.totalProperties, mockProperties.length); // 4
   assert.equal(summary.pendingApprovalsCount, 2);               // both "Pending Consent"
   assert.equal(summary.successfulVolumeRwf, 325_000);           // 180k + 145k
+});
+
+test("terminal approval states ignore subsequent consent mutations and report approving parties accurately", () => {
+  const cancelled = { ...mockApprovalPendingRenter, status: "Cancelled" };
+  const afterAttempt = applyPartyConsentDecision(
+    cancelled,
+    "renter",
+    "Approved",
+  );
+  assert.equal(afterAttempt.status, "Cancelled");
+  assert.equal(canExecuteApproval(afterAttempt).allowed, false);
+
+  const approvedBoth = applyPartyConsentDecision(
+    mockApprovalPendingRenter,
+    "renter",
+    "Approved",
+  );
+  assert.deepEqual(getApprovingPartyNames(approvedBoth), [
+    "Landlord: Emmanuel Ntaganda",
+    "Renter: Aline Mukamana",
+  ]);
 });

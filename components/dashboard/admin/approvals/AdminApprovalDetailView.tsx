@@ -8,6 +8,7 @@ import { EmptyStateBox } from "@/components/shared/EmptyStateBox";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { useAdminWorkspace } from "@/store/admin-workspace.store";
+import { computeApprovalStatus } from "@/utils/admin-approvals";
 import { getAdminStatusTone } from "@/utils/admin-status-tone";
 import { ShieldCheck } from "lucide-react";
 import { AdminDetailGrid } from "../shared/AdminDetailGrid";
@@ -33,8 +34,9 @@ export function AdminApprovalDetailView({ requestId }: { requestId: string }) {
     );
   }
 
+  const liveStatus = computeApprovalStatus(req);
   const canCancel =
-    req.status === "Pending Consent" || req.status === "Approved";
+    liveStatus === "Pending Consent" || liveStatus === "Approved";
 
   return (
     <AdminShellSection
@@ -43,8 +45,8 @@ export function AdminApprovalDetailView({ requestId }: { requestId: string }) {
       action={
         <div className="flex items-center gap-2">
           <StatusBadge
-            label={req.status}
-            tone={getAdminStatusTone(req.status)}
+            label={liveStatus}
+            tone={getAdminStatusTone(liveStatus)}
           />
           {canCancel && (
             <Button
@@ -66,6 +68,12 @@ export function AdminApprovalDetailView({ requestId }: { requestId: string }) {
         ]}
       />
 
+      {liveStatus === "Expired" && (
+        <div className="border border-rose-300 bg-rose-50 px-4 py-3 text-xs font-semibold text-rose-800">
+          {t("expiredNotice")}
+        </div>
+      )}
+
       <AdminDetailGrid
         title={t("requestOverview")}
         rows={[
@@ -81,8 +89,8 @@ export function AdminApprovalDetailView({ requestId }: { requestId: string }) {
             label: t("colStatus"),
             value: (
               <StatusBadge
-                label={req.status}
-                tone={getAdminStatusTone(req.status)}
+                label={liveStatus}
+                tone={getAdminStatusTone(liveStatus)}
               />
             ),
           },

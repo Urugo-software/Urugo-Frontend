@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { Bell, CheckCheck, Plus, Trash2 } from "lucide-react";
@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { useAdminWorkspace } from "@/store/admin-workspace.store";
 import type { AdminNotificationItem } from "@/types/admin";
 import { getAdminStatusTone } from "@/utils/admin-status-tone";
+import { AdminFilterBar } from "../shared/AdminFilterBar";
 import { AdminShellSection } from "../shared/AdminShellSection";
 
 interface NoticeFormValues {
@@ -26,14 +27,22 @@ interface NoticeFormValues {
 export function AdminNotificationsView() {
   const t = useTranslations("admin.notifications");
   const tActions = useTranslations("common.actions");
+  const tCommon = useTranslations("admin.common");
   const notifications = useAdminWorkspace((s) => s.notifications);
   const markRead = useAdminWorkspace((s) => s.markNotificationRead);
   const markAllRead = useAdminWorkspace((s) => s.markAllNotificationsRead);
   const dismiss = useAdminWorkspace((s) => s.dismissNotification);
   const sendNotice = useAdminWorkspace((s) => s.sendPlatformNotice);
   const [composeOpen, setComposeOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
 
-  const { register, handleSubmit, reset } = useForm<NoticeFormValues>({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<NoticeFormValues>({
     defaultValues: {
       title: "",
       message: "",
@@ -43,6 +52,19 @@ export function AdminNotificationsView() {
   });
 
   const unreadCount = notifications.filter((n) => n.isUnread).length;
+
+  const filtered = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    return notifications.filter((item) => {
+      const matchCat = !categoryFilter || item.category === categoryFilter;
+      const matchQuery =
+        !q ||
+        item.title.toLowerCase().includes(q) ||
+        item.message.toLowerCase().includes(q) ||
+        item.audience.toLowerCase().includes(q);
+      return matchCat && matchQuery;
+    });
+  }, [categoryFilter, notifications, searchQuery]);
 
   return (
     <AdminShellSection
@@ -83,7 +105,33 @@ export function AdminNotificationsView() {
         </div>
       }
     >
-      {notifications.length === 0 ? (
+      <AdminFilterBar
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        searchPlaceholder={t("searchPlaceholder")}
+        searchLabel={t("searchPlaceholder")}
+        filters={[
+          {
+            key: "category",
+            label: t("allCategories"),
+            options: [
+              { value: "verification", label: t("categoryVerification") },
+              { value: "approval", label: t("categoryApproval") },
+              { value: "dispute", label: t("categoryDispute") },
+              { value: "security", label: t("categorySecurity") },
+              { value: "system", label: t("categorySystem") },
+            ],
+          },
+        ]}
+        selectedFilters={{ category: categoryFilter }}
+        onFilterChange={(_, val) => setCategoryFilter(val)}
+        onReset={() => {
+          setSearchQuery("");
+          setCategoryFilter("");
+        }}
+      />
+
+      {filtered.length === 0 ? (
         <EmptyStateBox
           icon={Bell}
           title={t("emptyTitle")}
@@ -91,7 +139,7 @@ export function AdminNotificationsView() {
         />
       ) : (
         <div className="divide-y divide-line border border-line bg-white shadow-2xs">
-          {notifications.map((item) => (
+          {filtered.map((item) => (
             <div
               key={item.id}
               className={`flex flex-col justify-between gap-3 p-4 sm:flex-row sm:items-center ${
@@ -172,9 +220,15 @@ export function AdminNotificationsView() {
         <form
           id="admin-notice-form"
           onSubmit={handleSubmit((values) => {
-            sendNotice(values);
-            toast.success(t("sentToast"));
-            setComposeOpen(false);
+            try {
+              sendNotice(values);
+              toast.success(t("sentToast"));
+              setComposeOpen(false);
+            } catch (error) {
+              toast.error(
+                error instanceof Error ? error.message : tCommon("actionFailed"),
+              );
+            }
           })}
           className="space-y-3.5"
         >
@@ -183,9 +237,14 @@ export function AdminNotificationsView() {
               {t("noticeTitleLabel")} *
             </label>
             <Input
-              {...register("title", { required: true })}
+              {...register("title", { required: t("titleRequired") })}
               className="mt-1 h-10 rounded-none border-line bg-white text-sm"
             />
+            {errors.title && (
+              <p className="mt-1 text-xs text-rose-700">
+                {errors.title.message}
+              </p>
+            )}
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
@@ -218,9 +277,14 @@ export function AdminNotificationsView() {
             </label>
             <textarea
               rows={3}
-              {...register("message", { required: true })}
+              {...register("message", { required: t("messageRequired") })}
               className="mt-1 w-full rounded-none border border-line bg-white p-2.5 text-sm"
             />
+            {errors.message && (
+              <p className="mt-1 text-xs text-rose-700">
+                {errors.message.message}
+              </p>
+            )}
           </div>
         </form>
       </ModalDialog>

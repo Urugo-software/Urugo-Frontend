@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { ShieldCheck } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { ModalDialog } from "@/components/shared/ModalDialog";
@@ -36,6 +37,7 @@ export function AdminConsentRequestModal({
   onSubmitRequest,
 }: AdminConsentRequestModalProps) {
   const tActions = useTranslations("common.actions");
+  const tCommon = useTranslations("admin.common");
   const tConsent = useTranslations("admin.consentModal");
   const {
     register,
@@ -81,8 +83,14 @@ export function AdminConsentRequestModal({
       <form
         id="admin-consent-request-form"
         onSubmit={handleSubmit((values) => {
-          onSubmitRequest(values);
-          onClose();
+          try {
+            onSubmitRequest(values);
+            onClose();
+          } catch (error) {
+            toast.error(
+              error instanceof Error ? error.message : tCommon("actionFailed"),
+            );
+          }
         })}
         className="space-y-4"
       >

@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { AlertTriangle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { ModalDialog } from "@/components/shared/ModalDialog";
@@ -38,6 +39,7 @@ export function AdminReasonModal({
   onSubmitAction,
 }: AdminReasonModalProps) {
   const tActions = useTranslations("common.actions");
+  const tCommon = useTranslations("admin.common");
   const tModal = useTranslations("admin.reasonModal");
   const {
     register,
@@ -55,8 +57,14 @@ export function AdminReasonModal({
   }, [open, reset]);
 
   const onValid = (values: AdminReasonFormValues) => {
-    onSubmitAction(values);
-    onClose();
+    try {
+      onSubmitAction(values);
+      onClose();
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : tCommon("actionFailed"),
+      );
+    }
   };
 
   return (

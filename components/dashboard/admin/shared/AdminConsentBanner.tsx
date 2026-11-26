@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { useAdminWorkspace } from "@/store/admin-workspace.store";
+import { computeApprovalStatus } from "@/utils/admin-approvals";
 
 interface AdminConsentBannerProps {
   party: "landlord" | "renter";
@@ -13,11 +14,12 @@ interface AdminConsentBannerProps {
 
 export function AdminConsentBanner({ party }: AdminConsentBannerProps) {
   const t = useTranslations("admin.partyConsent");
+  const tCommon = useTranslations("admin.common");
   const approvals = useAdminWorkspace((s) => s.approvals);
   const respond = useAdminWorkspace((s) => s.respondToApprovalRequest);
 
   const pending = approvals.filter((req) => {
-    if (req.status !== "Pending Consent") return false;
+    if (computeApprovalStatus(req) !== "Pending Consent") return false;
     const consent =
       party === "landlord" ? req.landlordConsent : req.renterConsent;
     return consent.required && consent.status === "Pending";
@@ -29,10 +31,16 @@ export function AdminConsentBanner({ party }: AdminConsentBannerProps) {
     requestId: string,
     decision: "Approved" | "Rejected",
   ) => {
-    respond({ requestId, party, decision });
-    toast.success(
-      decision === "Approved" ? t("approvedToast") : t("rejectedToast"),
-    );
+    try {
+      respond({ requestId, party, decision });
+      toast.success(
+        decision === "Approved" ? t("approvedToast") : t("rejectedToast"),
+      );
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : tCommon("actionFailed"),
+      );
+    }
   };
 
   return (

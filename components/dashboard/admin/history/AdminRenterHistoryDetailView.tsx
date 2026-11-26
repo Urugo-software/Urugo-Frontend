@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { History } from "lucide-react";
@@ -73,8 +74,28 @@ export function AdminRenterHistoryDetailView({
         title={t("detailsTitle")}
         rows={[
           { label: t("colId"), value: record.id },
-          { label: t("colRenter"), value: record.renterName },
-          { label: t("landlordLabel"), value: record.landlordName },
+          {
+            label: t("colRenter"),
+            value: (
+              <Link
+                href={`/admin/users/${encodeURIComponent(record.renterId)}`}
+                className="text-brand-blue hover:underline"
+              >
+                {record.renterName}
+              </Link>
+            ),
+          },
+          {
+            label: t("landlordLabel"),
+            value: (
+              <Link
+                href={`/admin/users/${encodeURIComponent(record.landlordId)}`}
+                className="text-brand-blue hover:underline"
+              >
+                {record.landlordName}
+              </Link>
+            ),
+          },
           { label: t("propertyLabel"), value: record.propertyTitle },
           {
             label: t("colAmount"),
@@ -84,10 +105,19 @@ export function AdminRenterHistoryDetailView({
           { label: t("createdLabel"), value: record.createdAt },
           {
             label: t("confirmedDebtLabel"),
-            value: meta.isConfirmedObligation ? t("yesConfirmed") : t("noNotConfirmed"),
+            value: meta.isConfirmedObligation
+              ? t("yesConfirmed")
+              : t("noNotConfirmed"),
           },
         ]}
       />
+
+      {record.reviewNote && (
+        <div className="border border-line bg-white p-4 text-xs text-body shadow-2xs">
+          <p className="font-bold text-ink">{t("reviewNoteLabel")}</p>
+          <p className="mt-1">{record.reviewNote}</p>
+        </div>
+      )}
 
       <section className="space-y-3 border border-line bg-white p-5 shadow-2xs">
         <h3 className="text-sm font-bold text-ink">{t("mediationTitle")}</h3>

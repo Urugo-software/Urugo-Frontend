@@ -33,14 +33,16 @@ interface NewFaqForm {
 export function AdminPublicContentView() {
   const t = useTranslations("admin.publicContent");
   const tActions = useTranslations("common.actions");
+  const tCommon = useTranslations("admin.common");
   const publicContent = useAdminWorkspace((s) => s.publicContent);
   const properties = useAdminWorkspace((s) => s.properties);
   const updatePublicContent = useAdminWorkspace((s) => s.updatePublicContent);
-  const [featuredIds, setFeaturedIds] = useState<string[]>(
-    publicContent.featuredPropertyIds,
-  );
-  const [faqs, setFaqs] = useState<PublicFaqItem[]>(publicContent.faqs);
+  const [featuredDraft, setFeaturedDraft] = useState<string[] | null>(null);
+  const [faqsDraft, setFaqsDraft] = useState<PublicFaqItem[] | null>(null);
   const [faqModalOpen, setFaqModalOpen] = useState(false);
+
+  const featuredIds = featuredDraft ?? publicContent.featuredPropertyIds;
+  const faqs = faqsDraft ?? publicContent.faqs;
 
   const verifiedProperties = properties.filter(
     (p) => p.verification === "Verified" && !p.isSuspended,
@@ -49,6 +51,7 @@ export function AdminPublicContentView() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<PublicSettingsForm>({
     defaultValues: {
@@ -68,29 +71,39 @@ export function AdminPublicContentView() {
   });
 
   const toggleFeatured = (id: string) => {
-    setFeaturedIds((curr) =>
-      curr.includes(id) ? curr.filter((x) => x !== id) : [...curr, id],
+    const base = featuredDraft ?? publicContent.featuredPropertyIds;
+    setFeaturedDraft(
+      base.includes(id) ? base.filter((x) => x !== id) : [...base, id],
     );
   };
 
   const onSaveAll = (values: PublicSettingsForm) => {
-    updatePublicContent(
-      {
-        announcement: {
-          enabled: values.enabled,
-          title: values.title,
-          message: values.message,
-          ctaLabel: values.ctaLabel,
-          ctaHref: values.ctaHref,
+    try {
+      updatePublicContent(
+        {
+          announcement: {
+            enabled: values.enabled,
+            title: values.title,
+            message: values.message,
+            ctaLabel: values.ctaLabel,
+            ctaHref: values.ctaHref,
+          },
+          featuredPropertyIds: featuredIds,
+          faqs,
+          supportPhone: values.supportPhone,
+          supportEmail: values.supportEmail,
         },
-        featuredPropertyIds: featuredIds,
-        faqs,
-        supportPhone: values.supportPhone,
-        supportEmail: values.supportEmail,
-      },
-      values.reason,
-    );
-    toast.success(t("savedToast"));
+        values.reason,
+      );
+      setFeaturedDraft(null);
+      setFaqsDraft(null);
+      setValue("reason", "");
+      toast.success(t("savedToast"));
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : tCommon("actionFailed"),
+      );
+    }
   };
 
   return (
@@ -120,9 +133,14 @@ export function AdminPublicContentView() {
                 {t("bannerTitleLabel")}
               </label>
               <Input
-                {...register("title", { required: true })}
+                {...register("title", { required: t("titleRequired") })}
                 className="mt-1 h-10 rounded-none border-line bg-white text-sm"
               />
+              {errors.title && (
+                <p className="mt-1 text-xs text-rose-700">
+                  {errors.title.message}
+                </p>
+              )}
             </div>
             <div>
               <label className="block text-xs font-semibold text-ink">
@@ -140,9 +158,14 @@ export function AdminPublicContentView() {
               {t("bannerMessageLabel")}
             </label>
             <Input
-              {...register("message", { required: true })}
+              {...register("message", { required: t("messageRequired") })}
               className="mt-1 h-10 rounded-none border-line bg-white text-sm"
             />
+            {errors.message && (
+              <p className="mt-1 text-xs text-rose-700">
+                {errors.message.message}
+              </p>
+            )}
           </div>
         </section>
 
@@ -218,7 +241,7 @@ export function AdminPublicContentView() {
                   type="button"
                   aria-label={tActions("remove")}
                   onClick={() =>
-                    setFaqs((curr) => curr.filter((f) => f.id !== faq.id))
+                    setFaqsDraft(faqs.filter((f) => f.id !== faq.id))
                   }
                   className="cursor-pointer p-1.5 text-faint hover:text-rose-700"
                 >
@@ -236,9 +259,14 @@ export function AdminPublicContentView() {
                 {t("supportPhoneLabel")}
               </label>
               <Input
-                {...register("supportPhone", { required: true })}
+                {...register("supportPhone", { required: t("phoneRequired") })}
                 className="mt-1 h-10 rounded-none border-line bg-white text-sm"
               />
+              {errors.supportPhone && (
+                <p className="mt-1 text-xs text-rose-700">
+                  {errors.supportPhone.message}
+                </p>
+              )}
             </div>
             <div>
               <label className="block text-xs font-semibold text-ink">
@@ -246,9 +274,14 @@ export function AdminPublicContentView() {
               </label>
               <Input
                 type="email"
-                {...register("supportEmail", { required: true })}
+                {...register("supportEmail", { required: t("emailRequired") })}
                 className="mt-1 h-10 rounded-none border-line bg-white text-sm"
               />
+              {errors.supportEmail && (
+                <p className="mt-1 text-xs text-rose-700">
+                  {errors.supportEmail.message}
+                </p>
+              )}
             </div>
           </div>
 
@@ -309,10 +342,7 @@ export function AdminPublicContentView() {
         <form
           id="add-faq-form"
           onSubmit={faqForm.handleSubmit((values) => {
-            setFaqs((curr) => [
-              ...curr,
-              { id: createSafeId("faq"), ...values },
-            ]);
+            setFaqsDraft([...faqs, { id: createSafeId("faq"), ...values }]);
             setFaqModalOpen(false);
           })}
           className="space-y-3"
@@ -335,9 +365,16 @@ export function AdminPublicContentView() {
               {t("questionLabel")} *
             </label>
             <Input
-              {...faqForm.register("question", { required: true })}
+              {...faqForm.register("question", {
+                required: t("questionRequired"),
+              })}
               className="mt-1 h-10 rounded-none border-line bg-white text-sm"
             />
+            {faqForm.formState.errors.question && (
+              <p className="mt-1 text-xs text-rose-700">
+                {faqForm.formState.errors.question.message}
+              </p>
+            )}
           </div>
           <div>
             <label className="block text-xs font-semibold text-ink">
@@ -345,9 +382,16 @@ export function AdminPublicContentView() {
             </label>
             <textarea
               rows={3}
-              {...faqForm.register("answer", { required: true })}
+              {...faqForm.register("answer", {
+                required: t("answerRequired"),
+              })}
               className="mt-1 w-full rounded-none border border-line bg-white p-2.5 text-sm"
             />
+            {faqForm.formState.errors.answer && (
+              <p className="mt-1 text-xs text-rose-700">
+                {faqForm.formState.errors.answer.message}
+              </p>
+            )}
           </div>
         </form>
       </ModalDialog>
