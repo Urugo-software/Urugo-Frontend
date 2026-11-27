@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useLogin } from "@/hooks/mutate/useLogin";
+import { useGoogleAuth } from "@/hooks/mutate/useGoogleAuth";
 import { cn } from "@/lib/utils";
 import type { LoginProps } from "@/types";
 
@@ -26,7 +27,7 @@ import {
   AUTH_LABEL_CLASS,
   AUTH_PRIMARY_BUTTON_CLASS,
 } from "../auth-styles";
-import { SignUpGoogleIcon } from "../sign-up/SignUpGoogleIcon";
+import { GoogleIdentityButton } from "../GoogleIdentityButton";
 import LoginFormHeader from "./LoginFormHeader";
 
 export function LoginForm({
@@ -46,6 +47,7 @@ export function LoginForm({
   });
 
   const { mutate, isPending } = useLogin();
+  const googleAuth = useGoogleAuth();
 
   const onSubmit = (data: LoginProps) => {
     mutate({
@@ -64,7 +66,7 @@ export function LoginForm({
       <div className="flex flex-col gap-6 sm:gap-7">
         <LoginFormHeader />
 
-        <FieldGroup className="gap-4 sm:gap-5" aria-busy={isPending}>
+        <FieldGroup className="gap-4 sm:gap-5" aria-busy={isPending || googleAuth.isPending}>
           <Field data-invalid={Boolean(errors.identifier) || undefined}>
             <FieldLabel htmlFor="identifier" className={AUTH_LABEL_CLASS}>
               {t("identifierLabel")}
@@ -73,7 +75,7 @@ export function LoginForm({
               id="identifier"
               type="text"
               autoComplete="username"
-              disabled={isPending}
+              disabled={isPending || googleAuth.isPending}
               placeholder={t("identifierPlaceholder")}
               aria-invalid={Boolean(errors.identifier)}
               aria-describedby={
@@ -111,7 +113,7 @@ export function LoginForm({
                 id="password"
                 type={showPassword ? "text" : "password"}
                 autoComplete="current-password"
-                disabled={isPending}
+                disabled={isPending || googleAuth.isPending}
                 placeholder={t("passwordPlaceholder")}
                 aria-invalid={Boolean(errors.password)}
                 aria-describedby={
@@ -124,7 +126,7 @@ export function LoginForm({
               />
               <button
                 type="button"
-                disabled={isPending}
+                disabled={isPending || googleAuth.isPending}
                 onClick={() => setShowPassword((prev) => !prev)}
                 aria-label={
                   showPassword ? t("hidePassword") : t("showPassword")
@@ -149,7 +151,7 @@ export function LoginForm({
           <Field className="pt-1">
             <Button
               type="submit"
-              disabled={isPending}
+              disabled={isPending || googleAuth.isPending}
               className={AUTH_PRIMARY_BUTTON_CLASS}
             >
               {isPending ? t("submitting") : t("submit")}
@@ -161,16 +163,11 @@ export function LoginForm({
           </FieldSeparator>
 
           <Field>
-            <Button
-              variant="outline"
-              type="button"
-              disabled
-              title={t("googleComingSoonTooltip")}
-              className="h-11 w-full cursor-not-allowed rounded-xl border-line text-sm font-medium text-faint"
-            >
-              <SignUpGoogleIcon />
-              <span>{t("googleComingSoon")}</span>
-            </Button>
+            <GoogleIdentityButton
+              mode="signin_with"
+              disabled={isPending || googleAuth.isPending}
+              onCredential={(idToken) => googleAuth.mutate({ idToken, intent: "sign_in" })}
+            />
           </Field>
 
           <FieldDescription className="pt-1 text-center text-sm text-body">

@@ -88,7 +88,7 @@ export const howItWorksData: Record<
         stepNumber: 1,
         title: "Join your rental workspace",
         description:
-          "Use your landlord's invitation link or sign up as a renter to access your current unit details.",
+          "Use the secure invitation email from your landlord to verify your email and activate your renter account before viewing your rental details.",
       },
       {
         stepNumber: 2,

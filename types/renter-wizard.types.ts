@@ -1,11 +1,6 @@
 import { LandlordPropertyItem, LandlordRenter } from "@/types/landlord";
 import { AgreementLanguage, Agreement } from "@/types/agreement.types";
-import {
-  CopyStatusMessage,
-  SimulatedRenterInvitationLink,
-} from "./renter-registration.types";
-
-export type AddRenterMode = "manual" | "link" | "existing";
+export type AddRenterMode = "manual" | "existing";
 export type WizardStep = 1 | 2 | 3 | 4 | 5;
 export type WizardStage = "step1" | "step2" | "step3" | "editor" | "completed";
 
@@ -109,7 +104,6 @@ export function getDefaultPropertyRent(property: LandlordPropertyItem): number |
 export interface FullRenterRegistrationSubmission {
   mode: AddRenterMode;
   identity: RenterIdentityDraft;
-  simulatedLink?: SimulatedRenterInvitationLink;
   tenancy: TenancyConfigDraft;
   propertyName?: string;
   propertyLocation?: string;
@@ -151,12 +145,9 @@ export interface Step2RenterDetailsProps {
   existingRenters: LandlordRenter[];
   onBack: () => void;
   onContinue: () => void;
-  // Link mode props
-  generatedLink: SimulatedRenterInvitationLink | null;
-  copied: boolean;
-  copyStatus: CopyStatusMessage | null;
-  onGenerateLink: () => void;
-  onCopyLink: () => void;
+  onStartInvitation: () => void;
+  isStartingInvitation: boolean;
+  queuedInvitation: { requestId: string; emailStatus: "QUEUED" } | null;
 }
 
 export interface Step3AgreementLanguageProps {
@@ -178,7 +169,6 @@ export interface WizardReviewViewProps {
   tenancy: TenancyConfigDraft;
   properties: LandlordPropertyItem[];
   paymentSummary: InitialPaymentCalculation;
-  simulatedLink: SimulatedRenterInvitationLink | null;
   onBackToEdit: (step?: WizardStep) => void;
   onConfirm: () => void;
 }

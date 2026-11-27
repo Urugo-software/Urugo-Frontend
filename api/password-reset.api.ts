@@ -1,28 +1,24 @@
-/**
- * Integration boundary for password recovery. Replace these placeholders once
- * the backend's reset endpoints and authorization contract are available.
- */
-export class PasswordResetUnavailableError extends Error {
-  constructor() {
-    super("Password recovery is not available yet. Please try again later.");
-    this.name = "PasswordResetUnavailableError";
+import api, { AxiosErrorHandler } from "@/lib/axios";
+
+async function postPasswordRecovery(path: string, body: Record<string, string>) {
+  try {
+    await api.post(path, body);
+  } catch (error) {
+    AxiosErrorHandler(error);
   }
 }
 
-export const requestPasswordResetCode: (email: string) => Promise<void> = async () => {
-  throw new PasswordResetUnavailableError();
-};
+export function requestPasswordResetCode(email: string, nationalId: string): Promise<void> {
+  return postPasswordRecovery("/api/auth/send-reset-otp", { email, nationalId });
+}
 
-export const verifyPasswordResetCode: (
-  email: string,
-  code: string,
-) => Promise<string> = async () => {
-  throw new PasswordResetUnavailableError();
-};
+export function verifyPasswordResetCode(code: string): Promise<void> {
+  return postPasswordRecovery("/api/auth/verify-otp", { otp: code });
+}
 
-export const resetPassword: (
-  password: string,
-  proof: string,
-) => Promise<void> = async () => {
-  throw new PasswordResetUnavailableError();
-};
+export function resetPassword(password: string, confirmation: string): Promise<void> {
+  return postPasswordRecovery("/api/auth/reset-password", {
+    newPassword: password,
+    confirmPassword: confirmation,
+  });
+}

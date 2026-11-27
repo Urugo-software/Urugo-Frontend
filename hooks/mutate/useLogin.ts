@@ -1,32 +1,22 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import toast from "react-hot-toast";
 
-import { loginUserService } from "@/api/auth.api";
-import { queryClient } from "@/components/provider/QueryClient";
+import { loginWithPassword, AUTH_SESSION_QUERY_KEY } from "@/services/auth.service";
 import { getPostLoginRoute } from "@/utils/auth-helpers";
-
-interface LoginResponseLike {
-  role?: string;
-  user?: {
-    role?: string;
-  };
-}
 
 export function useLogin() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const t = useTranslations("auth.login");
 
   const { isPending, mutate, isError, error } = useMutation({
-    mutationFn: loginUserService,
-    onSuccess: (data: LoginResponseLike | undefined) => {
-      queryClient.invalidateQueries({
-        queryKey: ["me"],
-      });
+    mutationFn: loginWithPassword,
+    onSuccess: (user) => {
+      queryClient.setQueryData(AUTH_SESSION_QUERY_KEY, user);
       toast.success(t("signInSuccess"));
-      const role = data?.user?.role ?? data?.role;
-      router.replace(getPostLoginRoute(role));
+      router.replace(getPostLoginRoute(user.role));
     },
     onError: (error) => {
       toast.error(error.message || t("signInErrorFallback"));

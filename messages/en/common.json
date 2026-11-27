@@ -42,6 +42,8 @@
     "copied": "Copied",
     "send": "Send",
     "reply": "Reply",
+    "signOut": "Sign out",
+    "signingOut": "Signing out...",
     "archive": "Archive",
     "dismiss": "Dismiss",
     "markAllRead": "Mark all read",
