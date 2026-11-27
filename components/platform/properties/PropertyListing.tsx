@@ -6,13 +6,18 @@ import { useTranslations } from "next-intl";
 import { ChevronDown, SearchX, SlidersHorizontal } from "lucide-react";
 
 import { EmptyStateBox } from "@/components/shared/EmptyStateBox";
+import SectionError from "@/components/shared/SectionError";
+import SectionLoading from "@/components/shared/SectionLoading";
 import { ViewModeToggle } from "@/components/shared/ViewModeToggle";
-import { listed_properties, sortOptions } from "@/data/properties";
-import { paginateItems } from "@/utils/pagination";
+import { sortOptions } from "@/data/properties";
+import { usePublicProperties } from "@/hooks/query/properties.hooks";
 import {
-  filterPublicProperties,
-  type PublicPropertyFilters,
-  type PublicPropertySort,
+  toPropertyListingCardProps,
+  toPublicPropertyQueryParams,
+} from "@/mappers/public-property-list.mapper";
+import type {
+  PublicPropertyFilters,
+  PublicPropertySort,
 } from "@/utils/public-properties";
 import PropertyFilter from "./PropertyFilter";
 import PropertyListingCard from "./PropertyListingCard";
@@ -55,16 +60,17 @@ function PropertyListing({
     filters.bedrooms !== "Any" ||
     filters.amenities.length > 0;
 
-  const filteredProperties = useMemo(
-    () => filterPublicProperties(listed_properties, filters),
-    [filters],
+  const apiParams = useMemo(
+    () => toPublicPropertyQueryParams(filters, currentPage),
+    [filters, currentPage],
   );
 
-  const paginated = paginateItems(
-    filteredProperties,
-    currentPage,
-    ITEMS_PER_PAGE,
-  );
+  const { data, isLoading, isError, error, refetch } =
+    usePublicProperties(apiParams);
+
+  const properties = data?.data?.properties ?? [];
+  const totalItems = data?.data?.totalProperties ?? 0;
+  const totalPages = data?.data?.totalPages ?? 0;
 
   const activeFilterCount = [
     filters.district !== "All districts",
@@ -101,7 +107,7 @@ function PropertyListing({
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-3">
             <TotalAvailableProperties
-              total={paginated.totalItems}
+              total={totalItems}
               hasActiveFilters={hasActiveFilters}
             />
             {hasActiveFilters && (
@@ -203,7 +209,18 @@ function PropertyListing({
         </AnimatePresence>
       </div>
 
-      {paginated.items.length === 0 ? (
+      {isLoading ? (
+        <div className="mt-6">
+          <SectionLoading message={t("loading")} />
+        </div>
+      ) : isError ? (
+        <div className="mt-6">
+          <SectionError
+            message={error instanceof Error ? error.message : t("loading")}
+            onRetry={() => void refetch()}
+          />
+        </div>
+      ) : properties.length === 0 ? (
         <div className="mt-6">
           <EmptyStateBox
             icon={SearchX}
@@ -229,32 +246,22 @@ function PropertyListing({
                 : "mt-6 flex flex-col gap-4"
             }
           >
-            {paginated.items.map((prop, idx) => (
-              <PropertyListingCard
-                key={prop.id}
-                index={idx}
-                viewMode={viewMode}
-                id={prop.id}
-                image={prop.image}
-                headline={prop.headline}
-                ownerName={prop.ownerName}
-                price={prop.price}
-                currency={prop.currency}
-                period={prop.period}
-                location={prop.location}
-                beds={prop.beds}
-                baths={prop.baths}
-                parking={prop.parking}
-                isVerified={prop.isVerified}
-                availabilityStatus={prop.availabilityStatus}
-              />
-            ))}
+            {properties.map((prop, idx) => {
+              const card = toPropertyListingCardProps(prop, idx);
+              return (
+                <PropertyListingCard
+                  key={card.id}
+                  viewMode={viewMode}
+                  {...card}
+                />
+              );
+            })}
           </div>
 
           <PropertyPagination
-            currentPage={paginated.page}
-            totalPages={paginated.totalPages}
-            totalItems={paginated.totalItems}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={totalItems}
             itemsPerPage={ITEMS_PER_PAGE}
             onPageChange={(nextPage) => setCurrentPage(nextPage)}
           />
