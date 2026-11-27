@@ -64,7 +64,7 @@ async function FeaturesPage() {
 
       <SectionContainer
         id="landlords"
-        className="mx-auto max-w-7xl scroll-mt-24 py-10 lg:pb-20"
+        className="mx-auto max-w-7xl  scroll-mt-24 py-10 lg:pb-20"
       >
         <LeftSectionHeader
           subHeader={t("landlords.subHeader")}

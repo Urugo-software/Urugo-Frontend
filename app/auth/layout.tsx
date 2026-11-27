@@ -10,8 +10,8 @@ function layout({ children }: { children: React.ReactNode }) {
         <Logo />
       </div>
       <BrandLogo />
-      <div className="flex min-h-screen flex-col items-center justify-center bg-surface/70 px-4 py-8 sm:px-6 sm:py-16 lg:px-10">
-        <div className="mb-6 flex w-full max-w-md items-center justify-between gap-3 sm:hidden">
+      <div className="flex bg-surface/70 min-h-screen flex-col items-center justify-center  px-4 py-8 sm:px-6 sm:py-16 lg:px-10">
+        <div className="fixed p-3  top-0 z-30 mb-6 flex w-full  max-w-md items-center justify-between gap-3 bg-surface/95  backdrop-blur sm:hidden">
           <Logo />
           <LanguageSwitcher variant="compact" shape="pill" />
         </div>

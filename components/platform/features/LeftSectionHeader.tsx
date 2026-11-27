@@ -15,8 +15,8 @@ function LeftSectionHeader({
   href,
 }: LeftSectionHeaderProps) {
   return (
-    <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
-      <div className="max-w-2xl flex-1">
+    <div className="mb-10 flex max-md:flex-col flex-wrap items-end justify-between gap-4">
+      <div className="max-w-2xl  flex-1">
         <span className="mb-2.5 block text-xs font-bold uppercase tracking-widest text-brand">
           {subHeader}
         </span>
@@ -28,7 +28,7 @@ function LeftSectionHeader({
       {href && seeMore && (
         <Link
           href={href}
-          className="inline-flex items-center gap-1.5 whitespace-nowrap text-sm font-semibold text-brand transition-colors hover:text-brand-deep hover:underline"
+          className="inline-flex max-md:mr-auto items-center gap-1.5 whitespace-nowrap text-sm font-semibold text-brand transition-colors hover:text-brand-deep hover:underline"
         >
           <span>{seeMore}</span>
           <ArrowRight aria-hidden="true" className="size-4" />

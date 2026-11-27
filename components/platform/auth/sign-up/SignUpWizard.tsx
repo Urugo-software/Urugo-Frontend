@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 
 import { FieldDescription, FieldGroup } from "@/components/ui/field";
 import { useGoogleAuth } from "@/hooks/mutate/useGoogleAuth";
+import { useStartPublicLandlordRegistration } from "@/hooks/mutate/usePublicLandlordRegistration";
 import type { LandlordPlan } from "@/types/auth";
 
 import { AUTH_CARD_CLASS } from "../auth-styles";
@@ -18,12 +19,13 @@ import SignUpFormHeader from "./SignUpFormHeader";
 import { SignUpProgress } from "./SignUpProgress";
 import type { SignUpField, SignUpValues } from "./SignUpWizardField";
 import ThirdStep from "./ThirdStep";
+import { LandlordRegistrationCompletion } from "./LandlordRegistrationCompletion";
 
 const STEP_KEYS = ["details", "identification", "plan"] as const;
 const STEP_ICONS = [UserRound, IdCard, BriefcaseBusiness] as const;
 
 const STEP_FIELDS: Record<1 | 2, ReadonlyArray<keyof SignUpValues>> = {
-  1: ["fullName"],
+  1: ["fullName", "email"],
   2: ["telephone", "nationalId"],
 };
 
@@ -33,8 +35,12 @@ export function SignUpWizard() {
   const searchParams = useSearchParams();
   const isRenterInvite = Boolean(searchParams.get("invite")?.trim());
   const googleAuth = useGoogleAuth();
+  const startRegistration = useStartPublicLandlordRegistration();
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedPlan, setSelectedPlan] = useState<LandlordPlan>("LISTING_ONLY");
+  const [registrationRequest, setRegistrationRequest] = useState<{ requestId: string; email: string } | null>(null);
+  const [registrationError, setRegistrationError] = useState<string | null>(null);
+  const idempotencyRef = useRef<{ fingerprint: string; key: string } | null>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const hasNavigatedRef = useRef(false);
 
@@ -45,7 +51,7 @@ export function SignUpWizard() {
     getFieldState,
     formState: { errors },
   } = useForm<SignUpValues>({
-    defaultValues: { fullName: "", telephone: "", nationalId: "" },
+    defaultValues: { fullName: "", email: "", telephone: "", nationalId: "" },
     mode: "onTouched",
   });
 
@@ -66,9 +72,10 @@ export function SignUpWizard() {
   };
 
   const onGoogleCredential = async (idToken: string) => {
-    const valid = await trigger(["fullName", "telephone", "nationalId"], { shouldFocus: true });
+    const valid = await trigger(["fullName", "email", "telephone", "nationalId"], { shouldFocus: true });
     if (!valid) {
       if (getFieldState("fullName").invalid) navigateToStep(1);
+      else if (getFieldState("email").invalid) navigateToStep(1);
       else if (getFieldState("telephone").invalid || getFieldState("nationalId").invalid) navigateToStep(2);
       return;
     }
@@ -85,6 +92,38 @@ export function SignUpWizard() {
     });
   };
 
+  const createLandlordAccount = async () => {
+    setRegistrationError(null);
+    const valid = await trigger(["fullName", "email", "telephone", "nationalId"], { shouldFocus: true });
+    if (!valid) {
+      if (getFieldState("fullName").invalid || getFieldState("email").invalid) navigateToStep(1);
+      else navigateToStep(2);
+      return;
+    }
+
+    const values = getValues();
+    const identity = {
+      name: values.fullName.trim(),
+      email: values.email.trim().toLowerCase(),
+      phoneNumber: values.telephone.trim(),
+      nationalId: values.nationalId.trim(),
+    };
+    const fingerprint = JSON.stringify({ identity, selectedPlan });
+    if (!idempotencyRef.current || idempotencyRef.current.fingerprint !== fingerprint) {
+      idempotencyRef.current = { fingerprint, key: window.crypto.randomUUID() };
+    }
+
+    try {
+      const result = await startRegistration.mutateAsync({
+        identity,
+        idempotencyKey: idempotencyRef.current.key,
+      });
+      setRegistrationRequest({ requestId: result.requestId, email: identity.email });
+    } catch (cause) {
+      setRegistrationError(cause instanceof Error ? cause.message : t("registrationStartFailed"));
+    }
+  };
+
   const progressSteps = STEP_KEYS.map((key, index) => ({
     key: index + 1,
     label: t(`steps.${key}.label`),
@@ -98,6 +137,13 @@ export function SignUpWizard() {
       type: "text",
       autoComplete: "name",
       placeholder: t("fields.fullName.placeholder"),
+      required: true,
+    }, {
+      id: "email",
+      label: t("fields.email.label"),
+      type: "email",
+      autoComplete: "email",
+      placeholder: t("fields.email.placeholder"),
       required: true,
     }],
     2: [
@@ -134,6 +180,16 @@ export function SignUpWizard() {
     );
   }
 
+  if (registrationRequest) {
+    return (
+      <LandlordRegistrationCompletion
+        requestId={registrationRequest.requestId}
+        email={registrationRequest.email}
+        selectedPlan={selectedPlan}
+      />
+    );
+  }
+
   const activeStepKey = STEP_KEYS[currentStep - 1];
 
   return (
@@ -153,7 +209,7 @@ export function SignUpWizard() {
           headingRef={headingRef}
         />
 
-        <FieldGroup className="gap-4 sm:gap-5" aria-busy={googleAuth.isPending}>
+        <FieldGroup className="gap-4 sm:gap-5" aria-busy={googleAuth.isPending || startRegistration.isPending}>
           {currentStep === 1 && <FirstStep fields={stepFields[1]} register={register} errors={errors} />}
           {currentStep === 2 && <SecondStep fields={stepFields[2]} register={register} errors={errors} onBack={() => navigateToStep(1)} />}
           {currentStep === 3 && (
@@ -161,9 +217,17 @@ export function SignUpWizard() {
               selectedPlan={selectedPlan}
               onSelectPlan={setSelectedPlan}
               onCredential={onGoogleCredential}
-              pending={googleAuth.isPending}
+              onCreateAccount={createLandlordAccount}
+              pending={googleAuth.isPending || startRegistration.isPending}
+              creatingAccount={startRegistration.isPending}
               onBack={() => navigateToStep(2)}
             />
+          )}
+
+          {registrationError && (
+            <p role="alert" className="rounded-xl border border-destructive/20 bg-destructive/5 px-3.5 py-2.5 text-xs leading-relaxed text-destructive">
+              {registrationError}
+            </p>
           )}
 
           {googleAuth.isError && (
