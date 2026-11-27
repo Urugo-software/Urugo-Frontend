@@ -25,7 +25,7 @@ const STEP_KEYS = ["details", "identification", "plan"] as const;
 const STEP_ICONS = [UserRound, IdCard, BriefcaseBusiness] as const;
 
 const STEP_FIELDS: Record<1 | 2, ReadonlyArray<keyof SignUpValues>> = {
-  1: ["fullName", "email"],
+  1: ["fullName"],
   2: ["telephone", "nationalId"],
 };
 

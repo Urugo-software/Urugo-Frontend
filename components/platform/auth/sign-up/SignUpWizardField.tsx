@@ -1,6 +1,5 @@
 import {
   IdCard,
-  Mail,
   Phone,
   UserRound,
   type LucideIcon,
@@ -23,7 +22,6 @@ import { AUTH_INPUT_CLASS, AUTH_LABEL_CLASS } from "../auth-styles";
 
 export type SignUpValues = {
   fullName: string;
-  email: string;
   telephone: string;
   nationalId: string;
 };
@@ -41,8 +39,6 @@ export type SignUpField = {
 export type SignUpValidationKey =
   | "fullNameRequired"
   | "fullNameMin"
-  | "emailRequired"
-  | "emailInvalid"
   | "telephoneRequired"
   | "telephoneInvalid"
   | "nationalIdRequired"
@@ -50,7 +46,6 @@ export type SignUpValidationKey =
 
 const fieldIcons: Record<keyof SignUpValues, LucideIcon> = {
   fullName: UserRound,
-  email: Mail,
   telephone: Phone,
   nationalId: IdCard,
 };
