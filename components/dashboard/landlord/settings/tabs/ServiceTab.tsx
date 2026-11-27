@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import toast from "react-hot-toast";
 import { Building2, Check, ShieldCheck } from "lucide-react";
@@ -9,12 +10,18 @@ import { StatusBadge } from "@/components/shared/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
 import type { LandlordServiceMode } from "@/types/landlord";
+import { AUTH_SESSION_QUERY_KEY, saveLandlordPlan } from "@/services/auth.service";
+import { useAuthSession } from "@/hooks/query/useAuthSession";
+import type { LandlordPlan } from "@/types/auth";
 
 const FEATURE_KEYS = ["f1", "f2", "f3", "f4", "f5"] as const;
 
 export function ServiceTab({ onSave }: { onSave: () => void }) {
   const t = useTranslations("landlord.settings.service");
   const { serviceMode, setServiceMode } = useLandlordWorkspace();
+  const queryClient = useQueryClient();
+  const authSession = useAuthSession();
+  const planMutation = useMutation({ mutationFn: saveLandlordPlan });
   const [pendingMode, setPendingMode] = useState<LandlordServiceMode | null>(
     null,
   );
@@ -42,13 +49,23 @@ export function ServiceTab({ onSave }: { onSave: () => void }) {
     },
   ];
 
-  const applyMode = (mode: LandlordServiceMode) => {
-    setServiceMode(mode);
-    toast.success(
-      mode === "managed" ? t("toastUpgraded") : t("toastSwitchedListingOnly"),
-    );
-    onSave();
-    setPendingMode(null);
+  const selectedPlan = authSession.data?.selectedLandlordPlan;
+  const currentMode: LandlordServiceMode = selectedPlan
+    ? selectedPlan === "LISTING_ONLY" ? "listing_only" : "managed"
+    : serviceMode;
+
+  const applyMode = async (mode: LandlordServiceMode) => {
+    const plan: LandlordPlan = mode === "listing_only" ? "LISTING_ONLY" : "MANAGED_PLAN";
+    try {
+      const user = await planMutation.mutateAsync(plan);
+      queryClient.setQueryData(AUTH_SESSION_QUERY_KEY, user);
+      setServiceMode(mode);
+      toast.success(t("planSaved"));
+      onSave();
+      setPendingMode(null);
+    } catch {
+      toast.error(t("planSaveFailed"));
+    }
   };
 
   return (
@@ -60,7 +77,7 @@ export function ServiceTab({ onSave }: { onSave: () => void }) {
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         {servicePlans.map(({ mode, title, subtitle, features, icon: Icon }) => {
-          const isCurrent = serviceMode === mode;
+          const isCurrent = currentMode === mode;
           return (
             <div
               key={mode}
@@ -104,7 +121,7 @@ export function ServiceTab({ onSave }: { onSave: () => void }) {
               <Button
                 type="button"
                 variant={isCurrent ? "outline" : "default"}
-                disabled={isCurrent}
+                disabled={isCurrent || planMutation.isPending || authSession.isPending}
                 onClick={() => setPendingMode(mode)}
                 className="w-full cursor-pointer rounded-none text-xs"
               >
@@ -144,10 +161,11 @@ export function ServiceTab({ onSave }: { onSave: () => void }) {
             </Button>
             <Button
               type="button"
-              onClick={() => pendingMode && applyMode(pendingMode)}
+              onClick={() => pendingMode && void applyMode(pendingMode)}
+              disabled={planMutation.isPending}
               className="cursor-pointer rounded-none"
             >
-              {t("confirmChange")}
+              {planMutation.isPending ? t("savingPlan") : t("confirmChange")}
             </Button>
           </>
         }

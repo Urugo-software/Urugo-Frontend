@@ -4,16 +4,19 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { ShieldAlert } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Button } from "@/components/ui/button";
-import { useAdminWorkspace } from "@/store/admin-workspace.store";
-import { hasRolePermission } from "@/utils/admin-permissions";
+import { useAuthSession } from "@/hooks/query/useAuthSession";
 
 export function AdminAccessGuard({ children }: { children: ReactNode }) {
   const t = useTranslations("admin.guard");
-  const activeRole = useAdminWorkspace((s) => s.activeRole);
-  const setActiveRole = useAdminWorkspace((s) => s.setActiveRole);
+  const tAuth = useTranslations("auth.session");
+  const session = useAuthSession();
+  const isAdmin = session.data?.roles.some((role) => role === "ADMIN" || role === "SUPER_ADMIN") ?? false;
 
-  if (hasRolePermission(activeRole, "admin:access")) {
+  if (session.isPending) {
+    return <div role="status" aria-busy="true" className="grid min-h-[40vh] place-items-center text-sm text-body">{tAuth("checking")}</div>;
+  }
+
+  if (isAdmin) {
     return <>{children}</>;
   }
 
@@ -27,25 +30,18 @@ export function AdminAccessGuard({ children }: { children: ReactNode }) {
           <div className="min-w-0">
             <h2 className="text-base font-bold text-ink">{t("title")}</h2>
             <p className="mt-1 text-xs leading-relaxed text-body">
-              {t("description", { role: activeRole })}
+              {t("description", { role: session.data?.role ?? "anonymous" })}
             </p>
           </div>
         </div>
 
         <div className="mt-5 flex flex-wrap items-center justify-end gap-2 border-t border-line pt-4">
           <Link
-            href={activeRole === "RENTER" ? "/renter" : "/landlord"}
+            href={session.data?.roles.includes("RENTER") ? "/renter" : "/landlord"}
             className="inline-flex h-9 items-center border border-line bg-white px-3.5 text-xs font-semibold text-ink hover:bg-surface"
           >
             {t("returnWorkspace")}
           </Link>
-          <Button
-            type="button"
-            onClick={() => setActiveRole("ADMIN")}
-            className="h-9 rounded-none bg-ink px-3.5 text-xs font-semibold text-white hover:bg-ink/90"
-          >
-            {t("switchToAdmin")}
-          </Button>
         </div>
       </div>
     </div>

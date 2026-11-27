@@ -6,7 +6,6 @@ import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useForm } from "react-hook-form";
 
-import { PasswordResetUnavailableError } from "@/api/password-reset.api";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -16,7 +15,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { isValidEmail } from "@/utils/auth-helpers";
+import { isValidEmail, isValidPassword } from "@/utils/auth-helpers";
 
 import { AuthFormHeader } from "../AuthFormHeader";
 import {
@@ -27,9 +26,9 @@ import {
 } from "../auth-styles";
 
 type ForgotPasswordFormProps = {
-  requestCode: (email: string) => Promise<void>;
-  verifyCode: (email: string, code: string) => Promise<string>;
-  resetPassword: (password: string, proof: string) => Promise<void>;
+  requestCode: (email: string, nationalId: string) => Promise<void>;
+  verifyCode: (code: string) => Promise<void>;
+  resetPassword: (password: string, confirmation: string) => Promise<void>;
 };
 
 type Step = "email" | "code" | "password" | "success";
@@ -42,6 +41,7 @@ type ServerErrorKey =
 
 interface ForgotPasswordValues {
   email: string;
+  nationalId: string;
   code: string;
   password: string;
   confirmation: string;
@@ -56,7 +56,7 @@ export function ForgotPasswordForm({
 
   const [step, setStep] = useState<Step>("email");
   const [verifiedEmail, setVerifiedEmail] = useState("");
-  const [proof, setProof] = useState("");
+  const [verifiedNationalId, setVerifiedNationalId] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [pending, setPending] = useState(false);
@@ -79,6 +79,7 @@ export function ForgotPasswordForm({
   } = useForm<ForgotPasswordValues>({
     defaultValues: {
       email: "",
+      nationalId: "",
       code: "",
       password: "",
       confirmation: "",
@@ -99,10 +100,12 @@ export function ForgotPasswordForm({
 
   const startOver = () => {
     resetField("code");
+    resetField("nationalId");
     resetField("password");
     resetField("confirmation");
     clearErrors();
-    setProof("");
+    setVerifiedEmail("");
+    setVerifiedNationalId("");
     setServerErrorKey(null);
     setShowResendNotice(false);
     moveToStep("email");
@@ -116,23 +119,21 @@ export function ForgotPasswordForm({
     setShowResendNotice(false);
 
     if (step === "email") {
-      const valid = await trigger("email", { shouldFocus: true });
+      const valid = await trigger(["email", "nationalId"], { shouldFocus: true });
       if (!valid) return;
 
       const trimmedEmail = getValues("email").trim();
+      const trimmedNationalId = getValues("nationalId").trim();
       setPending(true);
       try {
-        await requestCode(trimmedEmail);
+        await requestCode(trimmedEmail, trimmedNationalId);
         setVerifiedEmail(trimmedEmail);
+        setVerifiedNationalId(trimmedNationalId);
         setValue("email", trimmedEmail);
         resetField("code");
         moveToStep("code");
-      } catch (caught) {
-        setServerErrorKey(
-          caught instanceof PasswordResetUnavailableError
-            ? "unavailable"
-            : "requestFailed",
-        );
+      } catch {
+        setServerErrorKey("requestFailed");
       } finally {
         setPending(false);
       }
@@ -146,17 +147,11 @@ export function ForgotPasswordForm({
       const trimmedCode = getValues("code").trim();
       setPending(true);
       try {
-        const resetProof = await verifyCode(verifiedEmail, trimmedCode);
-        if (!resetProof) throw new Error("Missing reset authorization");
-        setProof(resetProof);
+        await verifyCode(trimmedCode);
         resetField("code");
         moveToStep("password");
-      } catch (caught) {
-        setServerErrorKey(
-          caught instanceof PasswordResetUnavailableError
-            ? "unavailable"
-            : "verifyFailed",
-        );
+      } catch {
+        setServerErrorKey("verifyFailed");
       } finally {
         setPending(false);
       }
@@ -172,17 +167,12 @@ export function ForgotPasswordForm({
       const nextPassword = getValues("password");
       setPending(true);
       try {
-        await resetPassword(nextPassword, proof);
+        await resetPassword(nextPassword, getValues("confirmation"));
         resetField("password");
         resetField("confirmation");
-        setProof("");
         moveToStep("success");
-      } catch (caught) {
-        setServerErrorKey(
-          caught instanceof PasswordResetUnavailableError
-            ? "unavailable"
-            : "resetFailed",
-        );
+      } catch {
+        setServerErrorKey("resetFailed");
       } finally {
         setPending(false);
       }
@@ -190,20 +180,16 @@ export function ForgotPasswordForm({
   };
 
   const handleResend = async () => {
-    if (pending || !verifiedEmail) return;
+    if (pending || !verifiedEmail || !verifiedNationalId) return;
     setServerErrorKey(null);
     setShowResendNotice(false);
     setPending(true);
     try {
-      await requestCode(verifiedEmail);
+      await requestCode(verifiedEmail, verifiedNationalId);
       resetField("code");
       setShowResendNotice(true);
-    } catch (caught) {
-      setServerErrorKey(
-        caught instanceof PasswordResetUnavailableError
-          ? "unavailable"
-          : "requestFailed",
-      );
+    } catch {
+      setServerErrorKey("requestFailed");
     } finally {
       setPending(false);
     }
@@ -236,6 +222,7 @@ export function ForgotPasswordForm({
 
         <FieldGroup className="gap-4 sm:gap-5" aria-busy={pending}>
           {step === "email" && (
+            <>
             <Field data-invalid={Boolean(errors.email) || undefined}>
               <FieldLabel htmlFor="recovery-email" className={AUTH_LABEL_CLASS}>
                 {t("fields.emailLabel")}
@@ -266,6 +253,31 @@ export function ForgotPasswordForm({
                 </FieldError>
               )}
             </Field>
+            <Field data-invalid={Boolean(errors.nationalId) || undefined}>
+              <FieldLabel htmlFor="recovery-national-id" className={AUTH_LABEL_CLASS}>
+                {t("fields.nationalIdLabel")}
+              </FieldLabel>
+              <Input
+                id="recovery-national-id"
+                type="text"
+                autoComplete="off"
+                disabled={pending}
+                placeholder={t("fields.nationalIdPlaceholder")}
+                aria-invalid={Boolean(errors.nationalId)}
+                aria-describedby={errors.nationalId ? "recovery-national-id-error" : undefined}
+                className={AUTH_INPUT_CLASS}
+                {...register("nationalId", {
+                  required: t("validation.nationalIdRequired"),
+                  validate: (value) => value.trim().length > 0 || t("validation.nationalIdRequired"),
+                })}
+              />
+              {errors.nationalId?.message && (
+                <FieldError id="recovery-national-id-error" className="text-xs font-medium">
+                  {errors.nationalId.message}
+                </FieldError>
+              )}
+            </Field>
+            </>
           )}
 
           {step === "code" && (
@@ -291,7 +303,7 @@ export function ForgotPasswordForm({
                   {...register("code", {
                     required: t("validation.codeRequired"),
                     validate: (value) =>
-                      value.trim().length > 0 || t("validation.codeRequired"),
+                      /^\d{6}$/.test(value.trim()) || t("validation.codeInvalid"),
                   })}
                 />
                 {errors.code?.message && (
@@ -341,6 +353,8 @@ export function ForgotPasswordForm({
                         value: 8,
                         message: t("validation.passwordMin"),
                       },
+                      validate: (value) =>
+                        isValidPassword(value) || t("validation.passwordRequirements"),
                     })}
                   />
                   <button

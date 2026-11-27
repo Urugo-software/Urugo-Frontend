@@ -8,6 +8,9 @@ export function getPostLoginRoute(role?: string | null): string {
   if (normalized === "RENTER") {
     return "/renter";
   }
+  if (normalized === "HOME_SEEKER") {
+    return "/home-seeker";
+  }
   return "/landlord";
 }
 
@@ -16,13 +19,17 @@ export function isValidEmail(value: string): boolean {
 }
 
 export function isValidTelephone(value: string): boolean {
-  const digits = value.replace(/\D/g, "");
-  return digits.length >= 9 && digits.length <= 15;
+  const normalized = value.trim().replace(/[\s().-]/g, "");
+  return /^\+?\d{7,15}$/.test(normalized);
 }
 
 export function isValidNationalId(value: string): boolean {
   const compact = value.replace(/\s+/g, "");
   return compact.length >= 6;
+}
+
+export function isValidPassword(value: string): boolean {
+  return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(value);
 }
 
 export function formatPhotoFileSize(bytes: number): string {

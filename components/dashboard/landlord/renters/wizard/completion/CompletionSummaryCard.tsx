@@ -16,7 +16,6 @@ export function CompletionSummaryCard({
   const t = useTranslations("landlord.renters.wizard.completion");
   const tLang = useTranslations("common.language");
   const locale = useLocale() as AppLocale;
-  const isLinkMode = submission.mode === "link";
   const maskedNid =
     submission.identity.nationalId.length === 16
       ? `${submission.identity.nationalId.slice(0, 4)}********${submission.identity.nationalId.slice(-4)}`
@@ -31,9 +30,7 @@ export function CompletionSummaryCard({
       <div className="flex flex-col gap-3 border-b border-line bg-surface/50 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
         <div>
           <h4 className="text-sm font-semibold text-ink">
-            {isLinkMode
-              ? t("invitationLinkHeading")
-              : submission.identity.fullName || t("renterRecordFallback")}
+            {submission.identity.fullName || t("renterRecordFallback")}
           </h4>
           <p className="mt-0.5 text-xs text-body">
             {t("recordedAt", { time: submission.submittedAt })}
@@ -61,8 +58,7 @@ export function CompletionSummaryCard({
             </h5>
           </div>
 
-          {!isLinkMode ? (
-            <div className="space-y-3 text-xs">
+          <div className="space-y-3 text-xs">
               <div className="flex items-center justify-between gap-2">
                 <span className="text-body">{t("emailAddress")}</span>
                 <span className="font-medium text-ink">
@@ -79,18 +75,7 @@ export function CompletionSummaryCard({
                 <span className="text-body">{t("nationalId")}</span>
                 <span className="font-medium text-ink">{maskedNid}</span>
               </div>
-            </div>
-          ) : (
-            <div className="space-y-2.5 text-xs">
-              <span className="block text-body">
-                {t("invitationLinkGenerated")}
-              </span>
-              <div className="break-all border border-line bg-surface p-2.5 text-xs text-ink">
-                {submission.simulatedLink?.url || t("generatedInSession")}
-              </div>
-              <p className="text-xs text-faint">{t("shareLinkHint")}</p>
-            </div>
-          )}
+          </div>
         </div>
 
         <div className="space-y-4 p-5 sm:p-6">

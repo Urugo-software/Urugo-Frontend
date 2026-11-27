@@ -1,6 +1,5 @@
 import {
   IdCard,
-  Mail,
   Phone,
   UserRound,
   type LucideIcon,
@@ -15,7 +14,6 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
-  isValidEmail,
   isValidNationalId,
   isValidTelephone,
 } from "@/utils/auth-helpers";
@@ -24,7 +22,6 @@ import { AUTH_INPUT_CLASS, AUTH_LABEL_CLASS } from "../auth-styles";
 
 export type SignUpValues = {
   fullName: string;
-  email: string;
   telephone: string;
   nationalId: string;
 };
@@ -42,8 +39,6 @@ export type SignUpField = {
 export type SignUpValidationKey =
   | "fullNameRequired"
   | "fullNameMin"
-  | "emailRequired"
-  | "emailInvalid"
   | "telephoneRequired"
   | "telephoneInvalid"
   | "nationalIdRequired"
@@ -51,7 +46,6 @@ export type SignUpValidationKey =
 
 const fieldIcons: Record<keyof SignUpValues, LucideIcon> = {
   fullName: UserRound,
-  email: Mail,
   telephone: Phone,
   nationalId: IdCard,
 };
@@ -65,11 +59,6 @@ export function getSignUpFieldRules(
       return {
         required: t("fullNameRequired"),
         validate: (value) => value.trim().length >= 2 || t("fullNameMin"),
-      };
-    case "email":
-      return {
-        required: t("emailRequired"),
-        validate: (value) => isValidEmail(value) || t("emailInvalid"),
       };
     case "telephone":
       return {
