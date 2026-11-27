@@ -3,7 +3,6 @@
 import { useTranslations } from "next-intl";
 import { ShieldCheck } from "lucide-react";
 
-import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
 import type { Landlord } from "@/types/properties";
 
 interface LandlordCardProps {
@@ -12,7 +11,6 @@ interface LandlordCardProps {
 
 export default function LandlordCard({ landlord }: LandlordCardProps) {
   const t = useTranslations("properties.details.landlord");
-  const showPhone = useLandlordWorkspace((s) => s.contactVisibility.showPhone);
 
   return (
     <div className="flex items-start gap-3">
@@ -35,7 +33,7 @@ export default function LandlordCard({ landlord }: LandlordCardProps) {
           {landlord.isVerified ? t("verifiedLandlord") : t("propertyOwner")}
         </div>
 
-        {showPhone && landlord.phone && (
+        {landlord.phone && (
           <a
             href={`tel:${landlord.phone}`}
             className="mt-0.5 inline-block text-[12.5px] font-medium text-body transition-colors hover:text-brand hover:underline"

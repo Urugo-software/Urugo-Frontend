@@ -1,9 +1,10 @@
-import Image, { type StaticImageData } from "next/image";
+import Image from "next/image";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { ArrowRight, MapPin } from "lucide-react";
 
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
+import type { RelatedPublicProperty } from "@/mappers/public-property.mapper";
 import type { Property } from "@/types/properties";
 import { buildPropertyBreadcrumbs } from "@/utils/public-properties";
 import PaymentCostBreakdown from "./PaymentCostBreakdowns";
@@ -12,19 +13,9 @@ import PropertyGallery from "./PropertyGallery";
 import PropertyHeader from "./PropertyHeader";
 import PropertySidebar from "./PropertySidebar";
 
-interface RelatedPropertyCardItem {
-  id: string;
-  image: string | StaticImageData;
-  headline: string;
-  location: string;
-  price: string;
-  currency: string;
-  period: string;
-}
-
 interface PropertyDetailsProps {
   property: Property;
-  relatedProperties?: RelatedPropertyCardItem[];
+  relatedProperties?: RelatedPublicProperty[];
 }
 
 export default async function PropertyDetails({

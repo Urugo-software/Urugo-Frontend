@@ -10,7 +10,10 @@ import { ModalDialog } from "@/components/shared/ModalDialog";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
+import {
+  submitPropertyInquiry,
+  submitPublicViewingRequest,
+} from "@/services/public-interactions.service";
 
 interface PropertyLeadActionsProps {
   propertyId: string;
@@ -41,8 +44,6 @@ export function PropertyLeadActions({
 }: PropertyLeadActionsProps) {
   const t = useTranslations("properties.details.leads");
   const tActions = useTranslations("common.actions");
-  const { contactVisibility, addInquiry, addViewingRequest } =
-    useLandlordWorkspace();
   const [modal, setModal] = useState<"visit" | "inquiry" | null>(null);
 
   const visitForm = useForm<VisitFormValues>({
@@ -60,12 +61,11 @@ export function PropertyLeadActions({
     defaultValues: { name: "", phone: "", email: "", message: "" },
   });
 
-  const whatsappHref =
-    contactVisibility.showWhatsApp && landlordPhone
-      ? `https://wa.me/${landlordPhone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
-          t("whatsappMessage", { propertyTitle }),
-        )}`
-      : null;
+  const whatsappHref = landlordPhone
+    ? `https://wa.me/${landlordPhone.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(
+        t("whatsappMessage", { propertyTitle }),
+      )}`
+    : null;
 
   return (
     <>
@@ -112,6 +112,7 @@ export function PropertyLeadActions({
             <Button
               type="submit"
               form="public-visit-form"
+              disabled={visitForm.formState.isSubmitting}
               className="cursor-pointer rounded-none"
             >
               {t("visitModal.submit")}
@@ -122,20 +123,17 @@ export function PropertyLeadActions({
         <form
           id="public-visit-form"
           noValidate
-          onSubmit={visitForm.handleSubmit((vals) => {
-            addViewingRequest({
-              propertyId,
-              propertyName: propertyTitle,
-              requesterName: vals.name.trim(),
-              requesterPhone: vals.phone.trim(),
-              requesterEmail: vals.email.trim(),
-              preferredDate: vals.preferredDate,
-              preferredTime: vals.preferredTime,
-              note: vals.note.trim() || undefined,
-            });
-            toast.success(t("visitModal.successToast"));
-            visitForm.reset();
-            setModal(null);
+          onSubmit={visitForm.handleSubmit(async (vals) => {
+            try {
+              await submitPublicViewingRequest(propertyId, vals);
+              toast.success(t("visitModal.successToast"));
+              visitForm.reset();
+              setModal(null);
+            } catch (err) {
+              toast.error(
+                err instanceof Error ? err.message : "Failed to submit viewing request",
+              );
+            }
           })}
           className="space-y-3"
         >
@@ -247,6 +245,7 @@ export function PropertyLeadActions({
             <Button
               type="submit"
               form="public-inquiry-form"
+              disabled={inquiryForm.formState.isSubmitting}
               className="cursor-pointer rounded-none"
             >
               {t("inquiryModal.submit")}
@@ -257,18 +256,17 @@ export function PropertyLeadActions({
         <form
           id="public-inquiry-form"
           noValidate
-          onSubmit={inquiryForm.handleSubmit((vals) => {
-            addInquiry({
-              propertyId,
-              propertyName: propertyTitle,
-              senderName: vals.name.trim(),
-              senderPhone: vals.phone.trim(),
-              senderEmail: vals.email.trim(),
-              message: vals.message.trim(),
-            });
-            toast.success(t("inquiryModal.successToast"));
-            inquiryForm.reset();
-            setModal(null);
+          onSubmit={inquiryForm.handleSubmit(async (vals) => {
+            try {
+              await submitPropertyInquiry(propertyId, vals);
+              toast.success(t("inquiryModal.successToast"));
+              inquiryForm.reset();
+              setModal(null);
+            } catch (err) {
+              toast.error(
+                err instanceof Error ? err.message : "Failed to send inquiry",
+              );
+            }
           })}
           className="space-y-3"
         >
