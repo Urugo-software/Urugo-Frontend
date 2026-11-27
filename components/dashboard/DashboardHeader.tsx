@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { House } from "lucide-react";
+import { House, LogOut } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { LanguageSwitcher } from "@/components/shared/LanguageSwitcher";
@@ -14,6 +14,7 @@ import {
 } from "@/utils/dashboard-titles";
 import { DashboardNotificationsDropdown } from "./DashboardNotificationsDropdown";
 import MobileNavWrapper from "./home-seeker/mobile-nav/mobile-nav-wrapper";
+import { useLogout } from "@/hooks/mutate/useLogout";
 
 interface DashboardHeaderProps {
   title?: string;
@@ -23,6 +24,7 @@ export function DashboardHeader({ title }: DashboardHeaderProps) {
   const pathname = usePathname();
   const tTitles = useTranslations("common.dashboardTitles");
   const tActions = useTranslations("common.actions");
+  const logout = useLogout();
 
   const titleKey = resolveDashboardTitleKey(pathname);
   const currentTitle =
@@ -49,6 +51,17 @@ export function DashboardHeader({ title }: DashboardHeaderProps) {
         >
           {tActions("backToHome")}
         </Link>
+
+        <button
+          type="button"
+          aria-label={logout.isPending ? tActions("signingOut") : tActions("signOut")}
+          onClick={() => logout.mutate()}
+          disabled={logout.isPending}
+          className="inline-flex h-9 items-center gap-2 border border-line bg-white px-3 text-xs font-semibold text-ink transition-colors hover:bg-surface disabled:cursor-not-allowed disabled:opacity-60"
+        >
+          <LogOut aria-hidden="true" className="size-4" />
+          <span className="hidden sm:inline">{logout.isPending ? tActions("signingOut") : tActions("signOut")}</span>
+        </button>
 
         <Link
           href="/"

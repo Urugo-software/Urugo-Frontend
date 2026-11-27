@@ -788,7 +788,7 @@ export const mockLandlordFaqs: LandlordFAQItem[] = [
     id: "faq-1",
     question: "How do I register a renter and prepare a tenancy agreement?",
     answer:
-      "Open Renters and click 'Add Renter'. Choose manual entry, an existing tenant, or an onboarding link, configure the tenancy schedule, and review the lease clauses before sending.",
+      "Open Renters and click 'Add Renter'. Enter new renter details to queue a secure email invitation, or select an existing renter; then configure the tenancy schedule and review the lease clauses.",
     category: "Tenancies",
     serviceScope: "managed",
   },

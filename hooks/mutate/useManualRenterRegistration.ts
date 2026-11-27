@@ -24,7 +24,6 @@ import {
   TenancyConfigErrors,
   WizardStep,
 } from "@/types/renter-wizard.types";
-import { useSimulatedRenterLink } from "./useSimulatedRenterLink";
 
 export const INITIAL_IDENTITY_DRAFT: RenterIdentityDraft = {
   fullName: "",
@@ -416,7 +415,7 @@ export function useRenterWizard(
   const [step, setStep] = useState<WizardStep>(1);
   const [stepDirection, setStepDirection] = useState<1 | -1>(1);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [mode, setMode] = useState<AddRenterMode>(initialMode);
+  const [mode, setMode] = useState<AddRenterMode>(initialMode === "existing" ? "existing" : "manual");
   const [selectedLanguage, setSelectedLanguage] =
     useState<AgreementLanguage>("en");
   const [agreementDraft, setAgreementDraft] = useState<Agreement | null>(null);
@@ -440,7 +439,7 @@ export function useRenterWizard(
       if (stored.step && stored.step >= 1 && stored.step <= 4) {
         setStep(stored.step);
       }
-      if (stored.mode) setMode(stored.mode);
+      if (stored.mode) setMode(stored.mode === "existing" ? "existing" : "manual");
       if (stored.selectedLanguage) setSelectedLanguage(stored.selectedLanguage);
       if (stored.identityDraft) setIdentityDraft(stored.identityDraft);
       if (stored.tenancyDraft) setTenancyDraft(stored.tenancyDraft);
@@ -482,8 +481,6 @@ export function useRenterWizard(
   ]);
 
   // Link mode helper
-  const linkState = useSimulatedRenterLink(properties);
-
   const paymentSummary = useMemo(
     () =>
       calculateInitialPayments(
@@ -534,7 +531,6 @@ export function useRenterWizard(
 
   const selectProperty = (propertyId: string) => {
     const selectedProp = properties.find((p) => p.id === propertyId);
-    linkState.setSelectedPropertyId(propertyId);
     setTenancyDraft((prev) => ({
       ...prev,
       propertyId,
@@ -578,11 +574,6 @@ export function useRenterWizard(
     } else if (mode === "existing") {
       if (!identityDraft.fullName || !identityDraft.isExistingRenter) {
         toast.error(tWizard("selectExistingRenter"));
-        return;
-      }
-    } else if (mode === "link") {
-      if (!linkState.generatedLink) {
-        toast.error(tWizard("generateInviteFirst"));
         return;
       }
     }
@@ -705,7 +696,6 @@ export function useRenterWizard(
         isExistingRenter: identityDraft.isExistingRenter,
         existingRenterId: identityDraft.existingRenterId,
       },
-      simulatedLink: linkState.generatedLink || undefined,
       tenancy: { ...tenancyDraft },
       propertyName: selectedProp?.name,
       propertyLocation: selectedProp?.location,
@@ -764,7 +754,6 @@ export function useRenterWizard(
     updateTenancyField,
     selectProperty,
     paymentSummary,
-    linkState,
     submission,
     goToStep1,
     goToStep2,

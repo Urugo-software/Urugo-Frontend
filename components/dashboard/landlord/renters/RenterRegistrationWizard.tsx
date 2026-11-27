@@ -1,13 +1,20 @@
 "use client";
 
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import toast from "react-hot-toast";
 import {
   AnimatePresence,
   motion,
   useReducedMotion,
   type Variants,
 } from "framer-motion";
-import { useRenterWizard } from "@/hooks/mutate/useManualRenterRegistration";
+import {
+  useRenterWizard,
+  validateRenterIdentity,
+} from "@/hooks/mutate/useManualRenterRegistration";
+import { useStartLandlordRenterInvitation } from "@/hooks/mutate/useRenterInvitation";
 import { useLandlordWorkspace } from "@/store/landlord-workspace.store";
 import {
   RenterRegistrationWizardProps,
@@ -48,6 +55,14 @@ export function RenterRegistrationWizard({
   initialMode = "manual",
 }: RenterRegistrationWizardProps) {
   const router = useRouter();
+  const tInvitation = useTranslations("landlord.renters.wizard.step2");
+  const startInvitation = useStartLandlordRenterInvitation();
+  const invitationKeyRef = useRef<{ signature: string; key: string } | null>(null);
+  const [queuedInvitation, setQueuedInvitation] = useState<{
+    signature: string;
+    requestId: string;
+    emailStatus: "QUEUED";
+  } | null>(null);
   const existingRenters = useLandlordWorkspace((s) => s.renters);
   const shouldReduceMotion = useReducedMotion();
 
@@ -69,7 +84,6 @@ export function RenterRegistrationWizard({
     updateTenancyField,
     selectProperty,
     paymentSummary,
-    linkState,
     submission,
     goToStep1,
     goToStep2,
@@ -93,6 +107,45 @@ export function RenterRegistrationWizard({
   const activeVariants = shouldReduceMotion
     ? reducedMotionVariants
     : stepVariants;
+
+  const identitySignature = JSON.stringify({
+    name: identityDraft.fullName.trim(),
+    email: identityDraft.email.trim().toLowerCase(),
+    phoneNumber: identityDraft.phoneNumber.replace(/[\s-]/g, ""),
+    nationalId: identityDraft.nationalId.replace(/\s+/g, ""),
+  });
+
+  const handleStartInvitation = async () => {
+    const validation = validateRenterIdentity(identityDraft);
+    if (Object.keys(validation).length > 0) {
+      toast.error(tInvitation("invitationIdentityRequired"));
+      return;
+    }
+
+    const key = invitationKeyRef.current?.signature === identitySignature
+      ? invitationKeyRef.current.key
+      : crypto.randomUUID();
+    invitationKeyRef.current = { signature: identitySignature, key };
+
+    try {
+      const result = await startInvitation.mutateAsync({
+        identity: {
+          name: identityDraft.fullName.trim(),
+          email: identityDraft.email.trim().toLowerCase(),
+          phoneNumber: identityDraft.phoneNumber.trim(),
+          nationalId: identityDraft.nationalId.replace(/\s+/g, ""),
+        },
+        idempotencyKey: key,
+      });
+      setQueuedInvitation({ signature: identitySignature, ...result });
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : tInvitation("invitationStartFailed"));
+    }
+  };
+
+  const currentQueuedInvitation = queuedInvitation?.signature === identitySignature
+    ? queuedInvitation
+    : null;
 
   return (
     <div className="border border-line bg-white shadow-2xs">
@@ -160,11 +213,9 @@ export function RenterRegistrationWizard({
                 existingRenters={existingRenters}
                 onBack={goToStep1}
                 onContinue={goToStep3}
-                generatedLink={linkState.generatedLink}
-                copied={linkState.copied}
-                copyStatus={linkState.copyStatus}
-                onGenerateLink={linkState.generateLink}
-                onCopyLink={linkState.copyLink}
+                onStartInvitation={handleStartInvitation}
+                isStartingInvitation={startInvitation.isPending}
+                queuedInvitation={currentQueuedInvitation}
               />
             </motion.div>
           ) : step === 3 ? (

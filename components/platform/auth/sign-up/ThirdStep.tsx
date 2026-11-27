@@ -1,159 +1,65 @@
 "use client";
 
-import { ArrowLeft, Camera, FileImage, X } from "lucide-react";
+import { ArrowLeft, Check } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
-import { useDropzone } from "react-dropzone";
 
+import { GoogleIdentityButton } from "@/components/platform/auth/GoogleIdentityButton";
 import { Button } from "@/components/ui/button";
-import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldLabel,
-} from "@/components/ui/field";
-import { cn } from "@/lib/utils";
-import { formatPhotoFileSize } from "@/utils/auth-helpers";
+import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
+import type { LandlordPlan } from "@/types/auth";
 
-import {
-  AUTH_LABEL_CLASS,
-  AUTH_PRIMARY_BUTTON_CLASS,
-  AUTH_SECONDARY_BUTTON_CLASS,
-} from "../auth-styles";
+import { AUTH_LABEL_CLASS, AUTH_SECONDARY_BUTTON_CLASS } from "../auth-styles";
 
 type ThirdStepProps = {
-  photo: File | null;
-  onPhotoChange: (photo: File | null) => void;
+  selectedPlan: LandlordPlan;
+  onSelectPlan: (plan: LandlordPlan) => void;
+  onCredential: (idToken: string) => void;
+  pending: boolean;
   onBack: () => void;
 };
 
-function ThirdStep({ photo, onPhotoChange, onBack }: ThirdStepProps) {
-  const t = useTranslations("auth.signUp.photo");
+function ThirdStep({ selectedPlan, onSelectPlan, onCredential, pending, onBack }: ThirdStepProps) {
+  const t = useTranslations("auth.signUp.plan");
   const tActions = useTranslations("common.actions");
-  const [hasInvalidFile, setHasInvalidFile] = useState(false);
 
-  const { getRootProps, getInputProps, isDragActive, isDragReject } =
-    useDropzone({
-      accept: { "image/*": [] },
-      multiple: false,
-      onDrop: (acceptedFiles, rejectedFiles) => {
-        if (rejectedFiles.length > 0) {
-          setHasInvalidFile(true);
-          return;
-        }
-        const file = acceptedFiles[0];
-        if (file) {
-          setHasInvalidFile(false);
-          onPhotoChange(file);
-        }
-      },
-    });
-
-  const describedBy = hasInvalidFile
-    ? "photo-description photo-error"
-    : "photo-description";
+  const plans: LandlordPlan[] = ["LISTING_ONLY", "MANAGED_PLAN"];
 
   return (
     <>
-      <Field data-invalid={hasInvalidFile || undefined}>
-        <FieldLabel htmlFor="photo" className={AUTH_LABEL_CLASS}>
-          {t("label")}{" "}
-          <span className="font-normal text-faint">{t("optionalTag")}</span>
-        </FieldLabel>
-        <div
-          {...getRootProps({
-            role: "button",
-            "aria-label": t("dropzoneAria"),
-            "aria-describedby": describedBy,
-            className: cn(
-              "cursor-pointer rounded-xl border border-dashed border-line bg-surface/60 px-5 py-6 text-center transition-colors hover:border-brand/50 hover:bg-brand-tint/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/30 focus-visible:ring-offset-2",
-              (isDragActive || photo) &&
-                !isDragReject &&
-                "border-brand bg-brand-tint/40 hover:border-brand",
-              isDragReject &&
-                "border-destructive bg-destructive/5 hover:border-destructive",
-            ),
-          })}
-        >
-          <input
-            {...getInputProps({
-              id: "photo",
-              name: "photo",
-              "aria-describedby": describedBy,
-            })}
-          />
-          <div className="mx-auto mb-3 flex size-11 items-center justify-center rounded-full bg-white text-brand shadow-2xs ring-1 ring-line">
-            <Camera aria-hidden="true" className="size-5" />
-          </div>
-          <p className="text-sm font-medium text-ink">
-            {isDragReject
-              ? t("unsupportedTitle")
-              : isDragActive
-                ? t("dropHereTitle")
-                : t("uploadTitle")}
-          </p>
-          <p className="mt-1 text-xs text-body">
-            {isDragReject ? t("unsupportedHint") : t("browseHint")}
-          </p>
-        </div>
-
-        <FieldDescription id="photo-description" className="text-xs text-faint">
-          {t("description")}
-        </FieldDescription>
-
-        {photo && (
-          <div
-            role="status"
-            className="flex items-center gap-3 rounded-xl border border-line bg-surface/60 px-3.5 py-2.5 text-sm text-ink"
-          >
-            <FileImage
-              aria-hidden="true"
-              className="size-4 shrink-0 text-brand"
-            />
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-xs font-medium text-ink">
-                {photo.name}
-              </p>
-              <p className="text-[11px] text-faint">
-                {formatPhotoFileSize(photo.size)}
-              </p>
-            </div>
+      <Field>
+        <FieldLabel className={AUTH_LABEL_CLASS}>{t("label")}</FieldLabel>
+        <FieldDescription className="text-xs text-body">{t("description")}</FieldDescription>
+        <div role="radiogroup" aria-label={t("label")} className="grid gap-3 sm:grid-cols-2">
+          {plans.map((plan) => (
             <button
+              key={plan}
               type="button"
-              aria-label={t("removeAria")}
-              className="flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-lg text-faint transition-colors hover:bg-line/60 hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
-              onClick={() => {
-                onPhotoChange(null);
-                setHasInvalidFile(false);
-              }}
+              role="radio"
+              aria-checked={selectedPlan === plan}
+              disabled={pending}
+              onClick={() => onSelectPlan(plan)}
+              className={`flex min-h-28 cursor-pointer flex-col items-start gap-2 rounded-xl border p-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand disabled:cursor-not-allowed disabled:opacity-60 ${selectedPlan === plan ? "border-brand bg-brand-tint/40" : "border-line bg-white hover:bg-surface/60"}`}
             >
-              <X aria-hidden="true" className="size-4" />
+              <span className="flex w-full items-center justify-between gap-2 text-sm font-semibold text-ink">
+                {t(`options.${plan}.title`)}
+                {selectedPlan === plan && <Check aria-hidden="true" className="size-4 text-brand" />}
+              </span>
+              <span className="text-xs leading-relaxed text-body">{t(`options.${plan}.description`)}</span>
             </button>
-          </div>
-        )}
-
-        {hasInvalidFile && (
-          <FieldError id="photo-error" className="text-xs font-medium">
-            {t("invalidFile")}
-          </FieldError>
-        )}
+          ))}
+        </div>
       </Field>
 
       <Field className="pt-1">
-        <div className="flex flex-col-reverse gap-2.5 sm:grid sm:grid-cols-[auto_1fr] sm:gap-3">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onBack}
-            className={`${AUTH_SECONDARY_BUTTON_CLASS} sm:min-w-28`}
-          >
-            <ArrowLeft aria-hidden="true" className="size-4" />
-            <span>{tActions("back")}</span>
-          </Button>
-          <Button type="submit" className={AUTH_PRIMARY_BUTTON_CLASS}>
-            {t("createAccount")}
-          </Button>
-        </div>
+        <GoogleIdentityButton mode="signup_with" onCredential={onCredential} disabled={pending} />
+        <p role="note" className="text-center text-xs leading-relaxed text-faint">{t("emailUnavailable")}</p>
+      </Field>
+
+      <Field className="pt-1">
+        <Button type="button" variant="outline" onClick={onBack} className={`${AUTH_SECONDARY_BUTTON_CLASS} w-full`}>
+          <ArrowLeft aria-hidden="true" className="size-4" />
+          <span>{tActions("back")}</span>
+        </Button>
       </Field>
     </>
   );

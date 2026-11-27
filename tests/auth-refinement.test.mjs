@@ -5,15 +5,16 @@ import {
   getPostLoginRoute,
   isValidEmail,
   isValidNationalId,
+  isValidPassword,
   isValidTelephone,
 } from "../utils/auth-helpers.ts";
 
-test("getPostLoginRoute maps active account roles and never routes to home-seeker", () => {
+test("getPostLoginRoute maps backend account roles to their dashboards", () => {
   assert.equal(getPostLoginRoute("ADMIN"), "/admin");
   assert.equal(getPostLoginRoute("super_admin"), "/admin");
   assert.equal(getPostLoginRoute("RENTER"), "/renter");
   assert.equal(getPostLoginRoute("LANDLORD"), "/landlord");
-  assert.equal(getPostLoginRoute("HOME_SEEKER"), "/landlord");
+  assert.equal(getPostLoginRoute("HOME_SEEKER"), "/home-seeker");
   assert.equal(getPostLoginRoute(undefined), "/landlord");
   assert.equal(getPostLoginRoute(""), "/landlord");
 });
@@ -31,6 +32,15 @@ test("isValidTelephone accepts Rwandan and international phone numbers", () => {
   assert.equal(isValidTelephone("0788123456"), true);
   assert.equal(isValidTelephone("12345"), false);
   assert.equal(isValidTelephone("abc-def-ghij"), false);
+  assert.equal(isValidTelephone("abc123456789"), false);
+});
+
+test("isValidPassword matches backend password requirements", () => {
+  assert.equal(isValidPassword("UrugoPass1!"), true);
+  assert.equal(isValidPassword("urugopass1!"), false);
+  assert.equal(isValidPassword("UrugoPass!"), false);
+  assert.equal(isValidPassword("UrugoPass1"), false);
+  assert.equal(isValidPassword("Urugo space1!"), false);
 });
 
 test("isValidNationalId checks non-empty compact ID length", () => {

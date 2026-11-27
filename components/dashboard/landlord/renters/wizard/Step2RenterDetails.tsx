@@ -5,11 +5,8 @@ import { useTranslations } from "next-intl";
 import {
   UserPlus,
   Users,
-  Link as LinkIcon,
   CheckCircle2,
-  Link2,
-  Copy,
-  Check,
+  MailCheck,
 } from "lucide-react";
 import { DashboardSearchInput } from "@/components/shared/DashboardSearchInput";
 import { Button } from "@/components/ui/button";
@@ -32,10 +29,9 @@ export function Step2RenterDetails({
   existingRenters,
   onBack,
   onContinue,
-  generatedLink,
-  copied,
-  onGenerateLink,
-  onCopyLink,
+  onStartInvitation,
+  isStartingInvitation,
+  queuedInvitation,
 }: Step2RenterDetailsProps) {
   const t = useTranslations("landlord.renters.wizard.step2");
   const [searchTerm, setSearchTerm] = useState("");
@@ -64,7 +60,7 @@ export function Step2RenterDetails({
           type="button"
           onClick={() => onModeChange("manual")}
           className={`flex items-center gap-3 p-4 border text-left cursor-pointer transition-colors ${
-            mode === "manual" || mode === "link"
+            mode === "manual"
               ? "border-ink bg-surface/50 text-ink"
               : "border-line bg-white text-body hover:bg-surface/30"
           }`}
@@ -193,102 +189,7 @@ export function Step2RenterDetails({
       ) : (
         /* OPTION A: Register New Renter */
         <div className="space-y-6">
-          {/* Sub-toggle: Manual entry vs Link */}
-          <div className="flex items-center gap-2 border-b border-line pb-4">
-            <button
-              type="button"
-              onClick={() => onModeChange("manual")}
-              className={`px-3 py-1.5 text-xs font-semibold cursor-pointer border ${
-                mode === "manual"
-                  ? "bg-ink text-white border-ink"
-                  : "bg-white text-body border-line hover:text-ink"
-              }`}
-            >
-              {t("manualFormTab")}
-            </button>
-            <button
-              type="button"
-              onClick={() => onModeChange("link")}
-              className={`px-3 py-1.5 text-xs font-semibold cursor-pointer border flex items-center gap-1.5 ${
-                mode === "link"
-                  ? "bg-ink text-white border-ink"
-                  : "bg-white text-body border-line hover:text-ink"
-              }`}
-            >
-              <LinkIcon className="size-3" />
-              <span>{t("invitationLinkTab")}</span>
-            </button>
-          </div>
-
-          {mode === "link" ? (
-            <div className="space-y-6">
-              {!generatedLink ? (
-                <div className="border border-dashed border-line bg-surface/50 p-8 sm:p-10 text-center space-y-3">
-                  <div className="mx-auto flex size-10 items-center justify-center border border-line bg-white text-ink">
-                    <Link2 className="size-4" />
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-bold text-ink">
-                      {t("generateTitle")}
-                    </h4>
-                    <p className="mt-1 text-xs text-body max-w-sm mx-auto leading-relaxed">
-                      {t("generateDesc")}
-                    </p>
-                  </div>
-                  <Button
-                    type="button"
-                    onClick={onGenerateLink}
-                    className="mt-2 h-9 cursor-pointer gap-2 rounded-none bg-ink px-5 text-xs font-semibold text-white hover:bg-black transition-colors"
-                  >
-                    <Link2 className="size-3.5" />
-                    <span>{t("generateBtn")}</span>
-                  </Button>
-                </div>
-              ) : (
-                <div className="border border-line bg-surface/60 p-5 space-y-4">
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <span className="inline-flex items-center gap-1.5 border border-line bg-white px-2 py-0.5 text-[12.5px] font-semibold text-ink">
-                      {t("linkReadyBadge")}
-                    </span>
-                    <span className="text-[12.5px] text-faint">
-                      {t("linkMeta", {
-                        createdAt: generatedLink.createdAt,
-                        expiresIn: generatedLink.expiresInLabel,
-                      })}
-                    </span>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row gap-2">
-                    <Input
-                      type="text"
-                      readOnly
-                      value={generatedLink.url}
-                      aria-label={t("linkInputAria")}
-                      className="h-9 flex-1 rounded-none border-line bg-white px-3 font-mono text-[12.5px] text-ink"
-                    />
-                    <Button
-                      type="button"
-                      onClick={onCopyLink}
-                      className="h-9 shrink-0 cursor-pointer gap-1.5 rounded-none bg-ink px-4 text-[12.5px] font-semibold text-white hover:bg-black transition-colors"
-                    >
-                      {copied ? (
-                        <>
-                          <Check className="size-3.5" />
-                          <span>{t("copied")}</span>
-                        </>
-                      ) : (
-                        <>
-                          <Copy className="size-3.5" />
-                          <span>{t("copyLink")}</span>
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </div>
-          ) : (
-            <FieldGroup className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <FieldGroup className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Full Legal Name */}
               <Field className="space-y-1.5 sm:col-span-2">
                 <FieldLabel className="text-[12.5px] font-semibold uppercase tracking-wider text-faint">
@@ -369,8 +270,32 @@ export function Step2RenterDetails({
                   </FieldError>
                 )}
               </Field>
-            </FieldGroup>
-          )}
+          </FieldGroup>
+
+          <div className="space-y-3 border border-line bg-surface/40 p-4 sm:p-5">
+            <div className="flex items-start gap-3">
+              <MailCheck aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-brand-blue" />
+              <div className="space-y-1">
+                <h4 className="text-sm font-semibold text-ink">{t("invitationTitle")}</h4>
+                <p className="text-xs leading-relaxed text-body">{t("invitationDescription")}</p>
+              </div>
+            </div>
+            {queuedInvitation ? (
+              <p role="status" aria-live="polite" className="text-xs text-emerald-800">
+                {t("invitationQueued", { requestId: queuedInvitation.requestId })}
+              </p>
+            ) : (
+              <Button
+                type="button"
+                onClick={onStartInvitation}
+                disabled={isStartingInvitation || mode !== "manual"}
+                className="h-9 cursor-pointer gap-2 rounded-none bg-ink px-4 text-xs font-semibold text-white hover:bg-black disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                <MailCheck aria-hidden="true" className="size-3.5" />
+                {isStartingInvitation ? t("invitationSubmitting") : t("sendInvitation")}
+              </Button>
+            )}
+          </div>
         </div>
       )}
 
