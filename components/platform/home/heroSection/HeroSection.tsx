@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 
 import { home_stats } from "@/data/home-data";
+import { usePublicStats } from "@/hooks/query/public-stats.hooks";
 import slide1 from "@/public/assets/home/im1.webp";
 import slide2 from "@/public/assets/home/im2.webp";
 import slide3 from "@/public/assets/home/im3.webp";
@@ -26,6 +27,7 @@ function HeroSection() {
   const router = useRouter();
   const t = useTranslations("public.home.hero");
   const tActions = useTranslations("common.actions");
+  const { data: publicStats } = usePublicStats();
   const [searchQuery, setSearchQuery] = useState("");
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -191,7 +193,13 @@ function HeroSection() {
         {home_stats.map((item) => (
           <HomeStasCounter
             key={item.id}
-            title={item.title}
+            title={
+              item.id === "1"
+                ? publicStats?.availableProperties ?? "—"
+                : item.id === "2"
+                  ? publicStats?.registeredLandlords ?? "—"
+                  : item.title
+            }
             paragraph={t(`stats.${item.id as StatKey}`)}
           />
         ))}

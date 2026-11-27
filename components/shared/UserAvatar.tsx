@@ -3,20 +3,12 @@
 import Image from "next/image";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { getInitials } from "@/utils/initials";
 
 interface UserAvatarProps {
   src?: string | null;
   name: string;
   className?: string;
-}
-
-function getInitials(name: string) {
-  return name
-    .trim()
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase() ?? "")
-    .join("");
 }
 
 export function UserAvatar({ src, name, className }: UserAvatarProps) {

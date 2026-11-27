@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { CheckCircle2, Mail, Phone } from "lucide-react";
 
 import { contactInfo, legalLinks, productColumn } from "@/data/footer-data";
+import { subscribeToNewsletter } from "@/services/public-interactions.service";
 import SectionContainer from "./SectionContainer";
 
 interface NewsletterValues {
@@ -28,11 +29,17 @@ function FooterSection() {
     defaultValues: { email: "" },
   });
 
-  const onSubscribe = () => {
-    // Preview mode — backend newsletter subscription endpoint is not connected yet.
-    setSubscribed(true);
-    reset();
-    toast.success(t("subscribedToast"));
+  const onSubscribe = async (values: NewsletterValues) => {
+    try {
+      await subscribeToNewsletter(values.email);
+      setSubscribed(true);
+      reset();
+      toast.success(t("subscribedToast"));
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "Failed to subscribe",
+      );
+    }
   };
 
   const resolveProductLinkLabel = (href: string, fallback: string) => {
@@ -149,10 +156,10 @@ function FooterSection() {
                 />
                 <div>
                   <p className="text-sm font-medium text-success">
-                    {t("previewSavedTitle")}
+                    {t("subscribedTitle")}
                   </p>
                   <p className="mt-0.5 text-xs text-body">
-                    {t("previewSavedBody")}
+                    {t("subscribedBody")}
                   </p>
                   <button
                     type="button"

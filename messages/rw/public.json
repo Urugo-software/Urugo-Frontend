@@ -32,7 +32,7 @@
         "4": "Inzu igezweho ifite ubusitani"
       },
       "stats": {
-        "1": "Inzu zemejwe",
+        "1": "Inzu ziboneka",
         "2": "Ba nyir'inzu biyandikishije",
         "3": "Igipimo cy'ubwishyu bugenda neza",
         "4": "Zoe iboneka amasaha yose"
@@ -392,9 +392,9 @@
     "emailRequired": "Nyamuneka andika aderesi ya imeyili yawe.",
     "emailInvalid": "Nyamuneka andika aderesi ya imeyili iboneye.",
     "subscribe": "Iyandikishe",
-    "subscribedToast": "Imeyili yabitswe (uburyo bw'igerageza).",
-    "previewSavedTitle": "Byabitswe mu igerageza",
-    "previewSavedBody": "Kohereza imeyili ntibiratangira gukora. Aderesi yawe yagenzuwe mu buryo bw'igerageza.",
+    "subscribedToast": "Urakoze kwiyandikisha ku makuru mashya ya Urugo.",
+    "subscribedTitle": "Wiyandikishije",
+    "subscribedBody": "Imeyili yawe yabitswe kugira ngo ujye ubona amakuru mashya ya Urugo.",
     "enterAnotherEmail": "Andika indi imeyili",
     "copyright": "© {year} Urugo. Uburenganzira bwose burarinzwe.",
     "privacyPolicy": "Politiki y'ibanga",

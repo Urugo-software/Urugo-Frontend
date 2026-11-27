@@ -3,7 +3,10 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 
 import PropertyDetails from "@/components/platform/properties/propertyDescription/PropertyDetails";
-import { listed_properties, property_details } from "@/data/properties";
+import {
+  getPublicPropertyMetadata,
+  getPublicPropertyPageData,
+} from "@/services/public-property.service";
 
 interface PropertyPageProps {
   params: Promise<{
@@ -15,7 +18,7 @@ export async function generateMetadata({
   params,
 }: PropertyPageProps): Promise<Metadata> {
   const { propertyId } = await params;
-  const property = property_details.find((prop) => prop.id === propertyId);
+  const property = await getPublicPropertyMetadata(propertyId);
 
   if (!property) {
     const t = await getTranslations("properties.meta");
@@ -25,28 +28,19 @@ export async function generateMetadata({
     };
   }
 
-  return {
-    title: `${property.headline} — ${property.location}`,
-    description: property.description,
-  };
+  return property;
 }
 
 export default async function PropertyPage({ params }: PropertyPageProps) {
   const { propertyId } = await params;
-  const property = property_details.find((prop) => prop.id === propertyId);
+  const propertyPage = await getPublicPropertyPageData(propertyId);
 
-  if (!property) {
-    notFound();
-  }
-
-  const relatedProperties = listed_properties
-    .filter((item) => item.id !== property.id)
-    .slice(0, 3);
+  if (!propertyPage) notFound();
 
   return (
     <PropertyDetails
-      property={property}
-      relatedProperties={relatedProperties}
+      property={propertyPage.property}
+      relatedProperties={propertyPage.relatedProperties}
     />
   );
 }

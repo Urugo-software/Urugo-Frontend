@@ -9,14 +9,13 @@ import {
   Check,
   ChevronRight,
   Copy,
-  Info,
   Send,
   Sparkles,
 } from "lucide-react";
 
-import { listed_properties } from "@/data/properties";
+import { sendPublicAssistantMessage } from "@/services/public-interactions.service";
+import type { PublicAssistantHistoryMessage } from "@/api/property.api";
 import type { AssistantAnimState } from "@/types/ai-assistant";
-import { parseNumericPrice } from "@/utils/public-properties";
 import { AssistantCanvas } from "./AssistantCanvas";
 import { AssistantHeader } from "./AssistantHeader";
 import { PropertyMatches, type PropertyMatchItem } from "./PropertyMatches";
@@ -41,7 +40,10 @@ interface ComposerForm {
   message: string;
 }
 
-type ZoeTranslator = ReturnType<typeof useTranslations<"public.zoe">>;
+interface PendingAssistantQuery {
+  message: string;
+  conversationHistory: PublicAssistantHistoryMessage[];
+}
 
 const SUGGESTION_CHIP_KEYS = [
   "studioKacyiru",
@@ -50,116 +52,6 @@ const SUGGESTION_CHIP_KEYS = [
   "landlordModes",
 ] as const;
 
-function toMatchItem(
-  item: (typeof listed_properties)[number],
-  t: ZoeTranslator,
-): PropertyMatchItem {
-  return {
-    id: item.id,
-    image: item.image,
-    name: item.headline,
-    location: item.location,
-    details: `${t("matches.beds", { count: item.beds })} · ${t("matches.baths", { count: item.baths })}${item.parking ? ` · ${t("matches.parking")}` : ""}`,
-    price: `${item.price} ${item.currency}`,
-    isVerified: item.isVerified,
-  };
-}
-
-function buildPreviewReply(
-  queryText: string,
-  t: ZoeTranslator,
-): Omit<WidgetMessage, "id" | "role" | "timestamp"> {
-  const q = queryText.toLowerCase();
-
-  if (
-    q.includes("listing-only") ||
-    q.includes("managed") ||
-    q.includes("landlord") ||
-    q.includes("kwamamaza") ||
-    q.includes("gucunga") ||
-    q.includes("nyir'inzu") ||
-    q.includes("nyirinzu")
-  ) {
-    return {
-      badge: t("replies.landlordBadge"),
-      content: t("replies.landlordContent"),
-      suggestedActions: [t("chips.browseHomes"), t("chips.moveInCosts")],
-    };
-  }
-
-  if (
-    q.includes("move-in") ||
-    q.includes("cost") ||
-    q.includes("deposit") ||
-    q.includes("afford") ||
-    q.includes("kwimuka") ||
-    q.includes("ikiguzi") ||
-    q.includes("ingwate")
-  ) {
-    return {
-      badge: t("replies.moveInBadge"),
-      content: t("replies.moveInContent"),
-      suggestedActions: [t("chips.studioKacyiru"), t("chips.twoBrKimironko")],
-    };
-  }
-
-  if (
-    q.includes("visit") ||
-    q.includes("viewing") ||
-    q.includes("sign") ||
-    q.includes("register") ||
-    q.includes("gusura") ||
-    q.includes("isura") ||
-    q.includes("iyandikishe")
-  ) {
-    return {
-      badge: t("replies.visitBadge"),
-      content: t("replies.visitContent"),
-      suggestedActions: [t("chips.browseHomes"), t("chips.landlordModes")],
-    };
-  }
-
-  const areaMatches = listed_properties.filter((item) => {
-    const hay = `${item.headline} ${item.location}`.toLowerCase();
-    const areaHit =
-      (q.includes("kacyiru") && hay.includes("kacyiru")) ||
-      (q.includes("kimironko") && hay.includes("kimironko")) ||
-      (q.includes("kicukiro") && hay.includes("kicukiro")) ||
-      (q.includes("nyarutarama") && hay.includes("nyarutarama")) ||
-      (q.includes("gacuriro") && hay.includes("gacuriro")) ||
-      ((q.includes("studio") || q.includes("situdiyo")) &&
-        hay.includes("studio")) ||
-      (q.includes("villa") && hay.includes("villa")) ||
-      ((q.includes("2br") || q.includes("ibyumba 2")) && item.beds === 2);
-
-    const underMatch = q.match(/(?:under|munsi ya)\s+(\d+)\s*k?/);
-    if (underMatch) {
-      const raw = Number(underMatch[1]);
-      const cap = raw < 1000 ? raw * 1000 : raw;
-      const hasAreaKeyword =
-        /kacyiru|kimironko|kicukiro|nyarutarama|gacuriro/.test(q);
-      return (
-        parseNumericPrice(item.price) <= cap && (areaHit || !hasAreaKeyword)
-      );
-    }
-    return areaHit;
-  });
-
-  const selected = (
-    areaMatches.length > 0 ? areaMatches : listed_properties.slice(0, 3)
-  ).map((item) => toMatchItem(item, t));
-
-  return {
-    badge: t("replies.listingsBadge", { count: selected.length }),
-    content:
-      areaMatches.length > 0
-        ? t("replies.listingsMatched", { count: selected.length })
-        : t("replies.listingsFallback"),
-    propertyMatches: selected,
-    suggestedActions: [t("chips.moveInCosts"), t("chips.landlordModes")],
-  };
-}
-
 export function AssistantPanel({
   onClose,
   initialPrompt,
@@ -167,12 +59,13 @@ export function AssistantPanel({
 }: AssistantPanelProps) {
   const t = useTranslations("public.zoe");
   const [messages, setMessages] = useState<WidgetMessage[]>([]);
-  const [pendingQuery, setPendingQuery] = useState<string | null>(null);
+  const [pendingQuery, setPendingQuery] = useState<PendingAssistantQuery | null>(null);
   const [animState, setAnimState] = useState<AssistantAnimState>("idle");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [isMaximized, setIsMaximized] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
+  const messagesRef = useRef<WidgetMessage[]>([]);
 
   const { register, handleSubmit, reset } = useForm<ComposerForm>({
     defaultValues: { message: "" },
@@ -196,6 +89,7 @@ export function AssistantPanel({
   const allMessages = [welcomeMessage, ...messages];
 
   useEffect(() => {
+    messagesRef.current = messages;
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
 
@@ -209,22 +103,50 @@ export function AssistantPanel({
 
   useEffect(() => {
     if (!pendingQuery) return;
-    const query = pendingQuery;
-    const replyTimer = setTimeout(() => {
-      const replyData = buildPreviewReply(query, t);
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: `ai-${crypto.randomUUID()}`,
-          role: "assistant",
-          timestamp: t("justNow"),
-          ...replyData,
-        },
-      ]);
-      setPendingQuery(null);
-      setAnimState("talking");
-    }, 600);
-    return () => clearTimeout(replyTimer);
+    let cancelled = false;
+    const { message: query, conversationHistory } = pendingQuery;
+    void (async () => {
+      try {
+        const res = await sendPublicAssistantMessage(query, conversationHistory);
+        if (cancelled) return;
+        const replyData = res?.data;
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: `ai-${crypto.randomUUID()}`,
+            role: "assistant",
+            timestamp: t("justNow"),
+            badge: replyData?.badge ?? "Zoe",
+            content:
+              replyData?.content ??
+              "Zoe could not process your request right now. Please try again.",
+            propertyMatches: replyData?.propertyMatches,
+            suggestedActions: replyData?.suggestedActions,
+          },
+        ]);
+      } catch {
+        if (cancelled) return;
+        setMessages((prev) => [
+          ...prev,
+          {
+            id: `ai-${crypto.randomUUID()}`,
+            role: "assistant",
+            timestamp: t("justNow"),
+            badge: "Unavailable",
+            content:
+              "Zoe is temporarily unavailable. Please try again in a moment or browse available properties directly.",
+          },
+        ]);
+      } finally {
+        if (!cancelled) {
+          setPendingQuery(null);
+          setAnimState("talking");
+        }
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
   }, [pendingQuery, t]);
 
   useEffect(() => {
@@ -236,6 +158,7 @@ export function AssistantPanel({
   const queueMessage = (rawText: string) => {
     const trimmed = rawText.trim();
     if (!trimmed) return;
+    const conversationHistory = messages;
     setMessages((prev) => [
       ...prev,
       {
@@ -246,12 +169,13 @@ export function AssistantPanel({
       },
     ]);
     setAnimState("thinking");
-    setPendingQuery(trimmed);
+    setPendingQuery({ message: trimmed, conversationHistory });
   };
 
   useEffect(() => {
     if (!initialPrompt) return;
     const queued = initialPrompt.trim();
+    const conversationHistory = messagesRef.current;
     onConsumePrompt?.();
     if (!queued) return;
     const timer = setTimeout(() => {
@@ -265,7 +189,7 @@ export function AssistantPanel({
         },
       ]);
       setAnimState("thinking");
-      setPendingQuery(queued);
+      setPendingQuery({ message: queued, conversationHistory });
     }, 0);
     return () => clearTimeout(timer);
   }, [initialPrompt, onConsumePrompt, t]);
@@ -323,11 +247,6 @@ export function AssistantPanel({
             isMaximized={isMaximized}
             onToggleMaximize={() => setIsMaximized((prev) => !prev)}
           />
-        </div>
-
-        <div className="flex items-center gap-2 border-b border-line bg-brand-tint/40 px-4 py-2 text-xs text-brand-deep">
-          <Info aria-hidden="true" className="size-3.5 shrink-0 text-brand" />
-          <span>{t("previewNotice")}</span>
         </div>
 
         <div className="flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto bg-surface p-4 sm:p-5">

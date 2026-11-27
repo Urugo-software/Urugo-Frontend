@@ -32,7 +32,7 @@
         "4": "Modern Garden Apartment"
       },
       "stats": {
-        "1": "Verified properties",
+        "1": "Available properties",
         "2": "Registered Landlords",
         "3": "Payment success rate",
         "4": "Zoe availability"
@@ -392,9 +392,9 @@
     "emailRequired": "Please enter your email address.",
     "emailInvalid": "Please enter a valid email address.",
     "subscribe": "Subscribe",
-    "subscribedToast": "Email recorded (preview mode).",
-    "previewSavedTitle": "Preview saved",
-    "previewSavedBody": "Email delivery is not connected yet. Your address was validated locally in preview mode.",
+    "subscribedToast": "Thanks for subscribing to Urugo updates.",
+    "subscribedTitle": "Subscribed",
+    "subscribedBody": "Your email has been saved for Urugo updates.",
     "enterAnotherEmail": "Enter another email",
     "copyright": "© {year} Urugo. All rights reserved.",
     "privacyPolicy": "Privacy Policy",
