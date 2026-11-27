@@ -7,6 +7,8 @@ export interface RenterInvitationIdentity {
   nationalId: string;
 }
 
+export type LandlordRegistrationIdentity = RenterInvitationIdentity;
+
 export interface RenterInvitationStartResponse {
   success: true;
   message: string;
@@ -27,6 +29,50 @@ export const startLandlordRenterInvitationRequest = (
     "/api/landlord/renters",
     { identity },
     { headers: { "Idempotency-Key": idempotencyKey } },
+  );
+
+export const startPublicLandlordRegistrationRequest = (
+  identity: LandlordRegistrationIdentity,
+  idempotencyKey: string,
+) =>
+  api.post<RenterInvitationStartResponse>(
+    "/api/auth/register",
+    { identity },
+    { headers: { "Idempotency-Key": idempotencyKey } },
+  );
+
+export const verifyPublicLandlordRegistrationRequest = (
+  requestId: string,
+  capabilityToken: string,
+  code: string,
+) =>
+  api.post<RegistrationActionResponse>(
+    `/api/requests/${encodeURIComponent(requestId)}/participants/APPLICANT/verify`,
+    { code },
+    { headers: { "x-capability-token": capabilityToken } },
+  );
+
+export const resendPublicLandlordRegistrationRequest = (
+  requestId: string,
+  capabilityToken: string,
+) =>
+  api.post<RegistrationActionResponse>(
+    `/api/requests/${encodeURIComponent(requestId)}/participants/APPLICANT/resend`,
+    {},
+    { headers: { "x-capability-token": capabilityToken } },
+  );
+
+export const completePublicLandlordRegistrationRequest = (
+  requestId: string,
+  capabilityToken: string,
+  password: string,
+  confirmation: string,
+  selectedLandlordPlan: "LISTING_ONLY" | "MANAGED_PLAN",
+) =>
+  api.post<RegistrationActionResponse>(
+    `/api/requests/${encodeURIComponent(requestId)}/password`,
+    { password, confirmation, selectedLandlordPlan },
+    { headers: { "x-capability-token": capabilityToken } },
   );
 
 export const startAdminRenterInvitationRequest = (

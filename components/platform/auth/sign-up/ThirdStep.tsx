@@ -14,13 +14,26 @@ type ThirdStepProps = {
   selectedPlan: LandlordPlan;
   onSelectPlan: (plan: LandlordPlan) => void;
   onCredential: (idToken: string) => void;
+  onCreateAccount: () => void;
   pending: boolean;
+  creatingAccount: boolean;
   onBack: () => void;
 };
 
-function ThirdStep({ selectedPlan, onSelectPlan, onCredential, pending, onBack }: ThirdStepProps) {
+function ThirdStep({
+  selectedPlan,
+  onSelectPlan,
+  onCredential,
+  onCreateAccount,
+  pending,
+  creatingAccount,
+  onBack,
+}: ThirdStepProps) {
   const t = useTranslations("auth.signUp.plan");
   const tActions = useTranslations("common.actions");
+  const googleConfigured = Boolean(
+    process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID?.trim(),
+  );
 
   const plans: LandlordPlan[] = ["LISTING_ONLY", "MANAGED_PLAN"];
 
@@ -28,8 +41,14 @@ function ThirdStep({ selectedPlan, onSelectPlan, onCredential, pending, onBack }
     <>
       <Field>
         <FieldLabel className={AUTH_LABEL_CLASS}>{t("label")}</FieldLabel>
-        <FieldDescription className="text-xs text-body">{t("description")}</FieldDescription>
-        <div role="radiogroup" aria-label={t("label")} className="grid gap-3 sm:grid-cols-2">
+        <FieldDescription className="text-xs text-body">
+          {t("description")}
+        </FieldDescription>
+        <div
+          role="radiogroup"
+          aria-label={t("label")}
+          className="grid gap-3 sm:grid-cols-2"
+        >
           {plans.map((plan) => (
             <button
               key={plan}
@@ -42,21 +61,48 @@ function ThirdStep({ selectedPlan, onSelectPlan, onCredential, pending, onBack }
             >
               <span className="flex w-full items-center justify-between gap-2 text-sm font-semibold text-ink">
                 {t(`options.${plan}.title`)}
-                {selectedPlan === plan && <Check aria-hidden="true" className="size-4 text-brand" />}
+                {selectedPlan === plan && (
+                  <Check aria-hidden="true" className="size-4 text-brand" />
+                )}
               </span>
-              <span className="text-xs leading-relaxed text-body">{t(`options.${plan}.description`)}</span>
+              <span className="text-xs leading-relaxed text-body">
+                {t(`options.${plan}.description`)}
+              </span>
             </button>
           ))}
         </div>
       </Field>
 
       <Field className="pt-1">
-        <GoogleIdentityButton mode="signup_with" onCredential={onCredential} disabled={pending} />
-        <p role="note" className="text-center text-xs leading-relaxed text-faint">{t("emailUnavailable")}</p>
+        <Button
+          type="button"
+          disabled={pending}
+          onClick={onCreateAccount}
+          className="w-full py-5 rounded-sm"
+        >
+          {creatingAccount ? t("creatingAccount") : t("createAccount")}
+        </Button>
+        {googleConfigured && (
+          <>
+            <p className="py-1 text-center text-xs text-faint">
+              {t("orContinueWith")}
+            </p>
+            <GoogleIdentityButton
+              mode="signup_with"
+              onCredential={onCredential}
+              disabled={pending}
+            />
+          </>
+        )}
       </Field>
 
       <Field className="pt-1">
-        <Button type="button" variant="outline" onClick={onBack} className={`${AUTH_SECONDARY_BUTTON_CLASS} w-full`}>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onBack}
+          className={`${AUTH_SECONDARY_BUTTON_CLASS} w-full`}
+        >
           <ArrowLeft aria-hidden="true" className="size-4" />
           <span>{tActions("back")}</span>
         </Button>
